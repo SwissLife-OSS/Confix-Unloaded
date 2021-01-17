@@ -9,6 +9,9 @@ export const tabsTypeMap = {
     },
     "COMPONENT": {
         color: "#26A69A" // teal lighten-1
+    },
+    "APP_PART": {
+        color: "#9FA8DA" //indigo lighten-3
     }
 }
 

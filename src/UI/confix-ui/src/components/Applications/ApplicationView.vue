@@ -56,10 +56,8 @@
                 >
               </v-list-item-content>
               <v-list-item-action>
-                <v-btn icon @click.stop="onClickAddComponent(part)">
-                  <v-icon small color="grey lighten-1"
-                    >mdi-shape-square-plus</v-icon
-                  >
+                <v-btn icon @click.stop="onClickEditPart(part)">
+                  <v-icon small color="grey lighten-1">mdi-pencil</v-icon>
                 </v-btn>
               </v-list-item-action>
             </template>
@@ -131,7 +129,16 @@ export default {
   methods: {
     ...mapActions("apps", ["loadApps", "loadAppsRemote"]),
     ...mapActions("shell", ["openTab"]),
-    onClickAddComponent: function (part) {
+    onClickEditPart: function (part) {
+      this.openTab({
+        type: "APP_PART",
+        title: `Edit ${part.name}`,
+        id: `${this.selectedApp.id}_${part.id}`,
+        item: {
+          application: this.selectedApp,
+          part: part,
+        },
+      });
       console.log(part);
     },
     onClickAddApplication: function () {

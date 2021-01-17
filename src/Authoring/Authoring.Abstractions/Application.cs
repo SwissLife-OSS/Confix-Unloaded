@@ -15,6 +15,8 @@ namespace Confix.Authoring.Store
 
     public class ApplicationPart
     {
+        public Guid Id { get; set; }
+
         public string Name { get; set; }
 
         public IEnumerable<ApplicationPartComponent> Components { get; set; }

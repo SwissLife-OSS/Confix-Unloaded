@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Confix.Authoring.Store;
@@ -30,32 +29,18 @@ namespace Confix.Authoring.GraphQL
 
             return new UpdateApplicationPayload(application);
         }
-    }
 
-    public class UpdateApplicationPayload : Payload
-    {
-        public Application? Application { get; }
-
-        public UpdateApplicationPayload(Application application)
+        [GraphQLName("ApplicationPart_Update")]
+        public async Task<UpdateApplicationPayload> UpdatePartAsync(
+            UpdateApplicationPartRequest input,
+            CancellationToken cancellationToken)
         {
-            Application = application;
-        }
+            Application application = await _applicationService.UpdateApplicationPartAsync(
+                input,
+                cancellationToken);
 
-        public UpdateApplicationPayload(
-            IReadOnlyList<UserError>? errors = null)
-            : base(errors)
-        {
+            return new UpdateApplicationPayload(application);
         }
-    }
-
-    public abstract class Payload
-    {
-        protected Payload(IReadOnlyList<UserError>? errors = null)
-        {
-            Errors = errors;
-        }
-
-        public IReadOnlyList<UserError>? Errors { get; }
     }
 
     public record UserError(string Message, string Code);

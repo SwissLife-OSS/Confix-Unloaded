@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,11 +10,19 @@ namespace Confix.Authoring
     {
         Task<Application> AddAsync(AddApplicationRequest request, CancellationToken cancellationToken);
         Task<IEnumerable<Application>> GetAllAsync(CancellationToken cancellationToken);
+        Task<Application> UpdateApplicationPartAsync(UpdateApplicationPartRequest request, CancellationToken cancellationToken);
     }
 
     public record AddApplicationRequest(string Name)
     {
         public IEnumerable<string>? Parts { get; init; }
+    }
+
+    public record UpdateApplicationPartRequest(Guid ApplicationId, Guid PartId)
+    {
+        public string? Name { get; init; }
+
+        public IEnumerable<string>? Components { get; init; }
     }
 
 }

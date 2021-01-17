@@ -4,6 +4,7 @@ query allApps
     id
     name
     parts{
+      id
       name
       components{
         componentId

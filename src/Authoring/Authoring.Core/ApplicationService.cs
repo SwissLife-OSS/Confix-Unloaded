@@ -32,11 +32,40 @@ namespace Confix.Authoring
                 Name = request.Name,
                 Parts = request.Parts?.Select(x => new ApplicationPart
                 {
+                    Id = Guid.NewGuid(),
                     Name = x
                 }) ?? Array.Empty<ApplicationPart>()
             };
 
             return await _applicationStore.AddAsync(app, cancellationToken);
+        }
+
+        public async Task<Application> UpdateApplicationPartAsync(
+            UpdateApplicationPartRequest request,
+            CancellationToken cancellationToken)
+        {
+            Application application = await _applicationStore.GetByIdAsync(
+                request.ApplicationId,
+                cancellationToken);
+
+            ApplicationPart? part = application.Parts.FirstOrDefault(x => x.Id == request.PartId);
+
+            if (part != null)
+            {
+                part.Components = request.Components?.Select(x => new ApplicationPartComponent
+                {
+                    ComponentId = x
+                }) ?? Array.Empty< ApplicationPartComponent>();
+
+                if (request.Name != null)
+                {
+                    part.Name = request.Name;
+                }
+
+                await _applicationStore.UpdateAsync(application, cancellationToken);
+            }
+
+            return application;
         }
     }
 }

@@ -1,4 +1,4 @@
-import { addApplication, getAllApplications } from "../services/applicationService";
+import { addApplication, getAllApplications, updatePart } from "../services/applicationService";
 import { excuteGraphQL } from "./graphqlClient";
 
 const applicationStore = {
@@ -9,7 +9,8 @@ const applicationStore = {
             { id: "1", name: "DEV" },
             { id: "2", name: "STAGE" },
             { id: "3", name: "PROD" },
-        ]
+        ],
+
     }),
     mutations: {
         APPS_LOADED(state, apps) {
@@ -17,6 +18,12 @@ const applicationStore = {
         },
         APP_ADDED(state, app) {
             state.apps.push(app);
+        },
+        APP_UPDATED(state, app) {
+            var index = state.app.findIndex(x => x.id === app.id);
+            if (index > -1) {
+                state.apps[index] = app;
+            }
         }
     },
     actions: {
@@ -27,15 +34,22 @@ const applicationStore = {
             }
         },
         async addApplication({ commit }, input) {
-
             const result = await excuteGraphQL(() => addApplication(input));
 
             if (result.success) {
                 console.log(result);
 
-                commit("APP_ADDED", result.data.application);
+                commit("APP_ADDED", result.data.Application_Add.application);
             }
+        },
+        async updatePart({ commit }, input) {
+            const result = await excuteGraphQL(() => updatePart(input));
 
+            if (result.success) {
+                console.log(result);
+
+                commit("APP_UPDATED", result.data.ApplicationPart_Update.application);
+            }
         },
         async loadApps({ commit }) {
 

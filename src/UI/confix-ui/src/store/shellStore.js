@@ -21,12 +21,7 @@ const shellStore = {
         },
         TAB_CLOSED(state, id) {
             const index = state.tabs.findIndex(x => x.id === id);
-            console.log(index, state.tabs.length)
-
             state.tabs.splice(index, 1)
-
-
-            console.log(index, state.tabs.length)
 
             if (id === state.selectedTabId) {
                 if (index > 0) {
@@ -41,6 +36,7 @@ const shellStore = {
     actions: {
 
         openTab: function ({ commit }, item) {
+            console.log(item.id)
             commit('TAB_OPENED', item)
         },
         selectTab: function ({ commit }, id) {

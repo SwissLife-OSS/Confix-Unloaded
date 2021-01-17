@@ -26,6 +26,7 @@ namespace Confix.Authoring.GraphQL
                 .AddMutationType(d => d.Name("Mutation"))
                 .AddType<ApplicationMutations>()
                 .RenameRequestToInput<AddApplicationRequest>()
+                .RenameRequestToInput<UpdateApplicationPartRequest>()
                 .AddAuthorization();
 
             return builder;

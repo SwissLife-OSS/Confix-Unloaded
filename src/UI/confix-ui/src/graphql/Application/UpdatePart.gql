@@ -1,0 +1,15 @@
+mutation updatePart($input: UpdateApplicationPartInput!) {
+  ApplicationPart_Update(input: $input) {
+    application {
+      id
+      name
+      parts {
+        id
+        name
+        components {
+          componentId
+        }
+      }  
+    }
+  }
+}

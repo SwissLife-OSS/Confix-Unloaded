@@ -13,18 +13,31 @@
       v-if="activeTabItem.type === 'COMPONENT'"
       :component="activeTabItem.item.component"
     ></component-editor>
+
+    <application-part-editor
+      v-if="activeTabItem.type === 'APP_PART'"
+      :part="activeTabItem.item.part"
+      :application="activeTabItem.item.application"
+    >
+    </application-part-editor>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
 import AppComponentConfigEditor from "../Editors/AppComponentConfigEditor.vue";
+import ApplicationPartEditor from "../Editors/ApplicationPartEditor.vue";
 import ComponentEditor from "../Editors/ComponentEditor.vue";
 import VariableEditor from "../Editors/VariableEditor.vue";
 
 export default {
   created() {},
-  components: { AppComponentConfigEditor, VariableEditor, ComponentEditor },
+  components: {
+    AppComponentConfigEditor,
+    VariableEditor,
+    ComponentEditor,
+    ApplicationPartEditor,
+  },
 
   data() {
     return {};

@@ -43,6 +43,9 @@ export default {
   name: "App",
 
   components: { TabList, EditorShell },
+  created() {
+    this.$store.dispatch("comp/loadComponents");
+  },
 
   data: () => ({
     navItems: [
