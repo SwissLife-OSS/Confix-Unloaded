@@ -1,0 +1,13 @@
+query allApps
+{
+  applications{
+    id
+    name
+    parts{
+      name
+      components{
+        componentId
+      }
+    }
+  }
+}

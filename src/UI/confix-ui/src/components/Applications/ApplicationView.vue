@@ -13,6 +13,8 @@
       placeholder="Search Aplication"
       prepend-icon="mdi-magnify"
       return-object
+      append-outer-icon="mdi-plus"
+      @click:append-outer="onClickAddApplication"
     ></v-autocomplete>
 
     <v-card v-if="selectedApp" elevation="1" rounded="0">
@@ -86,20 +88,35 @@
         </v-list>
       </v-card-text>
     </v-card>
+
+    <edit-application-dialog
+      :show="showAddApplicationDialog"
+      @close="showAddApplicationDialog = false"
+    ></edit-application-dialog>
+
+    <add-component-dialog
+      :show="showAddComponentDialog"
+      @close="showAddComponentDialog = false"
+    ></add-component-dialog>
   </div>
 </template>
 
 <script>
 import { mapState, mapActions } from "vuex";
+import AddComponentDialog from "./AddComponentDialog.vue";
+import EditApplicationDialog from "./EditApplicationDialog.vue";
 
 export default {
+  components: { EditApplicationDialog, AddComponentDialog },
   created() {
-    this.loadApps();
+    this.loadAppsRemote();
   },
   data() {
     return {
       selectedApp: null,
       selectedComponent: null,
+      showAddApplicationDialog: false,
+      showAddComponentDialog: false,
     };
   },
   watch: {
@@ -112,10 +129,13 @@ export default {
     ...mapState("shell", ["selectedTabId"]),
   },
   methods: {
-    ...mapActions("apps", ["loadApps"]),
+    ...mapActions("apps", ["loadApps", "loadAppsRemote"]),
     ...mapActions("shell", ["openTab"]),
     onClickAddComponent: function (part) {
       console.log(part);
+    },
+    onClickAddApplication: function () {
+      this.showAddApplicationDialog = true;
     },
     onClickCloseApp: function () {
       this.selectedApp = null;
@@ -126,7 +146,6 @@ export default {
         type: "APP_COMPONENT_CONFIG",
         title: `${part.name}/${component.name}`,
         id: `${this.selectedApp.id}_${part.name}_${component.name}`,
-
         item: {
           component: component,
           part: part,

@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>Confix.Authoring.GraphQL</AssemblyName>
+    <RootNamespace>Confix.Authoring.GraphQL</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="HotChocolate.AspNetCore" Version="$(HotChocolateVersion)" />
+    <PackageReference Include="HotChocolate.AspNetCore.Authorization" Version="$(HotChocolateVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Authoring.Abstractions\Authoring.Abstractions.csproj" />
+    <ProjectReference Include="..\Authoring.Core\Authoring.Core.csproj" />
+  </ItemGroup>
+
+</Project>

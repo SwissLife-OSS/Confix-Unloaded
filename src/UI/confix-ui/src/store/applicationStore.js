@@ -1,3 +1,5 @@
+import { addApplication, getAllApplications } from "../services/applicationService";
+import { excuteGraphQL } from "./graphqlClient";
 
 const applicationStore = {
     namespaced: true,
@@ -12,9 +14,29 @@ const applicationStore = {
     mutations: {
         APPS_LOADED(state, apps) {
             state.apps = apps;
+        },
+        APP_ADDED(state, app) {
+            state.apps.push(app);
         }
     },
     actions: {
+        async loadAppsRemote({ commit }) {
+            const result = await excuteGraphQL(() => getAllApplications());
+            if (result.success) {
+                commit('APPS_LOADED', result.data.applications);
+            }
+        },
+        async addApplication({ commit }, input) {
+
+            const result = await excuteGraphQL(() => addApplication(input));
+
+            if (result.success) {
+                console.log(result);
+
+                commit("APP_ADDED", result.data.application);
+            }
+
+        },
         async loadApps({ commit }) {
 
             const apps = [{

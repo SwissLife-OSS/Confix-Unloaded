@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>Confix.Authoring.Store.Mongo</AssemblyName>
+    <RootNamespace>Confix.Authoring.Store.Mongo</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MongoDB.Extensions.Context" Version="0.3.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Authoring.Abstractions\Authoring.Abstractions.csproj" />
+  </ItemGroup>
+
+</Project>

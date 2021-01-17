@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <AssemblyName>Confix.Authoring.Data.Mongo</AssemblyName>
+    <RootNamespace>Confix.Authoring.Data.Mongo</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Authoring.Abstractions\Authoring.Abstractions.csproj" />
+  </ItemGroup>
+
+</Project>
