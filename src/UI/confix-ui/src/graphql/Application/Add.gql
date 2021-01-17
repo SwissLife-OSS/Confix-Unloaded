@@ -1,0 +1,8 @@
+mutation addApp($input: AddApplicationInput!) {
+  Application_Add(input: $input) {
+    application {
+      id
+      name
+    }
+  }
+}

@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mt-2" elevation="1" rounded="0">
+  <v-card class="mt-2" elevation="1" rounded="0" height="600">
     <v-toolbar height="36" color="teal darken-3" dark>
       <v-toolbar-title>{{ component.name }} </v-toolbar-title>
       <v-spacer></v-spacer>
