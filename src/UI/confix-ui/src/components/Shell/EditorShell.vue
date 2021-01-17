@@ -9,17 +9,22 @@
       v-if="activeTabItem.type === 'VARIABLE'"
       :variable="activeTabItem.item.variable"
     ></variable-editor>
+    <component-editor
+      v-if="activeTabItem.type === 'COMPONENT'"
+      :component="activeTabItem.item.component"
+    ></component-editor>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
 import AppComponentConfigEditor from "../Editors/AppComponentConfigEditor.vue";
+import ComponentEditor from "../Editors/ComponentEditor.vue";
 import VariableEditor from "../Editors/VariableEditor.vue";
 
 export default {
   created() {},
-  components: { AppComponentConfigEditor, VariableEditor },
+  components: { AppComponentConfigEditor, VariableEditor, ComponentEditor },
 
   data() {
     return {};

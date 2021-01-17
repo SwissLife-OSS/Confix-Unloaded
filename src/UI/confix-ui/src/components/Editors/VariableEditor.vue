@@ -13,6 +13,7 @@
             clearable
             clear-icon="mdi-delete-variant"
             append-icon="mdi-content-save"
+            @click:append="onSave(env)"
           ></v-text-field>
         </v-col>
       </v-row>
@@ -33,6 +34,11 @@ export default {
       });
 
       return all;
+    },
+  },
+  methods: {
+    onSave: function (env) {
+      console.log(env);
     },
   },
 };

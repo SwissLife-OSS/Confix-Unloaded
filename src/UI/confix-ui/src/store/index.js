@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import applicationStore from './applicationStore'
+import componentStore from './componentStore'
 import shellStore from './shellStore'
 import variableStore from './variableStore'
 
@@ -16,6 +17,7 @@ export default new Vuex.Store({
   modules: {
     apps: applicationStore,
     vars: variableStore,
-    shell: shellStore
+    shell: shellStore,
+    comp: componentStore
   }
 })

@@ -49,7 +49,7 @@ export default {
   },
 
   computed: {
-    ...mapState("app", ["environments"]),
+    ...mapState("apps", ["environments"]),
   },
   methods: {},
 };

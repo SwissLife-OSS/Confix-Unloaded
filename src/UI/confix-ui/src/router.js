@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import ApplicationView from "./components/Applications/ApplicationView"
-import VariablesSearch from "./components/Variables/VariablesSearch"
+import VariableSearch from "./components/Variables/VariableSearch"
+import ComponentSearch from "./components/Components/ComponentSearch"
 
 Vue.use(VueRouter)
 
@@ -14,7 +15,12 @@ const routes = [
   {
     path: '/vars',
     name: 'Variables',
-    component: VariablesSearch
+    component: VariableSearch
+  },
+  {
+    path: '/comp',
+    name: 'Components',
+    component: ComponentSearch
   }
 ]
 
