@@ -22,16 +22,27 @@
     </v-navigation-drawer>
 
     <v-main>
-      <router-view></router-view>
+      <v-row dense>
+        <v-col md="4">
+          <router-view></router-view>
+        </v-col>
+        <v-col md="8">
+          <tab-list></tab-list>
+          <br />
+          <editor-shell></editor-shell>
+        </v-col>
+      </v-row>
     </v-main>
   </v-app>
 </template>
 
 <script>
+import EditorShell from "./components/Shell/EditorShell";
+import TabList from "./components/Shell/TabList.vue";
 export default {
   name: "App",
 
-  components: {},
+  components: { TabList, EditorShell },
 
   data: () => ({
     navItems: [

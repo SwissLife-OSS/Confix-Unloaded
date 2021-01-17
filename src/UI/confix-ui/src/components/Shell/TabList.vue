@@ -5,10 +5,18 @@
       :class="{ active: tab.active }"
       v-for="tab in tabs"
       :key="tab.id"
+      @mouseover="hoveredTabId = tab.id"
+      @mouseleave="hoveredTabId = null"
       @click="onSelectTab(tab)"
+      :title="tab.title"
+      :style="{ 'background-color': tab.color }"
     >
       {{ tab.title }}
-      <v-icon size="20" class="tab-close" @click="onCloseTab(tab)"
+      <v-icon
+        size="20"
+        v-if="hoveredTabId === tab.id"
+        class="tab-close"
+        @click="onCloseTab(tab)"
         >mdi-close</v-icon
       >
     </div>
@@ -17,18 +25,21 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+import { tabsTypeMap } from "../../resources";
 
 export default {
   created() {},
   data() {
-    return {};
+    return {
+      hoveredTabId: null,
+    };
   },
-
   computed: {
     ...mapState("shell", ["selectedTabId"]),
     tabs: function () {
       return this.$store.state.shell.tabs.map((x) => {
         x.active = this.$store.state.shell.selectedTabId === x.id;
+        x.color = tabsTypeMap[x.type].color;
         return x;
       });
     },
@@ -55,8 +66,7 @@ export default {
 
 .tab-item {
   position: relative;
-  background-color: #7986cb;
-  width: 120px;
+  width: 140px;
   height: 30px;
   float: left;
   margin-left: 1px;
@@ -70,7 +80,7 @@ export default {
 }
 
 .tab-item.active {
-  border-bottom: red solid 1px;
+  border-bottom: red solid 2px;
 }
 
 .tab-close {

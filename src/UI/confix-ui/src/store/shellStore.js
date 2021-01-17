@@ -8,7 +8,6 @@ const shellStore = {
     mutations: {
         TAB_OPENED(state, item) {
             const existingIndex = state.tabs.findIndex(x => x.id === item.id);
-            console.log(existingIndex)
             if (existingIndex > -1) {
                 state.selectedTabId = state.tabs[existingIndex].id;
             }

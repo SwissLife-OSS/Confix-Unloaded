@@ -1,46 +1,28 @@
 <template>
   <div v-if="activeTabItem">
-    <v-card class="mt-2" v-if="activeTabItem.type === 'APP_COMPONENT_CONFIG'">
-      <v-toolbar height="36" color="indigo darken-4" dark>
-        <v-toolbar-title
-          >{{ activeTabItem.item.part.name }} |
-          {{ activeTabItem.item.component.name }}
-        </v-toolbar-title>
-        <v-spacer></v-spacer>
-
-        <v-btn-toggle v-model="environment" dense rounded tile group>
-          <v-btn small value="DEV" rounded> DEV </v-btn>
-          <v-btn small value="STAGE" rounded> STAGE </v-btn>
-          <v-btn small value="PROD" rounded> PROD </v-btn>
-        </v-btn-toggle>
-        <v-btn shaped small color="indigo darken-2" class="ml-6">
-          Save
-          <v-icon right>mdi-content-save-outline</v-icon>
-        </v-btn>
-      </v-toolbar>
-      <v-card-text>
-        <pre>
-            {
-            
-
-
-            }
-            </pre
-        >
-      </v-card-text>
-    </v-card>
+    <app-component-config-editor
+      v-if="activeTabItem.type === 'APP_COMPONENT_CONFIG'"
+      :part="activeTabItem.item.part"
+      :component="activeTabItem.item.component"
+    ></app-component-config-editor>
+    <variable-editor
+      v-if="activeTabItem.type === 'VARIABLE'"
+      :variable="activeTabItem.item.variable"
+    ></variable-editor>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
+import AppComponentConfigEditor from "../Editors/AppComponentConfigEditor.vue";
+import VariableEditor from "../Editors/VariableEditor.vue";
 
 export default {
   created() {},
+  components: { AppComponentConfigEditor, VariableEditor },
+
   data() {
-    return {
-      environment: "A",
-    };
+    return {};
   },
 
   computed: {
