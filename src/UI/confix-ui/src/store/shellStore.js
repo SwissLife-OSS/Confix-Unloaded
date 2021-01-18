@@ -3,7 +3,8 @@ const shellStore = {
     namespaced: true,
     state: () => ({
         tabs: [],
-        selectedTabId: null
+        selectedTabId: null,
+        statusMessage: null
     }),
     mutations: {
         TAB_OPENED(state, item) {
@@ -31,6 +32,13 @@ const shellStore = {
                     state.selectedTabId = state.tabs[index].id;
                 }
             }
+        },
+        MESSAGE_ADDED(state, message) {
+            state.statusMessage = message;
+
+            window.setTimeout(() => {
+                state.statusMessage = null;
+            }, 5000)
         }
     },
     actions: {
@@ -47,6 +55,9 @@ const shellStore = {
         },
         closeActiveTab: function ({ commit, state }) {
             commit('TAB_CLOSED', state.selectedTabId)
+        },
+        addMessage: function ({ commit }, message) {
+            commit("MESSAGE_ADDED", message)
         }
     },
     getters: {

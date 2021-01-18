@@ -1,14 +1,14 @@
-query allApps
-{
-  applications{
+query allApps {
+  applications {
     id
     name
-    parts{
-      id
-      name
-      components{
-        componentId
-      }
-    }
+      parts {
+        id
+        name
+        components {
+          id
+          name
+        }
+      } 
   }
 }

@@ -27,23 +27,28 @@ const applicationStore = {
         }
     },
     actions: {
-        async loadAppsRemote({ commit }) {
-            const result = await excuteGraphQL(() => getAllApplications());
+        async loadApplications({ commit, dispatch }) {
+            const result = await excuteGraphQL(() => getAllApplications(), dispatch);
             if (result.success) {
                 commit('APPS_LOADED', result.data.applications);
             }
         },
-        async addApplication({ commit }, input) {
-            const result = await excuteGraphQL(() => addApplication(input));
+        async addApplication({ commit, dispatch }, input) {
+            const result = await excuteGraphQL(() => addApplication(input), dispatch);
 
             if (result.success) {
                 console.log(result);
 
                 commit("APP_ADDED", result.data.Application_Add.application);
+
+                dispatch("shell/addMessage", {
+                    type: "SUCCES",
+                    text: "Application added"
+                }, { root: true });
             }
         },
-        async updatePart({ commit }, input) {
-            const result = await excuteGraphQL(() => updatePart(input));
+        async updatePart({ commit, dispatch }, input) {
+            const result = await excuteGraphQL(() => updatePart(input), dispatch);
 
             if (result.success) {
                 console.log(result);
@@ -51,48 +56,6 @@ const applicationStore = {
                 commit("APP_UPDATED", result.data.ApplicationPart_Update.application);
             }
         },
-        async loadApps({ commit }) {
-
-            const apps = [{
-                id: "1",
-                name: 'Account',
-                parts: [
-                    {
-                        name: 'API', components: [
-                            { name: "Security" },
-                            { name: "Tracing" },
-                            { name: "Audit" },
-                        ]
-                    },
-                    { name: 'Worker', components: [{ name: "Tracing" },] },
-                ]
-            },
-            {
-                id: "2",
-                name: 'Magnet',
-                parts: [
-                    { name: 'UI', components: [{ name: "Security" },] },
-                    { name: 'Service', components: [{ name: "Tracing" },] },
-                    { name: 'Hooks', components: [{ name: "SendGrid" }, { name: "Twilio" }] },
-                ]
-            },
-            {
-                id: "3",
-                name: 'Snapshooter',
-                parts: [
-                    { name: 'Tests', components: [{ name: "Security" },] },
-                ]
-            },
-            {
-                id: "4",
-                name: 'Squadron',
-                parts: [
-                    { name: 'Api', components: [{ name: "Security" }, { name: "Docker" }] },
-                ]
-            }]
-
-            commit('APPS_LOADED', apps);
-        }
     },
     getters: {
 

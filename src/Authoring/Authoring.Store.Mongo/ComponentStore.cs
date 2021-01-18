@@ -34,6 +34,15 @@ namespace Confix.Authoring.Store.Mongo
                 .FirstOrDefaultAsync(cancellationToken);
         }
 
+        public async Task<IEnumerable<Component>> GetManyAsync(
+            IEnumerable<Guid> ids,
+            CancellationToken cancellationToken)
+        {
+            return await _dbContext.Components.AsQueryable()
+                .Where(x => ids.Contains(x.Id))
+                .ToListAsync(cancellationToken);
+        }
+
         public async Task<Component> AddAsync(
             Component component,
             CancellationToken cancellationToken)

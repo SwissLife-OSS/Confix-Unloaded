@@ -86,7 +86,7 @@ export default {
 .tab-close {
   position: absolute;
   right: 2px;
-  top: -1px;
+  top: 3px;
   transition: 0.4s;
 }
 </style>

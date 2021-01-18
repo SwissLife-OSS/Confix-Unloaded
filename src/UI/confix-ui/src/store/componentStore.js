@@ -15,14 +15,14 @@ const componentStore = {
         }
     },
     actions: {
-        async loadComponents({ commit }) {
-            const result = await excuteGraphQL(() => getAllComponents());
+        async loadComponents({ commit, dispatch }) {
+            const result = await excuteGraphQL(() => getAllComponents(), dispatch);
             if (result.success) {
                 commit('COMPONENTS_LOADED', result.data.components);
             }
         },
-        async addComponent({ commit }, input) {
-            const result = await excuteGraphQL(() => addComponent(input));
+        async addComponent({ commit, dispatch }, input) {
+            const result = await excuteGraphQL(() => addComponent(input), dispatch);
             if (result.success) {
                 commit('COMPONENT_ADDED', result.data.Component_Add.component);
             }

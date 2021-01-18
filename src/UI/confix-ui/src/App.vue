@@ -3,6 +3,14 @@
     <v-system-bar window dark color="grey darken-2" app>
       <span class="white--text">ConfiX | {{ $route.name }}</span>
       <v-spacer></v-spacer>
+
+      <div class="mr-4 status-message" v-if="statusMessage">
+        <v-icon
+          :color="statusMessage.color"
+          v-text="statusMessage.icon"
+        ></v-icon>
+        <span class="white--text">{{ statusMessage.text }}</span>
+      </div>
       <v-icon color="green">mdi-signal-cellular-outline</v-icon>
       <v-icon>mdi-bell-outline</v-icon>
 
@@ -74,6 +82,18 @@ export default {
         return x;
       });
     },
+    statusMessage: function () {
+      if (this.$store.state.shell.statusMessage) {
+        const isError = this.$store.state.shell.statusMessage.type === "ERROR";
+
+        return Object.assign(this.$store.state.shell.statusMessage, {
+          color: isError ? "red" : "green",
+          icon: isError ? "mdi-nuke" : "mdi-check-circle",
+        });
+      } else {
+        return null;
+      }
+    },
   },
   methods: {
     onNavigate: function (nav) {
@@ -102,5 +122,9 @@ export default {
 .nav-item:hover {
   background-color: rgba(0, 0, 0, 0.79);
   border-radius: 40px;
+}
+
+.status-message {
+  overflow: hidden;
 }
 </style>

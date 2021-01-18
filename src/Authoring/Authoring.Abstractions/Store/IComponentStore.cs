@@ -10,6 +10,7 @@ namespace Confix.Authoring.Store
         Task<Component> AddAsync(Component component, CancellationToken cancellationToken);
         Task<IEnumerable<Component>> GetAllAsync(CancellationToken cancellationToken);
         Task<Component> GetByIdAsync(Guid id, CancellationToken cancellationToken);
+        Task<IEnumerable<Component>> GetManyAsync(IEnumerable<Guid> ids, CancellationToken cancellationToken);
         Task<Component> UpdateAsync(Component component, CancellationToken cancellationToken);
     }
 }

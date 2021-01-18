@@ -65,6 +65,7 @@ export default {
         name: this.newApp.name,
         parts: this.newApp.parts,
       });
+      this.$emit("close", false);
     },
   },
 };

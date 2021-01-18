@@ -84,6 +84,8 @@
             </v-list-item>
           </v-list-group>
         </v-list>
+
+        Components
       </v-card-text>
     </v-card>
 
@@ -91,23 +93,17 @@
       :show="showAddApplicationDialog"
       @close="showAddApplicationDialog = false"
     ></edit-application-dialog>
-
-    <add-component-dialog
-      :show="showAddComponentDialog"
-      @close="showAddComponentDialog = false"
-    ></add-component-dialog>
   </div>
 </template>
 
 <script>
 import { mapState, mapActions } from "vuex";
-import AddComponentDialog from "./AddComponentDialog.vue";
 import EditApplicationDialog from "./EditApplicationDialog.vue";
 
 export default {
-  components: { EditApplicationDialog, AddComponentDialog },
+  components: { EditApplicationDialog },
   created() {
-    this.loadAppsRemote();
+    this.loadApplications();
   },
   data() {
     return {
@@ -127,7 +123,7 @@ export default {
     ...mapState("shell", ["selectedTabId"]),
   },
   methods: {
-    ...mapActions("apps", ["loadApps", "loadAppsRemote"]),
+    ...mapActions("apps", ["loadApps", "loadApplications"]),
     ...mapActions("shell", ["openTab"]),
     onClickEditPart: function (part) {
       this.openTab({
@@ -139,7 +135,6 @@ export default {
           part: part,
         },
       });
-      console.log(part);
     },
     onClickAddApplication: function () {
       this.showAddApplicationDialog = true;

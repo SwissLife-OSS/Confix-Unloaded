@@ -3,6 +3,14 @@ mutation addApp($input: AddApplicationInput!) {
     application {
       id
       name
+            parts {
+        id
+        name
+        components {
+          id
+          name
+        }
+      } 
     }
   }
 }

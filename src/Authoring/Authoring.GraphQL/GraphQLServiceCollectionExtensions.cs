@@ -1,3 +1,4 @@
+using Confix.Authoring.GraphQL.DataLoaders;
 using Confix.Authoring.GraphQL.Serialization;
 using HotChocolate.Execution.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,16 +22,59 @@ namespace Confix.Authoring.GraphQL
             this IRequestExecutorBuilder builder)
         {
             builder
+                .AddQueries()
+                .AddMutations()
+                .AddTypes()
+                .RenameRequests()
+                .AddDataLoaders()
+                .AddAuthorization();
+
+            return builder;
+        }
+
+        private static IRequestExecutorBuilder AddQueries(this IRequestExecutorBuilder builder)
+        {
+            builder
                 .AddQueryType(d => d.Name("Query"))
                 .AddType<ApplicationQueries>()
-                .AddType<ComponentQueries>()
+                .AddType<ComponentQueries>();
+
+            return builder;
+        }
+
+        private static IRequestExecutorBuilder AddMutations(this IRequestExecutorBuilder builder)
+        {
+            builder
                 .AddMutationType(d => d.Name("Mutation"))
                 .AddType<ApplicationMutations>()
-                .AddType<ComponentMutations>()
-                .RenameRequestToInput<AddApplicationRequest>()
-                .RenameRequestToInput<UpdateApplicationPartRequest>()
-                .RenameRequestToInput<AddComponentRequest>()
-                .AddAuthorization();
+                .AddType<ComponentMutations>();
+
+            return builder;
+        }
+
+        private static IRequestExecutorBuilder AddTypes(this IRequestExecutorBuilder builder)
+        {
+            builder
+                .AddType<ApplicationPartComponentType>()
+                .AddType<ApplicationPartType>();
+
+            return builder;
+        }
+
+        private static IRequestExecutorBuilder AddDataLoaders(this IRequestExecutorBuilder builder)
+        {
+            builder
+                .AddDataLoader<ComponentByIdDataLoader>();
+
+            return builder;
+        }
+
+        private static IRequestExecutorBuilder RenameRequests(this IRequestExecutorBuilder builder)
+        {
+            builder
+              .RenameRequestToInput<AddApplicationRequest>()
+              .RenameRequestToInput<UpdateApplicationPartRequest>()
+              .RenameRequestToInput<AddComponentRequest>();
 
             return builder;
         }
