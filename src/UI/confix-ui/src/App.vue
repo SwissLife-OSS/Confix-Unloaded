@@ -53,6 +53,8 @@ export default {
   components: { TabList, EditorShell },
   created() {
     this.$store.dispatch("comp/loadComponents");
+    this.$store.dispatch("apps/loadApplications");
+    this.$store.dispatch("vars/loadVariables");
   },
 
   data: () => ({
@@ -70,6 +72,7 @@ export default {
       { text: "Variables", icon: "mdi-variable", route: "Variables" },
       { text: "Environments", icon: "mdi-server", route: "Environments" },
       { text: "Vault", icon: "mdi-shield-star-outline", route: "Vault" },
+      { text: "Explorer", icon: "mdi-file-tree-outline", route: "Explorer" },
       { text: "Settings", icon: "mdi-cog-outline", route: "Settings" },
     ],
   }),

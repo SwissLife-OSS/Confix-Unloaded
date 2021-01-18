@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import ApplicationView from "./components/Applications/ApplicationView"
 import VariableSearch from "./components/Variables/VariableSearch"
 import ComponentSearch from "./components/Components/ComponentSearch"
+import ExplorerView from "./components/Shell/ExplorerView"
 
 Vue.use(VueRouter)
 
@@ -21,6 +22,11 @@ const routes = [
     path: '/comp',
     name: 'Components',
     component: ComponentSearch
+  },
+  {
+    path: '/explorer',
+    name: 'Explorer',
+    component: ExplorerView
   }
 ]
 
