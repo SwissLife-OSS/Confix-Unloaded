@@ -44,6 +44,9 @@ const shellStore = {
         },
         closeTab: function ({ commit }, id) {
             commit('TAB_CLOSED', id)
+        },
+        closeActiveTab: function ({ commit, state }) {
+            commit('TAB_CLOSED', state.selectedTabId)
         }
     },
     getters: {

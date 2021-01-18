@@ -20,6 +20,10 @@
       :application="activeTabItem.item.application"
     >
     </application-part-editor>
+
+    <new-component-editor
+      v-if="activeTabItem.type === 'NEW_COMPONENT'"
+    ></new-component-editor>
   </div>
 </template>
 
@@ -28,6 +32,7 @@ import { mapState } from "vuex";
 import AppComponentConfigEditor from "../Editors/AppComponentConfigEditor.vue";
 import ApplicationPartEditor from "../Editors/ApplicationPartEditor.vue";
 import ComponentEditor from "../Editors/ComponentEditor.vue";
+import NewComponentEditor from "../Editors/NewComponentEditor.vue";
 import VariableEditor from "../Editors/VariableEditor.vue";
 
 export default {
@@ -37,6 +42,7 @@ export default {
     VariableEditor,
     ComponentEditor,
     ApplicationPartEditor,
+    NewComponentEditor,
   },
 
   data() {

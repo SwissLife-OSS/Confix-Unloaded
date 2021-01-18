@@ -22,7 +22,6 @@ namespace Confix.Authoring
     {
         public string? Name { get; init; }
 
-        public IEnumerable<string>? Components { get; init; }
+        public IEnumerable<Guid>? Components { get; init; }
     }
-
 }

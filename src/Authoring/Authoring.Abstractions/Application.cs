@@ -25,7 +25,7 @@ namespace Confix.Authoring.Store
 
     public class ApplicationPartComponent
     {
-        public string ComponentId { get; set; }
+        public Guid ComponentId { get; set; }
     }
 
     public class Variable

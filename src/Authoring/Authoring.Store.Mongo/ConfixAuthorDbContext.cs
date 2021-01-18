@@ -20,15 +20,14 @@ namespace Confix.Authoring.Store.Mongo
                 .ConfigureConnection(con => con.ReadConcern = ReadConcern.Majority)
                 .ConfigureConnection(con => con.WriteConcern = WriteConcern.WMajority)
                 .ConfigureConnection(con => con.ReadPreference = ReadPreference.Primary)
-                .ConfigureCollection(new ApplicationCollectionConfiguration());
+                .ConfigureCollection(new ApplicationCollectionConfiguration())
+                .ConfigureCollection(new ComponentCollectionConfiguration());
         }
 
         public IMongoCollection<Application> Applications
-        {
-            get
-            {
-                return CreateCollection<Application>();
-            }
-        }
+            => CreateCollection<Application>();
+
+        public IMongoCollection<Component> Components
+            => CreateCollection<Component>();
     }
 }

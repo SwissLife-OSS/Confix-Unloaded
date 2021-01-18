@@ -4,6 +4,8 @@
       clearable
       placeholder="Search"
       prepend-icon="mdi-magnify"
+      append-outer-icon="mdi-plus"
+      @click:append-outer="onClickAddComponent"
     ></v-text-field>
 
     <v-list rounded dense class="mt-0">
@@ -49,6 +51,13 @@ export default {
         item: {
           component,
         },
+      });
+    },
+    onClickAddComponent: function () {
+      this.openTab({
+        type: "NEW_COMPONENT",
+        title: "New Component",
+        id: "NC",
       });
     },
   },

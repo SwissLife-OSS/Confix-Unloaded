@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Confix.Authoring.Store;
 
 namespace Confix.Authoring.GraphQL
@@ -18,6 +18,4 @@ namespace Confix.Authoring.GraphQL
         {
         }
     }
-
-
 }
