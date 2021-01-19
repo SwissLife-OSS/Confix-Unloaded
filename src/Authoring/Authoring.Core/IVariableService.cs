@@ -30,6 +30,8 @@ namespace Confix.Authoring
     public record AddVariableRequest(string Name)
     {
         public string? Namespace { get; init; }
+
+        public string? DefaultValue { get; set; }
     }
 
     public record SaveVariableValueRequest(Guid VariableId, string Value)

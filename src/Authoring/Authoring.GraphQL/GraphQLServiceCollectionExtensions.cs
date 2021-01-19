@@ -37,6 +37,7 @@ namespace Confix.Authoring.GraphQL
             builder
                 .AddQueryType(d => d.Name("Query"))
                 .AddType<ApplicationQueries>()
+                .AddType<VariableQueries>()
                 .AddType<ComponentQueries>();
 
             return builder;
@@ -47,6 +48,7 @@ namespace Confix.Authoring.GraphQL
             builder
                 .AddMutationType(d => d.Name("Mutation"))
                 .AddType<ApplicationMutations>()
+                .AddType<VariableMutations>()
                 .AddType<ComponentMutations>();
 
             return builder;
@@ -75,6 +77,7 @@ namespace Confix.Authoring.GraphQL
               .RenameRequestToInput<AddApplicationRequest>()
               .RenameRequestToInput<UpdateApplicationPartRequest>()
               .RenameRequestToInput<UpdateComponentSchemaRequest>()
+              .RenameRequestToInput<AddVariableRequest>()
               .RenameRequestToInput<AddComponentRequest>();
 
             return builder;

@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Confix.Authoring.Store;
@@ -35,6 +33,13 @@ namespace Confix.Authoring
 
             await _variableStore.AddAsync(variable, cancellationToken);
 
+            if (request.DefaultValue != null)
+            {
+                await SaveVariableValueAsync(
+                    new SaveVariableValueRequest(variable.Id, request.DefaultValue),
+                    cancellationToken);
+            }
+
             return variable;
         }
 
@@ -51,7 +56,7 @@ namespace Confix.Authoring
             return await _variableStore.GetByIdAsync(id, cancellationToken);
         }
 
-        public async Task SaveVariableValue(
+        public async Task SaveVariableValueAsync(
             SaveVariableValueRequest request,
             CancellationToken cancellationToken)
         {
@@ -85,6 +90,4 @@ namespace Confix.Authoring
             }
         }
     }
-
-
 }
