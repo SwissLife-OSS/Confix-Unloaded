@@ -58,6 +58,7 @@ namespace Confix.Authoring.GraphQL
         {
             builder
                 .AddType<ApplicationPartComponentType>()
+                .AddType<VariableType>()
                 .AddType<ApplicationPartType>();
 
             return builder;
@@ -78,6 +79,7 @@ namespace Confix.Authoring.GraphQL
               .RenameRequestToInput<UpdateApplicationPartRequest>()
               .RenameRequestToInput<UpdateComponentSchemaRequest>()
               .RenameRequestToInput<AddVariableRequest>()
+              .RenameRequestToInput<SaveVariableValueRequest>()
               .RenameRequestToInput<AddComponentRequest>();
 
             return builder;

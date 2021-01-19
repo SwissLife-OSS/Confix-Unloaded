@@ -6,7 +6,7 @@ using HotChocolate.Types;
 
 namespace Confix.Authoring.GraphQL
 {
-    [ExtendObjectType(Name = "Mutations")]
+    [ExtendObjectType(Name = "Mutation")]
     public class VariableMutations
     {
         private readonly IVariableService _variableService;
@@ -26,6 +26,18 @@ namespace Confix.Authoring.GraphQL
                 cancellationToken);
 
             return new UpdateVariablePayload(variable); 
+        }
+
+        [GraphQLName("Variable_SaveValue")]
+        public async Task<UpdateVariablePayload> SaveValueAsync(
+            SaveVariableValueRequest input,
+            CancellationToken cancellationToken)
+        {
+            Variable variable = await _variableService.SaveVariableValueAsync(
+                input,
+                cancellationToken);
+
+            return new UpdateVariablePayload(variable);
         }
     }
 

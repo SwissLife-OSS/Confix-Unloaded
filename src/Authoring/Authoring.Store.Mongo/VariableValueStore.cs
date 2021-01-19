@@ -35,6 +35,20 @@ namespace Confix.Authoring.Store.Mongo
                 .ToListAsync(cancellationToken);
         }
 
+        public async Task<IEnumerable<VariableValue>> GetByFilterAsync(
+            VariableValueFilter filter,
+            CancellationToken cancellationToken)
+        {
+            FilterDefinition<VariableValue> dbFilter = BuildValueFilter(filter);
+
+            IAsyncCursor<VariableValue> cursor = await _dbContext.VariableValues.FindAsync(
+                dbFilter,
+                options: null,
+                cancellationToken);
+
+            return await cursor.ToListAsync(cancellationToken);
+        }
+
         public async Task<VariableValue> SaveAsync(
             VariableValue value,
             CancellationToken cancellationToken)
@@ -46,6 +60,29 @@ namespace Confix.Authoring.Store.Mongo
                 cancellationToken);
 
             return value;
+        }
+
+        private static FilterDefinition<VariableValue> BuildValueFilter(VariableValueFilter filter)
+        {
+            FilterDefinition<VariableValue> dbFilter = Builders<VariableValue>
+                .Filter.Eq(x => x.VariableId, filter.Id);
+
+            if (filter.EnvironmentId.HasValue)
+            {
+                dbFilter &= Builders<VariableValue>.Filter.Eq(x => x.EnvionmentId, filter.EnvironmentId.Value);
+            }
+
+            if (filter.ApplicationId.HasValue)
+            {
+                dbFilter &= Builders<VariableValue>.Filter.Eq(x => x.PartId, filter.ApplicationId.Value);
+            }
+
+            if (filter.PartId.HasValue)
+            {
+                dbFilter &= Builders<VariableValue>.Filter.Eq(x => x.PartId, filter.PartId.Value);
+            }
+
+            return dbFilter;
         }
     }
 }

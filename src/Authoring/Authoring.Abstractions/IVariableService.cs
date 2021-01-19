@@ -12,6 +12,9 @@ namespace Confix.Authoring
         Task<IEnumerable<Variable>> GetAllAsync(CancellationToken cancellationToken);
 
         Task<Variable> GetByIdAsync(Guid id, CancellationToken cancellationToken);
+        Task<IEnumerable<VariableValue>> GetValuesAsync(GetVariableValuesRequest request, CancellationToken cancellationToken);
+        Task<IEnumerable<VariableValue>> GetValuesAsync(Variable variable, GetVariableValuesRequest request, CancellationToken cancellationToken);
+        Task<Variable> SaveVariableValueAsync(SaveVariableValueRequest request, CancellationToken cancellationToken);
     }
 
     public interface IVariableCryptoProvider
@@ -20,14 +23,17 @@ namespace Confix.Authoring
             string value,
             CancellationToken cancellationToken);
 
-        Task<string> DescryptAsync(string encryptedValue, CancellationToken cancellationToken);
+        Task<string> DecryptAsync(
+            string encryptedValue,
+            VariableEncryptionInfo encryptionInfo,
+            CancellationToken cancellationToken);
     }
 
     public record ValueEncryptionResult(
         VariableEncryptionInfo EncryptionInfo,
         string EncryptedValue);
 
-    public record AddVariableRequest(string Name)
+    public record AddVariableRequest(string Name, bool IsSecret)
     {
         public string? Namespace { get; init; }
 
@@ -38,10 +44,24 @@ namespace Confix.Authoring
     {
         public Guid? ValueId { get; init; }
 
-        public Guid? AppliationId { get; init; }
+        public Guid? ApplicationId { get; init; }
 
         public Guid? PartId { get; init; }
 
         public Guid? EnvironmentId { get; init; }
+    }
+
+    public record GetVariableValuesRequest(VariableValueFilter Filter)
+    {
+        public bool Decrypt { get; init; }
+    }
+
+    public record VariableValueFilter(Guid Id)
+    {
+        public Guid? EnvironmentId { get; init; }
+
+        public Guid? ApplicationId { get; init; }
+
+        public Guid? PartId { get; init; }
     }
 }

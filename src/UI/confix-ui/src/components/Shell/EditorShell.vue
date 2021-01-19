@@ -24,6 +24,10 @@
     <new-component-editor
       v-if="activeTabItem.type === 'NEW_COMPONENT'"
     ></new-component-editor>
+
+    <new-variable-editor
+      v-if="activeTabItem.type === 'VARIABLE_ADD'"
+    ></new-variable-editor>
   </div>
 </template>
 
@@ -33,6 +37,7 @@ import AppComponentConfigEditor from "../Editors/AppComponentConfigEditor.vue";
 import ApplicationPartEditor from "../Editors/ApplicationPartEditor.vue";
 import ComponentEditor from "../Editors/ComponentEditor.vue";
 import NewComponentEditor from "../Editors/NewComponentEditor.vue";
+import NewVariableEditor from "../Editors/NewVariableEditor.vue";
 import VariableEditor from "../Editors/VariableEditor.vue";
 
 export default {
@@ -43,6 +48,7 @@ export default {
     ComponentEditor,
     ApplicationPartEditor,
     NewComponentEditor,
+    NewVariableEditor,
   },
 
   data() {
