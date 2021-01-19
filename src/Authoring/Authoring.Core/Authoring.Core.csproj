@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>Confix.Authoring.Core</AssemblyName>
+    <RootNamespace>Confix.Authoring</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Authoring.Abstractions\Authoring.Abstractions.csproj" />
+  </ItemGroup>
+
+</Project>

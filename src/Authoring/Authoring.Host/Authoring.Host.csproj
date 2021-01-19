@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <AssemblyName>Confix.Authoring.Host</AssemblyName>
+    <RootNamespace>Confix.Authoring</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Authoring.Core\Authoring.Core.csproj" />
+    <ProjectReference Include="..\Authoring.GraphQL\Authoring.GraphQL.csproj" />
+    <ProjectReference Include="..\Authoring.Store.Mongo\Authoring.Store.Mongo.csproj" />
+  </ItemGroup>
+
+</Project>

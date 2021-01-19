@@ -1,0 +1,16 @@
+mutation addApp($input: AddApplicationInput!) {
+  Application_Add(input: $input) {
+    application {
+      id
+      name
+            parts {
+        id
+        name
+        components {
+          id
+          name
+        }
+      } 
+    }
+  }
+}

@@ -1,0 +1,65 @@
+import { addApplication, getAllApplications, updatePart } from "../services/applicationService";
+import { excuteGraphQL } from "./graphqlClient";
+
+const applicationStore = {
+    namespaced: true,
+    state: () => ({
+        apps: [],
+        environments: [
+            { id: "1", name: "DEV" },
+            { id: "2", name: "STAGE" },
+            { id: "3", name: "PROD" },
+        ],
+
+    }),
+    mutations: {
+        APPS_LOADED(state, apps) {
+            state.apps = apps;
+        },
+        APP_ADDED(state, app) {
+            state.apps.push(app);
+        },
+        APP_UPDATED(state, app) {
+            var index = state.app.findIndex(x => x.id === app.id);
+            if (index > -1) {
+                state.apps[index] = app;
+            }
+        }
+    },
+    actions: {
+        async loadApplications({ commit, dispatch }) {
+            const result = await excuteGraphQL(() => getAllApplications(), dispatch);
+            if (result.success) {
+                commit('APPS_LOADED', result.data.applications);
+            }
+        },
+        async addApplication({ commit, dispatch }, input) {
+            const result = await excuteGraphQL(() => addApplication(input), dispatch);
+
+            if (result.success) {
+                console.log(result);
+
+                commit("APP_ADDED", result.data.Application_Add.application);
+
+                dispatch("shell/addMessage", {
+                    type: "SUCCES",
+                    text: "Application added"
+                }, { root: true });
+            }
+        },
+        async updatePart({ commit, dispatch }, input) {
+            const result = await excuteGraphQL(() => updatePart(input), dispatch);
+
+            if (result.success) {
+                console.log(result);
+
+                commit("APP_UPDATED", result.data.ApplicationPart_Update.application);
+            }
+        },
+    },
+    getters: {
+
+    }
+};
+
+export default applicationStore;

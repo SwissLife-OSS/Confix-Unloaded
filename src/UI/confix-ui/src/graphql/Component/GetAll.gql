@@ -1,0 +1,6 @@
+query allComponents {
+  components {
+    id
+    name
+  }
+}
