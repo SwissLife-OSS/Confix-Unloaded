@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Confix.Authoring.Store;
@@ -37,10 +35,26 @@ namespace Confix.Authoring
             var component = new Component
             {
                 Id = Guid.NewGuid(),
+                State = ComponentState.Active,
                 Name = request.Name,
             };
 
             return await _componentStore.AddAsync(component, cancellationToken);
+        }
+
+        public async Task<Component> UpdateSchemaAsync(
+            UpdateComponentSchemaRequest request,
+            CancellationToken cancellationToken)
+        {
+            Component component = await _componentStore.GetByIdAsync(
+                request.Id,
+                cancellationToken);
+
+            component.Schema = request.Schema;
+
+            await _componentStore.UpdateAsync(component, cancellationToken);
+
+            return component;
         }
     }
 }

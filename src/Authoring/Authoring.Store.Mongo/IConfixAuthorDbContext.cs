@@ -6,5 +6,7 @@ namespace Confix.Authoring.Store.Mongo
     {
         IMongoCollection<Application> Applications { get; }
         IMongoCollection<Component> Components { get; }
+        IMongoCollection<Variable> Variables { get; }
+        IMongoCollection<VariableValue> VariableValues { get; }
     }
 }

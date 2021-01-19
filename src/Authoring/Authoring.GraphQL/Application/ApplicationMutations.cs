@@ -42,8 +42,4 @@ namespace Confix.Authoring.GraphQL
             return new UpdateApplicationPayload(application);
         }
     }
-
-    public record UserError(string Message, string Code);
-
-
 }

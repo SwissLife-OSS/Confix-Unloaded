@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace Confix.Authoring.GraphQL
 {
@@ -11,6 +11,8 @@ namespace Confix.Authoring.GraphQL
 
         public IReadOnlyList<UserError>? Errors { get; }
     }
+
+    public record UserError(string Message, string Code);
 
 
 }

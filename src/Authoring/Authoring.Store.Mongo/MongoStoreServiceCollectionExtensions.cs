@@ -21,10 +21,11 @@ namespace Confix.Authoring.Store.Mongo
             MongoOptions options = configuration.GetSection("Confix:Storage:Database")
                 .Get<MongoOptions>();
 
-
             services.AddSingleton<IConfixAuthorDbContext>(new ConfixAuthorDbContext(options));
             services.AddSingleton<IApplicationStore, ApplicationStore>();
             services.AddSingleton<IComponentStore, ComponentStore>();
+            services.AddSingleton<IVariableStore, VariableStore>();
+            services.AddSingleton<IVariableValueStore, VariableValueStore>();
 
             return services;
         }

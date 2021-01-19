@@ -26,6 +26,18 @@ namespace Confix.Authoring.GraphQL
 
             return new UpdateComponentPayload(component);
         }
+
+        [GraphQLName("Component_UpdateSchema")]
+        public async Task<UpdateComponentPayload> UpdateSchemaAsync(
+            UpdateComponentSchemaRequest input,
+            CancellationToken cancellationToken)
+        {
+            Component component = await _componentService.UpdateSchemaAsync(
+                input,
+                cancellationToken);
+
+            return new UpdateComponentPayload(component);
+        }
     }
 
 }

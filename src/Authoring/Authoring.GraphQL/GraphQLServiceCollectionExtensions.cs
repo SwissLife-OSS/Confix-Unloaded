@@ -74,6 +74,7 @@ namespace Confix.Authoring.GraphQL
             builder
               .RenameRequestToInput<AddApplicationRequest>()
               .RenameRequestToInput<UpdateApplicationPartRequest>()
+              .RenameRequestToInput<UpdateComponentSchemaRequest>()
               .RenameRequestToInput<AddComponentRequest>();
 
             return builder;

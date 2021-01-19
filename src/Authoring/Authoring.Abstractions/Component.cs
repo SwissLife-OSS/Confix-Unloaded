@@ -11,6 +11,16 @@ namespace Confix.Authoring
     {
         public Guid Id { get; set; }
 
+        public ComponentState State { get; set; }
+
         public string Name { get; set; }
+
+        public string? Schema { get; set; }
+    }
+
+    public enum ComponentState
+    {
+        Active,
+        Deprecated
     }
 }

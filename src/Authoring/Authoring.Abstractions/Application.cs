@@ -27,15 +27,4 @@ namespace Confix.Authoring.Store
     {
         public Guid ComponentId { get; set; }
     }
-
-    public class Variable
-    {
-        public Guid Id { get; set; }
-
-        public string Name { get; set; }
-
-        public bool IsSecret { get; set; }
-
-        public IEnumerable<Guid> AssignedApplicationIds { get; set; }
-    }
 }
