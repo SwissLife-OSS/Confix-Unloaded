@@ -117,20 +117,15 @@ namespace Confix.Authoring
         {
             var value = new VariableValue
             {
-                VariableId = request.VariableId,
-                ApplicationId = request.ApplicationId,
-                PartId = request.PartId,
-                EnvironmentId = request.EnvironmentId,
+                Id = request.ValueId ?? Guid.NewGuid(),
+                Key = new VariableKey
+                {
+                    VariableId = request.VariableId,
+                    ApplicationId = request.ApplicationId,
+                    PartId = request.PartId,
+                    EnvironmentId = request.EnvironmentId,
+                }
             };
-
-            if (request.ValueId != null)
-            {
-                value.Id = request.ValueId;
-            }
-            else
-            {
-                value.Id = value.BuildId();
-            }
 
             if (variable.IsSecret)
             {

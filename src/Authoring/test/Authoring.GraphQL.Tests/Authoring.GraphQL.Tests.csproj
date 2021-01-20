@@ -27,4 +27,8 @@
     <PackageReference Include="Snapshooter.Xunit" Version="0.5.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="__snapshots__\__mismatch__\" />
+  </ItemGroup>
+
 </Project>

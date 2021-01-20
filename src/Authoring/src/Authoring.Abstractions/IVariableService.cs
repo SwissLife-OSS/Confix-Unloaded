@@ -43,7 +43,7 @@ namespace Confix.Authoring
 
     public record SaveVariableValueRequest(Guid VariableId, string Value)
     {
-        public string ValueId { get; init; }
+        public Guid? ValueId { get; init; }
 
         public Guid? ApplicationId { get; init; }
 
