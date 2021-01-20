@@ -1,8 +1,26 @@
 ﻿using System;
+using System.Threading.Tasks;
+using HotChocolate;
+using HotChocolate.Execution;
+using Microsoft.Extensions.DependencyInjection;
+using Snapshooter.Xunit;
+using Xunit;
 
-namespace Authoring.GraphQL.Tests
+namespace Confix.Authoring.GraphQL
 {
-    public class Class1
+    public class SchemaTests
     {
+        [Fact]
+        public async Task PrintSchema()
+        {
+            ISchema schema =
+                await new ServiceCollection()
+                    .AddGraphQLServer()
+                    .AddGraphQLTypes()
+                    .BuildSchemaAsync();
+
+            schema.Print().MatchSnapshot();
+        }
+
     }
 }

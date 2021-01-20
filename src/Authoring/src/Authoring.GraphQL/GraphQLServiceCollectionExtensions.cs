@@ -10,15 +10,19 @@ namespace Confix.Authoring.GraphQL
         public static IConfixServerBuilder AddGraphQLServer(
             this IConfixServerBuilder builder)
         {
-            builder.Services.AddGraphQLServer()
-                .AddGraphQL();
+            builder
+                .Services
+                .AddGraphQLServer()
+                .AddGraphQLTypes();
 
-            builder.Services.AddHttpResultSerializer<ForbiddenHttpResultSerializer>();
+            builder
+                .Services
+                .AddHttpResultSerializer<ForbiddenHttpResultSerializer>();
 
             return builder;
         }
 
-        private static IRequestExecutorBuilder AddGraphQL(
+        public static IRequestExecutorBuilder AddGraphQLTypes(
             this IRequestExecutorBuilder builder)
         {
             builder

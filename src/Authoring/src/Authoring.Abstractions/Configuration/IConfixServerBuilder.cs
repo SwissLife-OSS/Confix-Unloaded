@@ -6,6 +6,7 @@ namespace Confix.Authoring
     public interface IConfixServerBuilder
     {
         IConfiguration Configuration { get; }
+
         IServiceCollection Services { get; }
     }
 }
