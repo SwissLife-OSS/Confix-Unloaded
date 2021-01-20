@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using HotChocolate;
 using HotChocolate.Execution;
@@ -21,6 +21,5 @@ namespace Confix.Authoring.GraphQL
 
             schema.Print().MatchSnapshot();
         }
-
     }
 }
