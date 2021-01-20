@@ -6,10 +6,23 @@ query variableById($id: Uuid!) {
     isSecret
     values {
       id
-      applicationId
-      partId
-      environmentId
+      key {
+        applicationId
+        partId
+        environmentId
+      }
       value
+      encryption {
+        algorithm
+      }
+      application {
+        id
+        name
+      }
+      variable {
+        name
+        isSecret
+      }
     }
   }
 }

@@ -12,11 +12,15 @@ namespace Confix.Authoring.Store.Mongo
             CancellationToken cancellationToken);
 
         Task<VariableValue> GetByIdAsync(
-            string id,
+            Guid id,
+            CancellationToken cancellationToken);
+
+        Task<VariableValue?> GetByKeyAsync(
+            VariableKey key,
             CancellationToken cancellationToken);
 
         Task<IEnumerable<VariableValue>> GetManyAsync(
-            IEnumerable<string> ids,
+            IEnumerable<Guid> ids,
             CancellationToken cancellationToken);
 
         Task<VariableValue> SaveAsync(

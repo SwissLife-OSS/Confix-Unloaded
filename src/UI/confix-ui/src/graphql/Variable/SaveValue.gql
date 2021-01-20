@@ -2,10 +2,12 @@ mutation saveVariableValue($input: SaveVariableValueInput!) {
   Variable_SaveValue(input: $input) {
     value {
       id
-      variableId
-      applicationId
-      partId
-      environmentId
+      key {
+        applicationId
+        variableId
+        partId
+        environmentId
+      }
       encryption{
         keyProvider
         algorithm
