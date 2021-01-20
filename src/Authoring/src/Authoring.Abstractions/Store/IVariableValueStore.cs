@@ -26,9 +26,5 @@ namespace Confix.Authoring.Store.Mongo
         Task<VariableValue> SaveAsync(
             VariableValue value,
             CancellationToken cancellationToken);
-
-        Task<VariableValue> UpsertAsync(
-            VariableValue value,
-            CancellationToken cancellationToken);
     }
 }

@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 
-#nullable enable
-
 namespace Confix.Authoring.Store.Mongo
 {
     public class VariableValueStore : IVariableValueStore
@@ -63,19 +61,6 @@ namespace Confix.Authoring.Store.Mongo
         }
 
         public async Task<VariableValue> SaveAsync(
-            VariableValue value,
-            CancellationToken cancellationToken)
-        {
-            await _dbContext.VariableValues.ReplaceOneAsync(
-                x => x.Id == value.Id,
-                value,
-                options: new ReplaceOptions { IsUpsert = true },
-                cancellationToken);
-
-            return value;
-        }
-
-        public async Task<VariableValue> UpsertAsync(
             VariableValue value,
             CancellationToken cancellationToken)
         {

@@ -52,7 +52,7 @@ namespace Authoring.Store.Mongo.Tests
                 new VariableValueStore(_docuStoreDbContext);
 
             // Act
-            await variableValueStore.UpsertAsync(variableValue, default);
+            await variableValueStore.SaveAsync(variableValue, default);
 
             // Assert
             Snapshot.Match(GetVariableValueDump());
@@ -80,7 +80,7 @@ namespace Authoring.Store.Mongo.Tests
                 new VariableValueStore(_docuStoreDbContext);
 
             // Act
-            await variableValueStore.UpsertAsync(variableValue, default);
+            await variableValueStore.SaveAsync(variableValue, default);
 
             // Assert
             Snapshot.Match(GetVariableValueDump());
@@ -118,7 +118,7 @@ namespace Authoring.Store.Mongo.Tests
                 new VariableValueStore(_docuStoreDbContext);
 
             // Act
-            await variableValueStore.UpsertAsync(variableValue, default);
+            await variableValueStore.SaveAsync(variableValue, default);
 
             // Assert
             Snapshot.Match(GetVariableValueDump());
@@ -158,7 +158,7 @@ namespace Authoring.Store.Mongo.Tests
                 new VariableValueStore(_docuStoreDbContext);
 
             // Act
-            await variableValueStore.UpsertAsync(variableValue, default);
+            await variableValueStore.SaveAsync(variableValue, default);
 
             // Assert
             Snapshot.Match(GetVariableValueDump());

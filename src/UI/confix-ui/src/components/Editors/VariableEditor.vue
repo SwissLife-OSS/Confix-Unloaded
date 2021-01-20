@@ -93,9 +93,9 @@ export default {
         const env = values[i];
         const vv = this.variable.values.find(
           (x) =>
-            x.environmentId === env.environmentId &&
-            x.applicationId === this.selectedApplicationId &&
-            x.partId === this.selectedPartId
+            x.key.environmentId === env.environmentId &&
+            x.key.applicationId === this.selectedApplicationId &&
+            x.key.partId === this.selectedPartId
         );
         console.log(env.environmentId, this.selectedPartId, vv);
         if (vv != null) {
@@ -138,6 +138,7 @@ export default {
     onSave: function (value) {
       this.saveValue({
         variableId: this.variable.id,
+        valueId: value.id,
         value: value.value,
         applicationId: this.selectedApplicationId,
         partId: this.selectedPartId,
