@@ -123,13 +123,13 @@ namespace Confix.Authoring
                 EnvironmentId = request.EnvironmentId,
             };
 
-            if (request.ValueId.HasValue)
+            if (request.ValueId != null)
             {
-                value.Id = request.ValueId.Value;
+                value.Id = request.ValueId;
             }
             else
             {
-                value.Id = Guid.NewGuid();
+                value.Id = value.BuildId();
             }
 
             if (variable.IsSecret)

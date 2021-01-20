@@ -138,7 +138,6 @@ export default {
     onSave: function (value) {
       this.saveValue({
         variableId: this.variable.id,
-        valueId: value.id,
         value: value.value,
         applicationId: this.selectedApplicationId,
         partId: this.selectedPartId,

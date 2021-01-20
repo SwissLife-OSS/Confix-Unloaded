@@ -18,7 +18,7 @@ namespace Confix.Authoring.Store.Mongo
         }
 
         public async Task<VariableValue> GetByIdAsync(
-            Guid id,
+            string id,
             CancellationToken cancellationToken)
         {
             return await _dbContext.VariableValues.AsQueryable()
@@ -27,7 +27,7 @@ namespace Confix.Authoring.Store.Mongo
         }
 
         public async Task<IEnumerable<VariableValue>> GetManyAsync(
-            IEnumerable<Guid> ids,
+            IEnumerable<string> ids,
             CancellationToken cancellationToken)
         {
             return await _dbContext.VariableValues.AsQueryable()

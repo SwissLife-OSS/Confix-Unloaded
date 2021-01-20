@@ -1,4 +1,4 @@
-﻿using MongoDB.Driver;
+using MongoDB.Driver;
 using MongoDB.Extensions.Context;
 
 namespace Confix.Authoring.Store.Mongo.Configuration
@@ -20,7 +20,12 @@ namespace Confix.Authoring.Store.Mongo.Configuration
                 .WithCollectionSettings(s => s.ReadPreference = ReadPreference.Nearest)
                 .WithCollectionConfiguration(collection =>
                 {
+                    var variableIdIndex = new CreateIndexModel<VariableValue>(
+                         Builders<VariableValue>.IndexKeys
+                             .Descending(c => c.VariableId),
+                         new CreateIndexOptions { Unique = false });
 
+                    collection.Indexes.CreateOne(variableIdIndex);
                 });
         }
     }

@@ -21,7 +21,7 @@ namespace Confix.Authoring
 
     public class VariableValue
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
 
         public Guid VariableId { get; set; }
 
@@ -35,7 +35,6 @@ namespace Confix.Authoring
 
         public VariableEncryptionInfo? Encryption { get; set; }
     }
-
 
     public class VariableEncryptionInfo
     {
