@@ -32,7 +32,7 @@ namespace Confix.Authoring
 
     public record ValueEncryptionResult(
         VariableEncryptionInfo EncryptionInfo,
-        string EncryptedValue);
+        string CipherValue);
 
     public record AddVariableRequest(string Name, bool IsSecret)
     {

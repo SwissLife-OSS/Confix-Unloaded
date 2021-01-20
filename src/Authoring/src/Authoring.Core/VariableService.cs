@@ -133,7 +133,7 @@ namespace Confix.Authoring
                     request.Value,
                     cancellationToken);
 
-                value.Value = encrypted.EncryptedValue;
+                value.Value = encrypted.CipherValue;
                 value.Encryption = encrypted.EncryptionInfo;
             }
             else
