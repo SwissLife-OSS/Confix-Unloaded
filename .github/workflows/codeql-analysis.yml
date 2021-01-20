@@ -51,7 +51,7 @@ jobs:
       # 📚 https://git.io/JvXDl
 
       - run: |
-          dotnet build .\src\Authoring\
+          dotnet build ./src/Authoring/
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v1
