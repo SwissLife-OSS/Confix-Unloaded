@@ -69,7 +69,7 @@ namespace Confix.Authoring.Store.Mongo
 
             if (filter.EnvironmentId.HasValue)
             {
-                dbFilter &= Builders<VariableValue>.Filter.Eq(x => x.EnvionmentId, filter.EnvironmentId.Value);
+                dbFilter &= Builders<VariableValue>.Filter.Eq(x => x.EnvironmentId, filter.EnvironmentId.Value);
             }
 
             if (filter.ApplicationId.HasValue)

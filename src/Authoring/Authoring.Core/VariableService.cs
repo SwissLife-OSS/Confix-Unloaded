@@ -55,6 +55,13 @@ namespace Confix.Authoring
             return await _variableStore.GetAllAsync(cancellationToken);
         }
 
+        public async Task<IEnumerable<Variable>> GetManyAsync(
+            IEnumerable<Guid> ids,
+            CancellationToken cancellationToken)
+        {
+            return await _variableStore.GetManyAsync(ids, cancellationToken);
+        }
+
         public async Task<Variable> GetByIdAsync(
             Guid id,
             CancellationToken cancellationToken)
@@ -62,7 +69,7 @@ namespace Confix.Authoring
             return await _variableStore.GetByIdAsync(id, cancellationToken);
         }
 
-        public async Task<Variable> SaveVariableValueAsync(
+        public async Task<VariableValue> SaveVariableValueAsync(
             SaveVariableValueRequest request,
             CancellationToken cancellationToken)
         {
@@ -103,7 +110,7 @@ namespace Confix.Authoring
             return values;
         }
 
-        private async Task<Variable> SaveVariableValueAsync(
+        private async Task<VariableValue> SaveVariableValueAsync(
             Variable variable,
             SaveVariableValueRequest request,
             CancellationToken cancellationToken)
@@ -113,7 +120,7 @@ namespace Confix.Authoring
                 VariableId = request.VariableId,
                 ApplicationId = request.ApplicationId,
                 PartId = request.PartId,
-                EnvionmentId = request.EnvironmentId,
+                EnvironmentId = request.EnvironmentId,
             };
 
             if (request.ValueId.HasValue)
@@ -141,7 +148,7 @@ namespace Confix.Authoring
 
             await _variableValueStore.SaveAsync(value, cancellationToken);
 
-            return variable;
+            return value;
         }
     }
 }

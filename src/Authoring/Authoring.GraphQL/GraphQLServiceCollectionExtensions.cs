@@ -59,6 +59,7 @@ namespace Confix.Authoring.GraphQL
             builder
                 .AddType<ApplicationPartComponentType>()
                 .AddType<VariableType>()
+                .AddType<VariableValueType>()
                 .AddType<ApplicationPartType>();
 
             return builder;
@@ -67,6 +68,9 @@ namespace Confix.Authoring.GraphQL
         private static IRequestExecutorBuilder AddDataLoaders(this IRequestExecutorBuilder builder)
         {
             builder
+                .AddDataLoader<ApplicationByIdDataLoader>()
+                .AddDataLoader<ApplicationPartByIdDataLoader>()
+                .AddDataLoader<VariableByIdDataLoader>()
                 .AddDataLoader<ComponentByIdDataLoader>();
 
             return builder;

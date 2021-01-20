@@ -14,10 +14,12 @@ const variableStore = {
         VAR_ADDED: function (state, variable) {
             state.vars.push(variable);
         },
-        VAR_VALUE_SAVED: function (state, variable) {
+        VAR_VALUE_SAVED: function (state, value) {
 
-            var index = state.vars.findIndex(x => x.id === variable.id);
-            state.vars[index] = Object.assign(state.vars[index], variable);
+            var index = state.vars.findIndex(x => x.id === value.variableId);
+
+            console.log(index)
+            //state.vars[index] = Object.assign(state.vars[index], variable);
         }
     },
     actions: {
@@ -41,7 +43,13 @@ const variableStore = {
         async saveValue({ commit, dispatch }, input) {
             const result = await excuteGraphQL(() => saveValue(input), dispatch);
             if (result.success) {
-                commit('VAR_VALUE_SAVED', result.data.Variable_SaveValue.variable);
+
+                console.log(result.data.Variable_SaveValue.value);
+
+                //TODO: Commit mutation in shell
+                commit('VAR_VALUE_SAVED', result.data.Variable_SaveValue.value);
+
+                commit('shell/VAR_VALUE_SAVED', result.data.Variable_SaveValue.value, { root: true })
 
                 dispatch("shell/addMessage", {
                     type: "SUCCES",

@@ -12,9 +12,10 @@ namespace Confix.Authoring
         Task<IEnumerable<Variable>> GetAllAsync(CancellationToken cancellationToken);
 
         Task<Variable> GetByIdAsync(Guid id, CancellationToken cancellationToken);
+        Task<IEnumerable<Variable>> GetManyAsync(IEnumerable<Guid> ids, CancellationToken cancellationToken);
         Task<IEnumerable<VariableValue>> GetValuesAsync(GetVariableValuesRequest request, CancellationToken cancellationToken);
         Task<IEnumerable<VariableValue>> GetValuesAsync(Variable variable, GetVariableValuesRequest request, CancellationToken cancellationToken);
-        Task<Variable> SaveVariableValueAsync(SaveVariableValueRequest request, CancellationToken cancellationToken);
+        Task<VariableValue> SaveVariableValueAsync(SaveVariableValueRequest request, CancellationToken cancellationToken);
     }
 
     public interface IVariableCryptoProvider

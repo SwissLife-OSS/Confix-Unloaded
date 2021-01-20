@@ -29,11 +29,11 @@ namespace Confix.Authoring
 
         public Guid? PartId { get; set; }
 
-        public Guid? EnvionmentId { get; set; }
+        public Guid? EnvironmentId { get; set; }
 
         public string Value { get; set; }
 
-        public VariableEncryptionInfo Encryption { get; set; }
+        public VariableEncryptionInfo? Encryption { get; set; }
     }
 
 
