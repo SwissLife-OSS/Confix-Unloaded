@@ -51,7 +51,6 @@ jobs:
       # 📚 https://git.io/JvXDl
 
       - run: |
-          dotnet restore .\src\Authoring\
           dotnet build .\src\Authoring\
 
       - name: Perform CodeQL Analysis
