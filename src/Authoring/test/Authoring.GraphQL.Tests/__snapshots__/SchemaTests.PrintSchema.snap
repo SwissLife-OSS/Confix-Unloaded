@@ -82,15 +82,19 @@ type VariableEncryptionInfo {
   algorithm: String!
 }
 
+type VariableKey {
+  variableId: Uuid
+  applicationId: Uuid
+  partId: Uuid
+  environmentId: Uuid
+}
+
 type VariableValue {
   variable: Variable
   application: Application
   part: ApplicationPart
   id: Uuid!
-  variableId: Uuid!
-  applicationId: Uuid
-  partId: Uuid
-  environmentId: Uuid
+  key: VariableKey!
   value: String!
   encryption: VariableEncryptionInfo
 }

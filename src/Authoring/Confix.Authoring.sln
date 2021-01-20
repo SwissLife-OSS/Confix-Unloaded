@@ -1,7 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
+<<<<<<< HEAD
 VisualStudioVersion = 16.0.30709.64
+=======
+VisualStudioVersion = 16.0.30907.101
+>>>>>>> master
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F361355D-1E99-4708-BF69-29D9BB6F46B6}"
 EndProject
@@ -19,9 +23,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{86DC8486-2
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authoring.GraphQL.Tests", "test\Authoring.GraphQL.Tests\Authoring.GraphQL.Tests.csproj", "{1D6145A0-DA19-4A00-B7D8-E8FBCAB2FE1A}"
 EndProject
+<<<<<<< HEAD
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoProviders.AzureKeyVault", "CryptoProviders.AzureKeyVault\CryptoProviders.AzureKeyVault.csproj", "{304518D7-2010-4DB9-A70F-740774D507F6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoProviders.AzureKeyVault.Tests", "test\CryptoProviders.AzureKeyVault.Tests\CryptoProviders.AzureKeyVault.Tests.csproj", "{809C38D9-7B4B-4727-9950-6A41C0DC6504}"
+=======
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authoring.Store.Mongo.Tests", "test\Authoring.Store.Mongo.Tests\Authoring.Store.Mongo.Tests.csproj", "{57ABA1C0-E26E-4A63-9E06-6D21E3E168A9}"
+>>>>>>> master
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -105,6 +113,7 @@ Global
 		{1D6145A0-DA19-4A00-B7D8-E8FBCAB2FE1A}.Release|x64.Build.0 = Release|Any CPU
 		{1D6145A0-DA19-4A00-B7D8-E8FBCAB2FE1A}.Release|x86.ActiveCfg = Release|Any CPU
 		{1D6145A0-DA19-4A00-B7D8-E8FBCAB2FE1A}.Release|x86.Build.0 = Release|Any CPU
+<<<<<<< HEAD
 		{304518D7-2010-4DB9-A70F-740774D507F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{304518D7-2010-4DB9-A70F-740774D507F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{304518D7-2010-4DB9-A70F-740774D507F6}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -129,6 +138,20 @@ Global
 		{809C38D9-7B4B-4727-9950-6A41C0DC6504}.Release|x64.Build.0 = Release|Any CPU
 		{809C38D9-7B4B-4727-9950-6A41C0DC6504}.Release|x86.ActiveCfg = Release|Any CPU
 		{809C38D9-7B4B-4727-9950-6A41C0DC6504}.Release|x86.Build.0 = Release|Any CPU
+=======
+		{57ABA1C0-E26E-4A63-9E06-6D21E3E168A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57ABA1C0-E26E-4A63-9E06-6D21E3E168A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57ABA1C0-E26E-4A63-9E06-6D21E3E168A9}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{57ABA1C0-E26E-4A63-9E06-6D21E3E168A9}.Debug|x64.Build.0 = Debug|Any CPU
+		{57ABA1C0-E26E-4A63-9E06-6D21E3E168A9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{57ABA1C0-E26E-4A63-9E06-6D21E3E168A9}.Debug|x86.Build.0 = Debug|Any CPU
+		{57ABA1C0-E26E-4A63-9E06-6D21E3E168A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57ABA1C0-E26E-4A63-9E06-6D21E3E168A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57ABA1C0-E26E-4A63-9E06-6D21E3E168A9}.Release|x64.ActiveCfg = Release|Any CPU
+		{57ABA1C0-E26E-4A63-9E06-6D21E3E168A9}.Release|x64.Build.0 = Release|Any CPU
+		{57ABA1C0-E26E-4A63-9E06-6D21E3E168A9}.Release|x86.ActiveCfg = Release|Any CPU
+		{57ABA1C0-E26E-4A63-9E06-6D21E3E168A9}.Release|x86.Build.0 = Release|Any CPU
+>>>>>>> master
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -140,10 +163,17 @@ Global
 		{DEBA7FA5-32EE-4799-9A01-71B1AA976EF9} = {F361355D-1E99-4708-BF69-29D9BB6F46B6}
 		{4CD81182-D6D6-4560-AFBE-D6AB2B54A5F0} = {F361355D-1E99-4708-BF69-29D9BB6F46B6}
 		{1D6145A0-DA19-4A00-B7D8-E8FBCAB2FE1A} = {86DC8486-2F42-489C-A3C1-C15F12BF3B2A}
+<<<<<<< HEAD
 		{304518D7-2010-4DB9-A70F-740774D507F6} = {F361355D-1E99-4708-BF69-29D9BB6F46B6}
 		{809C38D9-7B4B-4727-9950-6A41C0DC6504} = {86DC8486-2F42-489C-A3C1-C15F12BF3B2A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0192615A-682A-4DFC-9B0E-4FE5E79CC03C}
+=======
+		{57ABA1C0-E26E-4A63-9E06-6D21E3E168A9} = {86DC8486-2F42-489C-A3C1-C15F12BF3B2A}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {70318B76-53F3-46B9-8327-26B31A0D3A75}
+>>>>>>> master
 	EndGlobalSection
 EndGlobal

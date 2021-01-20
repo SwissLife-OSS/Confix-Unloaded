@@ -1,0 +1,11 @@
+﻿{
+  "Id": "f39140e5-b24c-48f3-aacd-9864f76f53a6",
+  "Key": {
+    "VariableId": "98047cea-e467-4d7a-8eb1-73f617bdcf75",
+    "ApplicationId": "53055060-7173-4839-8a16-ef7845a0d1b9",
+    "PartId": "9442bff1-6aa9-4416-8c89-ba58ec2a1aa4",
+    "EnvironmentId": "04e057a5-0140-404c-9c94-92ad7702a63c"
+  },
+  "Value": "This is a insertion test value 3.",
+  "Encryption": null
+}

@@ -3,7 +3,6 @@
     <v-system-bar window dark color="grey darken-2" app>
       <span class="white--text">ConfiX | {{ $route.name }}</span>
       <v-spacer></v-spacer>
-
       <div class="mr-4 status-message" v-if="statusMessage">
         <v-icon
           :color="statusMessage.color"
@@ -13,7 +12,6 @@
       </div>
       <v-icon color="green">mdi-signal-cellular-outline</v-icon>
       <v-icon>mdi-bell-outline</v-icon>
-
       <v-icon>mdi-account</v-icon>
     </v-system-bar>
     <v-navigation-drawer width="62" class="nav" app>
@@ -37,7 +35,7 @@
         <v-col md="8">
           <tab-list></tab-list>
           <br />
-          <editor-shell></editor-shell>
+          <editor-shell-manager></editor-shell-manager>
         </v-col>
       </v-row>
     </v-main>
@@ -45,12 +43,12 @@
 </template>
 
 <script>
-import EditorShell from "./components/Shell/EditorShell";
+import EditorShellManager from "./components/Shell/EditorShellManager";
 import TabList from "./components/Shell/TabList.vue";
 export default {
   name: "App",
 
-  components: { TabList, EditorShell },
+  components: { TabList, EditorShellManager },
   created() {
     this.$store.dispatch("comp/loadComponents");
     this.$store.dispatch("apps/loadApplications");

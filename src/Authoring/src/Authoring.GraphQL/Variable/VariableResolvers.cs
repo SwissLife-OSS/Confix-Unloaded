@@ -20,7 +20,9 @@ namespace Confix.Authoring.GraphQL
             VariableByIdDataLoader variableById,
             CancellationToken cancellationToken)
         {
-            return await variableById.LoadAsync(value.VariableId, cancellationToken);
+            return await variableById.LoadAsync(
+                value.Id, // TODO Question, which id/key shall be used, id or VariableId or Key (Compound)
+                cancellationToken);
         }
 
         public async Task<Application?> GetApplicationAsync(
@@ -28,10 +30,10 @@ namespace Confix.Authoring.GraphQL
             ApplicationByIdDataLoader applicationById,
             CancellationToken cancellationToken)
         {
-            if (value.ApplicationId.HasValue)
+            if (value.Key.ApplicationId.HasValue)
             {
                 return await applicationById.LoadAsync(
-                    value.ApplicationId.Value,
+                    value.Key.ApplicationId.Value,
                     cancellationToken);
 
             }
@@ -44,10 +46,10 @@ namespace Confix.Authoring.GraphQL
             ApplicationPartByIdDataLoader applicationPartById,
             CancellationToken cancellationToken)
         {
-            if (value.ApplicationId.HasValue)
+            if (value.Key.ApplicationId.HasValue)
             {
                 return await applicationPartById.LoadAsync(
-                    value.ApplicationId.Value,
+                    value.Key.ApplicationId.Value,
                     cancellationToken);
             }
 
