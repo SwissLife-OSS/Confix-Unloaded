@@ -1,4 +1,4 @@
-﻿using Azure.Security.KeyVault.Keys.Cryptography;
+using Azure.Security.KeyVault.Keys.Cryptography;
 
 namespace Confix.CryptoProvider.AzureKeyVault
 {

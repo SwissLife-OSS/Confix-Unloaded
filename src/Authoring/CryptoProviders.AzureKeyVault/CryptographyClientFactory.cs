@@ -13,6 +13,8 @@ namespace Confix.CryptoProvider.AzureKeyVault
             _options = options;
         }
 
+        private DefaultAzureCredential Credentials => new DefaultAzureCredential();
+
         private Uri BuildUri(string keyId)
         {
             return new Uri($"{_options.Url.Trim('/')}/keys/{keyId}");
@@ -22,14 +24,14 @@ namespace Confix.CryptoProvider.AzureKeyVault
         {
             return new CryptographyClient(
                 BuildUri(_options.EncryptionKeyId),
-                new DefaultAzureCredential());
+                Credentials);
         }
 
         public CryptographyClient CreateDecryptionClient(string keyId)
         {
             return new CryptographyClient(
                 BuildUri(keyId),
-                new DefaultAzureCredential());
+                Credentials);
         }
     }
 }

@@ -11,7 +11,7 @@ namespace Confix.CryptoProvider.AzureKeyVault
     {
         private readonly ICryptographyClientFactory _clientFactory;
         private readonly AzureKeyVaultOptions _options;
-        private const string KeyProviderName = "AzureKeyVault";
+        private const string KeyProviderName = "AZURE_KEYVAULT";
 
         public KeyVaultVariableCryptoProvider(
             ICryptographyClientFactory clientFactory,
@@ -22,19 +22,18 @@ namespace Confix.CryptoProvider.AzureKeyVault
         }
 
         public async Task<string> DecryptAsync(
-            string encryptedValue,
+            string cipherValue,
             VariableEncryptionInfo encryptionInfo,
             CancellationToken cancellationToken)
         {
-            EncryptionAlgorithm algorithm = Enum
-                .Parse<EncryptionAlgorithm>(encryptionInfo.Algorithm);
+            EncryptionAlgorithm algorithm = new EncryptionAlgorithm(encryptionInfo.Algorithm);
 
             CryptographyClient cryptoClient = _clientFactory
                 .CreateDecryptionClient(encryptionInfo.Key);
 
             DecryptResult result = await cryptoClient.DecryptAsync(
                 algorithm,
-                Encoding.UTF8.GetBytes(encryptedValue),
+                Convert.FromBase64String(cipherValue),
                 cancellationToken);
 
             return Encoding.UTF8.GetString(result.Plaintext);
@@ -47,18 +46,18 @@ namespace Confix.CryptoProvider.AzureKeyVault
             CryptographyClient cryptoClient = _clientFactory.CreateEncryptionClient();
 
             EncryptResult encryptedValue = await cryptoClient.EncryptAsync(
-                _options.Algorithm,
+                new EncryptionAlgorithm(_options.Algorithm),
                 Encoding.UTF8.GetBytes(value),
                 cancellationToken);
 
             return new ValueEncryptionResult(
                 new VariableEncryptionInfo
                 {
-                    Key = encryptedValue.KeyId,
+                    Key = _options.EncryptionKeyId,
                     Algorithm = encryptedValue.Algorithm.ToString(),
                     KeyProvider = KeyProviderName
                 },
-                Encoding.UTF8.GetString(encryptedValue.Ciphertext));
+                Convert.ToBase64String(encryptedValue.Ciphertext));
         }
     }
 }

@@ -9,10 +9,10 @@ namespace Confix.CryptoProvider.AzureKeyVault
 {
     public class AzureKeyVaultOptions
     {
-        public string Url { get; set; }
+        public string Url { get; set; } = default!;
 
-        public string EncryptionKeyId { get; set; }
+        public string EncryptionKeyId { get; set; } = default!;
 
-        public EncryptionAlgorithm Algorithm { get; set; }
+        public string Algorithm { get; set; } = "RSA-OAEP-256";
     }
 }

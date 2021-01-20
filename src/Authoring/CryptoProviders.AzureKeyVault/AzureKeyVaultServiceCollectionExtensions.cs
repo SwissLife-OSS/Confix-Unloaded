@@ -18,7 +18,8 @@ namespace Confix.CryptoProvider.AzureKeyVault
         public static IConfixServerBuilder AddAzureKeyVaultCryptoProvider(
             this IConfixServerBuilder builder)
         {
-            AzureKeyVaultOptions options = builder.Configuration.GetSection("Confix:AzureKeyVault")
+            AzureKeyVaultOptions options = builder.Configuration
+                .GetSection("Confix:AzureKeyVault")
                 .Get<AzureKeyVaultOptions>();
 
             builder.Services.AddSingleton(options);
