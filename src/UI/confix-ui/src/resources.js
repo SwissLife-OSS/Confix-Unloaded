@@ -7,6 +7,9 @@ export const tabsTypeMap = {
     "VARIABLE": {
         color: "#FFCA28" //amber lighten-1
     },
+    "VARIABLE_ADD": {
+        color: "#FFCA28" //amber lighten-1
+    },
     "COMPONENT": {
         color: "#26A69A" // teal lighten-1
     },

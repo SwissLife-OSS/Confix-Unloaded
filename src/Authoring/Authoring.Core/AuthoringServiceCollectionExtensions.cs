@@ -11,6 +11,7 @@ namespace Confix.Authoring
         {
             services.AddSingleton<IApplicationService, ApplicationService>();
             services.AddSingleton<IComponentService, ComponentService>();
+            services.AddSingleton<IVariableService, VariableService>();
             services.AddSingleton<IVariableCryptoProvider, DoNotUseVariableCrypoProvider>();
 
             return services;

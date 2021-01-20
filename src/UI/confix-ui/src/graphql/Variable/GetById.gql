@@ -1,0 +1,15 @@
+query variableById($id: Uuid!) {
+  variable(id: $id) {
+    id
+    name
+    namespace
+    isSecret
+    values {
+      id
+      applicationId
+      partId
+      environmentId
+      value
+    }
+  }
+}

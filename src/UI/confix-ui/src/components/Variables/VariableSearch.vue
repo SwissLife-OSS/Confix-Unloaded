@@ -4,6 +4,8 @@
       clearable
       placeholder="Search"
       prepend-icon="mdi-magnify"
+      append-outer-icon="mdi-plus"
+      @click:append-outer="onClickAddVariable"
     ></v-text-field>
 
     <v-list rounded dense class="mt-0">
@@ -55,6 +57,14 @@ export default {
         item: {
           variable,
         },
+      });
+    },
+    onClickAddVariable: function () {
+      this.openTab({
+        type: "VARIABLE_ADD",
+        title: "New Variable",
+        id: "VAR_NEW",
+        item: null,
       });
     },
   },

@@ -1,0 +1,10 @@
+mutation updateSchema($input: UpdateComponentSchemaInput!) {
+  Component_UpdateSchema(input: $input) {
+    component {
+      id
+      name
+      schema
+      state
+    }
+  }
+}

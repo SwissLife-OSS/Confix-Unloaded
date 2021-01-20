@@ -6,9 +6,9 @@ const applicationStore = {
     state: () => ({
         apps: [],
         environments: [
-            { id: "1", name: "DEV" },
-            { id: "2", name: "STAGE" },
-            { id: "3", name: "PROD" },
+            { id: "a35e912456774ba8976ad63eb9b8a5a1", name: "DEV" },
+            { id: "a35e912456774ba8976ad63eb9b8a5a2", name: "STAGE" },
+            { id: "a35e912456774ba8976ad63eb9b8a5a3", name: "PROD" },
         ],
 
     }),

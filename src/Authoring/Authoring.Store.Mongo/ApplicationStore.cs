@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MongoDB.Driver;
@@ -20,6 +21,15 @@ namespace Confix.Authoring.Store.Mongo
             CancellationToken cancellationToken)
         {
             return await _dbContext.Applications.AsQueryable()
+                .ToListAsync(cancellationToken);
+        }
+
+        public async Task<IEnumerable<Application>> GetManyAsync(
+            IEnumerable<Guid> ids,
+            CancellationToken cancellationToken)
+        {
+            return await _dbContext.Applications.AsQueryable()
+                .Where(x => ids.Contains(x.Id))
                 .ToListAsync(cancellationToken);
         }
 

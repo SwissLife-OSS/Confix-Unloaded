@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,6 +20,13 @@ namespace Confix.Authoring.GraphQL
             CancellationToken cancellationToken)
         {
             return await _variableService.GetAllAsync(cancellationToken);
+        }
+
+        public async Task<Variable> GetVariableAsync(
+            Guid id,
+            CancellationToken cancellationToken)
+        {
+            return await _variableService.GetByIdAsync(id,cancellationToken);
         }
     }
 }
