@@ -17,13 +17,24 @@ namespace Confix.Authoring.Store.Mongo
             _dbContext = dbContext;
         }
 
-        public async Task<VariableValue> GetByIdAsync(
+        public async Task<VariableValue?> GetByIdAsync(
             Guid id,
             CancellationToken cancellationToken)
         {
             return await _dbContext.VariableValues.AsQueryable()
                 .Where(x => x.Id == id)
-                .FirstOrDefaultAsync(cancellationToken);
+                .SingleOrDefaultAsync(cancellationToken);
+        }
+
+        public async Task<VariableValue?> GetByKeyAsync(
+            VariableKey key,
+            CancellationToken cancellationToken)
+        {
+            FilterDefinition<VariableValue> keyFilter = BuildUniqueKeyFilter(key);
+
+            return await _dbContext.VariableValues
+                .Find(keyFilter, options: null)
+                .SingleOrDefaultAsync(cancellationToken);
         }
 
         public async Task<IEnumerable<VariableValue>> GetManyAsync(
@@ -39,7 +50,7 @@ namespace Confix.Authoring.Store.Mongo
             VariableValueFilter filter,
             CancellationToken cancellationToken)
         {
-            FilterDefinition<VariableValue> dbFilter = BuildValueFilter(filter);
+            FilterDefinition<VariableValue> dbFilter = BuildFindKeyFilter(filter);
 
             IAsyncCursor<VariableValue> cursor = await _dbContext.VariableValues.FindAsync(
                 dbFilter,
@@ -54,7 +65,7 @@ namespace Confix.Authoring.Store.Mongo
             CancellationToken cancellationToken)
         {
             await _dbContext.VariableValues.ReplaceOneAsync(
-                x => x.Id == value.Id,
+                BuildUniqueKeyFilter(value.Key),
                 value,
                 options: new ReplaceOptions { IsUpsert = true },
                 cancellationToken);
@@ -62,24 +73,37 @@ namespace Confix.Authoring.Store.Mongo
             return value;
         }
 
-        private static FilterDefinition<VariableValue> BuildValueFilter(VariableValueFilter filter)
+        private static FilterDefinition<VariableValue> BuildUniqueKeyFilter(
+            VariableKey variableKey)
+        {
+            return Builders<VariableValue>.Filter.And(
+                Builders<VariableValue>.Filter.Eq(u => u.Key.VariableId, variableKey.VariableId),
+                Builders<VariableValue>.Filter.Eq(u => u.Key.ApplicationId, variableKey.ApplicationId),
+                Builders<VariableValue>.Filter.Eq(u => u.Key.PartId, variableKey.PartId),
+                Builders<VariableValue>.Filter.Eq(u => u.Key.EnvironmentId, variableKey.EnvironmentId));
+        }
+
+        private static FilterDefinition<VariableValue> BuildFindKeyFilter(VariableValueFilter filter)
         {
             FilterDefinition<VariableValue> dbFilter = Builders<VariableValue>
-                .Filter.Eq(x => x.VariableId, filter.Id);
+                .Filter.Eq(x => x.Key.VariableId, filter.Id);
 
             if (filter.EnvironmentId.HasValue)
             {
-                dbFilter &= Builders<VariableValue>.Filter.Eq(x => x.EnvironmentId, filter.EnvironmentId.Value);
+                dbFilter &= Builders<VariableValue>.Filter
+                    .Eq(x => x.Key.EnvironmentId, filter.EnvironmentId.Value);
             }
 
             if (filter.ApplicationId.HasValue)
             {
-                dbFilter &= Builders<VariableValue>.Filter.Eq(x => x.PartId, filter.ApplicationId.Value);
+                dbFilter &= Builders<VariableValue>.Filter
+                    .Eq(x => x.Key.ApplicationId, filter.ApplicationId.Value);
             }
 
             if (filter.PartId.HasValue)
             {
-                dbFilter &= Builders<VariableValue>.Filter.Eq(x => x.PartId, filter.PartId.Value);
+                dbFilter &= Builders<VariableValue>.Filter
+                    .Eq(x => x.Key.PartId, filter.PartId.Value);
             }
 
             return dbFilter;

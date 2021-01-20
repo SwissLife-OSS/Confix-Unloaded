@@ -1,0 +1,11 @@
+﻿{
+  "Id": "4674d60d-7f3e-4b54-8bfb-b484303f62b0",
+  "Key": {
+    "VariableId": "98047cea-e467-4d7a-8eb1-73f617bdcf75",
+    "ApplicationId": null,
+    "PartId": null,
+    "EnvironmentId": null
+  },
+  "Value": "This is a insertion test value 1.",
+  "Encryption": null
+}

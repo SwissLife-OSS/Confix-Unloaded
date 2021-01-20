@@ -23,19 +23,12 @@ namespace Confix.Authoring
     {
         public Guid Id { get; set; }
 
-        public Guid VariableId { get; set; }
-
-        public Guid? ApplicationId { get; set; }
-
-        public Guid? PartId { get; set; }
-
-        public Guid? EnvironmentId { get; set; }
+        public VariableKey Key{ get; set; }
 
         public string Value { get; set; }
 
         public VariableEncryptionInfo? Encryption { get; set; }
     }
-
 
     public class VariableEncryptionInfo
     {
@@ -44,6 +37,17 @@ namespace Confix.Authoring
         public string Key { get; set; }
 
         public string Algorithm { get; set; }
+    }
+
+    public class VariableKey
+    {
+        public Guid? VariableId { get; set; }
+
+        public Guid? ApplicationId { get; set; }
+
+        public Guid? PartId { get; set; }
+
+        public Guid? EnvironmentId { get; set; }
     }
 
     public enum VariableState
