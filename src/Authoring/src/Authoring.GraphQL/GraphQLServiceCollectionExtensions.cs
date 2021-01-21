@@ -83,7 +83,7 @@ namespace Confix.Authoring.GraphQL
         private static IRequestExecutorBuilder RenameRequests(this IRequestExecutorBuilder builder)
         {
             builder
-              .RenameRequestToInput<AddApplicationRequest>()
+              .RenameRequestToInput<AddApplicationInput>()
               .RenameRequestToInput<UpdateApplicationPartRequest>()
               .RenameRequestToInput<UpdateComponentSchemaRequest>()
               .RenameRequestToInput<AddVariableRequest>()

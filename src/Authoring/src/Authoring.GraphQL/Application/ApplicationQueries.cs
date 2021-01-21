@@ -33,18 +33,22 @@ namespace Confix.Authoring.GraphQL
         {
             descriptor
                 .Field("components")
-                .ResolveWith<ApplicationResolvers>(_ => _.GetComponentsAsync(default!, default!));
+                .ResolveWith<ApplicationResolvers>(
+                    _ => _.GetComponentsAsync(default!, default!));
         }
     }
 
     public class ApplicationPartComponentType : ObjectType<ApplicationPartComponent>
     {
-        protected override void Configure(IObjectTypeDescriptor<ApplicationPartComponent> descriptor)
+        protected override void Configure(
+            IObjectTypeDescriptor<ApplicationPartComponent> descriptor)
         {
             descriptor.Ignore(x => x.ComponentId);
 
-            descriptor.Field("component")
-               .ResolveWith< ApplicationResolvers>(_ => _.GetComponentAsync(default!, default!, default!));
+            descriptor
+                .Field("component")
+                .ResolveWith<ApplicationResolvers>(
+                    _ => _.GetComponentAsync(default!, default!, default!));
         }
     }
 

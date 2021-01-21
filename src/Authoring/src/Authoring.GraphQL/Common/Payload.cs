@@ -13,6 +13,4 @@ namespace Confix.Authoring.GraphQL
     }
 
     public record UserError(string Message, string Code);
-
-
 }

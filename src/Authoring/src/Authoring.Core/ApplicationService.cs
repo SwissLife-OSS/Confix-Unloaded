@@ -30,19 +30,24 @@ namespace Confix.Authoring
         }
 
         public async Task<Application> AddAsync(
-            AddApplicationRequest request,
+            AddApplicationInput input,
             CancellationToken cancellationToken)
         {
             var app = new Application
             {
                 Id = Guid.NewGuid(),
-                Name = request.Name,
-                Parts = request.Parts?.Select(x => new ApplicationPart
-                {
-                    Id = Guid.NewGuid(),
-                    Name = x
-                }) ?? Array.Empty<ApplicationPart>()
+                Name = input.Name
             };
+
+            if (input is { Parts: { Count: > 0 } parts })
+            {
+                app.Parts = parts.Select(
+                    name => new ApplicationPart
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = name
+                    }).ToList();
+            }
 
             return await _applicationStore.AddAsync(app, cancellationToken);
         }
@@ -64,14 +69,18 @@ namespace Confix.Authoring
 
             ApplicationPart? part = application.Parts.FirstOrDefault(x => x.Id == request.PartId);
 
-            if (part != null)
+            if (part is not null)
             {
-                part.Components = request.Components?.Select(x => new ApplicationPartComponent
+                if(part is { Components: { } components })
                 {
-                    ComponentId = x
-                }) ?? Array.Empty< ApplicationPartComponent>();
+                    part.Components = components.Select(
+                        component => new ApplicationPartComponent
+                        {
+                            ComponentId = component.ComponentId
+                        }).ToList();
+                }
 
-                if (request.Name != null)
+                if (request.Name is not null)
                 {
                     part.Name = request.Name;
                 }

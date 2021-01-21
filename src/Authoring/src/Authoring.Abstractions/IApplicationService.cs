@@ -8,17 +8,18 @@ namespace Confix.Authoring
 {
     public interface IApplicationService
     {
-        Task<Application> AddAsync(AddApplicationRequest request, CancellationToken cancellationToken);
+        Task<Application> AddAsync(
+            AddApplicationInput request, 
+            CancellationToken cancellationToken);
         Task<IEnumerable<Application>> GetAllAsync(CancellationToken cancellationToken);
         Task<IEnumerable<Application>> GetManyAsync(IEnumerable<Guid> ids, CancellationToken cancellationToken);
         Task<IEnumerable<ApplicationPart>> GetManyPartsAsync(IEnumerable<Guid> ids, CancellationToken cancellationToken);
         Task<Application> UpdateApplicationPartAsync(UpdateApplicationPartRequest request, CancellationToken cancellationToken);
     }
 
-    public record AddApplicationRequest(string Name)
-    {
-        public IEnumerable<string>? Parts { get; init; }
-    }
+    public record AddApplicationInput(
+        string Name, 
+        IReadOnlyList<string>? Parts = null);
 
     public record UpdateApplicationPartRequest(Guid ApplicationId, Guid PartId)
     {

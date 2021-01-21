@@ -6,7 +6,7 @@ using HotChocolate.Types;
 
 namespace Confix.Authoring.GraphQL
 {
-    [ExtendObjectType(Name = "Mutation")]
+    [ExtendObjectType(RootTypes.Mutation)]
     public class ApplicationMutations
     {
         private readonly IApplicationService _applicationService;
@@ -16,21 +16,24 @@ namespace Confix.Authoring.GraphQL
             _applicationService = applicationService;
         }
 
-        [GraphQLName("Application_Add")]
-        public async Task<UpdateApplicationPayload> AddAsync(
-            AddApplicationRequest input,
+        public async Task<AddApplicationPayload> AddApplicationAsync(
+            AddApplicationInput input,
             CancellationToken cancellationToken)
         {
-            Application application = await _applicationService.AddAsync(
-                input,
-                cancellationToken);
-
-            //TODO: handle error cases (Allready exists etc.)
-
-            return new UpdateApplicationPayload(application);
+            try
+            {
+                Application application =
+                    await _applicationService.AddAsync(
+                        input,
+                        cancellationToken);
+                return new AddApplicationPayload(application);
+            }
+            catch // TODO : duplicate name exception or something like this
+            {
+                return new AddApplicationPayload(new ApplicationNameTakenError(input.Name));
+            }
         }
 
-        [GraphQLName("ApplicationPart_Update")]
         public async Task<UpdateApplicationPayload> UpdatePartAsync(
             UpdateApplicationPartRequest input,
             CancellationToken cancellationToken)
