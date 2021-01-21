@@ -1,0 +1,11 @@
+mutation deleteVariableValue($id: Uuid!) {
+  Variable_DeleteValue(id: $id) {
+    variable{
+      id
+      name
+      isSecret
+      namespace
+    }
+    deletedId
+  }
+}

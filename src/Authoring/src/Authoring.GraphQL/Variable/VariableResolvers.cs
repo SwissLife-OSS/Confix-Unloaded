@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Confix.Authoring.GraphQL.DataLoaders;
@@ -21,7 +21,7 @@ namespace Confix.Authoring.GraphQL
             CancellationToken cancellationToken)
         {
             return await variableById.LoadAsync(
-                value.Id, // TODO Question, which id/key shall be used, id or VariableId or Key (Compound)
+                value.Key.VariableId,
                 cancellationToken);
         }
 
@@ -46,10 +46,10 @@ namespace Confix.Authoring.GraphQL
             ApplicationPartByIdDataLoader applicationPartById,
             CancellationToken cancellationToken)
         {
-            if (value.Key.ApplicationId.HasValue)
+            if (value.Key.PartId.HasValue)
             {
                 return await applicationPartById.LoadAsync(
-                    value.Key.ApplicationId.Value,
+                    value.Key.PartId.Value,
                     cancellationToken);
             }
 

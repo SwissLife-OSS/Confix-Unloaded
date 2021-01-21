@@ -8,7 +8,7 @@ namespace Confix.Authoring
     public interface IVariableService
     {
         Task<Variable> AddAsync(AddVariableRequest request, CancellationToken cancellationToken);
-
+        Task<Variable> DeleteValueAsync(Guid id, CancellationToken cancellationToken);
         Task<IEnumerable<Variable>> GetAllAsync(CancellationToken cancellationToken);
 
         Task<Variable> GetByIdAsync(Guid id, CancellationToken cancellationToken);

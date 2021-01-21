@@ -7,6 +7,7 @@ namespace Confix.Authoring.Store.Mongo
 {
     public interface IVariableValueStore
     {
+        Task DeleteAsync(Guid id, CancellationToken cancellationToken);
         Task<IEnumerable<VariableValue>> GetByFilterAsync(
             VariableValueFilter filter,
             CancellationToken cancellationToken);

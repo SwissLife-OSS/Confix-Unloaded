@@ -102,12 +102,25 @@ namespace Confix.Authoring
                 {
                     value.Value = await _cryptoProvider.DecryptAsync(
                         value.Value,
-                        value.Encryption,
+                        value.Encryption!,
                         cancellationToken);
                 }
             }
 
             return values;
+        }
+
+        public async Task<Variable> DeleteValueAsync(Guid id, CancellationToken cancellationToken)
+        {
+            VariableValue value = await _variableValueStore.GetByIdAsync(id, cancellationToken);
+
+            await _variableValueStore.DeleteAsync(id, cancellationToken);
+
+            Variable variable = await _variableStore.GetByIdAsync(
+                value.Key.VariableId,
+                cancellationToken);
+
+            return variable;
         }
 
         private async Task<VariableValue> SaveVariableValueAsync(

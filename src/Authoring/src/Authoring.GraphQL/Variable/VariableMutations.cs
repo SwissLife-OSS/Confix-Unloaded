@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using HotChocolate;
@@ -39,37 +39,14 @@ namespace Confix.Authoring.GraphQL
 
             return new UpdateVariableValuePayload(value);
         }
-    }
 
-    public class UpdateVariablePayload : Payload
-    {
-        public Variable? Variable { get; }
-
-        public UpdateVariablePayload(Variable variable)
+        [GraphQLName("Variable_DeleteValue")]
+        public async Task<DeleteVariableValuePayload> DeleteValueAsync(
+            Guid id, CancellationToken cancellationToken)
         {
-            Variable = variable;
-        }
+            Variable variable = await _variableService.DeleteValueAsync(id, cancellationToken);
 
-        public UpdateVariablePayload(
-            IReadOnlyList<UserError>? errors = null)
-            : base(errors)
-        {
-        }
-    }
-
-    public class UpdateVariableValuePayload : Payload
-    {
-        public VariableValue? Value { get; }
-
-        public UpdateVariableValuePayload(VariableValue value)
-        {
-            Value = value;
-        }
-
-        public UpdateVariableValuePayload(
-            IReadOnlyList<UserError>? errors = null)
-            : base(errors)
-        {
+            return new DeleteVariableValuePayload(id, variable);
         }
     }
 }

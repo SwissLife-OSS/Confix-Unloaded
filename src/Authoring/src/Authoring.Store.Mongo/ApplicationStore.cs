@@ -66,5 +66,18 @@ namespace Confix.Authoring.Store.Mongo
 
             return application;
         }
+
+        public async Task<IEnumerable<ApplicationPart>> GetManyPartsAsync(
+            IEnumerable<Guid> ids,
+            CancellationToken cancellationToken)
+        {
+            List<Application> applications = await _dbContext.Applications.AsQueryable()
+                .Where(x => x.Parts.Any(p => ids.Contains(p.Id)))
+                .ToListAsync(cancellationToken);
+
+            return applications
+                .SelectMany(x => x.Parts)
+                .Where(x => ids.Contains(x.Id));
+        }
     }
 }

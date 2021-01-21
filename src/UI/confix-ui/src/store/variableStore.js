@@ -1,4 +1,4 @@
-import { addVariable, getAllVariables, saveValue } from "../services/variableService";
+import { addVariable, deleteValue, getAllVariables, saveValue } from "../services/variableService";
 import { excuteGraphQL } from "./graphqlClient";
 
 
@@ -56,6 +56,17 @@ const variableStore = {
                     text: "Values saved"
                 }, { root: true });
             }
+        },
+        async deleteValue({ commit, dispatch }, id) {
+            const result = await excuteGraphQL(() => deleteValue(id), dispatch);
+            if (result.success) {
+                commit('shell/VAR_VALUE_DELETED', result.data.Variable_DeleteValue, { root: true });
+            }
+
+            dispatch("shell/addMessage", {
+                type: "SUCCES",
+                text: "Values deleted"
+            }, { root: true });
         }
     },
     getters: {
