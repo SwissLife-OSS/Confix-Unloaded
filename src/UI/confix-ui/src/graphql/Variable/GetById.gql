@@ -19,9 +19,9 @@ query variableById($id: Uuid!) {
         id
         name
       }
-      variable {
+      part{
+        id
         name
-        isSecret
       }
     }
   }

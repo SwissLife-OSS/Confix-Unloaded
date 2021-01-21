@@ -17,13 +17,13 @@ namespace Confix.Authoring.Store.Mongo
             _dbContext = dbContext;
         }
 
-        public async Task<VariableValue?> GetByIdAsync(
+        public async Task<VariableValue> GetByIdAsync(
             Guid id,
             CancellationToken cancellationToken)
         {
             return await _dbContext.VariableValues.AsQueryable()
                 .Where(x => x.Id == id)
-                .SingleOrDefaultAsync(cancellationToken);
+                .SingleAsync(cancellationToken);
         }
 
         public async Task<VariableValue?> GetByKeyAsync(
@@ -71,6 +71,16 @@ namespace Confix.Authoring.Store.Mongo
                 cancellationToken);
 
             return value;
+        }
+
+        public async Task DeleteAsync(
+            Guid id,
+            CancellationToken cancellationToken)
+        {
+            await _dbContext.VariableValues.DeleteOneAsync(
+                x => x.Id == id,
+                options: null,
+                cancellationToken);
         }
 
         private static FilterDefinition<VariableValue> BuildUniqueKeyFilter(

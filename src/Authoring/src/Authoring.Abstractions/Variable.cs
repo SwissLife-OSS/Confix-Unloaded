@@ -41,7 +41,7 @@ namespace Confix.Authoring
 
     public class VariableKey
     {
-        public Guid? VariableId { get; set; }
+        public Guid VariableId { get; set; }
 
         public Guid? ApplicationId { get; set; }
 

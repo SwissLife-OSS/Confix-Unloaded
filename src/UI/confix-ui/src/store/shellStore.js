@@ -52,7 +52,6 @@ const shellStore = {
         VAR_VALUE_SAVED(state, value) {
             const tabIndex = state.tabs.findIndex(x => x.id === value.variableId);
             if (tabIndex > -1) {
-                console.log("tabIndex", tabIndex)
 
                 const variable = state.tabs[tabIndex].data;
 
@@ -66,6 +65,20 @@ const shellStore = {
                 }
                 else {
                     variable.values.push(value)
+                }
+            }
+        },
+        VAR_VALUE_DELETED(state, result) {
+
+            console.log(result)
+            const tabIndex = state.tabs.findIndex(x => x.id === result.variable.id);
+            if (tabIndex > -1) {
+                const variable = state.tabs[tabIndex].data;
+                const valueIndex = variable.values.findIndex(x => x.id === result.deletedId);
+                console.log("valueIndex", valueIndex)
+                if (valueIndex > -1) {
+
+                    variable.values = [...variable.values.splice(valueIndex, 1)]
                 }
             }
         }

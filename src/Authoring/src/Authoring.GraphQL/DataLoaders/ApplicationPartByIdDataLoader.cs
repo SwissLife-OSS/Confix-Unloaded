@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Confix.Authoring.Store;
@@ -20,11 +21,14 @@ namespace Confix.Authoring.GraphQL.DataLoaders
             _applicationService = applicationService;
         }
 
-        protected override Task<IReadOnlyDictionary<Guid, ApplicationPart>> LoadBatchAsync(
+        protected override async Task<IReadOnlyDictionary<Guid, ApplicationPart>> LoadBatchAsync(
             IReadOnlyList<Guid> keys,
             CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            IEnumerable<ApplicationPart>? parts = await _applicationService
+                .GetManyPartsAsync(keys, cancellationToken);
+
+            return parts.ToDictionary(x => x.Id);
         }
     }
 }

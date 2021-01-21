@@ -3,64 +3,77 @@
     :title="variable.name"
     color="amber lighten-4"
     icon="mdi-variable"
+    :views="views"
+    :actions="actions"
+    :ready="false"
+    @ViewChanged="viewChanged"
   >
-    <slot>
-      <template>
-        <v-row>
-          <v-col md="6"
-            ><v-select
-              label="Application"
-              :items="applications"
-              prepend-icon="mdi-package-variant"
-              v-model="application"
-              item-text="name"
-              item-value="id"
-              return-object
-            ></v-select
-          ></v-col>
-          <v-col md="6"
-            ><v-select
-              label="Parts"
-              prepend-icon="mdi-toy-brick-outline"
-              :items="parts"
-              v-model="part"
-              item-text="name"
-              item-value="id"
-              return-object
-            ></v-select
-          ></v-col>
-        </v-row>
+    <template #FORM>
+      <v-row>
+        <v-col md="6"
+          ><v-select
+            label="Application"
+            :items="applications"
+            prepend-icon="mdi-package-variant"
+            v-model="application"
+            item-text="name"
+            item-value="id"
+            return-object
+          ></v-select
+        ></v-col>
+        <v-col md="6"
+          ><v-select
+            label="Parts"
+            prepend-icon="mdi-toy-brick-outline"
+            :items="parts"
+            v-model="part"
+            item-text="name"
+            item-value="id"
+            return-object
+          ></v-select
+        ></v-col>
+      </v-row>
 
-        <v-row v-for="vv in variableValues" :key="getKey(vv)">
-          <v-col md="1">
-            <h4 class="mt-6">{{ vv.environment }}</h4>
-          </v-col>
-          <v-col md="11">
-            <v-text-field
-              v-model="vv.value"
-              clearable
-              clear-icon="mdi-delete-variant"
-              append-icon="mdi-check"
-              @click:append="onSave(vv)"
-            ></v-text-field>
-          </v-col>
-        </v-row>
-      </template>
-    </slot>
+      <v-row v-for="vv in variableValues" :key="getKey(vv)">
+        <v-col md="1">
+          <h4 class="mt-6">{{ vv.environment }}</h4>
+        </v-col>
+        <v-col md="11">
+          <v-text-field
+            v-model="vv.value"
+            clearable
+            clear-icon="mdi-delete-variant"
+            append-icon="mdi-check"
+            @click:append="onSave(vv)"
+          ></v-text-field>
+        </v-col>
+      </v-row>
+    </template>
+
+    <template #LIST>
+      <variable-table :variable="variable"></variable-table>
+    </template>
+    <template #EDIT> Edit </template>
   </editor-base>
 </template>
 
 <script>
 import { mapActions } from "vuex";
 import EditorBase from "../Shell/EditorBase.vue";
+import VariableTable from "./VariableTable.vue";
 export default {
-  components: { EditorBase },
+  components: { EditorBase, VariableTable },
   props: ["variable"],
   data() {
     return {
       application: null,
       part: null,
-      view: "FORM",
+      views: [
+        { id: "FORM", icon: "mdi-format-list-bulleted" },
+        { id: "LIST", icon: "mdi-table" },
+        { id: "EDIT", icon: "mdi-pencil" },
+      ],
+      actionViewid: "FORM",
     };
   },
   computed: {
@@ -70,6 +83,13 @@ export default {
     },
     selectedPartId: function () {
       return this.part ? this.part.id : null;
+    },
+    actions: function () {
+      if (this.actionViewid === "EDIT") {
+        return [{ id: "SAVE", icon: "mdi-check" }];
+      }
+
+      return null;
     },
     variableValues: function () {
       const values = this.$store.state.apps.environments.map((x) => {
@@ -143,8 +163,10 @@ export default {
         environmentId: value.environmentId,
       });
     },
-    setView: function (name) {
-      this.view = name;
+
+    viewChanged: function (id) {
+      this.actionViewid = id;
+      console.log(id);
     },
   },
 };

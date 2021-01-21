@@ -47,6 +47,13 @@ namespace Confix.Authoring
             return await _applicationStore.AddAsync(app, cancellationToken);
         }
 
+        public async Task<IEnumerable<ApplicationPart>> GetManyPartsAsync(
+            IEnumerable<Guid> ids,
+            CancellationToken cancellationToken)
+        {
+            return await _applicationStore.GetManyPartsAsync(ids, cancellationToken);
+        }
+
         public async Task<Application> UpdateApplicationPartAsync(
             UpdateApplicationPartRequest request,
             CancellationToken cancellationToken)
