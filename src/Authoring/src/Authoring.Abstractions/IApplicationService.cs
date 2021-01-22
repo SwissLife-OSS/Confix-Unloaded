@@ -17,6 +17,8 @@ namespace Confix.Authoring
 
     public record AddApplicationRequest(string Name)
     {
+        public string? Namespace { get; set; }
+
         public IEnumerable<string>? Parts { get; init; }
     }
 
