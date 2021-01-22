@@ -30,16 +30,16 @@ namespace Confix.Authoring
         }
 
         public async Task<Application> AddAsync(
-            AddApplicationInput input,
+            AddApplicationRequest request,
             CancellationToken cancellationToken)
         {
             var app = new Application
             {
                 Id = Guid.NewGuid(),
-                Name = input.Name
+                Name = request.Name
             };
 
-            if (input is { Parts: { Count: > 0 } parts })
+            if (request is { Parts: { Count: > 0 } parts })
             {
                 app.Parts = parts.Select(
                     name => new ApplicationPart

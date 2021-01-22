@@ -2,6 +2,7 @@ namespace Confix.Authoring.GraphQL
 {
     public class ApplicationNameTakenError
         : IAddApplicationError
+        , IRenameApplicationError
         , IUserError
     {
         public ApplicationNameTakenError(string applicationName)
