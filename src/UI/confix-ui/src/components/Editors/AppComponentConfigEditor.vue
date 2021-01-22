@@ -1,12 +1,16 @@
 <template>
-  <v-card class="mt-2" elevation="1" rounded="0">
-    <v-toolbar height="36" color="indigo darken-4" dark>
-      <v-toolbar-title
-        >{{ part.name }} |
-        {{ component.name }}
-      </v-toolbar-title>
-      <v-spacer></v-spacer>
+  <editor-base
+    :title="`${part.name} ${component.name}`"
+    :actions="actions"
+    color="indigo lighten-4"
+  >
+    <pre>
+    {
+    
 
+    }
+    </pre>
+    <template #Toolbar>
       <v-btn-toggle v-model="environment" dense rounded tile group>
         <v-btn
           v-for="env in environments"
@@ -18,36 +22,24 @@
           {{ env.name }}
         </v-btn>
       </v-btn-toggle>
-      <v-btn shaped small color="indigo darken-2" class="ml-6">
-        Save
-        <v-icon right>mdi-content-save-outline</v-icon>
-      </v-btn>
-    </v-toolbar>
-    <v-card-text>
-      <pre>
-            {
-            
-
-
-            }
-            </pre
-      >
-    </v-card-text>
-  </v-card>
+    </template>
+  </editor-base>
 </template>
 
 <script>
 import { mapState } from "vuex";
+import EditorBase from "../Shell/EditorBase.vue";
 
 export default {
+  components: { EditorBase },
   props: ["part", "component"],
   created() {},
   data() {
     return {
       environment: "A",
+      actions: [{ id: "SAVE", icon: "mdi-check" }],
     };
   },
-
   computed: {
     ...mapState("apps", ["environments"]),
   },

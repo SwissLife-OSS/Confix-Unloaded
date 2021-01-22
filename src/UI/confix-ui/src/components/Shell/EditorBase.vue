@@ -15,6 +15,7 @@
           @click="setView(view)"
         ></v-icon>
       </div>
+      <slot name="Toolbar"></slot>
       <div v-if="actions">
         <div v-if="views" class="action-divider"></div>
         <v-btn
