@@ -148,7 +148,7 @@ namespace Confix.Authoring
 
                 value.Value = encrypted.CipherValue;
                 value.Encryption = encrypted.EncryptionInfo;
-            }
+            }   
             else
             {
                 value.Value = request.Value;
