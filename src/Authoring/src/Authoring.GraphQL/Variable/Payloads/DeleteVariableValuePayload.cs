@@ -14,10 +14,5 @@ namespace Confix.Authoring.GraphQL
             Variable = variable;
         }
 
-        public DeleteVariableValuePayload(
-            IReadOnlyList<UserError>? errors = null)
-            : base(errors)
-        {
-        }
     }
 }

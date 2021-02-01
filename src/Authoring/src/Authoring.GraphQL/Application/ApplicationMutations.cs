@@ -15,21 +15,21 @@ namespace Confix.Authoring.GraphQL
             _applicationService = applicationService;
         }
 
-        public async Task<AddApplicationPayload> AddApplicationAsync(
-            AddApplicationInput input,
+        public async Task<CreateApplicationPayload> CreateApplicationAsync(
+            CreateApplicationInput input,
             CancellationToken cancellationToken)
         {
             try
             {
                 Application application =
                     await _applicationService.AddAsync(
-                        new Authoring.AddApplicationRequest(input.Name, input.Parts),
+                        new AddApplicationRequest(input.Name, input.Parts),
                         cancellationToken);
-                return new AddApplicationPayload(application);
+                return new CreateApplicationPayload(application);
             }
             catch // TODO : duplicate name exception or something like this
             {
-                return new AddApplicationPayload(new ApplicationNameTakenError(input.Name));
+                return new CreateApplicationPayload(new ApplicationNameTaken(input.Name));
             }
         }
 
@@ -45,21 +45,69 @@ namespace Confix.Authoring.GraphQL
                         cancellationToken);
                 return new RenameApplicationPayload(application);
             }
+            catch(EntityIdInvalidException)
+            {
+                return new RenameApplicationPayload(
+                    new ApplicationIdInvalid(input.Id));
+            }
             catch // TODO : duplicate name exception or something like this
             {
-                return new RenameApplicationPayload(new ApplicationNameTakenError(input.Name));
+                return new RenameApplicationPayload(new ApplicationNameTaken(input.Name));
             }
         }
 
-        public async Task<UpdateApplicationPayload> UpdatePartAsync(
-            UpdateApplicationPartRequest input,
+        public async Task<RenameApplicationPartPayload> RenameApplicationPartAsync(
+            RenameApplicationPartInput input,
             CancellationToken cancellationToken)
         {
-            Application application = await _applicationService.UpdateApplicationPartAsync(
-                input,
-                cancellationToken);
+            try
+            {
+                ApplicationPart applicationPart =
+                    await _applicationService.UpdateApplicationPartAsync(
+                        new UpdateApplicationPartRequest(input.ApplicationId,
+                            input.Id) {Name = input.Name},
+                        cancellationToken);
 
-            return new UpdateApplicationPayload(application);
+                return new RenameApplicationPartPayload(applicationPart);
+            }
+            catch(EntityIdInvalidException ex)
+            {
+                if (ex.EntityName == nameof(Application))
+                {
+                    return new RenameApplicationPartPayload(
+                        new ApplicationIdInvalid(input.ApplicationId));
+                }
+
+                return new RenameApplicationPartPayload(
+                    new ApplicationPartIdInvalid(input.Id));
+            }
+        }
+
+        public async Task<AddComponentsToApplicationPartPayload> AddComponentsToApplicationPartAsync(
+            AddComponentsToApplicationPartInput input,
+            CancellationToken cancellationToken)
+        {
+            try
+            {
+                ApplicationPart applicationPart =
+                    await _applicationService.UpdateApplicationPartAsync(
+                        new UpdateApplicationPartRequest(input.ApplicationId,
+                            input.Id) {Components = input.ComponentIds},
+                        cancellationToken);
+
+                return new AddComponentsToApplicationPartPayload(applicationPart);
+            }
+            catch(EntityIdInvalidException ex)
+            {
+                if (ex.EntityName == nameof(Application))
+                {
+                    return new AddComponentsToApplicationPartPayload(
+                        new ApplicationIdInvalid(input.ApplicationId));
+                }
+
+                return new AddComponentsToApplicationPartPayload(
+                    new ApplicationPartIdInvalid(input.Id));
+            }
         }
     }
 }

@@ -5,7 +5,7 @@ using HotChocolate.Types;
 
 namespace Confix.Authoring.GraphQL
 {
-    [ExtendObjectType(Name = "Mutation")]
+    [ExtendObjectType(RootTypes.Mutation)]
     public class ComponentMutations
     {
         private readonly IComponentService _componentService;
@@ -15,8 +15,7 @@ namespace Confix.Authoring.GraphQL
             _componentService = componentService;
         }
 
-        [GraphQLName("Component_Add")]
-        public async Task<UpdateComponentPayload> AddAsync(
+        public async Task<UpdateComponentPayload> CreateComponentAsync(
             AddComponentRequest input,
             CancellationToken cancellationToken)
         {
@@ -27,8 +26,7 @@ namespace Confix.Authoring.GraphQL
             return new UpdateComponentPayload(component);
         }
 
-        [GraphQLName("Component_UpdateSchema")]
-        public async Task<UpdateComponentPayload> UpdateSchemaAsync(
+        public async Task<UpdateComponentPayload> UpdateComponentSchemaAsync(
             UpdateComponentSchemaRequest input,
             CancellationToken cancellationToken)
         {
@@ -38,6 +36,15 @@ namespace Confix.Authoring.GraphQL
 
             return new UpdateComponentPayload(component);
         }
+    }
+
+    public record CreateComponentInput(
+        string Name,
+        string Schema = "type ComponentRoot { text: String! }");
+
+    public class CreateComponentPayload
+    {
+
     }
 
 }

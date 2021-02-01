@@ -3,19 +3,19 @@ using Confix.Authoring.Store;
 
 namespace Confix.Authoring.GraphQL
 {
-    public class AddApplicationPayload
+    public class CreateApplicationPayload
     {
-        public AddApplicationPayload(Application application)
+        public CreateApplicationPayload(Application application)
         {
             Application = application;
         }
 
-        public AddApplicationPayload(IAddApplicationError error)
+        public CreateApplicationPayload(IAddApplicationError error)
             : this(new[] { error })
         {
         }
 
-        public AddApplicationPayload(IReadOnlyList<IAddApplicationError> errors)
+        public CreateApplicationPayload(IReadOnlyList<IAddApplicationError> errors)
         {
             Errors = errors;
         }

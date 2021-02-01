@@ -4,13 +4,13 @@ namespace Confix.Authoring.GraphQL
 {
     public abstract class Payload
     {
-        protected Payload(IReadOnlyList<UserError>? errors = null)
+        protected Payload(IReadOnlyList<IUserError>? errors = null)
         {
             Errors = errors;
         }
 
-        public IReadOnlyList<UserError>? Errors { get; }
+        public IReadOnlyList<IUserError>? Errors { get; }
     }
 
-    public record UserError(string Message, string Code);
+
 }

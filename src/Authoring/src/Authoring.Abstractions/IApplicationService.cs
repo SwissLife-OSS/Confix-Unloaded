@@ -17,9 +17,12 @@ namespace Confix.Authoring
             CancellationToken cancellationToken);
 
         Task<IEnumerable<Application>> GetAllAsync(CancellationToken cancellationToken);
+
         Task<IEnumerable<Application>> GetManyAsync(IEnumerable<Guid> ids, CancellationToken cancellationToken);
+
         Task<IEnumerable<ApplicationPart>> GetManyPartsAsync(IEnumerable<Guid> ids, CancellationToken cancellationToken);
-        Task<Application> UpdateApplicationPartAsync(UpdateApplicationPartRequest request, CancellationToken cancellationToken);
+
+        Task<ApplicationPart> UpdateApplicationPartAsync(UpdateApplicationPartRequest request, CancellationToken cancellationToken);
     }
 
     public record AddApplicationRequest(

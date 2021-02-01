@@ -1,26 +1,19 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace Confix.Authoring
 {
     public class Component
     {
+        [Key]
         public Guid Id { get; set; }
 
         public ComponentState State { get; set; }
 
-        public string Name { get; set; }
+        [Required]
+        public string? Name { get; set; }
 
+        [Required]
         public string? Schema { get; set; }
-    }
-
-    public enum ComponentState
-    {
-        Active,
-        Deprecated
     }
 }

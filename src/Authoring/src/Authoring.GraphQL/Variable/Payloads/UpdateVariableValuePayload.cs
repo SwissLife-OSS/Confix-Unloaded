@@ -10,11 +10,5 @@ namespace Confix.Authoring.GraphQL
         {
             Value = value;
         }
-
-        public UpdateVariableValuePayload(
-            IReadOnlyList<UserError>? errors = null)
-            : base(errors)
-        {
-        }
     }
 }

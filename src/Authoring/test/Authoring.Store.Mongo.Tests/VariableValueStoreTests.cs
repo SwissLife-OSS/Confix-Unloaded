@@ -67,7 +67,7 @@ namespace Authoring.Store.Mongo.Tests
                 Id = Guid.Parse("4674d60d-7f3e-4b54-8bfb-b484303f62b0"),
                 Key = new VariableKey
                 {
-                    VariableId = null,
+                    VariableId = Guid.Empty,
                     ApplicationId = null,
                     EnvironmentId = null,
                     PartId = null
@@ -311,7 +311,7 @@ namespace Authoring.Store.Mongo.Tests
                 Id = Guid.Parse("DDF1670C-B4FF-4926-AC39-F6A7BDD3D341"),
                 Key = new VariableKey
                 {
-                    VariableId = null,
+                    VariableId = Guid.Empty,
                     ApplicationId = null,
                     EnvironmentId = null,
                     PartId = null

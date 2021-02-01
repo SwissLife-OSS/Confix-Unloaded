@@ -1,24 +1,26 @@
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Confix.Authoring.GraphQL.DataLoaders;
+using HotChocolate;
 using HotChocolate.Types;
+using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring.GraphQL
 {
-    [ExtendObjectType(Name = "Query")]
+    [ExtendObjectType(RootTypes.Query)]
     public class ComponentQueries
     {
-        private readonly IComponentService _componentService;
+        public Task<IEnumerable<Component>> GetComponentsAsync(
+            [Service] IComponentService componentService,
+            CancellationToken cancellationToken) =>
+            componentService.GetAllAsync(cancellationToken);
 
-        public ComponentQueries(IComponentService componentService)
-        {
-            _componentService = componentService;
-        }
-
-        public async Task<IEnumerable<Component>> GetComponentsAsync(
-            CancellationToken cancellationToken)
-        {
-            return await _componentService.GetAllAsync(cancellationToken);
-        }
+        public Task<Component?> GetComponentByIdAsync(
+            [ID(nameof(Component))] Guid id,
+            ComponentByIdDataLoader componentById,
+            CancellationToken cancellationToken) =>
+            componentById.LoadAsync(id, cancellationToken);
     }
 }

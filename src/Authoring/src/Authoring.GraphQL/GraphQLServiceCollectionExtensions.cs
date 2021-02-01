@@ -1,11 +1,13 @@
 using Confix.Authoring.GraphQL.DataLoaders;
 using Confix.Authoring.GraphQL.Serialization;
+using Confix.Authoring.GraphQL.Types;
+using Confix.Authoring.Store;
 using HotChocolate.Execution.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Confix.Authoring.GraphQL
 {
-    public static class GrapQLServiceCollectionExtensions
+    public static class GraphQLServiceCollectionExtensions
     {
         public static IConfixServerBuilder AddGraphQLServer(
             this IConfixServerBuilder builder)
@@ -26,20 +28,43 @@ namespace Confix.Authoring.GraphQL
             this IRequestExecutorBuilder builder)
         {
             builder
+                .EnableRelaySupport()
                 .AddQueries()
                 .AddMutations()
                 .AddTypes()
                 .RenameRequests()
                 .AddDataLoaders()
-                .AddAuthorization();
+                .AddAuthorization()
+                .AddErrorTypes()
+                .RegisterTypes();
 
             return builder;
+        }
+
+        private static IRequestExecutorBuilder AddErrorTypes(
+            this IRequestExecutorBuilder builder)
+        {
+            return builder
+                .AddInterfaceType<IUserError>()
+                .AddObjectType<ApplicationIdInvalid>()
+                .AddObjectType<ApplicationPartIdInvalid>()
+                .AddObjectType<ApplicationNameTaken>();
+        }
+
+        private static IRequestExecutorBuilder RegisterTypes(
+            this IRequestExecutorBuilder builder)
+        {
+             return builder
+                 .AddType<ApplicationType>()
+                 .AddType<ApplicationPartType>()
+                 .AddType<ApplicationPartComponentType>()
+                 .AddType<ComponentType>();
         }
 
         private static IRequestExecutorBuilder AddQueries(this IRequestExecutorBuilder builder)
         {
             builder
-                .AddQueryType(d => d.Name("Query"))
+                .AddQueryType(d => d.Name(RootTypes.Query))
                 .AddType<ApplicationQueries>()
                 .AddType<VariableQueries>()
                 .AddType<ComponentQueries>();
@@ -50,7 +75,7 @@ namespace Confix.Authoring.GraphQL
         private static IRequestExecutorBuilder AddMutations(this IRequestExecutorBuilder builder)
         {
             builder
-                .AddMutationType(d => d.Name("Mutation"))
+                .AddMutationType(d => d.Name(RootTypes.Mutation))
                 .AddType<ApplicationMutations>()
                 .AddType<VariableMutations>()
                 .AddType<ComponentMutations>();
@@ -61,10 +86,9 @@ namespace Confix.Authoring.GraphQL
         private static IRequestExecutorBuilder AddTypes(this IRequestExecutorBuilder builder)
         {
             builder
-                .AddType<ApplicationPartComponentType>()
                 .AddType<VariableType>()
-                .AddType<VariableValueType>()
-                .AddType<ApplicationPartType>();
+                .AddType<VariableValueType>();
+
 
             return builder;
         }
@@ -83,7 +107,7 @@ namespace Confix.Authoring.GraphQL
         private static IRequestExecutorBuilder RenameRequests(this IRequestExecutorBuilder builder)
         {
             builder
-              .RenameRequestToInput<AddApplicationInput>()
+              .RenameRequestToInput<CreateApplicationInput>()
               .RenameRequestToInput<UpdateApplicationPartRequest>()
               .RenameRequestToInput<UpdateComponentSchemaRequest>()
               .RenameRequestToInput<AddVariableRequest>()

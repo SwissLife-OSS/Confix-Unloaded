@@ -9,13 +9,7 @@ namespace Confix.Authoring.GraphQL
         public UpdateComponentPayload(Component component)
         {
             Component = component;
-        }
-
-        public UpdateComponentPayload(
-            IReadOnlyList<UserError>? errors = null)
-            : base(errors)
-        {
-        }
+        }   
     }
 
 }

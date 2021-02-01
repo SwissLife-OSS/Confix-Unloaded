@@ -9,7 +9,7 @@ using HotChocolate.DataLoader;
 
 namespace Confix.Authoring.GraphQL.DataLoaders
 {
-    public class ApplicationPartByIdDataLoader : BatchDataLoader<Guid, ApplicationPart>
+    public class ApplicationPartByIdDataLoader : BatchDataLoader<Guid, ApplicationPart?>
     {
         private readonly IApplicationService _applicationService;
 
@@ -21,14 +21,16 @@ namespace Confix.Authoring.GraphQL.DataLoaders
             _applicationService = applicationService;
         }
 
-        protected override async Task<IReadOnlyDictionary<Guid, ApplicationPart>> LoadBatchAsync(
+        protected override async Task<IReadOnlyDictionary<Guid, ApplicationPart?>> LoadBatchAsync(
             IReadOnlyList<Guid> keys,
             CancellationToken cancellationToken)
         {
-            IEnumerable<ApplicationPart>? parts = await _applicationService
-                .GetManyPartsAsync(keys, cancellationToken);
+            IEnumerable<ApplicationPart>? parts =
+                await _applicationService.GetManyPartsAsync(
+                    keys,
+                    cancellationToken);
 
-            return parts.ToDictionary(x => x.Id);
+            return parts.ToDictionary(x => x.Id)!;
         }
     }
 }

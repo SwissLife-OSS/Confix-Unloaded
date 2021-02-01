@@ -52,6 +52,14 @@ namespace Confix.Authoring
             return await _applicationStore.AddAsync(app, cancellationToken);
         }
 
+        public Task<Application> RenameAsync(
+            RenameApplicationRequest request,
+            CancellationToken cancellationToken)
+        {
+            // TODO : implement
+            throw new NotImplementedException();
+        }
+
         public async Task<IEnumerable<ApplicationPart>> GetManyPartsAsync(
             IEnumerable<Guid> ids,
             CancellationToken cancellationToken)
@@ -59,36 +67,44 @@ namespace Confix.Authoring
             return await _applicationStore.GetManyPartsAsync(ids, cancellationToken);
         }
 
-        public async Task<Application> UpdateApplicationPartAsync(
+        public async Task<ApplicationPart> UpdateApplicationPartAsync(
             UpdateApplicationPartRequest request,
             CancellationToken cancellationToken)
         {
-            Application application = await _applicationStore.GetByIdAsync(
-                request.ApplicationId,
-                cancellationToken);
+            Application? application =
+                await _applicationStore.GetByIdAsync(
+                    request.ApplicationId,
+                    cancellationToken);
+
+            if (application is null)
+            {
+                throw new EntityIdInvalidException(nameof(Application), request.ApplicationId);
+            }
 
             ApplicationPart? part = application.Parts.FirstOrDefault(x => x.Id == request.PartId);
 
-            if (part is not null)
+            if (part is null)
             {
-                if(part is { Components: { } components })
-                {
-                    part.Components = components.Select(
-                        component => new ApplicationPartComponent
-                        {
-                            ComponentId = component.ComponentId
-                        }).ToList();
-                }
-
-                if (request.Name is not null)
-                {
-                    part.Name = request.Name;
-                }
-
-                await _applicationStore.UpdateAsync(application, cancellationToken);
+                throw new EntityIdInvalidException(nameof(ApplicationPart), request.ApplicationId);
             }
 
-            return application;
+            if(part is { Components: { } components })
+            {
+                part.Components = components.Select(
+                    component => new ApplicationPartComponent
+                    {
+                        ComponentId = component.ComponentId
+                    }).ToList();
+            }
+
+            if (request.Name is not null)
+            {
+                part.Name = request.Name;
+            }
+
+            await _applicationStore.UpdateAsync(application, cancellationToken);
+
+            return part;
         }
     }
 }
