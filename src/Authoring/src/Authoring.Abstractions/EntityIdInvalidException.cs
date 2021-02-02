@@ -15,4 +15,9 @@ namespace Confix.Authoring
 
         public Guid EntityId { get; }
     }
+
+    public class NameTakenException : Exception
+    {
+        public string Name { get; }
+    }
 }

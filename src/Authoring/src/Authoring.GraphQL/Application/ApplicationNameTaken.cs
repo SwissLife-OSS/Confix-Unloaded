@@ -1,19 +1,17 @@
 namespace Confix.Authoring.GraphQL
 {
-    public class ApplicationNameTaken
-        : IAddApplicationError
-        , IRenameApplicationError
-        , IUserError
+    public class ApplicationNameTaken : UserError
     {
         public ApplicationNameTaken(string applicationName)
+            : base($"The application name `{applicationName}` is already taken.")
         {
-            Message = $"The application name `{applicationName}` is already taken.";
             ApplicationName = applicationName;
         }
 
-        public string Code => GetType().Name;
-
-        public string Message { get; }
+        public ApplicationNameTaken(NameTakenException exception)
+            : this(exception.Name)
+        {
+        }
 
         public string ApplicationName { get; }
     }

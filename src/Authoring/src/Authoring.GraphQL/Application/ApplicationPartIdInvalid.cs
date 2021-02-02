@@ -1,6 +1,7 @@
 using System;
 using Confix.Authoring.Store;
 using HotChocolate.Types.Relay;
+using HotChocolate.Utilities;
 
 namespace Confix.Authoring.GraphQL
 {
@@ -9,11 +10,6 @@ namespace Confix.Authoring.GraphQL
         , IAddComponentsToApplicationPartError
         , IRenameApplicationPartError
     {
-        public ApplicationPartIdInvalid(EntityIdInvalidException ex) {
-            
-        }
-
-
         public ApplicationPartIdInvalid(Guid applicationPartId)
         {
             ApplicationPartId = applicationPartId;
@@ -25,5 +21,16 @@ namespace Confix.Authoring.GraphQL
 
         [ID(nameof(ApplicationPart))]
         public Guid ApplicationPartId { get; }
+
+        public static ApplicationPartIdInvalid? CreateErrorFrom(Exception exception)
+        {
+            if (exception is EntityIdInvalidException ex &&
+                ex.EntityName.EqualsOrdinal(nameof(ApplicationPart)))
+            {
+                return new ApplicationPartIdInvalid(ex.EntityId);
+            }
+
+            return null;
+        }
     }
 }

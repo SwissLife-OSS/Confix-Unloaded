@@ -10,18 +10,6 @@ namespace Confix.Authoring.GraphQL
             ApplicationPart = applicationPart;
         }
 
-        public RenameApplicationPartPayload(IRenameApplicationPartError error)
-            : this(new[] { error })
-        {
-        }
-
-        public RenameApplicationPartPayload(IReadOnlyList<IRenameApplicationPartError> errors)
-        {
-            Errors = errors;
-        }
-
         public ApplicationPart? ApplicationPart { get; }
-
-        public IReadOnlyList<IRenameApplicationPartError>? Errors { get; }
     }
 }

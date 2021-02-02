@@ -2,10 +2,10 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Confix.Authoring.GraphQL.DataLoaders;
-using HotChocolate;
+using Confix.Authoring.Store;
 using HotChocolate.Types;
 
-namespace Confix.Authoring.Store
+namespace Confix.Authoring.GraphQL.Types
 {
     public class ApplicationType : ObjectType<Application>
     {
@@ -13,10 +13,10 @@ namespace Confix.Authoring.Store
         {
             descriptor
                 .ImplementsNode()
-                .ResolveNodeWith<Resolver>(c => c.GetApplication(default!, default, default));
+                .ResolveNodeWith<Resolvers>(c => c.GetApplication(default!, default!, default));
         }
 
-        private class Resolver
+        private class Resolvers
         {
             public Task<Application?> GetApplication(
                 Guid id,

@@ -11,20 +11,6 @@ namespace Confix.Authoring.GraphQL
             ApplicationPartPart = applicationPart;
         }
 
-        public AddComponentsToApplicationPartPayload(
-            IAddComponentsToApplicationPartError error)
-            : this(new [] { error })
-        {
-        }
-
-        public AddComponentsToApplicationPartPayload(
-            IReadOnlyList<IAddComponentsToApplicationPartError> errors)
-        {
-            Errors = errors;
-        }
-
         public ApplicationPart? ApplicationPartPart { get; }
-
-        public IReadOnlyList<IAddComponentsToApplicationPartError>? Errors { get; }
     }
 }

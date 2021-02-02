@@ -10,18 +10,6 @@ namespace Confix.Authoring.GraphQL
             Application = application;
         }
 
-        public CreateApplicationPayload(IAddApplicationError error)
-            : this(new[] { error })
-        {
-        }
-
-        public CreateApplicationPayload(IReadOnlyList<IAddApplicationError> errors)
-        {
-            Errors = errors;
-        }
-
         public Application? Application { get; }
-
-        public IReadOnlyList<IAddApplicationError>? Errors { get; }
     }
 }
