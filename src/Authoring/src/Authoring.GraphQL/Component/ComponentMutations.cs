@@ -101,10 +101,14 @@ namespace Confix.Authoring.GraphQL
         }
     }
 
+    internal static class ErrorContextData
+    {
+        public const string Factories = "SwissLife.Confix.ErrorFactories";
+        public const string Errors = "SwissLife.Confix.Errors";
+    }
+
     public static class ErrorObjectFieldDescriptorExtensions
     {
-        private const string _factories = "SwissLife.ErrorFactories";
-
         public static IObjectFieldDescriptor Throws<TError>(
             this IObjectFieldDescriptor descriptor) =>
             Throws(descriptor, typeof(TError));
@@ -113,15 +117,17 @@ namespace Confix.Authoring.GraphQL
             this IObjectFieldDescriptor descriptor,
             Type errorType)
         {
+            // TODO : ensure that this is not a schema type
+
             descriptor.Extend().OnBeforeCreate((c, d) =>
             {
                 CreateError factory = ErrorFactoryCompiler.Compile(errorType);
 
-                if (!d.ContextData.TryGetValue(_factories, out object? value) ||
+                if (!d.ContextData.TryGetValue(ErrorContextData.Factories, out object? value) ||
                     !(value is List<(Type, CreateError)> errorFactories))
                 {
                     errorFactories = new List<(Type, CreateError)>();
-                    d.ContextData[_factories] = errorFactories;
+                    d.ContextData[ErrorContextData.Factories] = errorFactories;
                 }
 
                 errorFactories.Add((errorType, factory));
@@ -138,33 +144,108 @@ namespace Confix.Authoring.GraphQL
     internal class MutationErrorTypeInterceptor : TypeInterceptor
     {
         private readonly StringBuilder _stringBuilder = new();
+        private readonly List<(ITypeReference, UnionType)> _needsErrorField = new();
+        private readonly HashSet<ObjectType> _objectTypes = new();
+        private readonly List<(ITypeCompletionContext, ObjectTypeDefinition)> _contexts = new();
 
         public override void OnAfterRegisterDependencies(
             ITypeDiscoveryContext discoveryContext,
             DefinitionBase? definition,
             IDictionary<string, object?> contextData)
         {
+            if (discoveryContext.Type is ObjectType objectType)
+            {
+                _objectTypes.Add(objectType);
+            }
+
             if (definition is ObjectTypeDefinition objectTypeDefinition)
             {
                 foreach (var field in objectTypeDefinition.Fields)
                 {
-                    _stringBuilder.Clear();
-                    _stringBuilder.Append(char.ToUpperInvariant(field.Name.Value[0]));
-                    _stringBuilder.Append(field.Name.Value.Substring(1));
-                    _stringBuilder.Append("Error");
+                    if (!field.IsIntrospectionField &&
+                        field.ContextData.TryGetValue(ErrorContextData.Factories, out var value) &&
+                        value is List<(Type, CreateError)> factories)
+                    {
+                        _stringBuilder.Clear();
+                        _stringBuilder.Append(char.ToUpperInvariant(field.Name.Value[0]));
+                        _stringBuilder.Append(field.Name.Value.Substring(1));
+                        _stringBuilder.Append("Error");
 
-                    var errorUnion = new UnionType(d => d.Name(_stringBuilder.ToString()));
+                        var errorUnion = new UnionType(d =>
+                        {
+                            d.Name(_stringBuilder.ToString());
 
+                            d.Extend().OnBeforeCreate(unionDef =>
+                            {
+                                foreach ((Type type, _) in factories)
+                                {
+                                    ExtendedTypeReference typeRef =
+                                        discoveryContext.TypeInspector.GetTypeRef(
+                                            typeof(ObjectType<>).MakeGenericType(type));
+                                    unionDef.Types.Add(typeRef);
+                                }
+                            });
+                        });
+
+                        _needsErrorField.Add((field.Type, errorUnion));
+
+                        FieldMiddleware middleware =
+                            FieldClassMiddlewareFactory.Create<ErrorMiddleware>();
+                        field.MiddlewareComponents.Insert(0, middleware);
+
+                        discoveryContext.RegisterDependency(
+                            new TypeDependency(new SchemaTypeReference(errorUnion)));
+
+                        field.ContextData.Remove(ErrorContextData.Factories);
+                    }
                 }
             }
         }
 
-        public override void OnAfterInitialize(
-            ITypeDiscoveryContext discoveryContext,
+        public override void OnAfterCompleteName(
+            ITypeCompletionContext completionContext,
             DefinitionBase? definition,
             IDictionary<string, object?> contextData)
         {
+            if (completionContext.Type is ObjectType objectType &&
+                definition is ObjectTypeDefinition objectTypeDef &&
+                _objectTypes.Contains(objectType))
+            {
+                _contexts.Add((completionContext, objectTypeDef));
+            }
+        }
 
+        public override void OnAfterCompleteTypeNames()
+        {
+            ITypeCompletionContext firstContext = _contexts.First().Item1;
+
+            foreach ((ITypeReference typeRef, UnionType unionType) in _needsErrorField)
+            {
+                if (firstContext.TryGetType<IType>(typeRef, out var type) &&
+                    type.NamedType() is ObjectType objectType &&
+                    _contexts.FirstOrDefault(t => t.Item1.Type == objectType) is
+                    {
+                        Item1: { } context,
+                        Item2: { } objectTypeDef
+                    })
+                {
+                    var descriptor = ObjectFieldDescriptor.New(context.DescriptorContext, "errors");
+
+                    descriptor
+                        .Type(new ListType(new NonNullType(unionType)))
+                        .Resolve(ctx =>
+                        {
+                            if (ctx.ScopedContextData.TryGetValue(ErrorContextData.Errors, out var o))
+                            {
+                                return o;
+                            }
+
+                            return null;
+                        });
+
+                    objectTypeDef.Fields.Add(descriptor.CreateDefinition());
+                }
+            }
         }
     }
 
@@ -212,7 +293,7 @@ namespace Confix.Authoring.GraphQL
                     throw;
                 }
 
-                context.SetScopedValue("errors", errors);
+                context.SetScopedValue(ErrorContextData.Errors, errors);
                 context.Result = new object();
             }
             catch (Exception ex)
@@ -233,7 +314,7 @@ namespace Confix.Authoring.GraphQL
                     throw;
                 }
 
-                context.SetScopedValue("errors", new[] { error });
+                context.SetScopedValue(ErrorContextData.Errors, new[] { error });
                 context.Result = new object();
             }
         }
@@ -271,10 +352,12 @@ namespace Confix.Authoring.GraphQL
             [NotNullWhen(true)] out CreateError? factory)
         {
             MethodInfo? method = errorType.GetMethod(
-                "TryCreateErrorFrom",
+                "CreateErrorFrom",
                 BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
 
-            if (method is not null && method.ReturnType == typeof(object))
+            if (method is not null &&
+                (method.ReturnType == typeof(object) ||
+                    method.ReturnType == errorType))
             {
                 ParameterInfo[] parameters = method.GetParameters();
                 if (parameters.Length == 1 &&
@@ -282,7 +365,9 @@ namespace Confix.Authoring.GraphQL
                 {
                     ParameterExpression exception = Expression.Parameter(typeof(Exception), "ex");
                     Expression factoryExpression = Expression.Call(method, exception);
-                    factory = Expression.Lambda<CreateError>(factoryExpression, exception).Compile();
+                    factory = Expression.Lambda<CreateError>(
+                        Expression.Convert(factoryExpression, typeof(object)),
+                        exception).Compile();
                     return true;
                 }
             }
@@ -301,16 +386,18 @@ namespace Confix.Authoring.GraphQL
 
             ParameterExpression exception = Expression.Parameter(typeof(Exception), "ex");
             Expression nullValue = Expression.Constant(null, typeof(object));
+            ParameterExpression variable = Expression.Variable(typeof(object), "obj");
             Expression? previous = null;
 
             foreach (var constructor in errorType.GetConstructors(
-                BindingFlags.Public | BindingFlags.NonPublic))
+                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
             {
                 ParameterInfo[] parameters = constructor.GetParameters();
                 if (parameters.Length == 1 &&
                     typeof(Exception).IsAssignableFrom(parameters[0].ParameterType))
                 {
                     Type expectedException = parameters[0].ParameterType;
+
 
                     Expression expected = Expression.Constant(expectedException, typeof(Type));
                     Expression actual = Expression.Call(exception, getTypeMethod);
@@ -321,27 +408,36 @@ namespace Confix.Authoring.GraphQL
 
                     if (previous is null)
                     {
-                        previous = Expression.IfThenElse(test, createError, nullValue);
+                        previous = Expression.IfThenElse(
+                            test,
+                            Expression.Assign(variable, createError),
+                            Expression.Assign(variable, nullValue));
                     }
                     else
                     {
-                        previous = Expression.IfThenElse(test, createError, previous);
+                        previous = Expression.IfThenElse(
+                            test,
+                            Expression.Assign(variable, createError),
+                            Expression.Assign(variable, previous));
                     }
                 }
             }
 
             if (previous is not null)
             {
-                factory = Expression.Lambda<CreateError>(previous, exception).Compile();
+
+                factory = Expression.Lambda<CreateError>(
+                    Expression.Block(
+                        new[] { variable },
+                        new List<Expression> { previous, variable }),
+                        exception).Compile();
                 return true;
             }
 
             factory = null;
             return false;
         }
-}
+    }
 
     internal delegate object? CreateError(Exception exception);
-
-
 }

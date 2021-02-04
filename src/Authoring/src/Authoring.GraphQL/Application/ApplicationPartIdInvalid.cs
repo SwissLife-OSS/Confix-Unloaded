@@ -5,10 +5,7 @@ using HotChocolate.Utilities;
 
 namespace Confix.Authoring.GraphQL
 {
-    public class ApplicationPartIdInvalid
-        : IUserError
-        , IAddComponentsToApplicationPartError
-        , IRenameApplicationPartError
+    public class ApplicationPartIdInvalid : IUserError
     {
         public ApplicationPartIdInvalid(Guid applicationPartId)
         {

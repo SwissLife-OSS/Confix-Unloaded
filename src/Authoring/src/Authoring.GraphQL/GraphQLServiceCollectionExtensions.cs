@@ -15,7 +15,12 @@ namespace Confix.Authoring.GraphQL
             builder
                 .Services
                 .AddGraphQLServer()
-                .AddGraphQLTypes();
+                .AddGraphQLTypes()
+                .TryAddTypeInterceptor<MutationErrorTypeInterceptor>()
+                .OnSchemaError((ctx, ex) =>
+                {
+
+                });
 
             builder
                 .Services
@@ -54,11 +59,11 @@ namespace Confix.Authoring.GraphQL
         private static IRequestExecutorBuilder RegisterTypes(
             this IRequestExecutorBuilder builder)
         {
-             return builder
-                 .AddType<ApplicationType>()
-                 .AddType<ApplicationPartType>()
-                 .AddType<ApplicationPartComponentType>()
-                 .AddType<ComponentType>();
+            return builder
+                .AddType<ApplicationType>()
+                .AddType<ApplicationPartType>()
+                .AddType<ApplicationPartComponentType>()
+                .AddType<ComponentType>();
         }
 
         private static IRequestExecutorBuilder AddQueries(this IRequestExecutorBuilder builder)
