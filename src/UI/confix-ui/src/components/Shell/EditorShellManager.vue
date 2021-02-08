@@ -29,6 +29,9 @@
       <new-variable-editor
         v-if="activeTabItem.type === 'VARIABLE_ADD'"
       ></new-variable-editor>
+
+      <new-application-editor v-if="activeTabItem.type === 'APP_ADD'">
+      </new-application-editor>
     </div>
     <div v-else>Loading...</div>
   </div>
@@ -39,6 +42,7 @@ import { mapState } from "vuex";
 import AppComponentConfigEditor from "../Editors/AppComponentConfigEditor.vue";
 import ApplicationPartEditor from "../Editors/ApplicationPartEditor.vue";
 import ComponentEditor from "../Editors/ComponentEditor.vue";
+import NewApplicationEditor from "../Editors/NewApplicationEditor.vue";
 import NewComponentEditor from "../Editors/NewComponentEditor.vue";
 import NewVariableEditor from "../Editors/NewVariableEditor.vue";
 import VariableEditor from "../Editors/VariableEditor.vue";
@@ -52,6 +56,7 @@ export default {
     ApplicationPartEditor,
     NewComponentEditor,
     NewVariableEditor,
+    NewApplicationEditor,
   },
 
   data() {

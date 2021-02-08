@@ -1,6 +1,6 @@
 <template>
   <v-card class="mt-2" elevation="1" rounded="0">
-    <v-toolbar height="36" color="amber lighten-4" light>
+    <v-toolbar height="36" :color="color" light>
       <v-toolbar-title
         ><v-icon color="black" class="mr-2">{{ icon }}</v-icon
         >{{ title }}
@@ -15,6 +15,7 @@
           @click="setView(view)"
         ></v-icon>
       </div>
+      <slot name="Toolbar"></slot>
       <div v-if="actions">
         <div v-if="views" class="action-divider"></div>
         <v-btn
@@ -37,6 +38,7 @@
           v-bind="view"
         ></slot>
       </div>
+      <slot v-if="views === undefined"></slot>
     </v-card-text>
   </v-card>
 </template>

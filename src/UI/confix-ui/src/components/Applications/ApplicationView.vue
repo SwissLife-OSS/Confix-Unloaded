@@ -1,21 +1,33 @@
 <template>
   <div>
-    <v-autocomplete
-      v-show="selectedApp === null"
-      v-model="selectedApp"
-      hide-no-data
-      hide-selected
-      clearable
-      item-text="name"
-      :items="apps"
-      item-value="id"
-      label="Application"
-      placeholder="Search Aplication"
-      prepend-icon="mdi-magnify"
-      return-object
-      append-outer-icon="mdi-plus"
-      @click:append-outer="onClickAddApplication"
-    ></v-autocomplete>
+    <div v-if="selectedApp === null">
+      <v-text-field
+        clearable
+        v-model="searchText"
+        placeholder="Search"
+        prepend-icon="mdi-magnify"
+        append-outer-icon="mdi-plus"
+        @click:append-outer="onClickAddApplication"
+      ></v-text-field>
+
+      <v-list two-line rounded dense class="mt-0">
+        <v-list-item-group color="primary" select-object>
+          <v-list-item
+            v-for="app in applications"
+            :key="app.id"
+            selectable
+            @click="onSelectApp(app)"
+          >
+            <v-list-item-content>
+              <v-list-item-title v-text="app.name"></v-list-item-title>
+              <v-list-item-subtitle
+                v-text="app.parts.map((x) => x.name).join(' | ')"
+              ></v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list-item-group>
+      </v-list>
+    </div>
 
     <v-card v-if="selectedApp" elevation="1" rounded="0">
       <v-toolbar color="indigo darken-4" height="36" dark>
@@ -88,20 +100,14 @@
         Components
       </v-card-text>
     </v-card>
-
-    <edit-application-dialog
-      :show="showAddApplicationDialog"
-      @close="showAddApplicationDialog = false"
-    ></edit-application-dialog>
   </div>
 </template>
 
 <script>
 import { mapState, mapActions } from "vuex";
-import EditApplicationDialog from "./EditApplicationDialog.vue";
 
 export default {
-  components: { EditApplicationDialog },
+  components: {},
   created() {
     this.loadApplications();
   },
@@ -109,18 +115,21 @@ export default {
     return {
       selectedApp: null,
       selectedComponent: null,
-      showAddApplicationDialog: false,
-      showAddComponentDialog: false,
+      searchText: "",
     };
   },
-  watch: {
-    selectedApp: function (newValue) {
-      console.log(newValue);
-    },
-  },
+
   computed: {
     ...mapState("apps", ["apps"]),
     ...mapState("shell", ["selectedTabId"]),
+    applications: function () {
+      if (this.searchText) {
+        const regex = new RegExp(`.*${this.searchText}.*`, "i");
+
+        return this.apps.filter((x) => regex.test(x.name));
+      }
+      return this.apps;
+    },
   },
   methods: {
     ...mapActions("apps", ["loadApps", "loadApplications"]),
@@ -137,7 +146,16 @@ export default {
       });
     },
     onClickAddApplication: function () {
-      this.showAddApplicationDialog = true;
+      this.openTab({
+        type: "APP_ADD",
+        title: `New Application`,
+        id: "APP_ADD",
+        item: null,
+      });
+    },
+    onSelectApp: function (app) {
+      console.log(app);
+      this.selectedApp = app;
     },
     onClickCloseApp: function () {
       this.selectedApp = null;
