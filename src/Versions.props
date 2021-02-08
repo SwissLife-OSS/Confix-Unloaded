@@ -2,6 +2,6 @@
   <PropertyGroup>
     <MassTransitVersion>7.0.6</MassTransitVersion>
     <AspNetCoreVersion>5.0.0</AspNetCoreVersion>
-    <HotChocolateVersion>11.1.0-preview.8</HotChocolateVersion>
+    <HotChocolateVersion>11.0.10-preview.4</HotChocolateVersion>
   </PropertyGroup>
 </Project>

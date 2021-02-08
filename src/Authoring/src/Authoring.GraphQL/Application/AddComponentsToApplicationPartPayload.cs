@@ -7,9 +7,9 @@ namespace Confix.Authoring.GraphQL
         public AddComponentsToApplicationPartPayload(
             ApplicationPart applicationPart)
         {
-            ApplicationPartPart = applicationPart;
+            ApplicationPart = applicationPart;
         }
 
-        public ApplicationPart? ApplicationPartPart { get; }
+        public ApplicationPart? ApplicationPart { get; }
     }
 }

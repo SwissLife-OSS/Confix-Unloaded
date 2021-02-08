@@ -1,15 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Confix.Authoring.GraphQL
+﻿namespace Confix.Authoring.GraphQL
 {
-    public class UpdateComponentPayload : Payload
-    {
-        public Component? Component { get; }
-
-        public UpdateComponentPayload(Component component)
-        {
-            Component = component;
-        }   
-    }
-
+    public record UpdateComponentPayload(Component? Component);
 }
