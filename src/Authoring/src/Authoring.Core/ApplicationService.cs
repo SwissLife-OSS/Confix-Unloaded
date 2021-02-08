@@ -36,15 +36,28 @@ namespace Confix.Authoring
             var app = new Application
             {
                 Id = Guid.NewGuid(),
-                Name = request.Name,
-                Parts = request.Parts?.Select(x => new ApplicationPart
-                {
-                    Id = Guid.NewGuid(),
-                    Name = x
-                }) ?? Array.Empty<ApplicationPart>()
+                Name = request.Name
             };
 
+            if (request is { Parts: { Count: > 0 } parts })
+            {
+                app.Parts = parts.Select(
+                    name => new ApplicationPart
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = name
+                    }).ToList();
+            }
+
             return await _applicationStore.AddAsync(app, cancellationToken);
+        }
+
+        public Task<Application> RenameAsync(
+            RenameApplicationRequest request,
+            CancellationToken cancellationToken)
+        {
+            // TODO : implement
+            throw new NotImplementedException();
         }
 
         public async Task<IEnumerable<ApplicationPart>> GetManyPartsAsync(
@@ -54,32 +67,44 @@ namespace Confix.Authoring
             return await _applicationStore.GetManyPartsAsync(ids, cancellationToken);
         }
 
-        public async Task<Application> UpdateApplicationPartAsync(
+        public async Task<ApplicationPart> UpdateApplicationPartAsync(
             UpdateApplicationPartRequest request,
             CancellationToken cancellationToken)
         {
-            Application application = await _applicationStore.GetByIdAsync(
-                request.ApplicationId,
-                cancellationToken);
+            Application? application =
+                await _applicationStore.GetByIdAsync(
+                    request.ApplicationId,
+                    cancellationToken);
+
+            if (application is null)
+            {
+                throw new EntityIdInvalidException(nameof(Application), request.ApplicationId);
+            }
 
             ApplicationPart? part = application.Parts.FirstOrDefault(x => x.Id == request.PartId);
 
-            if (part != null)
+            if (part is null)
             {
-                part.Components = request.Components?.Select(x => new ApplicationPartComponent
-                {
-                    ComponentId = x
-                }) ?? Array.Empty< ApplicationPartComponent>();
-
-                if (request.Name != null)
-                {
-                    part.Name = request.Name;
-                }
-
-                await _applicationStore.UpdateAsync(application, cancellationToken);
+                throw new EntityIdInvalidException(nameof(ApplicationPart), request.ApplicationId);
             }
 
-            return application;
+            if(part is { Components: { } components })
+            {
+                part.Components = components.Select(
+                    component => new ApplicationPartComponent
+                    {
+                        ComponentId = component.ComponentId
+                    }).ToList();
+            }
+
+            if (request.Name is not null)
+            {
+                part.Name = request.Name;
+            }
+
+            await _applicationStore.UpdateAsync(application, cancellationToken);
+
+            return part;
         }
     }
 }

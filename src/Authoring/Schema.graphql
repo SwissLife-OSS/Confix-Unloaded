@@ -12,6 +12,8 @@ type Query {
 
 type Mutation {
   addApplication(input: AddApplicationInput!): UpdateApplicationPayload!
+
+
   updateApplication(input: UpdateApplicationPartInput!): UpdateApplicationPayload!
   addVariable(input: AddVariableInput!): UpdateVariablePayload!
   updateVariable(input: SaveVariableValueInput!): UpdateVariableValuePayload!
@@ -28,11 +30,12 @@ type Application {
 type ApplicationPart {
   id: ID!
   name: String!
-  components: [Component]
+  components: [ApplicationPartComponent]
 }
 
 type ApplicationPartComponent {
   component: Component
+  settings: [Value!]!!
 }
 
 type Component {
@@ -52,7 +55,6 @@ type AddApplicationPayload {
 }
 
 input UpdateApplicationPartInput {
-  applicationId: ID!
   partId: ID!
   name: String
   components: [ID!]

@@ -33,7 +33,7 @@ namespace Confix.Authoring.Store.Mongo
                 .ToListAsync(cancellationToken);
         }
 
-        public async Task<Application> GetByIdAsync(
+        public async Task<Application?> GetByIdAsync(
             Guid id,
             CancellationToken cancellationToken)
         {

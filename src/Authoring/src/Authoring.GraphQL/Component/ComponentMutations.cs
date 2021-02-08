@@ -1,11 +1,10 @@
 using System.Threading;
 using System.Threading.Tasks;
-using HotChocolate;
 using HotChocolate.Types;
 
 namespace Confix.Authoring.GraphQL
 {
-    [ExtendObjectType(Name = "Mutation")]
+    [ExtendObjectType(RootTypes.Mutation)]
     public class ComponentMutations
     {
         private readonly IComponentService _componentService;
@@ -15,20 +14,18 @@ namespace Confix.Authoring.GraphQL
             _componentService = componentService;
         }
 
-        [GraphQLName("Component_Add")]
-        public async Task<UpdateComponentPayload> AddAsync(
-            AddComponentRequest input,
+        public async Task<CreateComponentPayload> CreateComponentAsync(
+            CreateComponentInput input,
             CancellationToken cancellationToken)
         {
             Component component = await _componentService.AddAsync(
-                input,
+                new AddComponentRequest(input.Name),
                 cancellationToken);
 
-            return new UpdateComponentPayload(component);
+            return new CreateComponentPayload(component);
         }
 
-        [GraphQLName("Component_UpdateSchema")]
-        public async Task<UpdateComponentPayload> UpdateSchemaAsync(
+        public async Task<UpdateComponentPayload> UpdateComponentSchemaAsync(
             UpdateComponentSchemaRequest input,
             CancellationToken cancellationToken)
         {
@@ -40,4 +37,17 @@ namespace Confix.Authoring.GraphQL
         }
     }
 
+    public record CreateComponentInput(
+        string Name,
+        string Schema = "type ComponentRoot { text: String! }");
+
+    public class CreateComponentPayload
+    {
+        public CreateComponentPayload(Component component)
+        {
+            Component = component;
+        }
+
+        public Component Component { get; }
+    }
 }

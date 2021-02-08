@@ -1,26 +1,31 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Confix.Authoring.Store
 {
     public class Application
     {
+        [Key]
         public Guid Id { get; set; }
 
-        public string Name { get; set; }
+        [Required]
+        public string? Name { get; set; }
 
-        public IEnumerable<ApplicationPart> Parts { get; set; }
-            = Array.Empty<ApplicationPart>();
+        public ICollection<ApplicationPart> Parts { get; set; } = 
+            new List<ApplicationPart>();
     }
 
     public class ApplicationPart
     {
+        [Key]
         public Guid Id { get; set; }
 
-        public string Name { get; set; }
+        [Required]
+        public string? Name { get; set; }
 
-        public IEnumerable<ApplicationPartComponent> Components { get; set; }
-            = Array.Empty<ApplicationPartComponent>();
+        public ICollection<ApplicationPartComponent> Components { get; set; } = 
+            new List<ApplicationPartComponent>();
     }
 
     public class ApplicationPartComponent
