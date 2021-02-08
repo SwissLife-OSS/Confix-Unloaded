@@ -14,15 +14,15 @@ namespace Confix.Authoring.GraphQL
             _componentService = componentService;
         }
 
-        public async Task<UpdateComponentPayload> CreateComponentAsync(
+        public async Task<CreateComponentPayload> CreateComponentAsync(
             CreateComponentInput input,
             CancellationToken cancellationToken)
         {
             Component component = await _componentService.AddAsync(
-                new Add,
+                new AddComponentRequest(input.Name),
                 cancellationToken);
 
-            return new UpdateComponentPayload(component);
+            return new CreateComponentPayload(component);
         }
 
         public async Task<UpdateComponentPayload> UpdateComponentSchemaAsync(
@@ -43,6 +43,11 @@ namespace Confix.Authoring.GraphQL
 
     public class CreateComponentPayload
     {
+        public CreateComponentPayload(Component component)
+        {
+            Component = component;
+        }
+
         public Component Component { get; }
     }
 }

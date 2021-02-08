@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Confix.Authoring.GraphQL
 {
-    public class DeleteVariableValuePayload : Payload
+    public class DeleteVariableValuePayload
     {
         public Guid? DeletedId { get; }
         public Variable? Variable { get; }

@@ -2,7 +2,7 @@
 
 namespace Confix.Authoring.GraphQL
 {
-    public class UpdateVariablePayload : Payload
+    public class UpdateVariablePayload
     {
         public Variable? Variable { get; }
 
