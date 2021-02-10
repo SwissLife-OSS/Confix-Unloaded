@@ -29,10 +29,10 @@
 
     <v-main>
       <v-row dense>
-        <v-col md="4">
+        <v-col md="6">
           <router-view></router-view>
         </v-col>
-        <v-col md="8">
+        <v-col md="6">
           <tab-list></tab-list>
           <br />
           <editor-shell-manager></editor-shell-manager>
