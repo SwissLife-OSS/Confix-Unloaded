@@ -1,4 +1,4 @@
-import { addApplication, getAllApplications, updatePart } from "../services/applicationService";
+import { createApplication, getAllApplications, updatePart } from "../services/applicationService";
 import { excuteGraphQL } from "./graphqlClient";
 
 const applicationStore = {
@@ -16,7 +16,7 @@ const applicationStore = {
         APPS_LOADED(state, apps) {
             state.apps = apps;
         },
-        APP_ADDED(state, app) {
+        APPLICATION_CREATED(state, app) {
             state.apps.push(app);
         },
         APP_UPDATED(state, app) {
@@ -34,12 +34,12 @@ const applicationStore = {
             }
         },
         async addApplication({ commit, dispatch }, input) {
-            const result = await excuteGraphQL(() => addApplication(input), dispatch);
+            const result = await excuteGraphQL(() => createApplication(input), dispatch);
 
             if (result.success) {
                 console.log(result);
 
-                commit("APP_ADDED", result.data.Application_Add.application);
+                commit("APPLICATION_CREATED", result.data.createApplication.application);
 
                 dispatch("shell/addMessage", {
                     type: "SUCCES",

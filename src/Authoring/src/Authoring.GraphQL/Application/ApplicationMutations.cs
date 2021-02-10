@@ -22,8 +22,9 @@ namespace Confix.Authoring.GraphQL
         {
             Application application =
                 await _applicationService.AddAsync(
-                    new AddApplicationRequest(input.Name, input.Parts),
+                    new AddApplicationRequest(input.Name, input.Namespace, input.Parts),
                     cancellationToken);
+
             return new CreateApplicationPayload(application);
         }
 

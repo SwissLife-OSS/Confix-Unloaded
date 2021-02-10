@@ -28,6 +28,7 @@ namespace Confix.Authoring
 
     public record AddApplicationRequest(
         string Name,
+        string Namespace,
         IReadOnlyList<string>? Parts = null);
 
     public record RenameApplicationRequest(
