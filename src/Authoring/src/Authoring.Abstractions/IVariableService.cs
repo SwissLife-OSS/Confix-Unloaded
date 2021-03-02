@@ -7,7 +7,7 @@ namespace Confix.Authoring
 {
     public interface IVariableService
     {
-        Task<Variable> AddAsync(AddVariableRequest request, CancellationToken cancellationToken);
+        Task<Variable> CreateAsync(CreateVariableRequest request, CancellationToken cancellationToken);
         Task<Variable> DeleteValueAsync(Guid id, CancellationToken cancellationToken);
         Task<IEnumerable<Variable>> GetAllAsync(CancellationToken cancellationToken);
 
@@ -15,7 +15,7 @@ namespace Confix.Authoring
         Task<IEnumerable<Variable>> GetManyAsync(IEnumerable<Guid> ids, CancellationToken cancellationToken);
         Task<IEnumerable<VariableValue>> GetValuesAsync(GetVariableValuesRequest request, CancellationToken cancellationToken);
         Task<IEnumerable<VariableValue>> GetValuesAsync(Variable variable, GetVariableValuesRequest request, CancellationToken cancellationToken);
-        Task<VariableValue> SaveVariableValueAsync(SaveVariableValueRequest request, CancellationToken cancellationToken);
+        Task<VariableValue> SaveValueAsync(SaveVariableValueRequest request, CancellationToken cancellationToken);
     }
 
     public interface IVariableCryptoProvider
@@ -34,7 +34,7 @@ namespace Confix.Authoring
         VariableEncryptionInfo EncryptionInfo,
         string CipherValue);
 
-    public record AddVariableRequest(string Name, bool IsSecret)
+    public record CreateVariableRequest(string Name, bool IsSecret)
     {
         public string? Namespace { get; init; }
 

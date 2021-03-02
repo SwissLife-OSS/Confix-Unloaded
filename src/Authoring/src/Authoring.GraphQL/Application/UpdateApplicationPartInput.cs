@@ -5,8 +5,9 @@ using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring.GraphQL
 {
-    public record AddComponentsToApplicationPartInput(
-        [ID(nameof(ApplicationPart))] Guid Id,
+    public record UpdateApplicationPartInput(
+        [ID(nameof(ApplicationPart))] Guid PartId,
         [ID(nameof(Application))] Guid ApplicationId,
-        [ID(nameof(Component))] IReadOnlyList<Guid> ComponentIds);
+        [ID(nameof(Component))] IReadOnlyList<Guid> Components,
+        string Name);
 }

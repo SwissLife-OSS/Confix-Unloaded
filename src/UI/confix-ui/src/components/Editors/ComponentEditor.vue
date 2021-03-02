@@ -22,7 +22,7 @@ export default {
     MonacoEditor,
   },
   mounted() {
-    this.code = this.component.schema;
+    this.code = this.component.schema ?? "";
   },
   props: ["component"],
 
@@ -34,7 +34,6 @@ export default {
   computed: {},
   methods: {
     ...mapActions("comp", ["updateSchema"]),
-
     onSave: function () {
       this.updateSchema({
         id: this.component.id,

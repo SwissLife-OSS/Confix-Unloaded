@@ -23,8 +23,8 @@ namespace Confix.Authoring
             _cryptoProvider = cryptoProvider;
         }
 
-        public async Task<Variable> AddAsync(
-            AddVariableRequest request,
+        public async Task<Variable> CreateAsync(
+            CreateVariableRequest request,
             CancellationToken cancellationToken)
         {
             var variable = new Variable
@@ -36,7 +36,7 @@ namespace Confix.Authoring
                 Namespace = request.Namespace
             };
 
-            await _variableStore.AddAsync(variable, cancellationToken);
+            await _variableStore.CreateAsync(variable, cancellationToken);
 
             if (request.DefaultValue != null)
             {
@@ -69,7 +69,7 @@ namespace Confix.Authoring
             return await _variableStore.GetByIdAsync(id, cancellationToken);
         }
 
-        public async Task<VariableValue> SaveVariableValueAsync(
+        public async Task<VariableValue> SaveValueAsync(
             SaveVariableValueRequest request,
             CancellationToken cancellationToken)
         {

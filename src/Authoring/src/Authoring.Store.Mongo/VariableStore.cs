@@ -42,7 +42,7 @@ namespace Confix.Authoring.Store.Mongo
                 .ToListAsync(cancellationToken);
         }
 
-        public async Task<Variable> AddAsync(
+        public async Task<Variable> CreateAsync(
             Variable Variable,
             CancellationToken cancellationToken)
         {

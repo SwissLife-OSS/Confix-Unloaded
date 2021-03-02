@@ -1,5 +1,5 @@
 import { Object } from "core-js";
-import { getAllComponents, addComponent, updateSchema } from "../services/componentService"
+import { getAllComponents, createComponent, updateSchema } from "../services/componentService"
 import { excuteGraphQL } from "./graphqlClient";
 
 const componentStore = {
@@ -11,7 +11,7 @@ const componentStore = {
         COMPONENTS_LOADED(state, components) {
             state.components = components;
         },
-        COMPONENT_ADDED(state, component) {
+        COMPONENT_CREATED(state, component) {
             state.components.push(component)
         },
         SCHEMA_UPDATED(state, component) {
@@ -26,10 +26,10 @@ const componentStore = {
                 commit('COMPONENTS_LOADED', result.data.components);
             }
         },
-        async addComponent({ commit, dispatch }, input) {
-            const result = await excuteGraphQL(() => addComponent(input), dispatch);
+        async createComponent({ commit, dispatch }, input) {
+            const result = await excuteGraphQL(() => createComponent(input), dispatch);
             if (result.success) {
-                commit('COMPONENT_ADDED', result.data.Component_Add.component);
+                commit('COMPONENT_CREATED', result.data.createComponent.component);
             }
         },
         async updateSchema({ commit, dispatch }, input) {
@@ -37,7 +37,7 @@ const componentStore = {
             console.log(result)
 
             if (result.success) {
-                commit('SCHEMA_UPDATED', result.data.Component_UpdateSchema.component);
+                commit('SCHEMA_UPDATED', result.data.updateComponentSchema.component);
             }
         }
     },

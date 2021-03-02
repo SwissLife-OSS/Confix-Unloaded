@@ -1,5 +1,5 @@
 mutation saveVariableValue($input: SaveVariableValueInput!) {
-  Variable_SaveValue(input: $input) {
+  saveVariableValue(input: $input) {
     value {
       id
       key {

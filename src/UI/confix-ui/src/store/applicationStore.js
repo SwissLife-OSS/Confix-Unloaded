@@ -53,7 +53,7 @@ const applicationStore = {
             if (result.success) {
                 console.log(result);
 
-                commit("APP_UPDATED", result.data.ApplicationPart_Update.application);
+                commit("APP_UPDATED", result.data.updateApplicationPart.application);
             }
         },
     },

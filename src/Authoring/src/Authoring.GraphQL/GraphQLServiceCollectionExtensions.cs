@@ -1,7 +1,6 @@
 using Confix.Authoring.GraphQL.DataLoaders;
 using Confix.Authoring.GraphQL.Serialization;
 using Confix.Authoring.GraphQL.Types;
-using Confix.Authoring.Store;
 using HotChocolate.Execution.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -37,7 +36,6 @@ namespace Confix.Authoring.GraphQL
                 .AddQueries()
                 .AddMutations()
                 .AddTypes()
-                .RenameRequests()
                 .AddDataLoaders()
                 .AddAuthorization()
                 .AddErrorTypes()
@@ -94,7 +92,6 @@ namespace Confix.Authoring.GraphQL
                 .AddType<VariableType>()
                 .AddType<VariableValueType>();
 
-
             return builder;
         }
 
@@ -105,28 +102,6 @@ namespace Confix.Authoring.GraphQL
                 .AddDataLoader<ApplicationPartByIdDataLoader>()
                 .AddDataLoader<VariableByIdDataLoader>()
                 .AddDataLoader<ComponentByIdDataLoader>();
-
-            return builder;
-        }
-
-        private static IRequestExecutorBuilder RenameRequests(this IRequestExecutorBuilder builder)
-        {
-            builder
-              .RenameRequestToInput<CreateApplicationInput>()
-              .RenameRequestToInput<UpdateApplicationPartRequest>()
-              .RenameRequestToInput<UpdateComponentSchemaRequest>()
-              .RenameRequestToInput<AddVariableRequest>()
-              .RenameRequestToInput<SaveVariableValueRequest>()
-              .RenameRequestToInput<AddComponentRequest>();
-
-            return builder;
-        }
-
-        private static IRequestExecutorBuilder RenameRequestToInput<T>(
-            this IRequestExecutorBuilder builder)
-        {
-            var name = typeof(T).Name.Replace("Request", "Input");
-            builder.AddInputObjectType<T>(d => d.Name(name));
 
             return builder;
         }

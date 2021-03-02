@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ namespace Confix.Authoring
 {
     public class Variable
     {
+        [Key]
         public Guid Id { get; set; }
 
         public VariableState State { get; set; }

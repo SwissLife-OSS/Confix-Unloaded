@@ -1,4 +1,8 @@
-﻿using HotChocolate.Types;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Confix.Authoring.GraphQL.DataLoaders;
+using HotChocolate.Types;
 
 namespace Confix.Authoring.GraphQL
 {
@@ -6,9 +10,24 @@ namespace Confix.Authoring.GraphQL
     {
         protected override void Configure(IObjectTypeDescriptor<Variable> descriptor)
         {
+            descriptor
+                .ImplementsNode()
+                .ResolveNodeWith<Resolvers>(c => c.GetVariable(default!, default!, default));
+
             descriptor.Field("values")
                 .ResolveWith<VariableResolvers>(_ => _.GetVariableValuesAsync(default!, default!));
-
         }
+
+        private class Resolvers
+        {
+            public Task<Variable?> GetVariable(
+                Guid id,
+                VariableByIdDataLoader variableById,
+                CancellationToken cancellationToken)
+            {
+                return variableById.LoadAsync(id, cancellationToken)!;
+            }
+        }
+
     }
 }

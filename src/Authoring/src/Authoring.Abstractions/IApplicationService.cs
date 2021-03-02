@@ -24,6 +24,7 @@ namespace Confix.Authoring
 
 
         Task<ApplicationPart> UpdateApplicationPartAsync(UpdateApplicationPartRequest request, CancellationToken cancellationToken);
+        Task<Application> GetByIdAsync(Guid id, CancellationToken cancellationToken);
     }
 
     public record AddApplicationRequest(
