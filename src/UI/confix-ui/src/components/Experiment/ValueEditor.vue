@@ -20,7 +20,8 @@ export default {
   data() {
     return {
       inputValue: null,
-      expanded: true,
+      expanded: false,
+      arrayListCount: 1
     };
   },
   methods: {
@@ -30,6 +31,10 @@ export default {
     onExpandCardClick: function () {
       this.expanded = !this.expanded;
     },
+    onAddArrayItem: function(){
+      this.arrayListCount++;
+      console.log('ADD');
+    }
   },
   render() {
     if (this.item.type === "bool") {
@@ -42,15 +47,28 @@ export default {
           items={this.item.values}
         ></VSelect>
       );
-    } else if (this.item.type === "object") {
-      return (
-        <VCard class="ml-2">
-          <VToolbar height={30} elevation={0} color="grey lighten-3">
+    } else if (this.item.type === "object" || this.item.type === "arrayItem") {
+
+      const expandIcon = <VIcon onclick={this.onExpandCardClick}> {this.expanded ? "mdi-chevron-up": "mdi-chevron-down"} </VIcon>
+
+      let toolbar = (<VToolbar height={30} elevation={0} color="grey lighten-3">
             {this.item.name}
             <VSpacer></VSpacer>
-            <VIcon onclick={this.onExpandCardClick}>mdi-chevron-up</VIcon>
-          </VToolbar>
+            {expandIcon}
+          </VToolbar>)
 
+      if ( this.item.type === "arrayItem"){
+              toolbar = (<VToolbar height={30} elevation={0} color="grey lighten-3">
+              Item {this.item.index}
+            <VSpacer></VSpacer>
+            <VIcon>mdi-trash-can-outline</VIcon>
+                        {expandIcon}
+          </VToolbar>)
+      }
+
+      return (
+        <VCard class="ml-2">
+          {toolbar}
           {this.expanded && (
             <VCardText>
               {this.item.items.map((item) => {
@@ -60,7 +78,54 @@ export default {
           )}
         </VCard>
       );
+      } else if (this.item.type === "array") {
+
+        const arrayItems = [];
+        for (let i = 0; i < this.arrayListCount; i++) {
+
+          arrayItems.push({
+            type: "arrayItem",
+            name: this.item.name,
+            index: i,
+            items: this.item.items
+          });
+        } 
+
+return(
+        <VCard class="mt-4">
+          <VToolbar height={30} elevation={0} color="grey lighten-1">
+            {this.item.name}
+            <VSpacer></VSpacer>
+            <VIcon onclick={this.onExpandCardClick}>{this.expanded ? "mdi-chevron-up": "mdi-chevron-down"}</VIcon>
+            <VIcon onclick={this.onAddArrayItem}>mdi-plus</VIcon>
+          </VToolbar>
+
+          {this.expanded && (
+            <VCardText>
+              {arrayItems.map((item) => {
+                return <value-editor item={item}> </value-editor>;
+              })}
+            </VCardText>
+          )}
+        </VCard>
+)
+
+      } else if ( this.item.type === "number"){
+
+return(
+
+        <VTextField
+          dense
+          type="number"
+          on-input={this.changed}
+          value={this.item.value}
+          label={this.item.name}
+          append-icon="mdi-dots-horizontal"
+        ></VTextField>
+)
     } else {
+
+
       return (
         <VTextField
           dense

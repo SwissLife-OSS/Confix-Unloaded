@@ -71,6 +71,7 @@ export default {
       { text: "Environments", icon: "mdi-server", route: "Environments" },
       { text: "Vault", icon: "mdi-shield-star-outline", route: "Vault" },
       { text: "Explorer", icon: "mdi-file-tree-outline", route: "Explorer" },
+      { text: "Lab", icon: "mdi-test-tube", route: "Experiment" },
       { text: "Settings", icon: "mdi-cog-outline", route: "Settings" },
     ],
   }),
