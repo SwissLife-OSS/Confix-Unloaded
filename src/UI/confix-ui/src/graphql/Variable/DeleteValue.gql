@@ -1,5 +1,5 @@
-mutation deleteVariableValue($id: Uuid!) {
-  Variable_DeleteValue(id: $id) {
+mutation deleteVariableValue($input: DeleteVariableValueInput!) {
+  deleteVariableValue(input: $input) {
     variable{
       id
       name

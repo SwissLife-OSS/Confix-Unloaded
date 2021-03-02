@@ -1,18 +1,18 @@
 import apollo from "../apollo";
-import QUERY_GET_ALL_APPLICATION from "../graphql/Application/GetAll.gql";
-import MUTATION_ADD_APPLICATION from "../graphql/Application/Add.gql";
-import MUTATION_UPDATE_PART from "../graphql/Application/UpdatePart.gql";
+import QUERY_APPLICATION_GET_ALL from "../graphql/Application/GetAll.gql";
+import MUTATION_APPLICATION_CREATE from "../graphql/Application/Create.gql";
+import MUTATION_PART_UPDATE from "../graphql/Application/UpdatePart.gql";
 
 export const getAllApplications = async () => {
     return await apollo.query({
-        query: QUERY_GET_ALL_APPLICATION,
+        query: QUERY_APPLICATION_GET_ALL,
         variables: {}
     });
 };
 
-export const addApplication = async (input) => {
+export const createApplication = async (input) => {
     return await apollo.mutate({
-        mutation: MUTATION_ADD_APPLICATION,
+        mutation: MUTATION_APPLICATION_CREATE,
         variables: {
             input
         }
@@ -21,7 +21,7 @@ export const addApplication = async (input) => {
 
 export const updatePart = async (input) => {
     return await apollo.mutate({
-        mutation: MUTATION_UPDATE_PART,
+        mutation: MUTATION_PART_UPDATE,
         variables: {
             input
         }

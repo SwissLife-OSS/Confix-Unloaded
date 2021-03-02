@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using HotChocolate.Types;
+using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring.GraphQL
 {
@@ -23,7 +24,7 @@ namespace Confix.Authoring.GraphQL
         }
 
         public async Task<Variable> GetVariableAsync(
-            Guid id,
+            [ID(nameof(Variable))] Guid id,
             CancellationToken cancellationToken)
         {
             return await _variableService.GetByIdAsync(id,cancellationToken);

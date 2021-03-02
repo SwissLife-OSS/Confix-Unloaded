@@ -1,8 +1,9 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using HotChocolate;
+using Confix.Authoring.Store;
 using HotChocolate.Types;
+using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring.GraphQL
 {
@@ -16,37 +17,71 @@ namespace Confix.Authoring.GraphQL
             _variableService = variableService;
         }
 
-        [GraphQLName("Variable_Add")]
-        public async Task<UpdateVariablePayload> AddAsync(
-            AddVariableRequest input,
+        public async Task<UpdateVariablePayload> CreateVariableAsync(
+            CreateVariableInput input,
             CancellationToken cancellationToken)
         {
-            Variable variable = await _variableService.AddAsync(
-                input,
+            Variable variable = await _variableService.CreateAsync(
+                new CreateVariableRequest(input.Name, input.IsSecret)
+                {
+                    DefaultValue = input.DefaultValue,
+                    Namespace = input.Namespace
+                },
                 cancellationToken);
 
-            return new UpdateVariablePayload(variable); 
+            return new UpdateVariablePayload(variable);
         }
 
-        [GraphQLName("Variable_SaveValue")]
-        public async Task<UpdateVariableValuePayload> SaveValueAsync(
-            SaveVariableValueRequest input,
+        public async Task<UpdateVariableValuePayload> SaveVariableValueAsync(
+            SaveVariableValueInput input,
             CancellationToken cancellationToken)
         {
-            VariableValue value = await _variableService.SaveVariableValueAsync(
-                input,
+            VariableValue value = await _variableService.SaveValueAsync(
+                new SaveVariableValueRequest(input.VariableId, input.Value)
+                {
+                    ApplicationId = input.ApplicationId,
+                    PartId = input.PartId,
+                    ValueId = input.ValueId,
+                    EnvironmentId = input.EnvironmentId
+                },
                 cancellationToken);
 
             return new UpdateVariableValuePayload(value);
         }
 
-        [GraphQLName("Variable_DeleteValue")]
-        public async Task<DeleteVariableValuePayload> DeleteValueAsync(
-            Guid id, CancellationToken cancellationToken)
+        public async Task<DeleteVariableValuePayload> DeleteVariableValueAsync(
+            DeleteVariableValueInput input,
+            CancellationToken cancellationToken)
         {
-            Variable variable = await _variableService.DeleteValueAsync(id, cancellationToken);
+            Variable variable = await _variableService.DeleteValueAsync(input.id, cancellationToken);
 
-            return new DeleteVariableValuePayload(id, variable);
+            return new DeleteVariableValuePayload(input.id, variable);
         }
+    }
+
+    public record CreateVariableInput(string Name, bool IsSecret)
+    {
+        public string? Namespace { get; init; }
+
+        public string? DefaultValue { get; set; }
+    }
+
+    public record DeleteVariableValueInput([ID(nameof(VariableValue))] Guid id);
+
+    public record SaveVariableValueInput(
+        [ID(nameof(Variable))] Guid VariableId,
+        string Value)
+    {
+        [ID(nameof(VariableValue))]
+        public Guid? ValueId { get; init; }
+
+        [ID(nameof(Application))]
+        public Guid? ApplicationId { get; init; }
+
+        [ID(nameof(ApplicationPart))]
+        public Guid? PartId { get; init; }
+
+        //[ID(nameof(Environment))]
+        public Guid? EnvironmentId { get; init; }
     }
 }

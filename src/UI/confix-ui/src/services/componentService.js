@@ -1,18 +1,18 @@
 import apollo from "../apollo";
-import QUERY_GET_ALL_COMPONENT from "../graphql/Component/GetAll.gql";
-import MUTATION_ADD_COMPONENT from "../graphql/Component/Add.gql";
-import MUTATION_UPDATE_SCHEMA from "../graphql/Component/UpdateSchema.gql";
+import QUERY_COMPONENT_GET_ALL from "../graphql/Component/GetAll.gql";
+import MUTATION_COMPONENT_CREATE from "../graphql/Component/Create.gql";
+import MUTATION_SCHEMA_UPDATE from "../graphql/Component/UpdateSchema.gql";
 
 export const getAllComponents = async () => {
     return await apollo.query({
-        query: QUERY_GET_ALL_COMPONENT,
+        query: QUERY_COMPONENT_GET_ALL,
         variables: {}
     });
 };
 
-export const addComponent = async (input) => {
+export const createComponent = async (input) => {
     return await apollo.mutate({
-        mutation: MUTATION_ADD_COMPONENT,
+        mutation: MUTATION_COMPONENT_CREATE,
         variables: {
             input
         }
@@ -21,7 +21,7 @@ export const addComponent = async (input) => {
 
 export const updateSchema = async (input) => {
     return await apollo.mutate({
-        mutation: MUTATION_UPDATE_SCHEMA,
+        mutation: MUTATION_SCHEMA_UPDATE,
         variables: {
             input
         }

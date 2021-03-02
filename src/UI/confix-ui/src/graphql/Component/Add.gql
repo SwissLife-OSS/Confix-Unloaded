@@ -1,8 +1,0 @@
-mutation addComponent($input: AddComponentInput!) {
-  Component_Add(input: $input) {
-    component {
-      id
-      name
-    }
-  }
-}

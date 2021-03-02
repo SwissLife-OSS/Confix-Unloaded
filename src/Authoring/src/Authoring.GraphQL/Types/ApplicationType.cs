@@ -21,8 +21,10 @@ namespace Confix.Authoring.GraphQL.Types
             public Task<Application?> GetApplication(
                 Guid id,
                 ApplicationByIdDataLoader applicationById,
-                CancellationToken cancellationToken) =>
-                applicationById.LoadAsync(id, cancellationToken)!;
+                CancellationToken cancellationToken) {
+
+                return applicationById.LoadAsync(id, cancellationToken)!;
+            }
         }
     }
 }

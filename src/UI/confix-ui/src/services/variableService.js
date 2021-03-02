@@ -1,7 +1,7 @@
 import apollo from "../apollo";
 import QUERY_GET_ALL_VARIABLES from "../graphql/Variable/GetAll.gql";
 import QUERY_GET_BY_ID from "../graphql/Variable/GetById.gql";
-import MUTATION_ADD_VARIABLE from "../graphql/Variable/Add.gql";
+import MUTATION_VARIABLE_CREATE from "../graphql/Variable/Create.gql";
 import MUTATION_SAVE_VALUE from "../graphql/Variable/SaveValue.gql";
 import MUTATION_DELETE_VALUE from "../graphql/Variable/DeleteValue.gql";
 
@@ -21,9 +21,9 @@ export const getById = async (id) => {
     });
 };
 
-export const addVariable = async (input) => {
+export const createVariable = async (input) => {
     return await apollo.mutate({
-        mutation: MUTATION_ADD_VARIABLE,
+        mutation: MUTATION_VARIABLE_CREATE,
         variables: {
             input
         }
@@ -39,11 +39,11 @@ export const saveValue = async (input) => {
     });
 };
 
-export const deleteValue = async (id) => {
+export const deleteValue = async (input) => {
     return await apollo.mutate({
         mutation: MUTATION_DELETE_VALUE,
         variables: {
-            id
+            input
         }
     });
 };

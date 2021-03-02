@@ -1,5 +1,5 @@
-mutation addVariable($input: AddVariableInput!) {
-  Variable_Add(input: $input) {
+mutation createVariable($input: CreateVariableInput!) {
+  createVariable(input: $input) {
     variable {
       id
       name

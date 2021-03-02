@@ -1,6 +1,5 @@
-import { addVariable, deleteValue, getAllVariables, saveValue } from "../services/variableService";
+import { createVariable, deleteValue, getAllVariables, saveValue } from "../services/variableService";
 import { excuteGraphQL } from "./graphqlClient";
-
 
 const variableStore = {
     namespaced: true,
@@ -29,10 +28,10 @@ const variableStore = {
                 commit('VARS_LOADED', result.data.variables);
             }
         },
-        async addVariable({ commit, dispatch }, input) {
-            const result = await excuteGraphQL(() => addVariable(input), dispatch);
+        async createVariable({ commit, dispatch }, input) {
+            const result = await excuteGraphQL(() => createVariable(input), dispatch);
             if (result.success) {
-                commit('VAR_ADDED', result.data.Variable_Add.variable);
+                commit('VAR_ADDED', result.data.createVariable.variable);
 
                 dispatch("shell/addMessage", {
                     type: "SUCCES",
@@ -44,12 +43,10 @@ const variableStore = {
             const result = await excuteGraphQL(() => saveValue(input), dispatch);
             if (result.success) {
 
-                console.log(result.data.Variable_SaveValue.value);
-
                 //TODO: Commit mutation in shell
-                commit('VAR_VALUE_SAVED', result.data.Variable_SaveValue.value);
+                commit('VAR_VALUE_SAVED', result.data.saveVariableValue.value);
 
-                commit('shell/VAR_VALUE_SAVED', result.data.Variable_SaveValue.value, { root: true })
+                commit('shell/VAR_VALUE_SAVED', result.data.saveVariableValue.value, { root: true })
 
                 dispatch("shell/addMessage", {
                     type: "SUCCES",
@@ -58,9 +55,9 @@ const variableStore = {
             }
         },
         async deleteValue({ commit, dispatch }, id) {
-            const result = await excuteGraphQL(() => deleteValue(id), dispatch);
+            const result = await excuteGraphQL(() => deleteValue({ id }), dispatch);
             if (result.success) {
-                commit('shell/VAR_VALUE_DELETED', result.data.Variable_DeleteValue, { root: true });
+                commit('shell/VAR_VALUE_DELETED', result.data.deleteVariableValue, { root: true });
             }
 
             dispatch("shell/addMessage", {

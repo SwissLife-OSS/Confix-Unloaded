@@ -23,7 +23,7 @@ namespace Confix.Authoring.GraphQL.Types
         private class Resolvers
         {
             public async Task<IEnumerable<Component>> GetComponentsAsync(
-                ApplicationPart part,
+                [Parent] ApplicationPart part,
                 [Service] IComponentService componentService,
                 CancellationToken cancellationToken)
             {

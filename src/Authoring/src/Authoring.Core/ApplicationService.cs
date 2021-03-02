@@ -22,6 +22,13 @@ namespace Confix.Authoring
             return await _applicationStore.GetAllAsync(cancellationToken);
         }
 
+        public async Task<Application> GetByIdAsync(
+            Guid id,
+            CancellationToken cancellationToken)
+        {
+            return await _applicationStore.GetByIdAsync(id, cancellationToken);
+        }
+
         public async Task<IEnumerable<Application>> GetManyAsync(
             IEnumerable<Guid> ids,
             CancellationToken cancellationToken)

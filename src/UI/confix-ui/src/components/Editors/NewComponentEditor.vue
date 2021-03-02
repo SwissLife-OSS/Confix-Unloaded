@@ -37,10 +37,10 @@ export default {
   },
   computed: {},
   methods: {
-    ...mapActions("comp", ["addComponent"]),
+    ...mapActions("comp", ["createComponent"]),
     ...mapActions("shell", ["closeActiveTab"]),
     onClickSave: function () {
-      this.addComponent({
+      this.createComponent({
         name: this.newComponent.name,
       });
       this.closeActiveTab();

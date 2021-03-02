@@ -1,4 +1,4 @@
-query variableById($id: Uuid!) {
+query variableById($id: ID!) {
   variable(id: $id) {
     id
     name

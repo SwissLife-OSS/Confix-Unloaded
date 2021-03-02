@@ -24,10 +24,12 @@ namespace Confix.Authoring
 
 
         Task<ApplicationPart> UpdateApplicationPartAsync(UpdateApplicationPartRequest request, CancellationToken cancellationToken);
+        Task<Application> GetByIdAsync(Guid id, CancellationToken cancellationToken);
     }
 
     public record AddApplicationRequest(
         string Name,
+        string Namespace,
         IReadOnlyList<string>? Parts = null);
 
     public record RenameApplicationRequest(

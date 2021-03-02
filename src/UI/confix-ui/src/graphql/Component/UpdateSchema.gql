@@ -1,5 +1,5 @@
-mutation updateSchema($input: UpdateComponentSchemaInput!) {
-  Component_UpdateSchema(input: $input) {
+mutation updateComponentSchema($input: UpdateComponentSchemaInput!) {
+  updateComponentSchema(input: $input) {
     component {
       id
       name

@@ -22,8 +22,9 @@ namespace Confix.Authoring.GraphQL
         {
             Application application =
                 await _applicationService.AddAsync(
-                    new AddApplicationRequest(input.Name, input.Parts),
+                    new AddApplicationRequest(input.Name, input.Namespace, input.Parts),
                     cancellationToken);
+
             return new CreateApplicationPayload(application);
         }
 
@@ -50,7 +51,8 @@ namespace Confix.Authoring.GraphQL
             ApplicationPart applicationPart =
                 await _applicationService.UpdateApplicationPartAsync(
                     new UpdateApplicationPartRequest(input.ApplicationId,
-                        input.Id) {Name = input.Name},
+                        input.Id)
+                    { Name = input.Name },
                     cancellationToken);
 
             return new RenameApplicationPartPayload(applicationPart);
@@ -58,17 +60,23 @@ namespace Confix.Authoring.GraphQL
 
         [Throws(typeof(ApplicationIdInvalid))]
         [Throws(typeof(ApplicationPartIdInvalid))]
-        public async Task<AddComponentsToApplicationPartPayload> AddComponentsToApplicationPartAsync(
-            AddComponentsToApplicationPartInput input,
+        public async Task<UpdateApplicationPartPayload> UpdateApplicationPartAsync(
+            UpdateApplicationPartInput input,
             CancellationToken cancellationToken)
         {
             ApplicationPart applicationPart =
                 await _applicationService.UpdateApplicationPartAsync(
-                    new UpdateApplicationPartRequest(input.ApplicationId,
-                        input.Id) {Components = input.ComponentIds},
+                    new UpdateApplicationPartRequest(input.ApplicationId, input.PartId)
+                    {
+                        Components = input.Components,
+                        Name = input.Name
+                    },
                     cancellationToken);
 
-            return new AddComponentsToApplicationPartPayload(applicationPart);
+            Application application = await _applicationService
+                .GetByIdAsync(input.ApplicationId, cancellationToken);
+
+            return new UpdateApplicationPartPayload(applicationPart, application);
         }
     }
 }

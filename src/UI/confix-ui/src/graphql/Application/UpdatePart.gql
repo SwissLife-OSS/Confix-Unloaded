@@ -1,5 +1,5 @@
 mutation updatePart($input: UpdateApplicationPartInput!) {
-  ApplicationPart_Update(input: $input) {
+  updateApplicationPart(input: $input) {
     application {
       id
       name

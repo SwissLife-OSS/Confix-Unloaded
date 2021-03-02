@@ -56,7 +56,7 @@ export default {
   },
   computed: {},
   methods: {
-    ...mapActions("vars", ["addVariable"]),
+    ...mapActions("vars", ["createVariable"]),
     ...mapActions("shell", ["closeActiveTab"]),
     onAction: function (action) {
       if (action === "SAVE") {
@@ -64,7 +64,7 @@ export default {
       }
     },
     saveNewVariable: function () {
-      this.addVariable({
+      this.createVariable({
         name: this.newVariable.name,
         namespace: this.newVariable.namespace,
         isSecret: this.newVariable.isSecret,
