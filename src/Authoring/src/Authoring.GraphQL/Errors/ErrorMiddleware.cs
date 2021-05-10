@@ -15,8 +15,8 @@ namespace Confix.Authoring.GraphQL
         {
             _next = next ??
                 throw new ArgumentNullException(nameof(next));
-            //_errorHandlers = errorHandlers ??
-            //    throw new ArgumentNullException(nameof(errorHandlers));
+            _errorHandlers = errorHandlers ??
+                throw new ArgumentNullException(nameof(errorHandlers));
         }
 
         public async ValueTask InvokeAsync(IMiddlewareContext context)

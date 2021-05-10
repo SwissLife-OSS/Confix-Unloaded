@@ -1,4 +1,4 @@
-namespace Confix.Authoring.GraphQL
+namespace Confix.Authoring.GraphQL.Applications
 {
     public class ApplicationNameTaken : UserError
     {

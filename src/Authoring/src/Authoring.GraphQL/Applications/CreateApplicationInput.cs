@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Confix.Authoring.GraphQL
+namespace Confix.Authoring.GraphQL.Applications
 {
     public record CreateApplicationInput(
         string Name,

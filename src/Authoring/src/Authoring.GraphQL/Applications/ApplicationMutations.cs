@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 using Confix.Authoring.Store;
 using HotChocolate.Types;
 
-namespace Confix.Authoring.GraphQL
+namespace Confix.Authoring.GraphQL.Applications
 {
-    [ExtendObjectType(RootTypes.Mutation)]
+    [ExtendObjectType(OperationTypeNames.Mutation)]
     public class ApplicationMutations
     {
         private readonly IApplicationService _applicationService;
@@ -15,7 +15,7 @@ namespace Confix.Authoring.GraphQL
             _applicationService = applicationService;
         }
 
-        [Throws(typeof(ApplicationNameTaken))]
+        [Error(typeof(ApplicationNameTaken))]
         public async Task<CreateApplicationPayload> CreateApplicationAsync(
             CreateApplicationInput input,
             CancellationToken cancellationToken)
@@ -28,8 +28,8 @@ namespace Confix.Authoring.GraphQL
             return new CreateApplicationPayload(application);
         }
 
-        [Throws(typeof(ApplicationIdInvalid))]
-        [Throws(typeof(ApplicationNameTaken))]
+        [Error(typeof(ApplicationIdInvalid))]
+        [Error(typeof(ApplicationNameTaken))]
         public async Task<RenameApplicationPayload> RenameApplicationAsync(
             RenameApplicationInput input,
             CancellationToken cancellationToken)
@@ -41,9 +41,9 @@ namespace Confix.Authoring.GraphQL
             return new RenameApplicationPayload(application);
         }
 
-        [Throws(typeof(ApplicationIdInvalid))]
-        [Throws(typeof(ApplicationPartIdInvalid))]
-        [Throws(typeof(ApplicationPartNameTaken))]
+        [Error(typeof(ApplicationIdInvalid))]
+        [Error(typeof(ApplicationPartIdInvalid))]
+        [Error(typeof(ApplicationPartNameTaken))]
         public async Task<RenameApplicationPartPayload> RenameApplicationPartAsync(
             RenameApplicationPartInput input,
             CancellationToken cancellationToken)
@@ -58,25 +58,26 @@ namespace Confix.Authoring.GraphQL
             return new RenameApplicationPartPayload(applicationPart);
         }
 
-        [Throws(typeof(ApplicationIdInvalid))]
-        [Throws(typeof(ApplicationPartIdInvalid))]
-        public async Task<UpdateApplicationPartPayload> UpdateApplicationPartAsync(
-            UpdateApplicationPartInput input,
+        [Error(typeof(ApplicationIdInvalid))]
+        [Error(typeof(ApplicationPartIdInvalid))]
+        public async Task<AddComponentsToApplicationPartPayload> AddComponentsToApplicationPartAsync(
+            AddComponentsToApplicationPartInput input,
             CancellationToken cancellationToken)
         {
             ApplicationPart applicationPart =
                 await _applicationService.UpdateApplicationPartAsync(
                     new UpdateApplicationPartRequest(input.ApplicationId, input.PartId)
                     {
-                        Components = input.Components,
-                        Name = input.Name
+                        Components = input.ComponentIds,
                     },
                     cancellationToken);
 
-            Application application = await _applicationService
-                .GetByIdAsync(input.ApplicationId, cancellationToken);
+            Application application =
+                await _applicationService.GetByIdAsync(
+                    input.ApplicationId,
+                    cancellationToken);
 
-            return new UpdateApplicationPartPayload(applicationPart, application);
+            return new AddComponentsToApplicationPartPayload(applicationPart, application);
         }
     }
 }

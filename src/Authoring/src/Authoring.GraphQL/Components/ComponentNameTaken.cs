@@ -1,6 +1,7 @@
 using System;
+using Confix.Authoring.GraphQL.Applications;
 
-namespace Confix.Authoring.GraphQL
+namespace Confix.Authoring.GraphQL.Components
 {
     public class ComponentNameTaken : UserError
     {

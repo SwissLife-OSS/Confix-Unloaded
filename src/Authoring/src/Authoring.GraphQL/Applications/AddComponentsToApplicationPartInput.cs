@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using Confix.Authoring.Store;
 using HotChocolate.Types.Relay;
 
-namespace Confix.Authoring.GraphQL
+namespace Confix.Authoring.GraphQL.Applications
 {
-    public record UpdateApplicationPartInput(
+    public record AddComponentsToApplicationPartInput(
         [ID(nameof(ApplicationPart))] Guid PartId,
         [ID(nameof(Application))] Guid ApplicationId,
-        [ID(nameof(Component))] IReadOnlyList<Guid> Components,
-        string Name);
+        [ID(nameof(Component))] IReadOnlyList<Guid> ComponentIds);
 }

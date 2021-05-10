@@ -1,6 +1,7 @@
+using Confix.Authoring.GraphQL.Applications;
+using Confix.Authoring.GraphQL.Components;
 using Confix.Authoring.GraphQL.DataLoaders;
 using Confix.Authoring.GraphQL.Serialization;
-using Confix.Authoring.GraphQL.Types;
 using HotChocolate.Execution.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -38,8 +39,7 @@ namespace Confix.Authoring.GraphQL
                 .AddTypes()
                 .AddDataLoaders()
                 .AddAuthorization()
-                .AddErrorTypes()
-                .RegisterTypes();
+                .AddErrorTypes();
 
             return builder;
         }
@@ -54,23 +54,13 @@ namespace Confix.Authoring.GraphQL
                 .AddObjectType<ApplicationNameTaken>();
         }
 
-        private static IRequestExecutorBuilder RegisterTypes(
-            this IRequestExecutorBuilder builder)
-        {
-            return builder
-                .AddType<ApplicationType>()
-                .AddType<ApplicationPartType>()
-                .AddType<ApplicationPartComponentType>()
-                .AddType<ComponentType>();
-        }
-
         private static IRequestExecutorBuilder AddQueries(this IRequestExecutorBuilder builder)
         {
             builder
-                .AddQueryType(d => d.Name(RootTypes.Query))
-                .AddType<ApplicationQueries>()
-                .AddType<VariableQueries>()
-                .AddType<ComponentQueries>();
+                .AddQueryType()
+                .AddTypeExtension<ApplicationQueries>()
+                .AddTypeExtension<VariableQueries>()
+                .AddTypeExtension<ComponentQueries>();
 
             return builder;
         }
@@ -78,10 +68,10 @@ namespace Confix.Authoring.GraphQL
         private static IRequestExecutorBuilder AddMutations(this IRequestExecutorBuilder builder)
         {
             builder
-                .AddMutationType(d => d.Name(RootTypes.Mutation))
-                .AddType<ApplicationMutations>()
-                .AddType<VariableMutations>()
-                .AddType<ComponentMutations>();
+                .AddMutationType()
+                .AddTypeExtension<ApplicationMutations>()
+                .AddTypeExtension<VariableMutations>()
+                .AddTypeExtension<ComponentMutations>();
 
             return builder;
         }
@@ -90,7 +80,11 @@ namespace Confix.Authoring.GraphQL
         {
             builder
                 .AddType<VariableType>()
-                .AddType<VariableValueType>();
+                .AddType<VariableValueType>()
+                .AddTypeExtension<ApplicationNode>()
+                .AddTypeExtension<ApplicationPartNode>()
+                .AddTypeExtension<ApplicationPartComponentNode>()
+                .AddTypeExtension<ComponentNode>();
 
             return builder;
         }

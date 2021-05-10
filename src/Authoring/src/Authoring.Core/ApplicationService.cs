@@ -95,12 +95,12 @@ namespace Confix.Authoring
                 throw new EntityIdInvalidException(nameof(ApplicationPart), request.ApplicationId);
             }
 
-            if(part is { Components: { } components })
+            if(request.Components is not null)
             {
-                part.Components = components.Select(
-                    component => new ApplicationPartComponent
+                part.Components = request.Components.Select(
+                    componentId => new ApplicationPartComponent
                     {
-                        ComponentId = component.ComponentId
+                        ComponentId = componentId
                     }).ToList();
             }
 

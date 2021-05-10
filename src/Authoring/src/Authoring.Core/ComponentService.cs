@@ -28,29 +28,32 @@ namespace Confix.Authoring
             return await _componentStore.GetManyAsync(ids, cancellationToken);
         }
 
-        public async Task<Component> AddAsync(
-            AddComponentRequest request,
+        public async Task<Component> CreateAsync(
+            string name,
+            string schema,
             CancellationToken cancellationToken)
         {
             var component = new Component
             {
                 Id = Guid.NewGuid(),
-                State = ComponentState.Active,
-                Name = request.Name,
+                Name = name,
+                Schema = schema,
+                State = ComponentState.Active
             };
 
             return await _componentStore.AddAsync(component, cancellationToken);
         }
 
         public async Task<Component> UpdateSchemaAsync(
-            UpdateComponentSchemaRequest request,
+            Guid componentId,
+            string schema,
             CancellationToken cancellationToken)
         {
             Component component = await _componentStore.GetByIdAsync(
-                request.Id,
+                componentId,
                 cancellationToken);
 
-            component.Schema = request.Schema;
+            component.Schema = schema;
 
             await _componentStore.UpdateAsync(component, cancellationToken);
 

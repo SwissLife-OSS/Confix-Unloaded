@@ -3,7 +3,7 @@ using Confix.Authoring.Store;
 using HotChocolate.Types.Relay;
 using HotChocolate.Utilities;
 
-namespace Confix.Authoring.GraphQL
+namespace Confix.Authoring.GraphQL.Applications
 {
     public class ApplicationPartIdInvalid : IUserError
     {

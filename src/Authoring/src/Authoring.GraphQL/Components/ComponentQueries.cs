@@ -7,9 +7,9 @@ using HotChocolate;
 using HotChocolate.Types;
 using HotChocolate.Types.Relay;
 
-namespace Confix.Authoring.GraphQL
+namespace Confix.Authoring.GraphQL.Components
 {
-    [ExtendObjectType(RootTypes.Query)]
+    [ExtendObjectType(OperationTypeNames.Query)]
     public class ComponentQueries
     {
         public Task<IEnumerable<Component>> GetComponentsAsync(

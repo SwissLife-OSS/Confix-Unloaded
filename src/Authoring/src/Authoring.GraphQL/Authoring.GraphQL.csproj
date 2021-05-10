@@ -15,4 +15,8 @@
     <ProjectReference Include="..\Authoring.Core\Authoring.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Types" />
+  </ItemGroup>
+
 </Project>

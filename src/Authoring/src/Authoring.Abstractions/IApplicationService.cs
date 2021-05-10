@@ -22,8 +22,8 @@ namespace Confix.Authoring
 
         Task<IEnumerable<ApplicationPart>> GetManyPartsAsync(IEnumerable<Guid> ids, CancellationToken cancellationToken);
 
-
         Task<ApplicationPart> UpdateApplicationPartAsync(UpdateApplicationPartRequest request, CancellationToken cancellationToken);
+
         Task<Application> GetByIdAsync(Guid id, CancellationToken cancellationToken);
     }
 
@@ -40,6 +40,6 @@ namespace Confix.Authoring
     {
         public string? Name { get; init; }
 
-        public IEnumerable<Guid>? Components { get; init; }
+        public IReadOnlyList<Guid>? Components { get; init; }
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Confix.Authoring.Store;
@@ -25,7 +26,7 @@ namespace Confix.Authoring.GraphQL.DataLoaders
             IReadOnlyList<Guid> keys,
             CancellationToken cancellationToken)
         {
-            IEnumerable<Application> applications = 
+            IEnumerable<Application> applications =
                 await _applicationService.GetManyAsync(
                     keys,
                     cancellationToken);
