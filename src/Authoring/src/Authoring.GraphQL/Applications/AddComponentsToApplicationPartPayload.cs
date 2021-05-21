@@ -1,19 +1,46 @@
+using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Confix.Authoring.GraphQL.DataLoaders;
 using Confix.Authoring.Store;
+using HotChocolate;
 
 namespace Confix.Authoring.GraphQL.Applications
 {
     public class AddComponentsToApplicationPartPayload
     {
+        private readonly Guid _applicationPartId;
+        private Application? _application;
+
         public AddComponentsToApplicationPartPayload(
-            ApplicationPart? applicationPart,
-            Application? application)
+            Guid applicationPartId)
         {
-            ApplicationPart = applicationPart;
-            Application = application;
+            _applicationPartId = applicationPartId;
         }
 
-        public ApplicationPart? ApplicationPart { get; }
+        public async Task<Application?> GetApplicationAsync(
+            [Service] IApplicationService applicationService,
+            CancellationToken cancellationToken)
+        {
+            if (_application is null)
+            {
+                _application = await applicationService.GetByPartIdAsync(
+                    _applicationPartId,
+                    cancellationToken);
+            }
 
-        public Application? Application { get; }
+            return _application;
+        }
+
+        public async Task<ApplicationPart?> GetApplicationPartAsync(
+            [Service] IApplicationService applicationService,
+            CancellationToken cancellationToken)
+        {
+            Application? application = await GetApplicationAsync(
+                applicationService,
+                cancellationToken);
+            return application?.Parts.FirstOrDefault(t => t.Id == _applicationPartId);
+        }
     }
 }

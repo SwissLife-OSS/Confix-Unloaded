@@ -12,6 +12,8 @@ namespace Confix.Authoring.Store
         [Required]
         public string? Name { get; set; }
 
+        public string? Namespace { get; set; }
+
         public ICollection<ApplicationPart> Parts { get; set; } =
             new List<ApplicationPart>();
     }

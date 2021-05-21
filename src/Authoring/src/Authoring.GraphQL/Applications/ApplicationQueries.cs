@@ -1,9 +1,11 @@
 using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Confix.Authoring.GraphQL.Applications.Filters;
 using Confix.Authoring.GraphQL.DataLoaders;
 using Confix.Authoring.Store;
+using HotChocolate.Data;
 using HotChocolate.Types;
 using HotChocolate.Types.Relay;
 
@@ -19,9 +21,10 @@ namespace Confix.Authoring.GraphQL.Applications
             _applicationService = applicationService;
         }
 
-        public Task<IEnumerable<Application>> GetApplicationsAsync(
-            CancellationToken cancellationToken) =>
-            _applicationService.GetAllAsync(cancellationToken);
+        [UsePaging]
+        [UseFiltering(typeof(ApplicationFilterInputType))]
+        public IQueryable<Application> GetApplications() =>
+            _applicationService.QueryApplications();
 
         public Task<Application?> GetApplicationByIdAsync(
             [ID(nameof(Application))] Guid id,
@@ -30,4 +33,6 @@ namespace Confix.Authoring.GraphQL.Applications
             applicationById.LoadAsync(id, cancellationToken);
 
     }
+
+
 }

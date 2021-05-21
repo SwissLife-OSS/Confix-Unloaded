@@ -27,7 +27,7 @@ namespace Confix.Authoring.GraphQL.DataLoaders
             CancellationToken cancellationToken)
         {
             IEnumerable<Application> applications =
-                await _applicationService.GetManyAsync(
+                await _applicationService.GetManyByIdAsync(
                     keys,
                     cancellationToken);
 

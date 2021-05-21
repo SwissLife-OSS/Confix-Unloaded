@@ -16,11 +16,9 @@ namespace Confix.Authoring.GraphQL
                 .Services
                 .AddGraphQLServer()
                 .AddGraphQLTypes()
-                .TryAddTypeInterceptor<MutationErrorTypeInterceptor>()
-                .OnSchemaError((ctx, ex) =>
-                {
-
-                });
+                .AddFiltering()
+                .AddSorting()
+                .TryAddTypeInterceptor<MutationErrorTypeInterceptor>();
 
             builder
                 .Services

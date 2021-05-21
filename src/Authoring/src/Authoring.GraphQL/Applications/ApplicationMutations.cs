@@ -15,32 +15,44 @@ namespace Confix.Authoring.GraphQL.Applications
             _applicationService = applicationService;
         }
 
+        /// <summary>
+        /// Creates a new application configuration.
+        /// </summary>
         [Error(typeof(ApplicationNameTaken))]
         public async Task<CreateApplicationPayload> CreateApplicationAsync(
             CreateApplicationInput input,
             CancellationToken cancellationToken)
         {
             Application application =
-                await _applicationService.AddAsync(
-                    new AddApplicationRequest(input.Name, input.Namespace, input.Parts),
+                await _applicationService.CreateAsync(
+                    input.Name,
+                    input.Namespace,
+                    input.Parts,
                     cancellationToken);
 
             return new CreateApplicationPayload(application);
         }
 
+        /// <summary>
+        /// Renames an application configuration.
+        /// </summary>
         [Error(typeof(ApplicationIdInvalid))]
         [Error(typeof(ApplicationNameTaken))]
         public async Task<RenameApplicationPayload> RenameApplicationAsync(
             RenameApplicationInput input,
             CancellationToken cancellationToken)
         {
-            Application application =
-                await _applicationService.RenameAsync(
-                    new RenameApplicationRequest(input.Id, input.Name),
-                    cancellationToken);
-            return new RenameApplicationPayload(application);
+            await _applicationService.RenameAsync(
+                input.Id,
+                input.Name,
+                cancellationToken);
+
+            return new RenameApplicationPayload(input.Id);
         }
 
+        /// <summary>
+        /// Renames an application part of an application configuration.
+        /// </summary>
         [Error(typeof(ApplicationIdInvalid))]
         [Error(typeof(ApplicationPartIdInvalid))]
         [Error(typeof(ApplicationPartNameTaken))]
@@ -48,36 +60,28 @@ namespace Confix.Authoring.GraphQL.Applications
             RenameApplicationPartInput input,
             CancellationToken cancellationToken)
         {
-            ApplicationPart applicationPart =
-                await _applicationService.UpdateApplicationPartAsync(
-                    new UpdateApplicationPartRequest(input.ApplicationId,
-                        input.Id)
-                    { Name = input.Name },
-                    cancellationToken);
+            await _applicationService.RenamePartAsync(
+                input.ApplicationPartId,
+                input.Name,
+                cancellationToken);
 
-            return new RenameApplicationPartPayload(applicationPart);
+            return new RenameApplicationPartPayload(input.ApplicationPartId);
         }
 
-        [Error(typeof(ApplicationIdInvalid))]
+        /// <summary>
+        /// Adds a component to an application part.
+        /// </summary>
         [Error(typeof(ApplicationPartIdInvalid))]
         public async Task<AddComponentsToApplicationPartPayload> AddComponentsToApplicationPartAsync(
             AddComponentsToApplicationPartInput input,
             CancellationToken cancellationToken)
         {
-            ApplicationPart applicationPart =
-                await _applicationService.UpdateApplicationPartAsync(
-                    new UpdateApplicationPartRequest(input.ApplicationId, input.PartId)
-                    {
-                        Components = input.ComponentIds,
-                    },
-                    cancellationToken);
+            await _applicationService.AddComponentsToPartAsync(
+                input.ApplicationPartId,
+                input.ComponentIds,
+                cancellationToken);
 
-            Application application =
-                await _applicationService.GetByIdAsync(
-                    input.ApplicationId,
-                    cancellationToken);
-
-            return new AddComponentsToApplicationPartPayload(applicationPart, application);
+            return new AddComponentsToApplicationPartPayload(input.ApplicationPartId);
         }
     }
 }

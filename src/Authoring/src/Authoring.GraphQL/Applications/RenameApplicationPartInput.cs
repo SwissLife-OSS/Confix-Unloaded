@@ -4,8 +4,12 @@ using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring.GraphQL.Applications
 {
+    /// <summary>
+    /// Rename application part input data.
+    /// </summary>
+    /// <param name="ApplicationPartId">The application part ID</param>
+    /// <param name="Name">The new name of the application part.</param>
     public record RenameApplicationPartInput(
-        [ID(nameof(Application))] Guid ApplicationId,
-        [ID(nameof(ApplicationPart))] Guid Id,
+        [ID(nameof(ApplicationPart))] Guid ApplicationPartId,
         string Name);
 }
