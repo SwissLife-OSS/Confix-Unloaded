@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Confix.Authoring.GraphQL.DataLoaders;
@@ -8,7 +9,6 @@ using HotChocolate;
 using HotChocolate.Language;
 using HotChocolate.Types;
 using HotChocolate.Types.Relay;
-using TypeKind = HotChocolate.Utilities.Introspection.TypeKind;
 
 namespace Confix.Authoring.GraphQL.Components
 {
@@ -39,9 +39,9 @@ namespace Confix.Authoring.GraphQL.Components
                     types.Add(
                         new Dictionary<string, object?>
                         {
-                            { "name", objectType.Name.Value },
-                            { "kind", TypeKind.OBJECT },
-                            { "fields", fields }
+                            {"name", objectType.Name.Value},
+                            {"kind", TypeKind.Object},
+                            {"fields", fields}
                         });
 
                     foreach (var field in objectType.Fields)
@@ -54,14 +54,95 @@ namespace Confix.Authoring.GraphQL.Components
                     types.Add(
                         new Dictionary<string, object?>
                         {
-                            { "name", enumType.Name.Value },
-                            { "kind", TypeKind.ENUM },
-                            { "enumValues", enumType.Values.Select(t => t.Name.Value).ToList() }
+                            {"name", enumType.Name.Value},
+                            {"kind", TypeKind.Enum},
+                            {"enumValues", enumType.Values.Select(t => t.Name.Value).ToList()}
                         });
                 }
             }
 
             return types;
+        }
+
+        [GraphQLType(typeof(AnyType))]
+        public async Task<Dictionary<string, object?>?> GetValuesAsJson(
+            [Parent] Component component,
+            [Service] IComponentService componentService,
+            CancellationToken cancellationToken)
+        {
+            if (component.Values is null)
+            {
+                return null;
+            }
+
+            ISchema? schema = await componentService.GetSchemaByIdAsync(component.Id, cancellationToken);
+
+            if (schema is null)
+            {
+                return null;
+            }
+
+            var document = JsonDocument.Parse(component.Values!);
+            return DeserializeDictionary(document.RootElement, schema.QueryType);
+        }
+
+        private object? Deserialize(JsonElement element, IType type)
+        {
+            switch (element.ValueKind)
+            {
+                case JsonValueKind.Object:
+                    return DeserializeDictionary(element, type);
+
+                case JsonValueKind.Array:
+                    return DeserializeList(element, type);
+
+                case JsonValueKind.String:
+                    return element.GetString();
+
+                case JsonValueKind.Number:
+                    if (type.IsScalarType() && type.NamedType().Name.Equals(ScalarNames.Int))
+                    {
+                        return element.GetInt32();
+                    }
+
+                    return element.GetDouble();
+
+                case JsonValueKind.True:
+                    return true;
+
+                case JsonValueKind.False:
+                    return false;
+
+                default:
+                    return null;
+            }
+        }
+
+        private Dictionary<string, object?> DeserializeDictionary(JsonElement element, IType type)
+        {
+            var dictionary = new Dictionary<string, object?>();
+            var objectType = (ObjectType)type.NamedType();
+
+            foreach (JsonProperty property in element.EnumerateObject())
+            {
+                IType fieldType = objectType.Fields[property.Name].Type;
+                dictionary[property.Name] = Deserialize(property.Value, fieldType);
+            }
+
+            return dictionary;
+        }
+
+        private List<object?> DeserializeList(JsonElement array, IType type)
+        {
+            var list = new List<object?>();
+            IType elementType = type.ElementType();
+
+            foreach (JsonElement element in array.EnumerateArray())
+            {
+                list.Add(Deserialize(element, elementType));
+            }
+
+            return list;
         }
 
         private Dictionary<string, object?> CreateFieldDto(
@@ -71,8 +152,7 @@ namespace Confix.Authoring.GraphQL.Components
             // TODO : add validator
             return new()
             {
-                { "name", field.Name.Value },
-                { "type", CreateTypeDto(field.Type, typeKinds) }
+                {"name", field.Name.Value}, {"type", CreateTypeDto(field.Type, typeKinds)}
             };
         }
 
@@ -84,16 +164,15 @@ namespace Confix.Authoring.GraphQL.Components
             {
                 NonNullTypeNode nnt => new Dictionary<string, object?>
                 {
-                    { "kind", TypeKind.NON_NULL },
-                    { "ofType", CreateTypeDto(nnt.Type, typeKinds) },
+                    {"kind", TypeKind.NonNull}, {"ofType", CreateTypeDto(nnt.Type, typeKinds)},
                 },
                 ListTypeNode lt => new Dictionary<string, object?>
                 {
-                    { "kind", TypeKind.LIST }, { "ofType", CreateTypeDto(lt.Type, typeKinds) },
+                    {"kind", TypeKind.List}, {"ofType", CreateTypeDto(lt.Type, typeKinds)},
                 },
                 NamedTypeNode nt => new Dictionary<string, object?>
                 {
-                    { "kind", typeKinds[nt.Name.Value] }, { "name", nt.Name.Value },
+                    {"kind", typeKinds[nt.Name.Value]}, {"name", nt.Name.Value},
                 },
                 _ => throw new InvalidOperationException("Invalid Type Structure.")
             };
@@ -103,21 +182,21 @@ namespace Confix.Authoring.GraphQL.Components
         {
             Dictionary<string, TypeKind> typeKinds = new()
             {
-                { ScalarNames.String, TypeKind.SCALAR },
-                { ScalarNames.Int, TypeKind.SCALAR },
-                { ScalarNames.Boolean, TypeKind.SCALAR },
-                { ScalarNames.Float, TypeKind.SCALAR }
+                {ScalarNames.String, TypeKind.Scalar},
+                {ScalarNames.Int, TypeKind.Scalar},
+                {ScalarNames.Boolean, TypeKind.Scalar},
+                {ScalarNames.Float, TypeKind.Scalar}
             };
 
             foreach (var definition in document.Definitions)
             {
                 if (definition is ObjectTypeDefinitionNode objectType)
                 {
-                    typeKinds[objectType.Name.Value] = TypeKind.OBJECT;
+                    typeKinds[objectType.Name.Value] = TypeKind.Object;
                 }
                 else if (definition is EnumTypeDefinitionNode enumType)
                 {
-                    typeKinds[enumType.Name.Value] = TypeKind.ENUM;
+                    typeKinds[enumType.Name.Value] = TypeKind.Enum;
                 }
             }
 

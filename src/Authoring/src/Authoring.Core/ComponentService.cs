@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Confix.Authoring.Store;
+using HotChocolate;
 
 namespace Confix.Authoring
 {
@@ -15,22 +17,43 @@ namespace Confix.Authoring
             _componentStore = componentStore;
         }
 
-        public async Task<IEnumerable<Component>> GetAllAsync(
-            CancellationToken cancellationToken)
+        public async Task<Component?> GetByIdAsync(
+            Guid id,
+            CancellationToken cancellationToken = default) =>
+            await _componentStore.GetByIdAsync(id, cancellationToken);
+
+        public async Task<ISchema?> GetSchemaByIdAsync(
+            Guid id,
+            CancellationToken cancellationToken = default)
         {
-            return await _componentStore.GetAllAsync(cancellationToken);
+            Component? component = await GetByIdAsync(id, cancellationToken);
+
+            if (component?.Schema is null)
+            {
+                return null;
+            }
+
+            return SchemaBuilder.New()
+                .AddDocumentFromString(component.Schema)
+                .Use(next => next)
+                .ModifyOptions(c =>
+                {
+                    c.QueryTypeName = "Component";
+                    c.StrictValidation = false;
+                })
+                .Create();
         }
 
-        public async Task<IEnumerable<Component>> GetManyAsync(
+        public Task<IReadOnlyCollection<Component>> GetManyByIdAsync(
             IEnumerable<Guid> ids,
-            CancellationToken cancellationToken)
-        {
-            return await _componentStore.GetManyAsync(ids, cancellationToken);
-        }
+            CancellationToken cancellationToken) =>
+            _componentStore.GetManyByIdAsync(ids, cancellationToken);
+
+        public IQueryable<Component> Query() => _componentStore.Query();
 
         public async Task<Component> CreateAsync(
             string name,
-            string schema,
+            string? schema,
             CancellationToken cancellationToken)
         {
             var component = new Component
@@ -47,6 +70,7 @@ namespace Confix.Authoring
         public async Task<Component> UpdateSchemaAsync(
             Guid componentId,
             string schema,
+            string? values,
             CancellationToken cancellationToken)
         {
             Component component = await _componentStore.GetByIdAsync(
@@ -54,6 +78,7 @@ namespace Confix.Authoring
                 cancellationToken);
 
             component.Schema = schema;
+            component.Values = values;
 
             await _componentStore.UpdateAsync(component, cancellationToken);
 

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using MongoDB.Driver;
@@ -18,13 +17,6 @@ namespace Confix.Authoring.Store.Mongo
             _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<Component>> GetAllAsync(
-            CancellationToken cancellationToken)
-        {
-            return await _dbContext.Components.AsQueryable()
-                .ToListAsync(cancellationToken);
-        }
-
         public async Task<Component> GetByIdAsync(
             Guid id,
             CancellationToken cancellationToken)
@@ -34,7 +26,7 @@ namespace Confix.Authoring.Store.Mongo
                 .FirstOrDefaultAsync(cancellationToken);
         }
 
-        public async Task<IEnumerable<Component>> GetManyAsync(
+        public async Task<IReadOnlyCollection<Component>> GetManyByIdAsync(
             IEnumerable<Guid> ids,
             CancellationToken cancellationToken)
         {
@@ -42,6 +34,9 @@ namespace Confix.Authoring.Store.Mongo
                 .Where(x => ids.Contains(x.Id))
                 .ToListAsync(cancellationToken);
         }
+
+        public IQueryable<Component> Query() =>
+            _dbContext.Components.AsQueryable();
 
         public async Task<Component> AddAsync(
             Component component,
@@ -62,7 +57,7 @@ namespace Confix.Authoring.Store.Mongo
             await _dbContext.Components.ReplaceOneAsync(
                 x => x.Id == component.Id,
                 component,
-                new ReplaceOptions { IsUpsert = false },
+                new ReplaceOptions {IsUpsert = false},
                 cancellationToken);
 
             return component;

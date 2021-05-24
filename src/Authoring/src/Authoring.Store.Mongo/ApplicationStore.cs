@@ -69,7 +69,7 @@ namespace Confix.Authoring.Store.Mongo
                 .ToList();
         }
 
-        public IQueryable<Application> QueryApplications() =>
+        public IQueryable<Application> Query() =>
             _dbContext.Applications.AsQueryable();
 
         public async Task<IEnumerable<Application>> GetAllAsync(

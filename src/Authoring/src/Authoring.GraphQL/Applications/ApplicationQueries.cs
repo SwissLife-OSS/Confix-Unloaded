@@ -24,7 +24,7 @@ namespace Confix.Authoring.GraphQL.Applications
         [UsePaging]
         [UseFiltering(typeof(ApplicationFilterInputType))]
         public IQueryable<Application> GetApplications() =>
-            _applicationService.QueryApplications();
+            _applicationService.Query();
 
         public Task<Application?> GetApplicationByIdAsync(
             [ID(nameof(Application))] Guid id,

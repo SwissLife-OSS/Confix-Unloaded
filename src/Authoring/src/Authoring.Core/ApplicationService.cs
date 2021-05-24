@@ -41,8 +41,8 @@ namespace Confix.Authoring
             CancellationToken cancellationToken = default) =>
             _store.GetManyPartsByIdAsync(ids, cancellationToken);
 
-        public IQueryable<Application> QueryApplications() =>
-            _store.QueryApplications();
+        public IQueryable<Application> Query() =>
+            _store.Query();
 
         public async Task<Application> CreateAsync(
             string name,

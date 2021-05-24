@@ -29,7 +29,7 @@ namespace Confix.Authoring
             IEnumerable<Guid> ids,
             CancellationToken cancellationToken = default);
 
-        IQueryable<Application> QueryApplications();
+        IQueryable<Application> Query();
 
         Task<Application> CreateAsync(
             string name,

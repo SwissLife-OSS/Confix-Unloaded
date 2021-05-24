@@ -97,7 +97,7 @@ namespace Confix.Authoring.Store
         /// <summary>
         /// Allows to query the application store.
         /// </summary>
-        IQueryable<Application> QueryApplications();
+        IQueryable<Application> Query();
 
         /// <summary>
         /// Adds a new application to the application store.

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Confix.Authoring.GraphQL.DataLoaders;
@@ -12,10 +13,10 @@ namespace Confix.Authoring.GraphQL.Components
     [ExtendObjectType(OperationTypeNames.Query)]
     public class ComponentQueries
     {
-        public Task<IEnumerable<Component>> GetComponentsAsync(
-            [Service] IComponentService componentService,
-            CancellationToken cancellationToken) =>
-            componentService.GetAllAsync(cancellationToken);
+        [UsePaging]
+        public IQueryable<Component> GetComponents(
+            [Service] IComponentService componentService) =>
+            componentService.Query();
 
         public Task<Component?> GetComponentByIdAsync(
             [ID(nameof(Component))] Guid id,

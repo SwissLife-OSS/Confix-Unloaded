@@ -20,7 +20,7 @@ namespace Confix.Authoring.GraphQL.Components
             CreateComponentInput input,
             CancellationToken cancellationToken)
         {
-            Authoring.Component component = await _componentService.CreateAsync(
+            Component component = await _componentService.CreateAsync(
                 input.Name,
                 input.Schema,
                 cancellationToken);
@@ -32,9 +32,10 @@ namespace Confix.Authoring.GraphQL.Components
             UpdateComponentSchemaInput input,
             CancellationToken cancellationToken)
         {
-            Authoring.Component component = await _componentService.UpdateSchemaAsync(
+            Component component = await _componentService.UpdateSchemaAsync(
                 input.Id,
                 input.Schema,
+                input.Values,
                 cancellationToken);
 
             return new UpdateComponentPayload(component);
@@ -47,25 +48,26 @@ namespace Confix.Authoring.GraphQL.Components
 
     public class CreateComponentPayload
     {
-        public CreateComponentPayload(Authoring.Component component)
+        public CreateComponentPayload(Component component)
         {
             Component = component;
         }
 
-        public Authoring.Component Component { get; }
+        public Component Component { get; }
     }
 
     public record UpdateComponentSchemaInput(
-        [ID(nameof(Authoring.Component))] Guid Id,
-        string Schema);
+        [ID(nameof(Component))] Guid Id,
+        string Schema,
+        string? Values);
 
     public class UpdateComponentSchemaPayload
     {
-        public UpdateComponentSchemaPayload(Authoring.Component component)
+        public UpdateComponentSchemaPayload(Component component)
         {
             Component = component;
         }
 
-        public Authoring.Component Component { get; }
+        public Component Component { get; }
     }
 }
