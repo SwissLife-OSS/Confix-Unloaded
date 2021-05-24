@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Confix.Authoring.GraphQL.DataLoaders;
+using Confix.Authoring.Internal;
 using HotChocolate;
 using HotChocolate.Language;
 using HotChocolate.Types;
@@ -65,6 +66,7 @@ namespace Confix.Authoring.GraphQL.Components
         }
 
         [GraphQLType(typeof(AnyType))]
+        [BindMember(nameof(Component.Values))]
         public async Task<Dictionary<string, object?>?> GetValuesAsJson(
             [Parent] Component component,
             [Service] IComponentService componentService,
@@ -83,66 +85,7 @@ namespace Confix.Authoring.GraphQL.Components
             }
 
             var document = JsonDocument.Parse(component.Values!);
-            return DeserializeDictionary(document.RootElement, schema.QueryType);
-        }
-
-        private object? Deserialize(JsonElement element, IType type)
-        {
-            switch (element.ValueKind)
-            {
-                case JsonValueKind.Object:
-                    return DeserializeDictionary(element, type);
-
-                case JsonValueKind.Array:
-                    return DeserializeList(element, type);
-
-                case JsonValueKind.String:
-                    return element.GetString();
-
-                case JsonValueKind.Number:
-                    if (type.IsScalarType() && type.NamedType().Name.Equals(ScalarNames.Int))
-                    {
-                        return element.GetInt32();
-                    }
-
-                    return element.GetDouble();
-
-                case JsonValueKind.True:
-                    return true;
-
-                case JsonValueKind.False:
-                    return false;
-
-                default:
-                    return null;
-            }
-        }
-
-        private Dictionary<string, object?> DeserializeDictionary(JsonElement element, IType type)
-        {
-            var dictionary = new Dictionary<string, object?>();
-            var objectType = (ObjectType)type.NamedType();
-
-            foreach (JsonProperty property in element.EnumerateObject())
-            {
-                IType fieldType = objectType.Fields[property.Name].Type;
-                dictionary[property.Name] = Deserialize(property.Value, fieldType);
-            }
-
-            return dictionary;
-        }
-
-        private List<object?> DeserializeList(JsonElement array, IType type)
-        {
-            var list = new List<object?>();
-            IType elementType = type.ElementType();
-
-            foreach (JsonElement element in array.EnumerateArray())
-            {
-                list.Add(Deserialize(element, elementType));
-            }
-
-            return list;
+            return ValueHelper.DeserializeDictionary(document.RootElement, schema.QueryType);
         }
 
         private Dictionary<string, object?> CreateFieldDto(

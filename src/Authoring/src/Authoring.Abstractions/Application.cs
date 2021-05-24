@@ -33,13 +33,7 @@ namespace Confix.Authoring.Store
     public class ApplicationPartComponent
     {
         public Guid ComponentId { get; set; }
-    }
 
-    public class ComponentValue
-    {
-
-        public string Name { get; }
-
-        public object Value { get; }
+        public string? Values { get; set; }
     }
 }
