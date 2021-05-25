@@ -24,6 +24,11 @@ namespace Confix.Authoring.GraphQL.Components
             CancellationToken cancellationToken) =>
             await componentById.LoadAsync(id, cancellationToken);
 
+        [BindMember(nameof(Component.Schema))]
+        [GraphQLType(typeof(SdlType))]
+        public string? GetSchema([Parent] Component component) =>
+            component.Schema;
+
         [GraphQLType(typeof(AnyType))]
         public List<object> GetSchemaAsJson([Parent] Component component)
         {
@@ -77,7 +82,9 @@ namespace Confix.Authoring.GraphQL.Components
                 return null;
             }
 
-            ISchema? schema = await componentService.GetSchemaByIdAsync(component.Id, cancellationToken);
+            ISchema? schema = await componentService.GetSchemaByIdAsync(
+                component.Id,
+                cancellationToken);
 
             if (schema is null)
             {

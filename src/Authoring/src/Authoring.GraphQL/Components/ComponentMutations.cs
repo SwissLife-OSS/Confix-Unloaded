@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using HotChocolate;
 using HotChocolate.Types;
 using HotChocolate.Types.Relay;
 
@@ -23,28 +25,57 @@ namespace Confix.Authoring.GraphQL.Components
             Component component = await _componentService.CreateAsync(
                 input.Name,
                 input.Schema,
+                input.Values,
                 cancellationToken);
 
             return new CreateComponentPayload(component);
         }
 
-        public async Task<UpdateComponentPayload> UpdateComponentSchemaAsync(
+        public async Task<RenameComponentPayload> RenameComponentAsync(
+            RenameComponentInput input,
+            CancellationToken cancellationToken)
+        {
+            Component component = await _componentService.RenameAsync(
+                input.Id,
+                input.Name,
+                cancellationToken);
+
+            return new RenameComponentPayload(component);
+        }
+
+        public async Task<UpdateComponentSchemaPayload> UpdateComponentSchemaAsync(
             UpdateComponentSchemaInput input,
             CancellationToken cancellationToken)
         {
-            Component component = await _componentService.UpdateSchemaAsync(
+            Component component = await _componentService.SetSchemaAsync(
                 input.Id,
                 input.Schema,
                 input.Values,
                 cancellationToken);
 
-            return new UpdateComponentPayload(component);
+            return new UpdateComponentSchemaPayload(component);
+        }
+
+        public async Task<UpdateComponentValuesPayload> UpdateComponentValuesAsync(
+            UpdateComponentValuesInput input,
+            CancellationToken cancellationToken)
+        {
+            Component component = await _componentService.SetValuesAsync(
+                input.Id,
+                input.Values,
+                cancellationToken);
+
+            return new UpdateComponentValuesPayload(component);
+
         }
     }
 
     public record CreateComponentInput(
         string Name,
-        [DefaultValue("type Component { text: String! }")] string Schema);
+        [DefaultValue("type Component { text: String! }")]
+        string Schema,
+        [GraphQLType(typeof(AnyType))] Dictionary<string, object?>? Values);
+
 
     public class CreateComponentPayload
     {
@@ -56,14 +87,42 @@ namespace Confix.Authoring.GraphQL.Components
         public Component Component { get; }
     }
 
+    public record RenameComponentInput(
+        [ID(nameof(Component))] Guid Id,
+        string Name);
+
     public record UpdateComponentSchemaInput(
         [ID(nameof(Component))] Guid Id,
         string Schema,
-        string? Values);
+        [GraphQLType(typeof(AnyType))] Dictionary<string, object?>? Values);
+
+    public record UpdateComponentValuesInput(
+        [ID(nameof(Component))] Guid Id,
+        [GraphQLType(typeof(AnyType))] Dictionary<string, object?> Values);
 
     public class UpdateComponentSchemaPayload
     {
         public UpdateComponentSchemaPayload(Component component)
+        {
+            Component = component;
+        }
+
+        public Component Component { get; }
+    }
+
+    public class UpdateComponentValuesPayload
+    {
+        public UpdateComponentValuesPayload(Component component)
+        {
+            Component = component;
+        }
+
+        public Component Component { get; }
+    }
+
+    public class RenameComponentPayload
+    {
+        public RenameComponentPayload(Component component)
         {
             Component = component;
         }

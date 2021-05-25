@@ -3,6 +3,7 @@ using Confix.Authoring.GraphQL.Components;
 using Confix.Authoring.GraphQL.DataLoaders;
 using Confix.Authoring.GraphQL.Serialization;
 using HotChocolate.Execution.Configuration;
+using HotChocolate.Types;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Confix.Authoring.GraphQL
@@ -18,11 +19,7 @@ namespace Confix.Authoring.GraphQL
                 .AddGraphQLTypes()
                 .AddFiltering()
                 .AddSorting()
-                .TryAddTypeInterceptor<MutationErrorTypeInterceptor>()
-                .OnSchemaError((c, ex) =>
-                {
-
-                });
+                .TryAddTypeInterceptor<MutationErrorTypeInterceptor>();
 
             builder
                 .Services
@@ -86,7 +83,8 @@ namespace Confix.Authoring.GraphQL
                 .AddTypeExtension<ApplicationNode>()
                 .AddTypeExtension<ApplicationPartNode>()
                 .AddTypeExtension<ApplicationPartComponentNode>()
-                .AddTypeExtension<ComponentNode>();
+                .AddTypeExtension<ComponentNode>()
+                .AddType<SdlType>();
 
             return builder;
         }
@@ -100,6 +98,14 @@ namespace Confix.Authoring.GraphQL
                 .AddDataLoader<ComponentByIdDataLoader>();
 
             return builder;
+        }
+    }
+
+    public class SdlType : StringType
+    {
+        public SdlType() : base("SDL", bind: BindingBehavior.Explicit)
+        {
+
         }
     }
 }

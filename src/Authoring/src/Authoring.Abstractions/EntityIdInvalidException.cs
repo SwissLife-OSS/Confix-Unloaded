@@ -2,7 +2,7 @@ using System;
 
 namespace Confix.Authoring
 {
-    public class EntityIdInvalidException : Exception
+    public sealed class EntityIdInvalidException : Exception
     {
         public EntityIdInvalidException(string entityName, Guid entityId)
             : base($"The {entityName} id `{entityId}` is invalid.")
@@ -14,10 +14,5 @@ namespace Confix.Authoring
         public string EntityName { get; }
 
         public Guid EntityId { get; }
-    }
-
-    public class NameTakenException : Exception
-    {
-        public string Name { get; }
     }
 }

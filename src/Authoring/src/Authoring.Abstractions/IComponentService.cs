@@ -25,13 +25,24 @@ namespace Confix.Authoring
 
         Task<Component> CreateAsync(
             string name,
-            string? schema,
+            string? schemaSdl,
+            Dictionary<string, object?>? values,
             CancellationToken cancellationToken);
 
-        Task<Component> UpdateSchemaAsync(
+        Task<Component> RenameAsync(
             Guid id,
-            string schema,
-            string? values,
+            string name,
+            CancellationToken cancellationToken);
+
+        Task<Component> SetSchemaAsync(
+            Guid id,
+            string schemaSdl,
+            Dictionary<string, object?>? values,
+            CancellationToken cancellationToken);
+
+        Task<Component> SetValuesAsync(
+            Guid id,
+            Dictionary<string, object?> values,
             CancellationToken cancellationToken);
     }
 }
