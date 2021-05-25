@@ -17,6 +17,11 @@ namespace Confix.Authoring.Internal
 
             foreach (var field in objectType.Fields)
             {
+                if (field.IsIntrospectionField)
+                {
+                    continue;
+                }
+
                 if (value.TryGetValue(field.Name, out var fieldValue))
                 {
                     Validate(fieldValue, field.Type);
@@ -26,6 +31,8 @@ namespace Confix.Authoring.Internal
                     throw new FieldRequiredException(objectType.Name, field.Name);
                 }
             }
+
+            // TODO : also validate fields that do not exist
         }
 
         private static void Validate(object? value, IType type)
@@ -41,28 +48,28 @@ namespace Confix.Authoring.Internal
                     break;
 
                 case string:
-                    if (!type.IsScalarType() && type.NamedType() is not StringType)
+                    if (!type.IsScalarType() || type.NamedType() is not StringType)
                     {
                         throw new ValueStructureInvalidException(type.NamedType().Name, value);
                     }
                     break;
 
                 case int:
-                    if (!type.IsScalarType() && type.NamedType() is not IntType and not FloatType)
+                    if (!type.IsScalarType() || type.NamedType() is not IntType and not FloatType)
                     {
                         throw new ValueStructureInvalidException(type.NamedType().Name, value);
                     }
                     break;
 
                 case bool:
-                    if (!type.IsScalarType() && type.NamedType() is not BooleanType)
+                    if (!type.IsScalarType() || type.NamedType() is not BooleanType)
                     {
                         throw new ValueStructureInvalidException(type.NamedType().Name, value);
                     }
                     break;
 
                 case double:
-                    if (!type.IsScalarType() && type.NamedType() is not FloatType)
+                    if (!type.IsScalarType() || type.NamedType() is not FloatType)
                     {
                         throw new ValueStructureInvalidException(type.NamedType().Name, value);
                     }

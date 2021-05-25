@@ -13,6 +13,6 @@ namespace Confix.Authoring
 
         public string Type { get; }
 
-        public object Field { get; }
+        public string Field { get; }
     }
 }

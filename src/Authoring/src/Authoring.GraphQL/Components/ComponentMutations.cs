@@ -18,6 +18,7 @@ namespace Confix.Authoring.GraphQL.Components
             _componentService = componentService;
         }
 
+        [Error(typeof(ComponentFieldRequired))]
         public async Task<CreateComponentPayload> CreateComponentAsync(
             CreateComponentInput input,
             CancellationToken cancellationToken)
@@ -31,6 +32,7 @@ namespace Confix.Authoring.GraphQL.Components
             return new CreateComponentPayload(component);
         }
 
+        [Error(typeof(ComponentFieldRequired))]
         public async Task<RenameComponentPayload> RenameComponentAsync(
             RenameComponentInput input,
             CancellationToken cancellationToken)
@@ -43,6 +45,7 @@ namespace Confix.Authoring.GraphQL.Components
             return new RenameComponentPayload(component);
         }
 
+        [Error(typeof(ComponentFieldRequired))]
         public async Task<UpdateComponentSchemaPayload> UpdateComponentSchemaAsync(
             UpdateComponentSchemaInput input,
             CancellationToken cancellationToken)
@@ -56,6 +59,7 @@ namespace Confix.Authoring.GraphQL.Components
             return new UpdateComponentSchemaPayload(component);
         }
 
+        [Error(typeof(ComponentFieldRequired))]
         public async Task<UpdateComponentValuesPayload> UpdateComponentValuesAsync(
             UpdateComponentValuesInput input,
             CancellationToken cancellationToken)
