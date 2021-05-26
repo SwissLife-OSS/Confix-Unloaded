@@ -3,6 +3,9 @@ mutation createComponent($input: CreateComponentInput!) {
     component {
       id
       name
+      schemaAsJson
+      valuesAsJson
+      schema
     }
   }
 }

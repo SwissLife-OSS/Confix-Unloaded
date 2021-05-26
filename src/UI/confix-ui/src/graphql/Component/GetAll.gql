@@ -1,6 +1,13 @@
 query allComponents {
   components {
-    id
-    name
+    edges {
+      node {
+        id
+        name
+        schemaAsJson
+        valuesAsJson
+        schema
+      }
+    }
   }
 }
