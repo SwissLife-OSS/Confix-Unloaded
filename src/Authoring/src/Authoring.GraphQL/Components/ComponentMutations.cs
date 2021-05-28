@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using HotChocolate;
 using HotChocolate.Types;
-using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring.GraphQL.Components
 {
@@ -18,7 +14,7 @@ namespace Confix.Authoring.GraphQL.Components
             _componentService = componentService;
         }
 
-        [Error(typeof(ComponentFieldRequired))]
+        [Error(typeof(ValueSchemaViolation))]
         public async Task<CreateComponentPayload> CreateComponentAsync(
             CreateComponentInput input,
             CancellationToken cancellationToken)
@@ -32,7 +28,6 @@ namespace Confix.Authoring.GraphQL.Components
             return new CreateComponentPayload(component);
         }
 
-        [Error(typeof(ComponentFieldRequired))]
         public async Task<RenameComponentPayload> RenameComponentAsync(
             RenameComponentInput input,
             CancellationToken cancellationToken)
@@ -45,7 +40,6 @@ namespace Confix.Authoring.GraphQL.Components
             return new RenameComponentPayload(component);
         }
 
-        [Error(typeof(ComponentFieldRequired))]
         public async Task<UpdateComponentSchemaPayload> UpdateComponentSchemaAsync(
             UpdateComponentSchemaInput input,
             CancellationToken cancellationToken)
@@ -53,13 +47,12 @@ namespace Confix.Authoring.GraphQL.Components
             Component component = await _componentService.SetSchemaAsync(
                 input.Id,
                 input.Schema,
-                input.Values,
                 cancellationToken);
 
             return new UpdateComponentSchemaPayload(component);
         }
 
-        [Error(typeof(ComponentFieldRequired))]
+        [Error(typeof(ValueSchemaViolation))]
         public async Task<UpdateComponentValuesPayload> UpdateComponentValuesAsync(
             UpdateComponentValuesInput input,
             CancellationToken cancellationToken)
@@ -70,67 +63,6 @@ namespace Confix.Authoring.GraphQL.Components
                 cancellationToken);
 
             return new UpdateComponentValuesPayload(component);
-
         }
-    }
-
-    public record CreateComponentInput(
-        string Name,
-        [DefaultValue("type Component { text: String! }")]
-        string Schema,
-        [GraphQLType(typeof(AnyType))] Dictionary<string, object?>? Values);
-
-
-    public class CreateComponentPayload
-    {
-        public CreateComponentPayload(Component component)
-        {
-            Component = component;
-        }
-
-        public Component Component { get; }
-    }
-
-    public record RenameComponentInput(
-        [ID(nameof(Component))] Guid Id,
-        string Name);
-
-    public record UpdateComponentSchemaInput(
-        [ID(nameof(Component))] Guid Id,
-        string Schema,
-        [GraphQLType(typeof(AnyType))] Dictionary<string, object?>? Values);
-
-    public record UpdateComponentValuesInput(
-        [ID(nameof(Component))] Guid Id,
-        [GraphQLType(typeof(AnyType))] Dictionary<string, object?> Values);
-
-    public class UpdateComponentSchemaPayload
-    {
-        public UpdateComponentSchemaPayload(Component component)
-        {
-            Component = component;
-        }
-
-        public Component Component { get; }
-    }
-
-    public class UpdateComponentValuesPayload
-    {
-        public UpdateComponentValuesPayload(Component component)
-        {
-            Component = component;
-        }
-
-        public Component Component { get; }
-    }
-
-    public class RenameComponentPayload
-    {
-        public RenameComponentPayload(Component component)
-        {
-            Component = component;
-        }
-
-        public Component Component { get; }
     }
 }

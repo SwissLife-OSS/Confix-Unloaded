@@ -37,10 +37,14 @@ namespace Confix.Authoring
         Task<Component> SetSchemaAsync(
             Guid id,
             string schemaSdl,
-            Dictionary<string, object?>? values,
             CancellationToken cancellationToken);
 
         Task<Component> SetValuesAsync(
+            Guid id,
+            Dictionary<string, object?> values,
+            CancellationToken cancellationToken);
+
+        Task<IReadOnlyList<SchemaViolation>> GetSchemaViolationsAsync(
             Guid id,
             Dictionary<string, object?> values,
             CancellationToken cancellationToken);

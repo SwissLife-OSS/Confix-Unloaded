@@ -26,11 +26,11 @@ namespace Confix.Authoring.GraphQL.Components
 
         [BindMember(nameof(Component.Schema))]
         [GraphQLType(typeof(SdlType))]
-        public string? GetSchema([Parent] Component component) =>
+        public string? GetSchemaSdl([Parent] Component component) =>
             component.Schema;
 
         [GraphQLType(typeof(AnyType))]
-        public List<object> GetSchemaAsJson([Parent] Component component)
+        public List<object> GetSchema([Parent] Component component)
         {
             DocumentNode document = Utf8GraphQLParser.Parse(component.Schema!);
             Dictionary<string, TypeKind> typeKinds = CreateTypeKindLookup(document);
@@ -72,7 +72,7 @@ namespace Confix.Authoring.GraphQL.Components
 
         [GraphQLType(typeof(AnyType))]
         [BindMember(nameof(Component.Values))]
-        public async Task<Dictionary<string, object?>?> GetValuesAsJson(
+        public async Task<Dictionary<string, object?>?> GetValues(
             [Parent] Component component,
             [Service] IComponentService componentService,
             CancellationToken cancellationToken)
@@ -93,6 +93,30 @@ namespace Confix.Authoring.GraphQL.Components
 
             var document = JsonDocument.Parse(component.Values!);
             return ValueHelper.DeserializeDictionary(document.RootElement, schema.QueryType);
+        }
+
+        public async Task<IReadOnlyList<SchemaViolation>> GetSchemaViolations(
+            [Parent] Component component,
+            [Service] IComponentService componentService,
+            CancellationToken cancellationToken)
+        {
+            if (component.Values is null)
+            {
+                return Array.Empty<SchemaViolation>();
+            }
+
+            Dictionary<string, object?>? values =
+                await GetValues(component, componentService, cancellationToken);
+
+            if (values is null)
+            {
+                return Array.Empty<SchemaViolation>();
+            }
+
+            return await componentService.GetSchemaViolationsAsync(
+                component.Id,
+                values,
+                cancellationToken);
         }
 
         private Dictionary<string, object?> CreateFieldDto(

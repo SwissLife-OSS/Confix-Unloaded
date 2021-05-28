@@ -25,7 +25,7 @@ namespace Confix.Authoring.GraphQL.Applications
 
         [GraphQLType(typeof(AnyType))]
         [BindMember(nameof(Component.Values))]
-        public async Task<Dictionary<string, object?>?> GetValuesAsJson(
+        public async Task<Dictionary<string, object?>?> GetValuesAsync(
             [Parent] ApplicationPartComponent applicationPartComponent,
             [Service] IComponentService componentService,
             CancellationToken cancellationToken)

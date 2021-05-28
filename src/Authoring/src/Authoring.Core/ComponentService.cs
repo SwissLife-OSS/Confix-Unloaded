@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Confix.Authoring.Internal;
 using Confix.Authoring.Store;
 using HotChocolate;
+using static Confix.Authoring.Internal.ValueHelper;
 
 namespace Confix.Authoring
 {
@@ -14,7 +14,8 @@ namespace Confix.Authoring
     {
         private readonly IComponentStore _componentStore;
 
-        public ComponentService(IComponentStore componentStore)
+        public ComponentService(
+            IComponentStore componentStore)
         {
             _componentStore = componentStore;
         }
@@ -62,7 +63,12 @@ namespace Confix.Authoring
 
                 if (values is not null)
                 {
-                    ValueHelper.ValidateDictionary(values, schema.QueryType);
+                    List<SchemaViolation> violations = ValidateDictionary(values, schema.QueryType);
+
+                    if (violations.Count > 0)
+                    {
+                        throw new SchemaViolationException(violations);
+                    }
                 }
             }
             else
@@ -100,7 +106,6 @@ namespace Confix.Authoring
         public async Task<Component> SetSchemaAsync(
             Guid componentId,
             string schemaSdl,
-            Dictionary<string, object?>? values,
             CancellationToken cancellationToken)
         {
             if (schemaSdl is null)
@@ -108,19 +113,14 @@ namespace Confix.Authoring
                 throw new ArgumentNullException(nameof(schemaSdl));
             }
 
-            ISchema schema = CreateSchema(schemaSdl);
-
-            if (values is not null)
-            {
-                ValueHelper.ValidateDictionary(values, schema.QueryType);
-            }
+            // we ensure that the schema is valid.
+            CreateSchema(schemaSdl);
 
             Component component = await _componentStore.GetByIdAsync(
                 componentId,
                 cancellationToken);
 
             component.Schema = schemaSdl;
-            component.Values = values is not null ? JsonSerializer.Serialize(values) : null;
 
             await _componentStore.UpdateAsync(component, cancellationToken);
 
@@ -128,12 +128,12 @@ namespace Confix.Authoring
         }
 
         public async Task<Component> SetValuesAsync(
-            Guid componentId,
+            Guid id,
             Dictionary<string, object?> values,
             CancellationToken cancellationToken)
         {
             Component component = await _componentStore.GetByIdAsync(
-                componentId,
+                id,
                 cancellationToken);
 
             if (component.Schema is null)
@@ -142,13 +142,36 @@ namespace Confix.Authoring
             }
 
             ISchema schema = CreateSchema(component.Schema);
-            ValueHelper.ValidateDictionary(values, schema.QueryType);
+            List<SchemaViolation> violations = ValidateDictionary(values, schema.QueryType);
+
+            if (violations.Count > 0)
+            {
+                throw new SchemaViolationException(violations);
+            }
 
             component.Values = JsonSerializer.Serialize(values);
 
             await _componentStore.UpdateAsync(component, cancellationToken);
 
             return component;
+        }
+
+        public async Task<IReadOnlyList<SchemaViolation>> GetSchemaViolationsAsync(
+            Guid id,
+            Dictionary<string, object?> values,
+            CancellationToken cancellationToken)
+        {
+            Component component = await _componentStore.GetByIdAsync(
+                id,
+                cancellationToken);
+
+            if (component.Schema is null)
+            {
+                throw new InvalidOperationException("There is no schema.");
+            }
+
+            ISchema schema = CreateSchema(component.Schema);
+            return ValidateDictionary(values, schema.QueryType);
         }
 
         private static ISchema CreateSchema(string schema)

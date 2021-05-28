@@ -1,16 +1,30 @@
 using System.Collections.Generic;
 using System.Text.Json;
+using HotChocolate;
 using HotChocolate.Types;
 
 namespace Confix.Authoring.Internal
 {
     public static class ValueHelper
     {
-        public static void ValidateDictionary(Dictionary<string, object?> value, IType type)
+        public static List<SchemaViolation> ValidateDictionary(
+            Dictionary<string, object?> value,
+            IType type)
+        {
+            var schemaViolations = new List<SchemaViolation>();
+            ValidateDictionary(value, type, Path.Root, schemaViolations);
+            return schemaViolations;
+        }
+
+        private static void ValidateDictionary(
+            Dictionary<string, object?> value,
+            IType type,
+            Path path,
+            List<SchemaViolation> schemaViolations)
         {
             if (!type.IsObjectType())
             {
-                throw new ValueStructureInvalidException(type.NamedType().Name, value);
+                schemaViolations.Add(new SchemaViolation(path.ToList(), "NOT_AN_OBJECT"));
             }
 
             var objectType = (ObjectType)type.NamedType();
@@ -24,65 +38,92 @@ namespace Confix.Authoring.Internal
 
                 if (value.TryGetValue(field.Name, out var fieldValue))
                 {
-                    Validate(fieldValue, field.Type);
+                    Validate(fieldValue, field.Type, path, schemaViolations);
                 }
                 else if (field.Type.IsNonNullType())
                 {
-                    throw new FieldRequiredException(objectType.Name, field.Name);
+                    schemaViolations.Add(new SchemaViolation(
+                        path.Append(field.Name).ToList(),
+                        "NON_NULL"));
                 }
             }
 
-            // TODO : also validate fields that do not exist
+            foreach (var fieldName in value.Keys)
+            {
+                if (!objectType.Fields.ContainsField(fieldName))
+                {
+                    schemaViolations.Add(new SchemaViolation(
+                        path.Append(fieldName).ToList(),
+                        "UNKNOWN_FIELD"));
+                }
+            }
         }
 
-        private static void Validate(object? value, IType type)
+        private static void Validate(
+            object? value,
+            IType type,
+            Path path,
+            List<SchemaViolation> schemaViolations)
         {
             switch (value)
             {
                 case Dictionary<string, object?> dict:
-                    ValidateDictionary(dict, type);
+                    ValidateDictionary(dict, type, path, schemaViolations);
                     break;
 
                 case List<object?> list:
-                    ValidateList(list, type);
+                    ValidateList(list, type, path, schemaViolations);
                     break;
 
                 case string:
                     if (!type.IsScalarType() || type.NamedType() is not StringType)
                     {
-                        throw new ValueStructureInvalidException(type.NamedType().Name, value);
+                        schemaViolations.Add(new SchemaViolation(path.ToList(), "INVALID_TYPE"));
                     }
                     break;
 
                 case int:
                     if (!type.IsScalarType() || type.NamedType() is not IntType and not FloatType)
                     {
-                        throw new ValueStructureInvalidException(type.NamedType().Name, value);
+                        schemaViolations.Add(new SchemaViolation(path.ToList(), "INVALID_TYPE"));
                     }
                     break;
 
                 case bool:
                     if (!type.IsScalarType() || type.NamedType() is not BooleanType)
                     {
-                        throw new ValueStructureInvalidException(type.NamedType().Name, value);
+                        schemaViolations.Add(new SchemaViolation(path.ToList(), "INVALID_TYPE"));
                     }
                     break;
 
                 case double:
                     if (!type.IsScalarType() || type.NamedType() is not FloatType)
                     {
-                        throw new ValueStructureInvalidException(type.NamedType().Name, value);
+                        schemaViolations.Add(new SchemaViolation(path.ToList(), "INVALID_TYPE"));
                     }
+                    break;
+
+                default:
+                    schemaViolations.Add(new SchemaViolation(path.ToList(), "UNKNOWN_TYPE"));
                     break;
             }
         }
 
-        private static void ValidateList(List<object?> value, IType type)
+        private static void ValidateList(
+            List<object?> value,
+            IType type,
+            Path path,
+            List<SchemaViolation> schemaViolations)
         {
             IType elementType = type.ElementType();
+            var i = 0;
             foreach (var element in value)
             {
-                Validate(element, elementType);
+                Validate(
+                    element,
+                    elementType,
+                    path.Append(i++),
+                    schemaViolations);
             }
         }
 

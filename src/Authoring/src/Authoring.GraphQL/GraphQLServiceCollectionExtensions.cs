@@ -50,7 +50,8 @@ namespace Confix.Authoring.GraphQL
                 .AddInterfaceType<IUserError>()
                 .AddObjectType<ApplicationIdInvalid>()
                 .AddObjectType<ApplicationPartIdInvalid>()
-                .AddObjectType<ApplicationNameTaken>();
+                .AddObjectType<ApplicationNameTaken>()
+                .AddType<SchemaViolationType>();
         }
 
         private static IRequestExecutorBuilder AddQueries(this IRequestExecutorBuilder builder)
