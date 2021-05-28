@@ -1,7 +1,9 @@
+using System;
 using Confix.Authoring.GraphQL.Applications;
 using Confix.Authoring.GraphQL.Components;
 using Confix.Authoring.GraphQL.DataLoaders;
 using Confix.Authoring.GraphQL.Serialization;
+using GreenDonut;
 using HotChocolate.Execution.Configuration;
 using HotChocolate.Types;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,8 +19,7 @@ namespace Confix.Authoring.GraphQL
                 .Services
                 .AddGraphQLServer()
                 .AddGraphQLTypes()
-                .AddFiltering()
-                .AddSorting()
+
                 .TryAddTypeInterceptor<MutationErrorTypeInterceptor>();
 
             builder
@@ -32,26 +33,21 @@ namespace Confix.Authoring.GraphQL
             this IRequestExecutorBuilder builder)
         {
             builder
-                .EnableRelaySupport()
+                // types
                 .AddQueries()
                 .AddMutations()
                 .AddTypes()
+
+                // dataloader
                 .AddDataLoaders()
+
+                // server options
                 .AddAuthorization()
-                .AddErrorTypes();
+                .EnableRelaySupport()
+                .AddFiltering()
+                .AddSorting();
 
             return builder;
-        }
-
-        private static IRequestExecutorBuilder AddErrorTypes(
-            this IRequestExecutorBuilder builder)
-        {
-            return builder
-                .AddInterfaceType<IUserError>()
-                .AddObjectType<ApplicationIdInvalid>()
-                .AddObjectType<ApplicationPartIdInvalid>()
-                .AddObjectType<ApplicationNameTaken>()
-                .AddType<SchemaViolationType>();
         }
 
         private static IRequestExecutorBuilder AddQueries(this IRequestExecutorBuilder builder)
@@ -87,6 +83,13 @@ namespace Confix.Authoring.GraphQL
                 .AddTypeExtension<ComponentNode>()
                 .AddType<SdlType>();
 
+            builder
+                .AddInterfaceType<IUserError>()
+                .AddObjectType<ApplicationIdInvalid>()
+                .AddObjectType<ApplicationPartIdInvalid>()
+                .AddObjectType<ApplicationNameTaken>()
+                .AddType<SchemaViolationType>();
+
             return builder;
         }
 
@@ -96,7 +99,12 @@ namespace Confix.Authoring.GraphQL
                 .AddDataLoader<ApplicationByIdDataLoader>()
                 .AddDataLoader<ApplicationPartByIdDataLoader>()
                 .AddDataLoader<VariableByIdDataLoader>()
-                .AddDataLoader<ComponentByIdDataLoader>();
+                .AddDataLoader<ComponentByIdDataLoader>()
+
+                // add additional dataloader lookups
+                .Services
+                .AddScoped<IDataLoader<Guid, Component?>>(
+                    sp => sp.GetRequiredService<ComponentByIdDataLoader>());
 
             return builder;
         }

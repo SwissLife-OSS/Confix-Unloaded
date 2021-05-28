@@ -1,29 +1,36 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Confix.Authoring.Store;
+using GreenDonut;
 using HotChocolate;
 using static Confix.Authoring.Internal.ValueHelper;
 
 namespace Confix.Authoring
 {
-    public class ComponentService : IComponentService
+    public sealed class ComponentService : IComponentService
     {
         private readonly IComponentStore _componentStore;
+        private readonly IDataLoader<Guid, Component> _componentById;
+        private readonly ConcurrentDictionary<string, ISchema> _schemas = new();
 
         public ComponentService(
-            IComponentStore componentStore)
+            IComponentStore componentStore,
+            IDataLoader<Guid, Component> componentById)
         {
             _componentStore = componentStore;
+            _componentById = componentById;
         }
 
         public async Task<Component?> GetByIdAsync(
             Guid id,
             CancellationToken cancellationToken = default) =>
-            await _componentStore.GetByIdAsync(id, cancellationToken);
+            await _componentById.LoadAsync(id, cancellationToken);
 
         public async Task<ISchema?> GetSchemaByIdAsync(
             Guid id,
@@ -39,10 +46,10 @@ namespace Confix.Authoring
             return CreateSchema(component.Schema);
         }
 
-        public Task<IReadOnlyCollection<Component>> GetManyByIdAsync(
+        public async Task<IReadOnlyCollection<Component>> GetManyByIdAsync(
             IEnumerable<Guid> ids,
             CancellationToken cancellationToken) =>
-            _componentStore.GetManyByIdAsync(ids, cancellationToken);
+            await _componentById.LoadAsync(ids.ToArray(), cancellationToken);
 
         public IQueryable<Component> Query() => _componentStore.Query();
 
@@ -98,7 +105,7 @@ namespace Confix.Authoring
                 throw new ArgumentException("Value cannot be null or empty.", nameof(name));
             }
 
-            Component component = await _componentStore.GetByIdAsync(id, cancellationToken);
+            Component component = await _componentById.LoadAsync(id, cancellationToken);
             component.Name = name;
             return component;
         }
@@ -116,7 +123,7 @@ namespace Confix.Authoring
             // we ensure that the schema is valid.
             CreateSchema(schemaSdl);
 
-            Component component = await _componentStore.GetByIdAsync(
+            Component component = await _componentById.LoadAsync(
                 componentId,
                 cancellationToken);
 
@@ -132,7 +139,7 @@ namespace Confix.Authoring
             Dictionary<string, object?> values,
             CancellationToken cancellationToken)
         {
-            Component component = await _componentStore.GetByIdAsync(
+            Component component = await _componentById.LoadAsync(
                 id,
                 cancellationToken);
 
@@ -161,7 +168,7 @@ namespace Confix.Authoring
             Dictionary<string, object?> values,
             CancellationToken cancellationToken)
         {
-            Component component = await _componentStore.GetByIdAsync(
+            Component component = await _componentById.LoadAsync(
                 id,
                 cancellationToken);
 
@@ -171,20 +178,22 @@ namespace Confix.Authoring
             }
 
             ISchema schema = CreateSchema(component.Schema);
+
             return ValidateDictionary(values, schema.QueryType);
         }
 
-        private static ISchema CreateSchema(string schema)
+        private ISchema CreateSchema(string schema)
         {
-            return SchemaBuilder.New()
-                .AddDocumentFromString(schema)
-                .Use(next => next)
-                .ModifyOptions(c =>
-                {
-                    c.QueryTypeName = "Component";
-                    c.StrictValidation = false;
-                })
-                .Create();
+            return _schemas.GetOrAdd(schema, s =>
+                SchemaBuilder.New()
+                    .AddDocumentFromString(schema)
+                    .Use(next => next)
+                    .ModifyOptions(c =>
+                    {
+                        c.QueryTypeName = "Component";
+                        c.StrictValidation = false;
+                    })
+                    .Create());
         }
     }
 }
