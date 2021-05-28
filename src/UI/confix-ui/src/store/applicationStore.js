@@ -14,7 +14,7 @@ const applicationStore = {
     }),
     mutations: {
         APPS_LOADED(state, apps) {
-            state.apps = apps;
+            state.apps = apps.edges.map(x => x.node);
         },
         APPLICATION_CREATED(state, app) {
             state.apps.push(app);

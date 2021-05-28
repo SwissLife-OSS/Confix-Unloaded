@@ -3,8 +3,9 @@ mutation updateComponentSchema($input: UpdateComponentSchemaInput!) {
     component {
       id
       name
-      schema
       state
+      schemaAsJson
+      valuesAsJson      
     }
   }
 }
