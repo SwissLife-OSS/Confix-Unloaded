@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using HotChocolate;
 using HotChocolate.Types;
@@ -7,6 +9,64 @@ namespace Confix.Authoring.Internal
 {
     public static class ValueHelper
     {
+        public static Dictionary<string, object?> CreateDefaultObjectValue(IType type)
+        {
+            var obj = new Dictionary<string, object?>();
+            var objectType = (ObjectType)type.NamedType();
+
+            foreach (var field in objectType.Fields)
+            {
+                if (field.IsIntrospectionField)
+                {
+                    continue;
+                }
+
+                obj[field.Name] = CreateDefaultValue(field.Type);
+            }
+
+            return obj;
+        }
+
+        private static object? CreateDefaultValue(IType type)
+        {
+            if (type.IsNonNullType())
+            {
+                if (type.IsListType())
+                {
+                    return CreateDefaultListValue(type);
+                }
+
+                if (type.IsObjectType())
+                {
+                    return CreateDefaultObjectValue(type);
+                }
+
+                if (!type.IsEnumType() && type.NamedType() is EnumType enumType)
+                {
+                    return enumType.Values.First().Name.ToString();
+                }
+
+                switch (type.NamedType().Name)
+                {
+                    case "String":
+                        return "abc";
+                    case "Int":
+                        return 123;
+                    case "Float":
+                        return 123.123;
+                    case "Boolean":
+                        return true;
+                    default:
+                        throw new NotSupportedException();
+                }
+            }
+
+            return null;
+        }
+
+        private static List<object?> CreateDefaultListValue(IType type) =>
+            new() { CreateDefaultValue(type.ElementType()) };
+
         public static List<SchemaViolation> ValidateDictionary(
             Dictionary<string, object?> value,
             IType type)

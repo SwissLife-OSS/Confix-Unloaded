@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Confix.Authoring.Internal;
 using Confix.Authoring.Store;
 using GreenDonut;
 using HotChocolate;
@@ -180,6 +180,23 @@ namespace Confix.Authoring
             ISchema schema = CreateSchema(component.Schema);
 
             return ValidateDictionary(values, schema.QueryType);
+        }
+
+        public async Task<Dictionary<string, object?>?> GetDefaultValuesAsync(
+            Guid id,
+            CancellationToken cancellationToken)
+        {
+            Component component = await _componentById.LoadAsync(
+                id,
+                cancellationToken);
+
+            if (component.Schema is null)
+            {
+                return null;
+            }
+
+            ISchema schema = CreateSchema(component.Schema);
+            return CreateDefaultObjectValue(schema.QueryType);
         }
 
         private ISchema CreateSchema(string schema)

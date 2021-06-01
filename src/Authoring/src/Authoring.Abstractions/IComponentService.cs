@@ -48,5 +48,9 @@ namespace Confix.Authoring
             Guid id,
             Dictionary<string, object?> values,
             CancellationToken cancellationToken);
+
+        Task<Dictionary<string, object?>?> GetDefaultValuesAsync(
+            Guid id,
+            CancellationToken cancellationToken);
     }
 }
