@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.Json;
 using System.Threading;
@@ -201,7 +202,9 @@ namespace Confix.Authoring
 
         private ISchema CreateSchema(string schema)
         {
-            return _schemas.GetOrAdd(schema, s =>
+            var stopwatch = Stopwatch.StartNew();
+
+            ISchema temp = _schemas.GetOrAdd(schema, s =>
                 SchemaBuilder.New()
                     .AddDocumentFromString(schema)
                     .Use(next => next)
@@ -211,6 +214,10 @@ namespace Confix.Authoring
                         c.StrictValidation = false;
                     })
                     .Create());
+
+            var time = stopwatch.Elapsed;
+
+            return temp;
         }
     }
 }
