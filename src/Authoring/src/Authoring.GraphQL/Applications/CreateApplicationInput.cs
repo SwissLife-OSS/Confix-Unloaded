@@ -4,6 +4,6 @@ namespace Confix.Authoring.GraphQL.Applications
 {
     public record CreateApplicationInput(
         string Name,
-        string Namespace,
+        string? Namespace,
         IReadOnlyList<string>? Parts = null);
 }
