@@ -10,6 +10,7 @@ using Confix.Authoring.Internal;
 using Confix.Authoring.Store;
 using GreenDonut;
 using HotChocolate;
+using HotChocolate.Language;
 using static Confix.Authoring.Internal.ValueHelper;
 
 namespace Confix.Authoring
@@ -108,6 +109,7 @@ namespace Confix.Authoring
 
             Component component = await _componentById.LoadAsync(id, cancellationToken);
             component.Name = name;
+            await _componentStore.UpdateAsync(component, cancellationToken);
             return component;
         }
 
@@ -204,13 +206,19 @@ namespace Confix.Authoring
         {
             var stopwatch = Stopwatch.StartNew();
 
+            DocumentNode schemaDoc = Utf8GraphQLParser.Parse(schema);
+            string rootTypeName = schemaDoc.Definitions
+                .OfType<ObjectTypeDefinitionNode>()
+                .FirstOrDefault()?.Name.Value ?? 
+                "Component";
+
             ISchema temp = _schemas.GetOrAdd(schema, s =>
                 SchemaBuilder.New()
-                    .AddDocumentFromString(schema)
+                    .AddDocument(schemaDoc)
                     .Use(next => next)
                     .ModifyOptions(c =>
                     {
-                        c.QueryTypeName = "Component";
+                        c.QueryTypeName = rootTypeName;
                         c.StrictValidation = false;
                     })
                     .Create());
