@@ -5,9 +5,9 @@ using HotChocolate.Types.Descriptors;
 
 namespace Confix.Authoring.GraphQL
 {
-    public class ThrowsAttribute : ObjectFieldDescriptorAttribute
+    public class ErrorAttribute : ObjectFieldDescriptorAttribute
     {
-        public ThrowsAttribute(Type errorType)
+        public ErrorAttribute(Type errorType)
         {
             ErrorType = errorType;
         }

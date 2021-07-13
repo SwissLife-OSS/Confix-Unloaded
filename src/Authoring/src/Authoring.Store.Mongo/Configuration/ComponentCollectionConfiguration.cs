@@ -20,7 +20,16 @@ namespace Confix.Authoring.Store.Mongo.Configuration
                 .WithCollectionSettings(s => s.ReadPreference = ReadPreference.Nearest)
                 .WithCollectionConfiguration(collection =>
                 {
-
+                     collection.Indexes.CreateOne(
+                        new CreateIndexModel<Component>(
+                            Builders<Component>.IndexKeys.Ascending(project => project.Name),
+                            new CreateIndexOptions
+                            {
+                                Collation = new Collation(
+                                    "en",
+                                    strength: CollationStrength.Secondary),
+                                Unique = true
+                            }));
                 });
         }
     }

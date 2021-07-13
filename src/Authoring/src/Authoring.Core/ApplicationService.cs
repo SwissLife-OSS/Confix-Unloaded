@@ -9,109 +9,112 @@ namespace Confix.Authoring
 {
     public class ApplicationService : IApplicationService
     {
-        private readonly IApplicationStore _applicationStore;
+        private readonly IApplicationStore _appStore;
+        private readonly IComponentStore _compStore;
 
-        public ApplicationService(IApplicationStore applicationStore)
+        public ApplicationService(
+            IApplicationStore appStore,
+            IComponentStore compStore)
         {
-            _applicationStore = applicationStore;
+            _appStore = appStore;
+            _compStore = compStore;
         }
 
-        public async Task<IEnumerable<Application>> GetAllAsync(
-            CancellationToken cancellationToken)
-        {
-            return await _applicationStore.GetAllAsync(cancellationToken);
-        }
+        public Task<Application?> GetByIdAsync(
+            Guid applicationId,
+            CancellationToken cancellationToken = default) =>
+            _appStore.GetByIdAsync(applicationId, cancellationToken);
 
-        public async Task<Application> GetByIdAsync(
+        public Task<Application?> GetByPartIdAsync(
+            Guid partId,
+            CancellationToken cancellationToken = default) =>
+            _appStore.GetByPartIdAsync(partId, cancellationToken);
+
+        public Task<IReadOnlyCollection<Application>> GetManyByIdAsync(
+            IEnumerable<Guid> applicationIds,
+            CancellationToken cancellationToken = default) =>
+            _appStore.GetManyByIdAsync(applicationIds, cancellationToken);
+
+        public Task<ApplicationPart?> GetPartByIdAsync(
             Guid id,
-            CancellationToken cancellationToken)
-        {
-            return await _applicationStore.GetByIdAsync(id, cancellationToken);
-        }
+            CancellationToken cancellationToken = default) =>
+            _appStore.GetPartByIdAsync(id, cancellationToken);
 
-        public async Task<IEnumerable<Application>> GetManyAsync(
+        public Task<IReadOnlyCollection<ApplicationPart>> GetManyPartsByIdAsync(
             IEnumerable<Guid> ids,
-            CancellationToken cancellationToken)
-        {
-            return await _applicationStore.GetManyAsync(ids, cancellationToken);
-        }
+            CancellationToken cancellationToken = default) =>
+            _appStore.GetManyPartsByIdAsync(ids, cancellationToken);
 
-        public async Task<Application> AddAsync(
-            AddApplicationRequest request,
-            CancellationToken cancellationToken)
+        public IQueryable<Application> Query() =>
+            _appStore.Query();
+
+        public async Task<Application> CreateAsync(
+            string name,
+            string? @namespace,
+            IReadOnlyList<string>? parts = null,
+            CancellationToken cancellationToken = default)
         {
-            var app = new Application
+            var application = new Application
             {
                 Id = Guid.NewGuid(),
-                Name = request.Name
+                Name = name,
+                Namespace = @namespace,
             };
 
-            if (request is { Parts: { Count: > 0 } parts })
+            if (parts is not null)
             {
-                app.Parts = parts.Select(
-                    name => new ApplicationPart
+                application.Parts = parts.Select(
+                    n => new ApplicationPart
                     {
                         Id = Guid.NewGuid(),
-                        Name = name
+                        Name = n
                     }).ToList();
             }
 
-            return await _applicationStore.AddAsync(app, cancellationToken);
+            await _appStore.AddAsync(application, cancellationToken);
+
+            return application;
         }
 
-        public Task<Application> RenameAsync(
-            RenameApplicationRequest request,
-            CancellationToken cancellationToken)
+        public Task RenameAsync(
+            Guid applicationId,
+            string name,
+            CancellationToken cancellationToken = default) =>
+            _appStore.RenameAsync(applicationId, name, cancellationToken);
+
+        public Task RenamePartAsync(
+            Guid applicationPartId,
+            string name,
+            CancellationToken cancellationToken = default) =>
+            _appStore.RenamePartAsync(applicationPartId, name, cancellationToken);
+
+        public async Task AddComponentsToPartAsync(
+            Guid applicationPartId,
+            IReadOnlyList<Guid> componentIds,
+            CancellationToken cancellationToken = default)
         {
-            // TODO : implement
-            throw new NotImplementedException();
-        }
-
-        public async Task<IEnumerable<ApplicationPart>> GetManyPartsAsync(
-            IEnumerable<Guid> ids,
-            CancellationToken cancellationToken)
-        {
-            return await _applicationStore.GetManyPartsAsync(ids, cancellationToken);
-        }
-
-        public async Task<ApplicationPart> UpdateApplicationPartAsync(
-            UpdateApplicationPartRequest request,
-            CancellationToken cancellationToken)
-        {
-            Application? application =
-                await _applicationStore.GetByIdAsync(
-                    request.ApplicationId,
-                    cancellationToken);
-
-            if (application is null)
-            {
-                throw new EntityIdInvalidException(nameof(Application), request.ApplicationId);
-            }
-
-            ApplicationPart? part = application.Parts.FirstOrDefault(x => x.Id == request.PartId);
+            Application? app = await _appStore.GetByPartIdAsync(applicationPartId, cancellationToken);
+            ApplicationPart? part = app?.Parts.FirstOrDefault(p => p.Id == applicationPartId);
 
             if (part is null)
             {
-                throw new EntityIdInvalidException(nameof(ApplicationPart), request.ApplicationId);
+                throw new EntityIdInvalidException(nameof(ApplicationPart), applicationPartId);
             }
 
-            if(part is { Components: { } components })
+            IReadOnlyCollection<Component> components =
+                await _compStore.GetManyByIdAsync(componentIds, cancellationToken);
+
+            foreach (Component component in components)
             {
-                part.Components = components.Select(
-                    component => new ApplicationPartComponent
-                    {
-                        ComponentId = component.ComponentId
-                    }).ToList();
+                if (part.Components.Any(t => t.ComponentId == component.Id))
+                {
+                    part.Components.Add(new ApplicationPartComponent 
+                    { 
+                        ComponentId = component.Id, 
+                        Values = component.Values
+                    });
+                }
             }
-
-            if (request.Name is not null)
-            {
-                part.Name = request.Name;
-            }
-
-            await _applicationStore.UpdateAsync(application, cancellationToken);
-
-            return part;
         }
     }
 }

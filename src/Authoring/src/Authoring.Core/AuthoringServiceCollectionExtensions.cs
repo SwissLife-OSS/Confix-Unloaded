@@ -10,7 +10,7 @@ namespace Confix.Authoring
             IConfiguration configuration)
         {
             services.AddSingleton<IApplicationService, ApplicationService>();
-            services.AddSingleton<IComponentService, ComponentService>();
+            services.AddScoped<IComponentService, ComponentService>();
             services.AddSingleton<IVariableService, VariableService>();
             services.AddSingleton<IVariableCryptoProvider, DoNotUseVariableCrypoProvider>();
 

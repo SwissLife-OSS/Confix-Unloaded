@@ -15,7 +15,7 @@ namespace Confix.Authoring.GraphQL
             _variableService = variableService;
         }
 
-        public async Task<Variable> GetVariableAsync(
+        public async Task<Variable?> GetVariableAsync(
             VariableValue value,
             VariableByIdDataLoader variableById,
             CancellationToken cancellationToken)

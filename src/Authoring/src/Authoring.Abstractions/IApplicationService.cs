@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Confix.Authoring.Store;
@@ -8,38 +9,47 @@ namespace Confix.Authoring
 {
     public interface IApplicationService
     {
-        Task<Application> AddAsync(
-            AddApplicationRequest request,
-            CancellationToken cancellationToken);
+        Task<Application?> GetByIdAsync(
+            Guid id,
+            CancellationToken cancellationToken = default);
 
-        Task<Application> RenameAsync(
-            RenameApplicationRequest request,
-            CancellationToken cancellationToken);
+        Task<Application?> GetByPartIdAsync(
+            Guid partId,
+            CancellationToken cancellationToken = default);
 
-        Task<IEnumerable<Application>> GetAllAsync(CancellationToken cancellationToken);
+        Task<IReadOnlyCollection<Application>> GetManyByIdAsync(
+            IEnumerable<Guid> ids,
+            CancellationToken cancellationToken = default);
 
-        Task<IEnumerable<Application>> GetManyAsync(IEnumerable<Guid> ids, CancellationToken cancellationToken);
+        Task<ApplicationPart?> GetPartByIdAsync(
+            Guid id,
+            CancellationToken cancellationToken = default);
 
-        Task<IEnumerable<ApplicationPart>> GetManyPartsAsync(IEnumerable<Guid> ids, CancellationToken cancellationToken);
+        Task<IReadOnlyCollection<ApplicationPart>> GetManyPartsByIdAsync(
+            IEnumerable<Guid> ids,
+            CancellationToken cancellationToken = default);
 
+        IQueryable<Application> Query();
 
-        Task<ApplicationPart> UpdateApplicationPartAsync(UpdateApplicationPartRequest request, CancellationToken cancellationToken);
-        Task<Application> GetByIdAsync(Guid id, CancellationToken cancellationToken);
-    }
+        Task<Application> CreateAsync(
+            string name,
+            string? @namespace,
+            IReadOnlyList<string>? parts = null,
+            CancellationToken cancellationToken = default);
 
-    public record AddApplicationRequest(
-        string Name,
-        string Namespace,
-        IReadOnlyList<string>? Parts = null);
+        Task RenameAsync(
+            Guid applicationId,
+            string name,
+            CancellationToken cancellationToken = default);
 
-    public record RenameApplicationRequest(
-        Guid ApplicationId,
-        string Name);
+        Task RenamePartAsync(
+            Guid applicationPartId,
+            string name,
+            CancellationToken cancellationToken = default);
 
-    public record UpdateApplicationPartRequest(Guid ApplicationId, Guid PartId)
-    {
-        public string? Name { get; init; }
-
-        public IEnumerable<Guid>? Components { get; init; }
+        Task AddComponentsToPartAsync(
+            Guid applicationPartId,
+            IReadOnlyList<Guid> componentIds,
+            CancellationToken cancellationToken = default);
     }
 }

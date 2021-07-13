@@ -7,7 +7,7 @@ using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring.GraphQL
 {
-    [ExtendObjectType(Name = "Mutation")]
+    [ExtendObjectType(OperationTypeNames.Mutation)]
     public class VariableMutations
     {
         private readonly IVariableService _variableService;

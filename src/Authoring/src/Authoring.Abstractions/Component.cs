@@ -8,12 +8,14 @@ namespace Confix.Authoring
         [Key]
         public Guid Id { get; set; }
 
-        public ComponentState State { get; set; }
-
         [Required]
         public string? Name { get; set; }
 
         [Required]
         public string? Schema { get; set; }
+
+        public string? Values { get; set; }
+
+        public ComponentState State { get; set; }
     }
 }

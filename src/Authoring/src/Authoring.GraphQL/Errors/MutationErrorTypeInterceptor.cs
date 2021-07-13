@@ -55,10 +55,12 @@ namespace Confix.Authoring.GraphQL
                             });
                         });
 
-                        _needsErrorField.Add((field.Type, errorUnion));
+                        _needsErrorField.Add((field.Type!, errorUnion));
 
                         FieldMiddleware middleware =
-                            FieldClassMiddlewareFactory.Create<ErrorMiddleware>();
+                            FieldClassMiddlewareFactory.Create<ErrorMiddleware>(
+                                (typeof(IReadOnlyList<CreateError>),
+                                factories.Select(t => t.Item2).ToArray()));
                         field.MiddlewareComponents.Insert(0, middleware);
 
                         discoveryContext.RegisterDependency(

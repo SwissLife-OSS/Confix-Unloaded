@@ -7,7 +7,7 @@ using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring.GraphQL
 {
-    [ExtendObjectType(Name = "Query")]
+    [ExtendObjectType(OperationTypeNames.Query)]
     public class VariableQueries
     {
         private readonly IVariableService _variableService;

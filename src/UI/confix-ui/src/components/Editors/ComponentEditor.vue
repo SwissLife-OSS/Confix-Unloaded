@@ -9,26 +9,49 @@
       </v-btn>
     </v-toolbar>
     <v-card-text>
-      <MonacoEditor class="editor" v-model="code" language="graphql" />
+      <v-tabs v-model="tab">
+        <v-tab>Values</v-tab>
+        <v-tab>Schema</v-tab>
+      </v-tabs>
+      <v-tabs-items v-model="tab">
+        <v-tab-item>
+          <monaco-editor
+            :style="{ height: '480px' }"
+            class="editor"
+            v-model="values"
+            language="json"
+          />
+        </v-tab-item>
+        <v-tab-item>
+          <monaco-editor
+            :style="{ height: '480px' }"
+            class="editor"
+            v-model="schema"
+            language="graphql"
+          />
+        </v-tab-item>
+      </v-tabs-items>
     </v-card-text>
   </v-card>
 </template>
 
 <script>
-import MonacoEditor from "vue-monaco";
 import { mapActions } from "vuex";
+import MonacoEditor from "../Common/MonacoEditor.vue";
 export default {
   components: {
     MonacoEditor,
   },
   mounted() {
-    this.code = this.component.schema ?? "";
+    this.schema = this.component.schema ?? "";
+    this.values = this.component.valuesAsJson ?? "{}";
   },
   props: ["component"],
-
   data() {
     return {
-      code: "",
+      tab: 0,
+      schema: "",
+      values: "{}",
     };
   },
   computed: {},

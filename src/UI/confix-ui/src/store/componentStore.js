@@ -9,7 +9,7 @@ const componentStore = {
     }),
     mutations: {
         COMPONENTS_LOADED(state, components) {
-            state.components = components;
+            state.components = components.edges.map(x => x.node);
         },
         COMPONENT_CREATED(state, component) {
             state.components.push(component)
