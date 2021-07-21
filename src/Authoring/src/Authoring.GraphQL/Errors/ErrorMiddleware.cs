@@ -8,6 +8,8 @@ namespace Confix.Authoring.GraphQL
 {
     internal class ErrorMiddleware
     {
+        public static readonly object ErrorObject = new();
+
         private readonly FieldDelegate _next;
         private readonly IReadOnlyList<CreateError> _errorHandlers;
 
@@ -51,7 +53,7 @@ namespace Confix.Authoring.GraphQL
                 }
 
                 context.SetScopedValue(ErrorContextData.Errors, errors);
-                context.Result = new object();
+                context.Result = ErrorObject;
             }
             catch (Exception ex)
             {
@@ -71,8 +73,12 @@ namespace Confix.Authoring.GraphQL
                     throw;
                 }
 
-                context.SetScopedValue(ErrorContextData.Errors, new[] { error });
-                context.Result = new object();
+                context.SetScopedValue(ErrorContextData.Errors,
+                    new[]
+                    {
+                        error
+                    });
+                context.Result = ErrorObject;
             }
         }
     }

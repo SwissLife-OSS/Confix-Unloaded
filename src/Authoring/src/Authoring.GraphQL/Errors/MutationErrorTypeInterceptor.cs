@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using HotChocolate.Configuration;
+using HotChocolate.Language;
 using HotChocolate.Resolvers;
 using HotChocolate.Types;
 using HotChocolate.Types.Descriptors;
 using HotChocolate.Types.Descriptors.Definitions;
+using static Confix.Authoring.GraphQL.ErrorContextData;
 
 namespace Confix.Authoring.GraphQL
 {
@@ -31,8 +33,8 @@ namespace Confix.Authoring.GraphQL
                 foreach (var field in objectTypeDefinition.Fields)
                 {
                     if (!field.IsIntrospectionField &&
-                        field.ContextData.TryGetValue(ErrorContextData.Factories, out var value) &&
-                        value is List<(Type, CreateError)> factories)
+                        field.ContextData.TryGetValue(ErrorDefinitions, out var value) &&
+                        value is List<ErrorDefinition> definitions)
                     {
                         StringBuilder stringBuilder = new();
                         stringBuilder.Append(char.ToUpperInvariant(field.Name.Value[0]));
@@ -43,30 +45,35 @@ namespace Confix.Authoring.GraphQL
                         {
                             d.Name(stringBuilder.ToString());
 
-                            d.Extend().OnBeforeCreate(unionDef =>
-                            {
-                                foreach ((Type type, _) in factories)
+                            d.Extend()
+                                .OnBeforeCreate(unionDef =>
                                 {
-                                    ExtendedTypeReference typeRef =
-                                        discoveryContext.TypeInspector.GetTypeRef(
-                                            typeof(ObjectType<>).MakeGenericType(type));
-                                    unionDef.Types.Add(typeRef);
-                                }
-                            });
+                                    foreach (ErrorDefinition def in definitions)
+                                    {
+                                        ExtendedTypeReference typeRef = discoveryContext
+                                            .TypeInspector
+                                            .GetTypeRef(def.SchemaType);
+
+                                        unionDef.Types.Add(typeRef);
+                                    }
+                                });
                         });
 
                         _needsErrorField.Add((field.Type!, errorUnion));
 
+                        IReadOnlyList<CreateError> factories =
+                            definitions.Select(t => t.Factory).ToArray();
+
                         FieldMiddleware middleware =
                             FieldClassMiddlewareFactory.Create<ErrorMiddleware>(
-                                (typeof(IReadOnlyList<CreateError>),
-                                factories.Select(t => t.Item2).ToArray()));
+                                (typeof(IReadOnlyList<CreateError>), factories));
+
                         field.MiddlewareComponents.Insert(0, middleware);
 
-                        discoveryContext.RegisterDependency(
-                            new TypeDependency(new SchemaTypeReference(errorUnion)));
+                        var unionTypeRef = new SchemaTypeReference(errorUnion);
+                        discoveryContext.RegisterDependency(new TypeDependency(unionTypeRef));
 
-                        field.ContextData.Remove(ErrorContextData.Factories);
+                        field.ContextData.Remove(ErrorDefinitions);
                     }
                 }
             }
@@ -99,13 +106,21 @@ namespace Confix.Authoring.GraphQL
                         Item2: { } objectTypeDef
                     })
                 {
+                    foreach (var field in objectTypeDef.Fields)
+                    {
+                        FieldMiddleware? middleware = FieldClassMiddlewareFactory
+                            .Create<ReturnNullWhenErrorWasThrow>();
+                        field.MiddlewareComponents.Insert(0, middleware);
+                        field.Type = RewriteTypeToNullableType(field, firstContext.TypeInspector);
+                    }
+
                     var descriptor = ObjectFieldDescriptor.New(context.DescriptorContext, "errors");
 
                     descriptor
                         .Type(new ListType(new NonNullType(unionType)))
                         .Resolve(ctx =>
                         {
-                            if (ctx.ScopedContextData.TryGetValue(ErrorContextData.Errors, out var o))
+                            if (ctx.ScopedContextData.TryGetValue(Errors, out var o))
                             {
                                 return o;
                             }
@@ -116,6 +131,37 @@ namespace Confix.Authoring.GraphQL
                     objectTypeDef.Fields.Add(descriptor.CreateDefinition());
                 }
             }
+        }
+
+        private static ITypeReference RewriteTypeToNullableType(
+            ObjectFieldDefinition definition,
+            ITypeInspector typeInspector)
+        {
+            ITypeReference? reference = definition.Type;
+
+            if (reference is ExtendedTypeReference extendedTypeRef)
+            {
+                return extendedTypeRef.Type.IsNullable
+                    ? extendedTypeRef
+                    : extendedTypeRef.WithType(
+                        typeInspector.ChangeNullability(extendedTypeRef.Type, true));
+            }
+
+            if (reference is SchemaTypeReference schemaRef)
+            {
+                return schemaRef.Type is NonNullType nnt
+                    ? schemaRef.WithType(nnt.Type)
+                    : schemaRef;
+            }
+
+            if (reference is SyntaxTypeReference syntaxRef)
+            {
+                return syntaxRef.Type is NonNullTypeNode nnt
+                    ? syntaxRef.WithType(nnt.Type)
+                    : syntaxRef;
+            }
+
+            throw new NotSupportedException();
         }
     }
 }

@@ -2,7 +2,6 @@ using HotChocolate.Types;
 
 namespace Confix.Authoring.GraphQL
 {
-    [InterfaceType("UserError")]
     public interface IUserError
     {
         string Code { get; }
