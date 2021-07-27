@@ -43,7 +43,8 @@ namespace Confix.Authoring.GraphQL
 
                 // server options
                 .AddAuthorization()
-                .EnableRelaySupport()
+                .AddGlobalObjectIdentification()
+                .AddQueryFieldToMutationPayloads()
                 .AddFiltering()
                 .AddSorting();
 

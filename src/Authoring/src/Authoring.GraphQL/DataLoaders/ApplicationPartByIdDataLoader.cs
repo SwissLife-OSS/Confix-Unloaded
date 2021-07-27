@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Confix.Authoring.Store;
 using GreenDonut;
-using HotChocolate.DataLoader;
+using HotChocolate.Fetching;
 
 namespace Confix.Authoring.GraphQL.DataLoaders
 {
