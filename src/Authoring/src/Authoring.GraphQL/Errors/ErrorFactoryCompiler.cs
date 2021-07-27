@@ -5,40 +5,65 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using HotChocolate;
+using HotChocolate.Types;
 using HotChocolate.Utilities;
 
 namespace Confix.Authoring.GraphQL
 {
     internal static class ErrorFactoryCompiler
     {
-        public static CreateError Compile(Type errorType)
+        public static ErrorDefinition Compile(Type errorType)
         {
             if (errorType is null)
             {
                 throw new ArgumentNullException(nameof(errorType));
             }
 
-            if (TryCreateDefaultErrorFactory(errorType, out CreateError? factory))
+            if (TryCreateDefaultErrorFactory(errorType, out ErrorDefinition? definition))
             {
-                return factory;
+                return definition;
             }
 
-            if (TryCreateFactoryFromConstructor(errorType, out factory))
+            if (TryCreateFactoryFromConstructor(errorType, out definition))
             {
-                return factory;
+                return definition;
+            }
+
+            if (TryCreateFactoryFromException(errorType, out definition))
+            {
+                return definition;
             }
 
             throw new SchemaException(
-                SchemaErrorBuilder.New()
+                SchemaErrorBuilder
+                    .New()
                     .SetMessage(
                         "The error type {0} does not expose any error factory.",
                         errorType.FullName ?? errorType.Name)
                     .Build());
         }
 
+        private static bool TryCreateFactoryFromException(
+            Type errorType,
+            [NotNullWhen(true)] out ErrorDefinition? definition)
+        {
+            if (errorType.IsAssignableTo(typeof(Exception)))
+            {
+                Type schemaType = typeof(ExceptionObjectType<>).MakeGenericType(errorType);
+                definition = new ErrorDefinition(
+                    errorType,
+                    schemaType,
+                    ex => ex.GetType() == errorType ? ex : null);
+                return true;
+            }
+
+            definition = null;
+            return false;
+        }
+
         private static bool TryCreateDefaultErrorFactory(
             Type errorType,
-            [NotNullWhen(true)] out CreateError? factory)
+            [NotNullWhen(true)] out ErrorDefinition? definition)
         {
             MethodInfo? method = errorType.GetMethod(
                 "CreateErrorFrom",
@@ -54,24 +79,30 @@ namespace Confix.Authoring.GraphQL
                 {
                     ParameterExpression exception = Expression.Parameter(typeof(Exception), "ex");
                     Expression factoryExpression = Expression.Call(method, exception);
-                    factory = Expression.Lambda<CreateError>(
-                        Expression.Convert(factoryExpression, typeof(object)),
-                        exception).Compile();
+                    CreateError factory = Expression.Lambda<CreateError>(
+                            Expression.Convert(factoryExpression, typeof(object)),
+                            exception)
+                        .Compile();
+
+                    Type schemaType = typeof(ObjectType<>).MakeGenericType(errorType);
+                    definition = new ErrorDefinition(errorType, schemaType, factory);
                     return true;
                 }
             }
 
-            factory = null;
+            definition = null;
             return false;
         }
 
         private static bool TryCreateFactoryFromConstructor(
             Type errorType,
-            [NotNullWhen(true)] out CreateError? factory)
+            [NotNullWhen(true)] out ErrorDefinition? definition)
         {
             MethodInfo getTypeMethod = typeof(Expression)
                 .GetMethods()
-                .Single(t => t.Name.EqualsOrdinal("GetType") && t.GetParameters().Length == 0);
+                .Single(t =>
+                    StringExtensions.EqualsOrdinal(t.Name, "GetType") &&
+                    t.GetParameters().Length == 0);
 
             ParameterExpression exception = Expression.Parameter(typeof(Exception), "ex");
             Expression nullValue = Expression.Constant(null, typeof(object));
@@ -86,7 +117,6 @@ namespace Confix.Authoring.GraphQL
                     typeof(Exception).IsAssignableFrom(parameters[0].ParameterType))
                 {
                     Type expectedException = parameters[0].ParameterType;
-
 
                     Expression expected = Expression.Constant(expectedException, typeof(Type));
                     Expression actual = Expression.Call(exception, getTypeMethod);
@@ -114,16 +144,21 @@ namespace Confix.Authoring.GraphQL
 
             if (previous is not null)
             {
-
-                factory = Expression.Lambda<CreateError>(
-                    Expression.Block(
-                        new[] { variable },
-                        new List<Expression> { previous, variable }),
-                        exception).Compile();
+                var factory = Expression.Lambda<CreateError>(
+                        Expression.Block(
+                            new[]
+                            {
+                                variable
+                            },
+                            new List<Expression> { previous, variable }),
+                        exception)
+                    .Compile();
+                Type schemaType = typeof(ObjectType<>).MakeGenericType(errorType);
+                definition = new ErrorDefinition(errorType, schemaType, factory);
                 return true;
             }
 
-            factory = null;
+            definition = null;
             return false;
         }
     }
