@@ -1,11 +1,13 @@
+#import "./Component.graphql"
 mutation createComponent($input: CreateComponentInput!) {
   createComponent(input: $input) {
     component {
-      id
-      name
-      schemaAsJson
-      valuesAsJson
-      schema
+      ...Component
+    }
+    errors {
+      ... on IUserError {
+        message
+      }
     }
   }
 }

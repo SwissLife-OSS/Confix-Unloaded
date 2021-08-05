@@ -1,11 +1,8 @@
+#import "./Component.graphql"
 mutation updateComponentSchema($input: UpdateComponentSchemaInput!) {
   updateComponentSchema(input: $input) {
     component {
-      id
-      name
-      state
-      schemaAsJson
-      valuesAsJson      
+      ...Component
     }
   }
 }

@@ -13,6 +13,7 @@
       <component-editor
         v-if="activeTabItem.type === 'COMPONENT'"
         :component="activeTabItem.item.component"
+        :key="activeTabItem.item.component.id"
       ></component-editor>
 
       <application-part-editor

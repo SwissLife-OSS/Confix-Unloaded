@@ -40,30 +40,36 @@ import { mapActions } from "vuex";
 import MonacoEditor from "../Common/MonacoEditor.vue";
 export default {
   components: {
-    MonacoEditor,
+    MonacoEditor
   },
   mounted() {
-    this.schema = this.component.schema ?? "";
-    this.values = this.component.valuesAsJson ?? "{}";
+    this.schema = this.component.schemaSdl ?? "";
+    this.values = JSON.stringify(this.component.values) ?? "{}";
   },
   props: ["component"],
   data() {
     return {
       tab: 0,
       schema: "",
-      values: "{}",
+      values: "{}"
     };
   },
   computed: {},
   methods: {
-    ...mapActions("comp", ["updateSchema"]),
-    onSave: function () {
-      this.updateSchema({
-        id: this.component.id,
-        schema: this.code,
+    ...mapActions("comp", ["updateSchemaAndValues"]),
+    onSave: function() {
+      this.updateSchemaAndValues({
+        schema: {
+          id: this.component.id,
+          schema: this.schema
+        },
+        values: {
+          id: this.component.id,
+          values: JSON.parse(this.values)
+        }
       });
-    },
-  },
+    }
+  }
 };
 </script>
 

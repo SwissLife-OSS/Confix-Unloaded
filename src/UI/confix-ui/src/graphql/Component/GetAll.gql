@@ -1,12 +1,9 @@
+#import "./Component.graphql"
 query allComponents {
   components {
     edges {
       node {
-        id
-        name
-        schemaAsJson
-        valuesAsJson
-        schema
+        ...Component
       }
     }
   }
