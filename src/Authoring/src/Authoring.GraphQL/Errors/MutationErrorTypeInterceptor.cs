@@ -68,7 +68,7 @@ namespace Confix.Authoring.GraphQL
                             FieldClassMiddlewareFactory.Create<ErrorMiddleware>(
                                 (typeof(IReadOnlyList<CreateError>), factories));
 
-                        field.MiddlewareComponents.Insert(0, middleware);
+                        field.MiddlewareDefinitions.Insert(0, new(middleware));
 
                         var unionTypeRef = new SchemaTypeReference(errorUnion);
                         discoveryContext.RegisterDependency(new TypeDependency(unionTypeRef));
@@ -110,7 +110,7 @@ namespace Confix.Authoring.GraphQL
                     {
                         FieldMiddleware? middleware = FieldClassMiddlewareFactory
                             .Create<ReturnNullWhenErrorWasThrow>();
-                        field.MiddlewareComponents.Insert(0, middleware);
+                        field.MiddlewareDefinitions.Insert(0, new(middleware));
                         field.Type = RewriteTypeToNullableType(field, firstContext.TypeInspector);
                     }
 
