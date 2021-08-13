@@ -1,4 +1,10 @@
-# hello-world
+# Confix UI
+
+
+## Generate GraphQL Client based on GraphQL Files
+```
+yarn generate
+```
 
 ## Project setup
 ```
