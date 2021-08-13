@@ -10,7 +10,7 @@ export function mapStateOfNamespace<
 ): {
   [K in TState]: () => Modules[T]["state"][TState];
 } {
-  return mapState(namespace, state as any) as any;
+  return mapState(namespace, [state as any]) as any;
 }
 
 export function mapActionOfNamespace<
@@ -22,7 +22,7 @@ export function mapActionOfNamespace<
 ): {
   [K in TState]: OmitFirstArg<Modules[T]["actions"][TState]>;
 } {
-  return mapActions(namespace, action as any) as any;
+  return mapActions(namespace, [action as any]) as any;
 }
 type OmitFirstArg<F> = F extends (x: any, ...args: infer P) => infer R
   ? (...args: P) => R

@@ -14,10 +14,10 @@
     "monaco-editor": "^0.24.0",
     "nano-assign": "^1.0.1",
     "v-clipboard": "^2.2.3",
-    "vue": "^3.0.0",
-    "vue-router": "^4.0.0-0",
+    "vue": "^2.6.11",
+    "vue-router": "^3.2.0",
     "vuetify": "^2.5.8",
-    "vuex": "^4.0.0-0"
+    "vuex": "^3.4.0"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^2.0.1",
@@ -41,7 +41,7 @@
     "eslint-plugin-vue": "^7.15.1",
     "prettier": "^2.3.2",
     "sass": "^1.37.5",
-    "sass-loader": "^12.1.0",
+    "sass-loader": "^10.1.1",
     "typescript": "~4.3.5",
     "vue-cli-plugin-apollo": "~0.22.2",
     "vue-cli-plugin-vuetify": "~2.4.2",

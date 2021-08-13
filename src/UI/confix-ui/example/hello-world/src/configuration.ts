@@ -1,6 +1,6 @@
 const configuration = {
   endpoint: {
-    url: "https://localhost:5000/graphql",
+    url: "/graphql",
   },
 };
 

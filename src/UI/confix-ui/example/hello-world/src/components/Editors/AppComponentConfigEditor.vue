@@ -27,13 +27,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "@vue/runtime-core";
+import Vue from "vue";
 import { mapStateOfNamespace } from "../../helpers/mapFunctions";
 import { prop } from "../../helpers/state";
 import { Application } from "../../state/Application";
 import EditorBase from "../Shell/EditorBase.vue";
 
-export default defineComponent({
+export default Vue.extend({
   components: { EditorBase },
   props: {
     part: {

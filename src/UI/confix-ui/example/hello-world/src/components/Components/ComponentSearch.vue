@@ -26,13 +26,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "@vue/runtime-core";
+import Vue from "vue";
 import { Component } from "../../graphql-operations";
 import {
   mapActionOfNamespace,
   mapStateOfNamespace,
 } from "../../helpers/mapFunctions";
-export default defineComponent({
+export default Vue.extend({
   created() {
     this.loadComponents();
   },

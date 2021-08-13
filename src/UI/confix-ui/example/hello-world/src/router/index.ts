@@ -1,27 +1,39 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
-import Home from "../views/Home.vue";
+import Vue from "vue";
+import VueRouter, { RouteConfig } from "vue-router";
+import ApplicationView from "../components/Applications/ApplicationView.vue";
+import VariableSearch from "../components/Variables/VariableSearch.vue";
+import ComponentSearch from "../components/Components/ComponentSearch.vue";
+import ExplorerView from "../components/Shell/ExplorerView.vue";
 
-const routes: Array<RouteRecordRaw> = [
+Vue.use(VueRouter);
+
+const routes: Array<RouteConfig> = [
   {
     path: "/",
-    name: "Home",
-    component: Home,
+    name: "Applications",
+    component: ApplicationView,
   },
   {
-    path: "/about",
-    name: "About",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue"),
+    path: "/vars",
+    name: "Variables",
+    component: VariableSearch,
+  },
+  {
+    path: "/comp",
+    name: "Components",
+    component: ComponentSearch,
+  },
+  {
+    path: "/explorer",
+    name: "Explorer",
+    component: ExplorerView,
   },
 ];
 
-const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+const router = new VueRouter({
+  mode: "history",
+  base: process.env.BASE_URL,
   routes,
 });
-
 
 export default router;

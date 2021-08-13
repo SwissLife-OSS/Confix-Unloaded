@@ -3,27 +3,26 @@
 </template>
 <script lang="ts">
 //Copied from https://github.com/egoist/vue-monaco
-import { h } from "vue";
-import { defineComponent } from "@vue/runtime-core";
-import monaco from "monaco-editor";
+import Vue, { CreateElement } from "vue";
+import m, { editor as MonacoEditor } from "monaco-editor";
 import assign from "nano-assign";
 import { maybeNull } from "../../helpers/state";
 
-type MonacoImport = typeof monaco;
+type Monaco = typeof m;
 
 function isDiffEditor(
-  editor?: monaco.editor.IEditor | null
-): editor is monaco.editor.IDiffEditor {
-  return editor?.getEditorType() == monaco.editor.EditorType.IDiffEditor;
+  editor?: MonacoEditor.IEditor | null
+): editor is MonacoEditor.IDiffEditor {
+  return editor?.getEditorType() == MonacoEditor.EditorType.IDiffEditor;
 }
 
 function isCodeEditor(
-  editor?: monaco.editor.IEditor | null
-): editor is monaco.editor.ICodeEditor {
-  return editor?.getEditorType() == monaco.editor.EditorType.ICodeEditor;
+  editor?: MonacoEditor.IEditor | null
+): editor is MonacoEditor.ICodeEditor {
+  return editor?.getEditorType() == MonacoEditor.EditorType.ICodeEditor;
 }
 
-export default defineComponent({
+export default Vue.extend({
   name: "MonacoEditor",
   props: {
     original: String,
@@ -51,14 +50,14 @@ export default defineComponent({
   },
 
   data: () => ({
-    monaco: maybeNull<MonacoImport>(),
-    editor: maybeNull<monaco.editor.IEditor>(),
+    monaco: maybeNull<Monaco>(),
+    editor: maybeNull<MonacoEditor.IEditor>(),
   }),
 
   watch: {
     options: {
       deep: true,
-      handler(options: monaco.editor.IEditorOptions) {
+      handler(options: MonacoEditor.IEditorOptions) {
         if (this.editor) {
           const editor = this.getModifiedEditor();
           editor?.updateOptions(options);
@@ -89,7 +88,7 @@ export default defineComponent({
       if (editor && this.monaco) {
         const model = editor.getModel();
         if (model) {
-          this.monaco.editor.setModelLanguage(model, newVal);
+          this.monaco.setModelLanguage(model, newVal);
         }
       }
     },
@@ -102,18 +101,21 @@ export default defineComponent({
   },
 
   mounted() {
-    this.monaco = monaco;
+    this.monaco = require("monaco-editor");
     this.$nextTick(() => {
-      this.initMonaco(monaco);
+      if (this.monaco) {
+        this.initMonaco(this.monaco);
+      }
     });
   },
 
-  beforeUnmount() {
+  // eslint-disable-next-line vue/no-deprecated-destroyed-lifecycle
+  beforeDestroy() {
     this.editor && this.editor.dispose();
   },
 
   methods: {
-    initMonaco(monaco: MonacoImport) {
+    initMonaco(monaco: Monaco) {
       this.$emit("editorWillMount", this.monaco);
 
       const options = assign(
@@ -126,7 +128,10 @@ export default defineComponent({
       );
 
       if (this.diffEditor && this.original) {
-        this.editor = monaco.editor.createDiffEditor(this.$el, options);
+        this.editor = monaco.editor.createDiffEditor(
+          this.$el as HTMLElement,
+          options
+        );
         const originalModel = monaco.editor.createModel(
           this.original,
           this.language
@@ -140,7 +145,7 @@ export default defineComponent({
           modified: modifiedModel,
         });
       } else {
-        this.editor = monaco.editor.create(this.$el, options);
+        this.editor = monaco.editor.create(this.$el as HTMLElement, options);
       }
 
       // @event `change`
@@ -155,7 +160,7 @@ export default defineComponent({
       this.$emit("editorDidMount", this.editor);
     },
 
-    getModifiedEditor(): monaco.editor.IEditor | null {
+    getModifiedEditor(): MonacoEditor.IEditor | null {
       if (!this.editor) {
         return null;
       }
@@ -165,7 +170,7 @@ export default defineComponent({
       return this.editor;
     },
 
-    getOriginalEditor(): monaco.editor.ICodeEditor | null {
+    getOriginalEditor(): MonacoEditor.ICodeEditor | null {
       if (isDiffEditor(this.editor)) {
         return this.editor.getOriginalEditor();
       }
@@ -180,7 +185,7 @@ export default defineComponent({
     },
   },
 
-  render() {
+  render(h: CreateElement) {
     return h("div");
   },
 });

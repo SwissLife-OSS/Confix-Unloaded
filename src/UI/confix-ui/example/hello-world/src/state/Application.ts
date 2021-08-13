@@ -4,6 +4,6 @@ export interface Application {
   parts: {
     id: string;
     name: string;
-    components: { id: string; name: string }[];
+    components: { definition: { id: string; name: string } }[];
   }[];
 }

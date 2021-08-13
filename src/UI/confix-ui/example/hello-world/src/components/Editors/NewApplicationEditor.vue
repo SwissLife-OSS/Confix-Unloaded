@@ -40,7 +40,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "@vue/runtime-core";
+import Vue from "vue";
 import { mapActions } from "vuex";
 import { mapActionOfNamespace } from "../../helpers/mapFunctions";
 import { maybeNull } from "../../helpers/state";
@@ -48,7 +48,7 @@ import EditorBase from "../Shell/EditorBase.vue";
 
 type Actions = "SAVE";
 
-export default defineComponent({
+export default Vue.extend({
   components: { EditorBase },
   data() {
     return {

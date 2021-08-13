@@ -44,14 +44,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "@vue/runtime-core";
+import Vue from "vue";
 import {
   mapActionOfNamespace,
   mapStateOfNamespace,
 } from "../../helpers/mapFunctions";
 import { prop } from "../../helpers/state";
 import { Application } from "../../state/Application";
-export default defineComponent({
+export default Vue.extend({
   props: {
     part: {
       type: prop<Application["parts"][0]>(),
@@ -82,7 +82,7 @@ export default defineComponent({
         applicationId: this.application.id,
         partId: this.part.id,
         name: this.form.name,
-        components: this.form.components.map((x) => x.id),
+        components: this.form.components.map((x) => x.definition.id),
       });
     },
   },

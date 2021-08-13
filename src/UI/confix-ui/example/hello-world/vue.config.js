@@ -24,7 +24,7 @@ module.exports = {
       "/graphql": {
         ws: true,
         changeOrigin: true,
-        target: process.env.API_BASE_URL,
+        target: "http://localhost:5000/graphql",
       },
     },
   },

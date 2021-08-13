@@ -3,7 +3,7 @@
     <div
       class="tab-item"
       :class="{ active: tab.active }"
-      v-for="tab in tabs"
+      v-for="tab in storedTabs"
       :key="tab.id"
       @mouseover="hoveredTabId = tab.id"
       @mouseleave="hoveredTabId = null"
@@ -24,15 +24,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "@vue/runtime-core";
+import Vue from "vue";
 import {
   mapActionOfNamespace,
   mapStateOfNamespace,
 } from "../../helpers/mapFunctions";
-import { tabsTypeMap } from "../../resources";
-import { Tab } from "../../state/Tab";
+import { StoredTab, Tab } from "../../state/Tab";
 
-export default defineComponent({
+export default Vue.extend({
   data() {
     return {
       hoveredTabId: null,
@@ -41,11 +40,10 @@ export default defineComponent({
   computed: {
     ...mapStateOfNamespace("shell", "selectedTabId"),
     ...mapStateOfNamespace("shell", "tabs"),
-    tabs: function (): Tab[] {
+    storedTabs: function (): StoredTab[] {
       return this.tabs.map((x) => ({
         ...x,
         active: this.selectedTabId === x.id,
-        color: tabsTypeMap[x.type].color,
       }));
     },
   },
@@ -53,12 +51,12 @@ export default defineComponent({
     ...mapActionOfNamespace("shell", "openTab"),
     ...mapActionOfNamespace("shell", "selectTab"),
     ...mapActionOfNamespace("shell", "closeTab"),
-    onSelectTab(tab: Tab) {
+    onSelectTab(tab: StoredTab) {
       if (!tab.active) {
         this.selectTab(tab.id);
       }
     },
-    onCloseTab(tab: Tab) {
+    onCloseTab(tab: StoredTab) {
       this.closeTab(tab.id);
     },
   },

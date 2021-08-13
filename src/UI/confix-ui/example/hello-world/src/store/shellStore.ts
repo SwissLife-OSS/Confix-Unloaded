@@ -123,7 +123,6 @@ const shellStore = defineModule({
       mutate("shell", "TAB_OPENED").commit({
         ...tab,
         color: tabsTypeMap[tab.type].color,
-        ready: true,
         active: false,
       });
     },

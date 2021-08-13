@@ -1,4 +1,5 @@
-import { createStore } from "vuex";
+import Vue from "vue";
+import Vuex from "vuex";
 import { Any } from "../helpers/Any";
 import applicationStore from "./applicationStore";
 import componentStore from "./componentStore";
@@ -11,7 +12,9 @@ export const modules = {
 
 export type Modules = typeof modules;
 
-const store = createStore({
+Vue.use(Vuex);
+
+const store = new Vuex.Store({
   state: {},
   mutations: {},
   actions: {},

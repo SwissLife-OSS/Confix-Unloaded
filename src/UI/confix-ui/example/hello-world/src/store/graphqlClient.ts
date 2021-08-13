@@ -15,7 +15,7 @@ export const useClient = <S, R>(
     } catch {
       await useModules(context)
         .action("shell", "addMessage")
-        .dispatch({
+        .rootDispatch({
           text: `An API error has accoured in operation ${operationName}.`,
           type: "ERROR",
         });

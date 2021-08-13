@@ -104,8 +104,6 @@
 </template>
 
 <script lang="ts">
-import { mapState, mapActions } from "vuex";
-import { defineComponent } from "vue";
 import {
   mapActionOfNamespace,
   mapStateOfNamespace,
@@ -113,8 +111,9 @@ import {
 import { Application } from "../../state/Application";
 import { Component } from "../../state/Component";
 import { maybeNull } from "../../helpers/state";
+import Vue from "vue";
 
-export default defineComponent({
+export default Vue.extend({
   components: {},
   created() {
     this.loadApplications();
@@ -177,8 +176,8 @@ export default defineComponent({
       }
       this.openTab({
         type: "APP_COMPONENT_CONFIG",
-        title: `${part.name}/${component.name}`,
-        id: `${this.selectedApp.id}_${part.name}_${component.name}`,
+        title: `${part.name}/${component.definition.name}`,
+        id: `${this.selectedApp.id}_${part.name}_${component.definition.name}`,
         item: {
           component,
           part,

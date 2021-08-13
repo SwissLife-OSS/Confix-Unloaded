@@ -36,12 +36,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "@vue/runtime-core";
+import Vue from "vue";
 import { mapActionOfNamespace } from "../../helpers/mapFunctions";
 import { prop } from "../../helpers/state";
 import { Component } from "../../state/Component";
 import MonacoEditor from "../Common/MonacoEditor.vue";
-export default defineComponent({
+export default Vue.extend({
   components: {
     MonacoEditor,
   },

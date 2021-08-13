@@ -58,11 +58,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "@vue/runtime-core";
+import Vue from "vue";
 import { mapActions } from "vuex";
 import { Any } from "../../helpers/Any";
 import { mapStateOfNamespace } from "../../helpers/mapFunctions";
 import { Application } from "../../state/Application";
+import { Component } from "../../state/Component";
 
 interface INode {
   id: string;
@@ -92,6 +93,15 @@ const getPartsNode = (part: Application["parts"][0]): INode => ({
 const getAppComponentNode = (
   component: Application["parts"][0]["components"][0]
 ): INode => ({
+  id: component.definition.id,
+  name: component.definition.name,
+  type: "PC",
+  icon: "mdi-toy-brick-outline",
+  color: "#26A69A",
+  item: component,
+  children: [],
+});
+const getComponentNode = (component: Component): INode => ({
   id: component.id,
   name: component.name,
   type: "PC",
@@ -101,7 +111,7 @@ const getAppComponentNode = (
   children: [],
 });
 
-export default defineComponent({
+export default Vue.extend({
   data: () => ({
     initiallyOpen: ["APPS"],
     typeFilter: null,
@@ -126,7 +136,7 @@ export default defineComponent({
           type: "C_FOLDER",
           icon: "mdi-folder",
           color: "#26A69A",
-          children: this.components.map(getAppComponentNode),
+          children: this.components.map(getComponentNode),
         },
       ];
 

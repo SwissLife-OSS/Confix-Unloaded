@@ -1,6 +1,6 @@
 <template>
   <div v-if="activeTabItem">
-    <div v-if="activeTabItem.ready">
+    <div>
       <app-component-config-editor
         v-if="activeTabItem.type === 'APP_COMPONENT_CONFIG'"
         :part="activeTabItem.item.part"
@@ -34,12 +34,11 @@
       <new-application-editor v-if="activeTabItem.type === 'APP_ADD'">
       </new-application-editor>
     </div>
-    <div v-else>Loading...</div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "@vue/runtime-core";
+import Vue from "vue";
 import { mapStateOfNamespace } from "../../helpers/mapFunctions";
 import { Tab } from "../../state/Tab";
 import AppComponentConfigEditor from "../Editors/AppComponentConfigEditor.vue";
@@ -50,7 +49,7 @@ import NewComponentEditor from "../Editors/NewComponentEditor.vue";
 import NewVariableEditor from "../Editors/NewVariableEditor.vue";
 import VariableEditor from "../Editors/VariableEditor.vue";
 
-export default defineComponent({
+export default Vue.extend({
   components: {
     AppComponentConfigEditor,
     VariableEditor,

@@ -43,12 +43,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "@vue/runtime-core";
-import { useRoute, useRouter } from "vue-router";
-import EditorShellManager from "./components/Shell/EditorShellManager";
+import Vue from "vue";
+import EditorShellManager from "./components/Shell/EditorShellManager.vue";
 import TabList from "./components/Shell/TabList.vue";
 import { useModules } from "./helpers/bind";
-import { extractStore } from "./helpers/extractStore";
 import { mapStateOfNamespace } from "./helpers/mapFunctions";
 import { array } from "./helpers/state";
 import { StatusMessage } from "./state/StatusMessage";
@@ -60,11 +58,11 @@ interface NavItem {
   active: boolean;
   color: string;
 }
-export default defineComponent({
+export default Vue.extend({
   name: "App",
   components: { TabList, EditorShellManager },
   created() {
-    const { action } = useModules(extractStore(this));
+    const { action } = useModules(this.$store);
     action("comp", "loadComponents").dispatch();
     action("apps", "loadApplications").dispatch();
     // TODO Variables
@@ -128,7 +126,7 @@ export default defineComponent({
   computed: {
     ...mapStateOfNamespace("shell", "statusMessage"),
     navBarItems: function (): NavItem[] {
-      const { name } = useRoute();
+      const { name } = this.$route;
       return this.navItems.map((x) => {
         x.active = x.route === name;
         x.color = x.active ? "#fff" : "#b3b3b3";
@@ -151,7 +149,7 @@ export default defineComponent({
   },
   methods: {
     onNavigate: function (nav: NavItem) {
-      const router = useRouter();
+      const router = this.$router;
       if (!nav.active) {
         router.push({ name: nav.route });
       }

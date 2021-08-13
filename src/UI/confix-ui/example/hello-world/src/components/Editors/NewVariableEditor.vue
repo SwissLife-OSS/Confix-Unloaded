@@ -38,14 +38,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "@vue/runtime-core";
+import Vue from "vue";
 import { mapActions } from "vuex";
 import EditorBase from "../Shell/EditorBase.vue";
 
 // TODO IMPLEMENT!
 type Actions = "SAVE";
 
-export default defineComponent({
+export default Vue.extend({
   components: { EditorBase },
   data() {
     return {
