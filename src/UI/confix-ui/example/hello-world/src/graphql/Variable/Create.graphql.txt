@@ -1,0 +1,11 @@
+mutation createVariable($input: CreateVariableInput!) {
+  createVariable(input: $input) {
+    variable {
+      id
+      name
+      namespace
+      state
+      isSecret
+    }
+  }
+}

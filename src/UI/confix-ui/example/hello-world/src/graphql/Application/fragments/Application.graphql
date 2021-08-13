@@ -1,0 +1,14 @@
+fragment Application on Application {
+  id
+  name
+  parts {
+    id
+    name
+    components {
+      definition {
+        id
+        name
+      }
+    }
+  }
+}

@@ -1,0 +1,8 @@
+#import "./Component.graphql"
+mutation updateComponentSchema($input: UpdateComponentSchemaInput!) {
+  updateComponentSchema(input: $input) {
+    component {
+      ...Component
+    }
+  }
+}

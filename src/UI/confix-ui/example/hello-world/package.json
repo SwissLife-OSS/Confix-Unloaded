@@ -1,0 +1,51 @@
+{
+  "name": "hello-world",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "generate": "graphql-codegen"
+  },
+  "dependencies": {
+    "core-js": "^3.6.5",
+    "graphql-request": "^3.5.0",
+    "monaco-editor": "^0.24.0",
+    "nano-assign": "^1.0.1",
+    "v-clipboard": "^2.2.3",
+    "vue": "^3.0.0",
+    "vue-router": "^4.0.0-0",
+    "vuetify": "^2.5.8",
+    "vuex": "^4.0.0-0"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "^2.0.1",
+    "@graphql-codegen/typed-document-node": "^2.0.0",
+    "@graphql-codegen/typescript": "^2.0.0",
+    "@graphql-codegen/typescript-graphql-request": "^4.0.0",
+    "@graphql-codegen/typescript-operations": "^2.0.1",
+    "@typescript-eslint/eslint-plugin": "^4.18.0",
+    "@typescript-eslint/parser": "^4.18.0",
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-eslint": "~4.5.0",
+    "@vue/cli-plugin-router": "~4.5.0",
+    "@vue/cli-plugin-typescript": "~4.5.0",
+    "@vue/cli-plugin-vuex": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "@vue/compiler-sfc": "^3.0.0",
+    "@vue/eslint-config-prettier": "^6.0.0",
+    "@vue/eslint-config-typescript": "^7.0.0",
+    "eslint": "^7.32.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-vue": "^7.15.1",
+    "prettier": "^2.3.2",
+    "sass": "^1.37.5",
+    "sass-loader": "^12.1.0",
+    "typescript": "~4.3.5",
+    "vue-cli-plugin-apollo": "~0.22.2",
+    "vue-cli-plugin-vuetify": "~2.4.2",
+    "vue-template-compiler": "^2.6.14",
+    "vuetify-loader": "^1.7.2"
+  }
+}

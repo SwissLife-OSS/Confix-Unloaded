@@ -1,0 +1,9 @@
+query allVariables {
+  variables {
+    id
+    name
+    namespace
+    isSecret
+    state
+  }
+}

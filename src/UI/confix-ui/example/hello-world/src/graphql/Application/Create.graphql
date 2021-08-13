@@ -1,0 +1,8 @@
+#import "./fragments/Application.graphql"
+mutation createApplication($input: CreateApplicationInput!) {
+  createApplication(input: $input) {
+    application {
+      ...Application
+    }
+  }
+}

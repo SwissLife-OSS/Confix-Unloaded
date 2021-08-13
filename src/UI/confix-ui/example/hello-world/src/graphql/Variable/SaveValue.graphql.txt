@@ -1,0 +1,18 @@
+mutation saveVariableValue($input: SaveVariableValueInput!) {
+  saveVariableValue(input: $input) {
+    value {
+      id
+      key {
+        applicationId
+        variableId
+        partId
+        environmentId
+      }
+      encryption {
+        keyProvider
+        algorithm
+      }
+      value
+    }
+  }
+}
