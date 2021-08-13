@@ -43,8 +43,18 @@
   </v-card>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from "vue";
+import { maybeNull } from "../../helpers/state";
+
+export interface IView {
+  id: string;
+}
+export interface Action {
+  id: string;
+}
+
+export default Vue.extend({
   props: ["title", "color", "icon", "actions", "views"],
   created() {
     if (this.views && this.views.length > 0) {
@@ -53,19 +63,19 @@ export default {
   },
   data() {
     return {
-      activeView: null,
+      activeView: maybeNull<string>(),
     };
   },
   methods: {
-    setView: function (view) {
+    setView: function (view: IView) {
       this.activeView = view.id;
       this.$emit("ViewChanged", view.id);
     },
-    onActionClick: function (action) {
+    onActionClick: function (action: Action) {
       this.$emit("Action", action.id);
     },
   },
-};
+});
 </script>
 
 <style scoped>

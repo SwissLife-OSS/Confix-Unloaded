@@ -50,12 +50,14 @@
   </v-card>
 </template>
 
-<script>
-import { mapActions } from "vuex";
+<script lang="ts">
+import Vue from "vue";
+import { mapActionOfNamespace } from "../../helpers/mapFunctions";
+import { maybeNull } from "../../helpers/state";
 import MonacoEditor from "../Common/MonacoEditor.vue";
-export default {
+export default Vue.extend({
   components: {
-    MonacoEditor
+    MonacoEditor,
   },
   mounted() {
     this.schema = "";
@@ -67,27 +69,29 @@ export default {
       schema: "",
       values: "{}",
       newComponent: {
-        name: null,
+        name: maybeNull<string>(),
         schema: "",
-        values: "{}"
-      }
+        values: "{}",
+      },
     };
   },
   computed: {},
   methods: {
-    ...mapActions("comp", ["createComponent"]),
-    ...mapActions("shell", ["closeActiveTab"]),
-    onClickSave: async function() {
-      await this.createComponent({
-        name: this.newComponent.name,
-        schema: this.schema,
-        values: JSON.parse(this.values)
-      });
-      // TODO Error handling
-      this.closeActiveTab();
-    }
-  }
-};
+    ...mapActionOfNamespace("comp", "createComponent"),
+    ...mapActionOfNamespace("shell", "closeActiveTab"),
+    onClickSave: async function () {
+      if (this.newComponent.name) {
+        await this.createComponent({
+          name: this.newComponent.name,
+          schema: this.schema,
+          values: JSON.parse(this.values),
+        });
+        // TODO Error handling
+        this.closeActiveTab();
+      }
+    },
+  },
+});
 </script>
 
 <style scoped>

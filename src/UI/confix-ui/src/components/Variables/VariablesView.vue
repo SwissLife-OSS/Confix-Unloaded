@@ -5,12 +5,12 @@
   </v-row>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
 import VariablesSearch from "./VariablesSearch.vue";
-export default {
+export default Vue.extend({
   components: { VariablesSearch },
-};
+});
 </script>
 
-<style>
-</style>
+<style></style>

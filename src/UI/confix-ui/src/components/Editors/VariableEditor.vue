@@ -58,10 +58,11 @@
 </template>
 
 <script>
+import Vue from "vue";
 import { mapActions } from "vuex";
 import EditorBase from "../Shell/EditorBase.vue";
 import VariableTable from "./VariableTable.vue";
-export default {
+export default Vue.extend({
   components: { EditorBase, VariableTable },
   props: ["variable"],
   data() {
@@ -169,8 +170,7 @@ export default {
       console.log(id);
     },
   },
-};
+});
 </script>
 
-<style>
-</style>
+<style></style>

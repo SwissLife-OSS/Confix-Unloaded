@@ -6,7 +6,7 @@
   >
     <pre>
     {
-    
+
 
     }
     </pre>
@@ -26,14 +26,25 @@
   </editor-base>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import Vue from "vue";
+import { mapStateOfNamespace } from "../../helpers/mapFunctions";
+import { prop } from "../../helpers/state";
+import { Application } from "../../state/Application";
 import EditorBase from "../Shell/EditorBase.vue";
 
-export default {
+export default Vue.extend({
   components: { EditorBase },
-  props: ["part", "component"],
-  created() {},
+  props: {
+    part: {
+      type: prop<Application["parts"][0]>(),
+      required: true,
+    },
+    component: {
+      type: String,
+      required: true,
+    },
+  },
   data() {
     return {
       environment: "A",
@@ -41,11 +52,10 @@ export default {
     };
   },
   computed: {
-    ...mapState("apps", ["environments"]),
+    ...mapStateOfNamespace("apps", "environments"),
   },
   methods: {},
-};
+});
 </script>
 
-<style>
-</style>
+<style></style>

@@ -57,114 +57,117 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
 import { mapActions } from "vuex";
-const getAppNode = (app) => {
-  const node = {
-    id: app.id,
-    name: app.name,
-    type: "A",
-    icon: "mdi-package-variant",
-  };
+import { Any } from "../../helpers/Any";
+import { mapStateOfNamespace } from "../../helpers/mapFunctions";
+import { Application } from "../../state/Application";
+import { Component } from "../../state/Component";
 
-  node.children = app.parts.map(getPartsNode);
+interface INode {
+  id: string;
+  name: string;
+  type: string;
+  icon: string;
+  children: INode[];
+  item?: Any;
+  color?: string;
+}
+const getAppNode = (app: Application): INode => ({
+  id: app.id,
+  name: app.name,
+  type: "A",
+  icon: "mdi-package-variant",
+  children: app.parts.map(getPartsNode),
+});
 
-  return node;
-};
+const getPartsNode = (part: Application["parts"][0]): INode => ({
+  id: part.id,
+  name: part.name,
+  type: "AP",
+  icon: "mdi-application",
+  children: part.components.map(getAppComponentNode),
+});
 
-const getPartsNode = (part) => {
-  const node = {
-    id: part.id,
-    name: part.name,
-    type: "AP",
-    icon: "mdi-application",
-  };
+const getAppComponentNode = (
+  component: Application["parts"][0]["components"][0]
+): INode => ({
+  id: component.definition.id,
+  name: component.definition.name,
+  type: "PC",
+  icon: "mdi-toy-brick-outline",
+  color: "#26A69A",
+  item: component,
+  children: [],
+});
+const getComponentNode = (component: Component): INode => ({
+  id: component.id,
+  name: component.name,
+  type: "PC",
+  icon: "mdi-toy-brick-outline",
+  color: "#26A69A",
+  item: component,
+  children: [],
+});
 
-  node.children = part.components.map((x) => {
-    const apn = getAppComponentNode(x);
-
-    return apn;
-  });
-
-  return node;
-};
-
-const getAppComponentNode = (ac) => {
-  const node = {
-    id: ac.id,
-    name: ac.name,
-    ac: "PC",
-    icon: "mdi-toy-brick-outline",
-    color: "#26A69A",
-    item: ac,
-  };
-
-  return node;
-};
-
-export default {
-  data() {
-    return {
-      initiallyOpen: ["APPS"],
-      typeFilter: null,
-      searchText: "",
-    };
-  },
+export default Vue.extend({
+  data: () => ({
+    initiallyOpen: ["APPS"],
+    typeFilter: null,
+    searchText: "",
+  }),
   computed: {
-    nodes: function () {
-      const nodes = [];
-      const appNode = {
-        id: "APPS",
-        name: "Applications",
-        type: "A_FOLDER",
-        icon: "mdi-folder",
-        color: "#7986cb",
-      };
-      nodes.push(appNode);
-      appNode.children = this.$store.state.apps.apps.map(getAppNode);
+    ...mapStateOfNamespace("apps", "apps"),
+    ...mapStateOfNamespace("comp", "components"),
+    nodes: function (): INode[] {
+      return [
+        {
+          id: "APPS",
+          name: "Applications",
+          type: "A_FOLDER",
+          icon: "mdi-folder",
+          color: "#7986cb",
+          children: this.apps.map(getAppNode),
+        },
+        {
+          id: "C",
+          name: "Components",
+          type: "C_FOLDER",
+          icon: "mdi-folder",
+          color: "#26A69A",
+          children: this.components.map(getComponentNode),
+        },
+      ];
 
-      const compNode = {
-        id: "C",
-        name: "Components",
-        type: "C_FOLDER",
-        icon: "mdi-folder",
-        color: "#26A69A",
-      };
-      nodes.push(compNode);
-      compNode.children = this.$store.state.comp.components.map((x) => {
-        x.type = "C";
-        x.icon = "mdi-toy-brick-outline";
-        return x;
-      });
+      // const varNode = {
+      //   id: "V",
+      //   name: "Variables",
+      //   type: "V_FOLDER",
+      //   icon: "mdi-folder",
+      //   color: "#FFCA28",
+      //   children: [],
+      // };
+      // nodes.push(varNode);
+      // varNode.children = this.$store.state.vars.vars.map((x) => {
+      //   x.type = "V";
+      //   x.icon = "mdi-variable";
 
-      const varNode = {
-        id: "V",
-        name: "Variables",
-        type: "V_FOLDER",
-        icon: "mdi-folder",
-        color: "#FFCA28",
-      };
-      nodes.push(varNode);
-      varNode.children = this.$store.state.vars.vars.map((x) => {
-        x.type = "V";
-        x.icon = "mdi-variable";
-
-        return x;
-      });
-
-      return nodes;
+      //   return x;
+      // });
     },
   },
   methods: {
     ...mapActions("shell", ["openTab"]),
-    handleSearch(input) {
+    handleSearch(input: []): void {
+      const tree = this.$refs.tree as Any;
       if (input) {
-        if (input.length > 2) this.$refs.tree.updateAll(true);
+        if (input.length > 2) tree.updateAll(true);
       } else {
-        this.$refs.tree.updateAll(false);
+        tree.updateAll(false);
       }
     },
-    onSelect: function (nodes) {
+    onSelect: function (nodes: INode[]): void {
       console.log(nodes);
 
       if (nodes.length > 0) {
@@ -187,8 +190,7 @@ export default {
       }
     },
   },
-};
+});
 </script>
 
-<style>
-</style>
+<style></style>

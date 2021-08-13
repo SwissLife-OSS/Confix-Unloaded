@@ -9,7 +9,7 @@ using Microsoft.Extensions.Hosting;
 namespace Confix.Authoring
 {
     public class Startup
-    { 
+    {
         public IConfiguration Configuration { get; }
         public IWebHostEnvironment HostEnvironment { get; }
 

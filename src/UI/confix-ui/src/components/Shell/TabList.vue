@@ -3,7 +3,7 @@
     <div
       class="tab-item"
       :class="{ active: tab.active }"
-      v-for="tab in tabs"
+      v-for="tab in storedTabs"
       :key="tab.id"
       @mouseover="hoveredTabId = tab.id"
       @mouseleave="hoveredTabId = null"
@@ -23,39 +23,44 @@
   </div>
 </template>
 
-<script>
-import { mapState, mapActions } from "vuex";
-import { tabsTypeMap } from "../../resources";
+<script lang="ts">
+import Vue from "vue";
+import {
+  mapActionOfNamespace,
+  mapStateOfNamespace,
+} from "../../helpers/mapFunctions";
+import { StoredTab, Tab } from "../../state/Tab";
 
-export default {
-  created() {},
+export default Vue.extend({
   data() {
     return {
       hoveredTabId: null,
     };
   },
   computed: {
-    ...mapState("shell", ["selectedTabId"]),
-    tabs: function () {
-      return this.$store.state.shell.tabs.map((x) => {
-        x.active = this.$store.state.shell.selectedTabId === x.id;
-        x.color = tabsTypeMap[x.type].color;
-        return x;
-      });
+    ...mapStateOfNamespace("shell", "selectedTabId"),
+    ...mapStateOfNamespace("shell", "tabs"),
+    storedTabs: function (): StoredTab[] {
+      return this.tabs.map((x) => ({
+        ...x,
+        active: this.selectedTabId === x.id,
+      }));
     },
   },
   methods: {
-    ...mapActions("shell", ["openTab", "selectTab", "closeTab"]),
-    onSelectTab(tab) {
+    ...mapActionOfNamespace("shell", "openTab"),
+    ...mapActionOfNamespace("shell", "selectTab"),
+    ...mapActionOfNamespace("shell", "closeTab"),
+    onSelectTab(tab: StoredTab) {
       if (!tab.active) {
         this.selectTab(tab.id);
       }
     },
-    onCloseTab(tab) {
+    onCloseTab(tab: StoredTab) {
       this.closeTab(tab.id);
     },
   },
-};
+});
 </script>
 
 <style scoped>

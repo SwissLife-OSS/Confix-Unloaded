@@ -20,13 +20,13 @@
     <v-card-text>
       <v-row>
         <v-col>
-          <v-text-field label="Part name" v-model="part.name"></v-text-field>
+          <v-text-field label="Part name" v-model="form.name"></v-text-field>
         </v-col>
       </v-row>
       <v-row>
         <v-col>
           <v-combobox
-            v-model="part.components"
+            v-model="form.components"
             :items="components"
             hide-selected
             label="Components"
@@ -43,27 +43,50 @@
   </v-card>
 </template>
 
-<script>
-import { mapActions, mapState } from "vuex";
-export default {
-  props: ["part", "application"],
+<script lang="ts">
+import Vue from "vue";
+import {
+  mapActionOfNamespace,
+  mapStateOfNamespace,
+} from "../../helpers/mapFunctions";
+import { prop } from "../../helpers/state";
+import { Application } from "../../state/Application";
+export default Vue.extend({
+  props: {
+    part: {
+      type: prop<Application["parts"][0]>(),
+      required: true,
+    },
+    application: {
+      type: prop<Application>(),
+      required: true,
+    },
+  },
+
+  data() {
+    return {
+      form: {
+        name: this.part.name,
+        components: this.part.components,
+      },
+    };
+  },
 
   computed: {
-    ...mapState("comp", ["components"]),
+    ...mapStateOfNamespace("comp", "components"),
   },
   methods: {
-    ...mapActions("apps", ["updatePart"]),
-    onClickSave() {
+    ...mapActionOfNamespace("apps", "updatePart"),
+    onClickSave: function (): void {
       this.updatePart({
         applicationId: this.application.id,
         partId: this.part.id,
-        name: this.part.name,
-        components: this.components.map((x) => x.id),
+        name: this.form.name,
+        components: this.form.components.map((x) => x.definition.id),
       });
     },
   },
-};
+});
 </script>
 
-<style>
-</style>
+<style></style>

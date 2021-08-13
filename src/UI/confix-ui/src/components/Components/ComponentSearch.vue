@@ -25,9 +25,14 @@
   </div>
 </template>
 
-<script>
-import { mapActions, mapState } from "vuex";
-export default {
+<script lang="ts">
+import Vue from "vue";
+import { Component } from "../../graphql-operations";
+import {
+  mapActionOfNamespace,
+  mapStateOfNamespace,
+} from "../../helpers/mapFunctions";
+export default Vue.extend({
   created() {
     this.loadComponents();
   },
@@ -37,13 +42,12 @@ export default {
     };
   },
   computed: {
-    ...mapState("comp", ["components"]),
+    ...mapStateOfNamespace("comp", "components"),
   },
   methods: {
-    ...mapActions("shell", ["openTab"]),
-    ...mapActions("comp", ["loadComponents"]),
-
-    onSelectComponent: function (component) {
+    ...mapActionOfNamespace("shell", "openTab"),
+    ...mapActionOfNamespace("comp", "loadComponents"),
+    onSelectComponent: function (component: Component) {
       this.openTab({
         type: "COMPONENT",
         title: component.name,
@@ -61,8 +65,7 @@ export default {
       });
     },
   },
-};
+});
 </script>
 
-<style>
-</style>
+<style></style>
