@@ -5,6 +5,6 @@ using HotChocolate.Types.Relay;
 namespace Confix.Authoring.GraphQL.Applications
 {
     public record RenameApplicationInput(
-        [ID(nameof(Application))] Guid Id,
+        [property: ID(nameof(Application))] Guid Id,
         string Name);
 }

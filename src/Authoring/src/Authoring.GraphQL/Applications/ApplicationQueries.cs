@@ -33,6 +33,4 @@ namespace Confix.Authoring.GraphQL.Applications
             applicationById.LoadAsync(id, cancellationToken);
 
     }
-
-
 }

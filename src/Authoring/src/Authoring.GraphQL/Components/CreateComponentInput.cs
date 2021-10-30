@@ -6,7 +6,7 @@ namespace Confix.Authoring.GraphQL.Components
 {
     public record CreateComponentInput(
         string Name,
-        [DefaultValue("type Component { text: String! }")]
+        [property:DefaultValue("type Component { text: String! }")]
         string Schema,
-        [GraphQLType(typeof(AnyType))] Dictionary<string, object?>? Values);
+        [property: GraphQLType(typeof(AnyType))] Dictionary<string, object?>? Values);
 }

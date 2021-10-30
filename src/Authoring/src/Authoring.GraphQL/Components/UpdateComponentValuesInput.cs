@@ -7,6 +7,6 @@ using HotChocolate.Types.Relay;
 namespace Confix.Authoring.GraphQL.Components
 {
     public record UpdateComponentValuesInput(
-        [ID(nameof(Component))] Guid Id,
-        [GraphQLType(typeof(AnyType))] Dictionary<string, object?> Values);
+        [property:ID(nameof(Component))] Guid Id,
+        [property: GraphQLType(typeof(AnyType))] Dictionary<string, object?> Values);
 }
