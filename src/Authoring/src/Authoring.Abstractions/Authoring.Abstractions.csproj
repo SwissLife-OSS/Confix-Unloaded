@@ -6,8 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!--PackageReference Include="HotChocolate" Version="$(HotChocolateVersion)" /-->
-    <ProjectReference Include="/Users/michael/local/hc-1/src/HotChocolate/AspNetCore/src/AspNetCore/HotChocolate.AspNetCore.csproj" />
+    <PackageReference Include="HotChocolate" Version="$(HotChocolateVersion)" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="$(AspNetCoreVersion)" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="$(AspNetCoreVersion)" />
   </ItemGroup>
