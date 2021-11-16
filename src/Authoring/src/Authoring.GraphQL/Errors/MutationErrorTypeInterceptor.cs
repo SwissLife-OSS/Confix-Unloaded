@@ -111,8 +111,9 @@ namespace Confix.Authoring.GraphQL
                     {
                         FieldMiddleware? middleware = FieldClassMiddlewareFactory
                             .Create<ReturnNullWhenErrorWasThrow>();
-                        field.MiddlewareDefinitions.Insert(0,
-                            new FieldMiddlewareDefinition(middleware));
+                            
+                        field.MiddlewareDefinitions.Insert(0, new(middleware));
+                        
                         field.Type = RewriteTypeToNullableType(field, firstContext.TypeInspector);
                     }
 

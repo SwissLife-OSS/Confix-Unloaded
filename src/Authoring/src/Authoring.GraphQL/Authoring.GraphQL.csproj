@@ -3,6 +3,8 @@
   <PropertyGroup>
     <AssemblyName>Confix.Authoring.GraphQL</AssemblyName>
     <RootNamespace>Confix.Authoring.GraphQL</RootNamespace>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

@@ -21,16 +21,25 @@ namespace Confix.Authoring.GraphQL.Applications
             _applicationService = applicationService;
         }
 
+        /// <summary>
+        /// Get all application configurations.
+        /// </summary>
         [UsePaging]
         [UseFiltering(typeof(ApplicationFilterInputType))]
         public IQueryable<Application> GetApplications() =>
             _applicationService.Query();
 
+        /// <summary>
+        /// Get a specific application configuration by its ID.
+        /// </summary>
+        /// <param name="id">The application ID.</param>
+        /// <param name="applicationById">The application DataLoader.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns></returns>
         public Task<Application?> GetApplicationByIdAsync(
             [ID(nameof(Application))] Guid id,
             ApplicationByIdDataLoader applicationById,
             CancellationToken cancellationToken) =>
             applicationById.LoadAsync(id, cancellationToken);
-
     }
 }
