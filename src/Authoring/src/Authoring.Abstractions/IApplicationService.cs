@@ -51,5 +51,23 @@ namespace Confix.Authoring
             Guid applicationPartId,
             IReadOnlyList<Guid> componentIds,
             CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Adds a part to the application
+        /// </summary>
+        /// <param name="applicationId">Id of the application</param>
+        /// <param name="partName">Name of the part</param>
+        /// <param name="cancellationToken">Cancellation Token</param>
+        /// <exception cref="ApplicationNotFoundException">
+        /// Throw when the <paramref name="applicationId"/> does not find the </exception>
+        /// <returns>The modified application</returns>
+        Task<Application> AddPartToApplicationAsync(
+            Guid applicationId,
+            string partName,
+            CancellationToken cancellationToken = default);
+
+        Task<Application> RemovePartAsync(
+            Guid applicationPartId,
+            CancellationToken cancellationToken = default);
     }
 }

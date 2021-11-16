@@ -2,8 +2,10 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Confix.Authoring.GraphQL.Applications.Filters;
 using Confix.Authoring.GraphQL.DataLoaders;
 using HotChocolate;
+using HotChocolate.Data;
 using HotChocolate.Types;
 using HotChocolate.Types.Relay;
 
@@ -13,8 +15,8 @@ namespace Confix.Authoring.GraphQL.Components
     public class ComponentQueries
     {
         [UsePaging]
-        public IQueryable<Component> GetComponents(
-            [Service] IComponentService componentService) =>
+        [UseFiltering(typeof(ComponentFilterInputType))]
+        public IQueryable<Component> GetComponents([Service] IComponentService componentService) =>
             componentService.Query();
 
         public Task<Component?> GetComponentByIdAsync(

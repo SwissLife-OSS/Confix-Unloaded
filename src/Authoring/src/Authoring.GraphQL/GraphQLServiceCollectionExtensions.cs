@@ -12,14 +12,12 @@ namespace Confix.Authoring.GraphQL
 {
     public static class GraphQLServiceCollectionExtensions
     {
-        public static IConfixServerBuilder AddGraphQLServer(
-            this IConfixServerBuilder builder)
+        public static IConfixServerBuilder AddGraphQLServer(this IConfixServerBuilder builder)
         {
             builder
                 .Services
                 .AddGraphQLServer()
                 .AddGraphQLTypes()
-
                 .TryAddTypeInterceptor<MutationErrorTypeInterceptor>();
 
             builder
@@ -29,8 +27,7 @@ namespace Confix.Authoring.GraphQL
             return builder;
         }
 
-        public static IRequestExecutorBuilder AddGraphQLTypes(
-            this IRequestExecutorBuilder builder)
+        public static IRequestExecutorBuilder AddGraphQLTypes(this IRequestExecutorBuilder builder)
         {
             builder
                 // types
@@ -115,7 +112,6 @@ namespace Confix.Authoring.GraphQL
     {
         public SdlType() : base("SDL", bind: BindingBehavior.Explicit)
         {
-
         }
     }
 }

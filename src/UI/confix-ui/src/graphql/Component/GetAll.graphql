@@ -1,0 +1,10 @@
+#import "./Component.graphql"
+query allComponents {
+  components {
+    edges {
+      node {
+        ...Component
+      }
+    }
+  }
+}

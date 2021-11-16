@@ -1,6 +1,6 @@
 <template>
   <div v-if="activeTabItem">
-    <div v-if="activeTabItem.ready">
+    <div>
       <app-component-config-editor
         v-if="activeTabItem.type === 'APP_COMPONENT_CONFIG'"
         :part="activeTabItem.item.part"
@@ -13,6 +13,7 @@
       <component-editor
         v-if="activeTabItem.type === 'COMPONENT'"
         :component="activeTabItem.item.component"
+        :key="activeTabItem.item.component.id"
       ></component-editor>
 
       <application-part-editor
@@ -33,12 +34,13 @@
       <new-application-editor v-if="activeTabItem.type === 'APP_ADD'">
       </new-application-editor>
     </div>
-    <div v-else>Loading...</div>
   </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import Vue from "vue";
+import { mapStateOfNamespace } from "../../helpers/mapFunctions";
+import { Tab } from "../../state/Tab";
 import AppComponentConfigEditor from "../Editors/AppComponentConfigEditor.vue";
 import ApplicationPartEditor from "../Editors/ApplicationPartEditor.vue";
 import ComponentEditor from "../Editors/ComponentEditor.vue";
@@ -47,8 +49,7 @@ import NewComponentEditor from "../Editors/NewComponentEditor.vue";
 import NewVariableEditor from "../Editors/NewVariableEditor.vue";
 import VariableEditor from "../Editors/VariableEditor.vue";
 
-export default {
-  created() {},
+export default Vue.extend({
   components: {
     AppComponentConfigEditor,
     VariableEditor,
@@ -64,21 +65,19 @@ export default {
   },
 
   computed: {
-    ...mapState("shell", ["selectedTabId"]),
-    activeTabItem: function () {
-      if (this.$store.state.shell.selectedTabId) {
-        const active = this.$store.state.shell.tabs.filter(
-          (x) => x.id === this.$store.state.shell.selectedTabId
-        )[0];
-        return active;
+    ...mapStateOfNamespace("shell", "tabs"),
+    ...mapStateOfNamespace("shell", "selectedTabId"),
+    activeTabItem: function (): Tab | null {
+      if (this.selectedTabId) {
+        const active = this.tabs.find((x) => x.id === this.selectedTabId);
+        return active ?? null;
       }
 
       return null;
     },
   },
   methods: {},
-};
+});
 </script>
 
-<style>
-</style>
+<style></style>

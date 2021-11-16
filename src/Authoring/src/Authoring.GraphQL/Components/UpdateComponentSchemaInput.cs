@@ -4,6 +4,6 @@ using HotChocolate.Types.Relay;
 namespace Confix.Authoring.GraphQL.Components
 {
     public record UpdateComponentSchemaInput(
-        [ID(nameof(Component))] Guid Id,
+        [property:ID(nameof(Component))] Guid Id,
         string Schema);
 }

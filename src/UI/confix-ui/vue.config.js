@@ -1,32 +1,31 @@
-const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin')
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
 
 module.exports = {
-  "transpileDependencies": [
-    "vuetify"
-  ],
+  transpileDependencies: ["vuetify"],
   pluginOptions: {
     apollo: {
-      lintGQL: false
-    }
+      lintGQL: false,
+    },
   },
-  chainWebpack: config => {
-    config.plugin('monaco-editor').use(MonacoWebpackPlugin, [
+  chainWebpack: (config) => {
+    config.plugin("monaco-editor").use(MonacoWebpackPlugin, [
       {
         // Languages are loaded on demand at runtime
-        languages: ['json', 'graphql'],
+        languages: ["json", "graphql"],
       },
-    ])
+    ]);
   },
   configureWebpack: {
-    devtool: 'source-map'
+    devtool: "source-map",
   },
   devServer: {
     proxy: {
       "/graphql": {
         ws: true,
         changeOrigin: true,
-        target: process.env.API_BASE_URL,
-      }
-    }
-  }
-}
+        target: "http://localhost:5000/graphql",
+      },
+    },
+  },
+};

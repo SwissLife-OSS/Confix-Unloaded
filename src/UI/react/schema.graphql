@@ -1,0 +1,528 @@
+"""
+The `@defer` directive may be provided for fragment spreads and inline fragments
+to inform the executor to delay the execution of the current fragment to
+indicate deprioritization of the current fragment. A query with `@defer`
+directive will cause the request to potentially return multiple responses, where
+non-deferred data is delivered in the initial response and data deferred is
+delivered in a subsequent response. `@include` and `@skip` take precedence over `@defer`.
+"""
+directive @defer(
+  """
+  If this argument label has a value other than null, it will be passed on to
+  the result of this defer directive. This label is intended to give client
+  applications a way to identify to which fragment a deferred result belongs to.
+  """
+  label: String
+
+  """Deferred when true."""
+  if: Boolean
+) on FRAGMENT_SPREAD | INLINE_FRAGMENT
+
+"""
+The `@stream` directive may be provided for a field of `List` type so that the
+backend can leverage technology such as asynchronous iterators to provide a
+partial list in the initial response, and additional list items in subsequent
+responses. `@include` and `@skip` take precedence over `@stream`.
+"""
+directive @stream(
+  """
+  If this argument label has a value other than null, it will be passed on to
+  the result of this stream directive. This label is intended to give client
+  applications a way to identify to which fragment a streamed result belongs to.
+  """
+  label: String
+
+  """The initial elements that shall be send down to the consumer."""
+  initialCount: Int!
+
+  """Streamed when true."""
+  if: Boolean
+) on FIELD
+
+directive @authorize(
+  """
+  The name of the authorization policy that determines access to the annotated resource.
+  """
+  policy: String
+
+  """Roles that are allowed to access the annotated resource."""
+  roles: [String!]
+
+  """
+  Defines when when the resolver shall be executed.By default the resolver is
+  executed after the policy has determined that the current user is allowed to
+  access the field.
+  """
+  apply: ApplyPolicy! = BEFORE_RESOLVER
+) on SCHEMA | OBJECT | FIELD_DEFINITION
+
+"""
+The `@specifiedBy` directive is used within the type system definition language
+to provide a URL for specifying the behavior of custom scalar definitions.
+"""
+directive @specifiedBy(
+  """
+  The specifiedBy URL points to a human-readable specification. This field will only read a result for scalar types.
+  """
+  url: String!
+) on SCALAR
+
+union AddComponentsToApplicationPartError = ApplicationPartIdInvalid
+
+input AddComponentsToApplicationPartInput {
+  applicationPartId: ID!
+  componentIds: [ID!]!
+}
+
+type AddComponentsToApplicationPartPayload {
+  application: Application
+  applicationPart: ApplicationPart
+  errors: [AddComponentsToApplicationPartError!]
+  query: Query!
+}
+
+union AddPartToApplicationError = ApplicationNotFoundError | ApplicationPartNameTaken
+
+input AddPartToApplicationInput {
+  partName: String!
+  applicationId: ID!
+}
+
+type AddPartToApplicationPayload {
+  application: Application
+  errors: [AddPartToApplicationError!]
+  query: Query!
+}
+
+scalar Any
+
+type Application implements Node {
+  id: ID!
+  name: String!
+  namespace: String
+  parts: [ApplicationPart!]!
+}
+
+input ApplicationFilterInput {
+  and: [ApplicationFilterInput!]
+  or: [ApplicationFilterInput!]
+  name: StringOperationFilterInput
+  namespace: StringOperationFilterInput
+}
+
+type ApplicationIdInvalid implements IUserError {
+  code: String!
+  message: String!
+  applicationId: ID!
+}
+
+type ApplicationNameTaken implements IUserError {
+  applicationName: String!
+  code: String!
+  message: String!
+}
+
+type ApplicationNotFoundError implements IUserError {
+  applicationId: UUID!
+  code: String!
+  message: String!
+}
+
+type ApplicationPart implements Node {
+  id: ID!
+  name: String!
+  components: [ApplicationPartComponent!]!
+}
+
+type ApplicationPartComponent {
+  definition: Component!
+  values: Any
+}
+
+type ApplicationPartIdInvalid implements IUserError {
+  code: String!
+  message: String!
+  applicationPartId: ID!
+}
+
+type ApplicationPartNameTaken implements IUserError {
+  applicationName: String!
+  code: String!
+  message: String!
+}
+
+type ApplicationPartNotFoundError implements IUserError {
+  applicationPartId: UUID!
+  code: String!
+  message: String!
+}
+
+"""A connection to a list of items."""
+type ApplicationsConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [ApplicationsEdge!]
+
+  """A flattened list of the nodes."""
+  nodes: [Application!]
+}
+
+"""An edge in a connection."""
+type ApplicationsEdge {
+  """A cursor for use in pagination."""
+  cursor: String!
+
+  """The item at the end of the edge."""
+  node: Application!
+}
+
+enum ApplyPolicy {
+  BEFORE_RESOLVER
+  AFTER_RESOLVER
+}
+
+type Component implements Node {
+  id: ID!
+  name: String!
+  state: ComponentState!
+  schemaSdl: SDL
+  schema: Any
+  values: Any
+  defaults: Any
+  schemaViolations: [SchemaViolation!]!
+}
+
+input ComponentFilterInput {
+  and: [ComponentFilterInput!]
+  or: [ComponentFilterInput!]
+  name: StringOperationFilterInput
+}
+
+"""A connection to a list of items."""
+type ComponentsConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [ComponentsEdge!]
+
+  """A flattened list of the nodes."""
+  nodes: [Component!]
+}
+
+"""An edge in a connection."""
+type ComponentsEdge {
+  """A cursor for use in pagination."""
+  cursor: String!
+
+  """The item at the end of the edge."""
+  node: Component!
+}
+
+enum ComponentState {
+  ACTIVE
+  DEPRECATED
+}
+
+union CreateApplicationError = ApplicationNameTaken
+
+input CreateApplicationInput {
+  name: String!
+  namespace: String
+  parts: [String!]
+}
+
+type CreateApplicationPayload {
+  application: Application
+  errors: [CreateApplicationError!]
+  query: Query!
+}
+
+union CreateComponentError = ValueSchemaViolation
+
+input CreateComponentInput {
+  name: String!
+  schema: String = "type Component { text: String! }"
+  values: Any
+}
+
+type CreateComponentPayload {
+  component: Component
+  errors: [CreateComponentError!]
+  query: Query!
+}
+
+input CreateVariableInput {
+  name: String!
+  isSecret: Boolean!
+  namespace: String
+  defaultValue: String
+}
+
+input DeleteVariableValueInput {
+  id: UUID!
+}
+
+type DeleteVariableValuePayload {
+  deletedId: UUID
+  variable: Variable
+  query: Query!
+}
+
+interface IUserError {
+  code: String!
+  message: String!
+}
+
+type Mutation {
+  createApplication(input: CreateApplicationInput!): CreateApplicationPayload!
+  renameApplication(input: RenameApplicationInput!): RenameApplicationPayload!
+  renameApplicationPart(input: RenameApplicationPartInput!): RenameApplicationPartPayload!
+  addComponentsToApplicationPart(input: AddComponentsToApplicationPartInput!): AddComponentsToApplicationPartPayload!
+  addPartToApplication(input: AddPartToApplicationInput!): AddPartToApplicationPayload!
+  removeApplicationPart(input: RemoveApplicationPartInput!): RemoveApplicationPartPayload!
+  createVariable(input: CreateVariableInput!): UpdateVariablePayload!
+  saveVariableValue(input: SaveVariableValueInput!): UpdateVariableValuePayload!
+  deleteVariableValue(input: DeleteVariableValueInput!): DeleteVariableValuePayload!
+  createComponent(input: CreateComponentInput!): CreateComponentPayload!
+  renameComponent(input: RenameComponentInput!): RenameComponentPayload!
+  updateComponentSchema(input: UpdateComponentSchemaInput!): UpdateComponentSchemaPayload!
+  updateComponentValues(input: UpdateComponentValuesInput!): UpdateComponentValuesPayload!
+}
+
+"""
+The node interface is implemented by entities that have a global unique identifier.
+"""
+interface Node {
+  id: ID!
+}
+
+"""Information about pagination in a connection."""
+type PageInfo {
+  """
+  Indicates whether more edges exist following the set defined by the clients arguments.
+  """
+  hasNextPage: Boolean!
+
+  """
+  Indicates whether more edges exist prior the set defined by the clients arguments.
+  """
+  hasPreviousPage: Boolean!
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: String
+
+  """When paginating forwards, the cursor to continue."""
+  endCursor: String
+}
+
+type Query {
+  """Fetches an object given its ID."""
+  node(
+    """ID of the object."""
+    id: ID!
+  ): Node
+
+  """Lookup nodes by a list of IDs."""
+  nodes(
+    """The list of node IDs."""
+    ids: [ID!]!
+  ): [Node]!
+  applications(
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+    where: ApplicationFilterInput
+  ): ApplicationsConnection
+  applicationById(id: ID!): Application
+  variables: [Variable!]!
+  variable(id: ID!): Variable!
+  components(
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+    where: ComponentFilterInput
+  ): ComponentsConnection
+  componentById(id: ID!): Component
+}
+
+union RemoveApplicationPartError = ApplicationPartNotFoundError
+
+input RemoveApplicationPartInput {
+  applicationPartId: ID!
+}
+
+type RemoveApplicationPartPayload {
+  application: Application
+  errors: [RemoveApplicationPartError!]
+  query: Query!
+}
+
+union RenameApplicationError = ApplicationIdInvalid | ApplicationNameTaken
+
+input RenameApplicationInput {
+  id: ID!
+  name: String!
+}
+
+union RenameApplicationPartError = ApplicationIdInvalid | ApplicationPartIdInvalid | ApplicationPartNameTaken
+
+input RenameApplicationPartInput {
+  applicationPartId: ID!
+  name: String!
+}
+
+type RenameApplicationPartPayload {
+  application: Application
+  applicationPart: ApplicationPart
+  errors: [RenameApplicationPartError!]
+  query: Query!
+}
+
+type RenameApplicationPayload {
+  application: Application
+  errors: [RenameApplicationError!]
+  query: Query!
+}
+
+input RenameComponentInput {
+  id: ID!
+  name: String!
+}
+
+type RenameComponentPayload {
+  component: Component!
+  query: Query!
+}
+
+input SaveVariableValueInput {
+  variableId: UUID!
+  value: String!
+  valueId: ID
+  applicationId: ID
+  partId: ID
+  environmentId: UUID
+}
+
+type SchemaViolation {
+  path: Any!
+  code: String!
+}
+
+scalar SDL
+
+input StringOperationFilterInput {
+  and: [StringOperationFilterInput!]
+  or: [StringOperationFilterInput!]
+  eq: String
+  neq: String
+  contains: String
+  ncontains: String
+  in: [String]
+  nin: [String]
+  startsWith: String
+  nstartsWith: String
+  endsWith: String
+  nendsWith: String
+}
+
+input UpdateComponentSchemaInput {
+  id: ID!
+  schema: String!
+}
+
+type UpdateComponentSchemaPayload {
+  component: Component!
+  query: Query!
+}
+
+union UpdateComponentValuesError = ValueSchemaViolation
+
+input UpdateComponentValuesInput {
+  id: ID!
+  values: Any
+}
+
+type UpdateComponentValuesPayload {
+  component: Component
+  errors: [UpdateComponentValuesError!]
+  query: Query!
+}
+
+type UpdateVariablePayload {
+  variable: Variable
+  query: Query!
+}
+
+type UpdateVariableValuePayload {
+  value: VariableValue
+  query: Query!
+}
+
+scalar UUID
+
+type ValueSchemaViolation implements IUserError {
+  violations: [SchemaViolation!]!
+  code: String!
+  message: String!
+}
+
+type Variable implements Node {
+  id: ID!
+  values: [VariableValue!]!
+  state: VariableState!
+  name: String!
+  isSecret: Boolean!
+  namespace: String
+}
+
+type VariableEncryptionInfo {
+  keyProvider: String!
+  key: String!
+  algorithm: String!
+}
+
+type VariableKey {
+  variableId: UUID!
+  applicationId: UUID
+  partId: UUID
+  environmentId: UUID
+}
+
+enum VariableState {
+  ACTIVE
+  DEPRECATED
+}
+
+type VariableValue {
+  variable: Variable
+  application: Application
+  part: ApplicationPart
+  id: UUID!
+  key: VariableKey!
+  value: String!
+  encryption: VariableEncryptionInfo
+}
+

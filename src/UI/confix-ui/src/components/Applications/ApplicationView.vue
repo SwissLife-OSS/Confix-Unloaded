@@ -103,78 +103,89 @@
   </div>
 </template>
 
-<script>
-import { mapState, mapActions } from "vuex";
+<script lang="ts">
+import {
+  mapActionOfNamespace,
+  mapStateOfNamespace,
+} from "../../helpers/mapFunctions";
+import { Application } from "../../state/Application";
+import { Component } from "../../state/Component";
+import { maybeNull } from "../../helpers/state";
+import Vue from "vue";
 
-export default {
+export default Vue.extend({
   components: {},
   created() {
     this.loadApplications();
   },
   data() {
     return {
-      selectedApp: null,
-      selectedComponent: null,
+      selectedApp: maybeNull<Application>(),
+      selectedComponent: maybeNull<Component>(),
       searchText: "",
     };
   },
 
   computed: {
-    ...mapState("apps", ["apps"]),
-    ...mapState("shell", ["selectedTabId"]),
-    applications: function () {
+    ...mapStateOfNamespace("apps", "apps"),
+    ...mapStateOfNamespace("shell", "selectedTabId"),
+    applications: function (): Application[] {
       if (this.searchText) {
         const regex = new RegExp(`.*${this.searchText}.*`, "i");
-
         return this.apps.filter((x) => regex.test(x.name));
       }
       return this.apps;
     },
   },
   methods: {
-    ...mapActions("apps", ["loadApps", "loadApplications"]),
-    ...mapActions("shell", ["openTab"]),
-    onClickEditPart: function (part) {
-      this.openTab({
-        type: "APP_PART",
-        title: `Edit ${part.name}`,
-        id: `${this.selectedApp.id}_${part.id}`,
-        item: {
-          application: this.selectedApp,
-          part: part,
-        },
-      });
+    ...mapActionOfNamespace("apps", "loadApplications"),
+    ...mapActionOfNamespace("shell", "openTab"),
+    onClickEditPart: function (part: Application["parts"][0]): void {
+      if (this.selectedApp) {
+        this.openTab({
+          type: "APP_PART",
+          title: `Edit ${part.name}`,
+          id: `${this.selectedApp.id}_${part.id}`,
+          item: {
+            application: this.selectedApp,
+            part: part,
+          },
+        });
+      }
     },
-    onClickAddApplication: function () {
+    onClickAddApplication: function (): void {
       this.openTab({
         type: "APP_ADD",
         title: `New Application`,
         id: "APP_ADD",
-        item: null,
       });
     },
-    onSelectApp: function (app) {
-      console.log(app);
+    onSelectApp: function (app: Application): void {
       this.selectedApp = app;
     },
-    onClickCloseApp: function () {
+    onClickCloseApp: function (): void {
       this.selectedApp = null;
       this.selectedComponent = null;
     },
-    onSelectComponent: function (part, component) {
+    onSelectComponent: function (
+      part: Application["parts"][0],
+      component: Application["parts"][0]["components"][0]
+    ): void {
+      if (!this.selectedApp) {
+        return;
+      }
       this.openTab({
         type: "APP_COMPONENT_CONFIG",
-        title: `${part.name}/${component.name}`,
-        id: `${this.selectedApp.id}_${part.name}_${component.name}`,
+        title: `${part.name}/${component.definition.name}`,
+        id: `${this.selectedApp.id}_${part.name}_${component.definition.name}`,
         item: {
-          component: component,
-          part: part,
+          component,
+          part,
         },
       });
     },
   },
-};
+});
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

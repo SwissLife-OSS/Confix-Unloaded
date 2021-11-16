@@ -37,11 +37,15 @@
   </editor-base>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
 import { mapActions } from "vuex";
 import EditorBase from "../Shell/EditorBase.vue";
 
-export default {
+// TODO IMPLEMENT!
+type Actions = "SAVE";
+
+export default Vue.extend({
   components: { EditorBase },
   data() {
     return {
@@ -58,7 +62,7 @@ export default {
   methods: {
     ...mapActions("vars", ["createVariable"]),
     ...mapActions("shell", ["closeActiveTab"]),
-    onAction: function (action) {
+    onAction: function (action: Actions) {
       if (action === "SAVE") {
         this.saveNewVariable();
       }
@@ -74,8 +78,7 @@ export default {
       this.closeActiveTab();
     },
   },
-};
+});
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

@@ -7,15 +7,16 @@
     fixed-header
     height="400"
   >
-    <template v-slot:item.actions="{ item }">
+    <!--template v-slot:item.actions="{ item }">
       <v-icon small @click="onDelete(item)"> mdi-delete-variant </v-icon>
-    </template></v-data-table
+    </template--></v-data-table
   >
 </template>
 
 <script>
+import Vue from "vue";
 import { mapActions } from "vuex";
-export default {
+export default Vue.extend({
   props: ["variable"],
   data() {
     return {
@@ -85,8 +86,7 @@ export default {
       console.log(variable);
     },
   },
-};
+});
 </script>
 
-<style>
-</style>
+<style></style>

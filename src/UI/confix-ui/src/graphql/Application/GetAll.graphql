@@ -1,0 +1,10 @@
+#import "./fragments/Application.graphql"
+query allApps {
+  applications {
+    edges {
+      node {
+        ...Application
+      }
+    }
+  }
+}

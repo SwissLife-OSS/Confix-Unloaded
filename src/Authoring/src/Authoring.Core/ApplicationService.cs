@@ -56,19 +56,14 @@ namespace Confix.Authoring
         {
             var application = new Application
             {
-                Id = Guid.NewGuid(),
-                Name = name,
-                Namespace = @namespace,
+                Id = Guid.NewGuid(), Name = name, Namespace = @namespace,
             };
 
             if (parts is not null)
             {
                 application.Parts = parts.Select(
-                    n => new ApplicationPart
-                    {
-                        Id = Guid.NewGuid(),
-                        Name = n
-                    }).ToList();
+                        n => new ApplicationPart { Id = Guid.NewGuid(), Name = n })
+                    .ToList();
             }
 
             await _appStore.AddAsync(application, cancellationToken);
@@ -93,7 +88,8 @@ namespace Confix.Authoring
             IReadOnlyList<Guid> componentIds,
             CancellationToken cancellationToken = default)
         {
-            Application? app = await _appStore.GetByPartIdAsync(applicationPartId, cancellationToken);
+            Application? app =
+                await _appStore.GetByPartIdAsync(applicationPartId, cancellationToken);
             ApplicationPart? part = app?.Parts.FirstOrDefault(p => p.Id == applicationPartId);
 
             if (part is null)
@@ -108,13 +104,58 @@ namespace Confix.Authoring
             {
                 if (part.Components.Any(t => t.ComponentId == component.Id))
                 {
-                    part.Components.Add(new ApplicationPartComponent 
-                    { 
-                        ComponentId = component.Id, 
-                        Values = component.Values
+                    part.Components.Add(new ApplicationPartComponent
+                    {
+                        ComponentId = component.Id, Values = component.Values
                     });
                 }
             }
+        }
+
+        public async Task<Application> AddPartToApplicationAsync(
+            Guid applicationId,
+            string partName,
+            CancellationToken cancellationToken = default)
+        {
+            Application? application =
+                await _appStore.GetByIdAsync(applicationId, cancellationToken);
+
+            if (application is null)
+            {
+                throw new ApplicationNotFoundException(applicationId);
+            }
+
+            if (application.Parts.Any(x => x.Name == partName))
+            {
+                throw new NameTakenException(partName);
+            }
+
+            application =
+                await _appStore.AddPartToApplicationAsync(applicationId,
+                    partName,
+                    cancellationToken);
+
+            if (application is null)
+            {
+                throw new ApplicationNotFoundException(applicationId);
+            }
+
+            return application;
+        }
+
+        public async Task<Application> RemovePartAsync(
+            Guid applicationPartId,
+            CancellationToken cancellationToken = default)
+        {
+            Application? application =
+                await _appStore.RemovePartAsync(applicationPartId, cancellationToken);
+
+            if (application is null)
+            {
+                throw new ApplicationPartNotFoundException(applicationPartId);
+            }
+
+            return application;
         }
     }
 }

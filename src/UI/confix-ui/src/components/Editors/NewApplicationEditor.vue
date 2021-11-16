@@ -39,26 +39,32 @@
   </editor-base>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
 import { mapActions } from "vuex";
+import { mapActionOfNamespace } from "../../helpers/mapFunctions";
+import { maybeNull } from "../../helpers/state";
 import EditorBase from "../Shell/EditorBase.vue";
-export default {
+
+type Actions = "SAVE";
+
+export default Vue.extend({
   components: { EditorBase },
   data() {
     return {
       newApp: {
-        name: null,
-        namespace: null,
-        parts: [],
+        name: maybeNull<string>(),
+        namespace: maybeNull<string>(),
+        parts: maybeNull<string[]>(),
       },
       actions: [{ id: "SAVE", icon: "mdi-check" }],
     };
   },
   methods: {
-    ...mapActions("apps", ["addApplication"]),
-    ...mapActions("shell", ["closeActiveTab"]),
-    onAction: function (name) {
-      if (name === "SAVE") {
+    ...mapActionOfNamespace("apps", "addApplication"),
+    ...mapActionOfNamespace("shell", "closeActiveTab"),
+    onAction: function (name: Actions) {
+      if (name === "SAVE" && this.newApp.name && this.newApp.parts) {
         this.addApplication({
           name: this.newApp.name,
           parts: this.newApp.parts,
@@ -68,7 +74,6 @@ export default {
       }
     },
   },
-};
+});
 </script>
-<style>
-</style>
+<style></style>

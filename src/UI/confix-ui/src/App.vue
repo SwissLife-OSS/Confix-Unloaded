@@ -42,66 +42,120 @@
   </v-app>
 </template>
 
-<script>
-import EditorShellManager from "./components/Shell/EditorShellManager";
+<script lang="ts">
+import Vue from "vue";
+import EditorShellManager from "./components/Shell/EditorShellManager.vue";
 import TabList from "./components/Shell/TabList.vue";
-export default {
-  name: "App",
+import { useModules } from "./helpers/bind";
+import { mapStateOfNamespace } from "./helpers/mapFunctions";
+import { array } from "./helpers/state";
+import { StatusMessage } from "./state/StatusMessage";
 
+interface NavItem {
+  text: string;
+  icon: string;
+  route: string;
+  active: boolean;
+  color: string;
+}
+export default Vue.extend({
+  name: "App",
   components: { TabList, EditorShellManager },
   created() {
-    this.$store.dispatch("comp/loadComponents");
-    this.$store.dispatch("apps/loadApplications");
-    this.$store.dispatch("vars/loadVariables");
+    const { action } = useModules(this.$store);
+    action("comp", "loadComponents").dispatch();
+    action("apps", "loadApplications").dispatch();
+    // TODO Variables
+    //action("vars", "loadVariables").dispatch();
   },
 
   data: () => ({
-    navItems: [
+    navItems: array<NavItem>([
       {
         text: "Applications",
         icon: "mdi-package-variant",
         route: "Applications",
+        active: false,
+        color: "#b3b3b3",
       },
       {
         text: "Components",
         icon: "mdi-toy-brick-outline",
         route: "Components",
+        active: false,
+        color: "#b3b3b3",
       },
-      { text: "Variables", icon: "mdi-variable", route: "Variables" },
-      { text: "Environments", icon: "mdi-server", route: "Environments" },
-      { text: "Vault", icon: "mdi-shield-star-outline", route: "Vault" },
-      { text: "Explorer", icon: "mdi-file-tree-outline", route: "Explorer" },
-      { text: "Settings", icon: "mdi-cog-outline", route: "Settings" },
-    ],
+      {
+        text: "Variables",
+        icon: "mdi-variable",
+        route: "Variables",
+        active: false,
+        color: "#b3b3b3",
+      },
+      {
+        text: "Environments",
+        icon: "mdi-server",
+        route: "Environments",
+
+        color: "#b3b3b3",
+        active: false,
+      },
+      {
+        text: "Vault",
+        icon: "mdi-shield-star-outline",
+        route: "Vault",
+        active: false,
+        color: "#b3b3b3",
+      },
+      {
+        text: "Explorer",
+        icon: "mdi-file-tree-outline",
+        route: "Explorer",
+        active: false,
+        color: "#b3b3b3",
+      },
+      {
+        text: "Settings",
+        icon: "mdi-cog-outline",
+        route: "Settings",
+        active: false,
+        color: "#b3b3b3",
+      },
+    ]),
   }),
   computed: {
-    navBarItems: function () {
+    ...mapStateOfNamespace("shell", "statusMessage"),
+    navBarItems: function (): NavItem[] {
+      const { name } = this.$route;
       return this.navItems.map((x) => {
-        x.active = x.route === this.$route.name;
+        x.active = x.route === name;
         x.color = x.active ? "#fff" : "#b3b3b3";
-
         return x;
       });
     },
-    statusMessage: function () {
-      if (this.$store.state.shell.statusMessage) {
-        const isError = this.$store.state.shell.statusMessage.type === "ERROR";
+    prepareStatusMessage: function (): StatusMessage | null {
+      if (this.statusMessage) {
+        const isError = this.statusMessage.type === "ERROR";
 
-        return Object.assign(this.$store.state.shell.statusMessage, {
+        return {
+          ...this.statusMessage,
           color: isError ? "red" : "green",
           icon: isError ? "mdi-nuke" : "mdi-check-circle",
-        });
+        };
       } else {
         return null;
       }
     },
   },
   methods: {
-    onNavigate: function (nav) {
-      if (!nav.active) this.$router.push({ name: nav.route });
+    onNavigate: function (nav: NavItem) {
+      const router = this.$router;
+      if (!nav.active) {
+        router.push({ name: nav.route });
+      }
     },
   },
-};
+});
 </script>
 
 <style scoped>

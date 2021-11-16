@@ -35,18 +35,26 @@
   </v-card>
 </template>
 
-<script>
-import { mapActions } from "vuex";
+<script lang="ts">
+import Vue from "vue";
+import { mapActionOfNamespace } from "../../helpers/mapFunctions";
+import { prop } from "../../helpers/state";
+import { Component } from "../../state/Component";
 import MonacoEditor from "../Common/MonacoEditor.vue";
-export default {
+export default Vue.extend({
   components: {
     MonacoEditor,
   },
   mounted() {
-    this.schema = this.component.schema ?? "";
-    this.values = this.component.valuesAsJson ?? "{}";
+    this.schema = this.component.schemaSdl ?? "";
+    this.values = JSON.stringify(this.component.values) ?? "{}";
   },
-  props: ["component"],
+  props: {
+    component: {
+      type: prop<Component>(),
+      required: true,
+    },
+  },
   data() {
     return {
       tab: 0,
@@ -56,15 +64,21 @@ export default {
   },
   computed: {},
   methods: {
-    ...mapActions("comp", ["updateSchema"]),
+    ...mapActionOfNamespace("comp", "updateSchemaAndValues"),
     onSave: function () {
-      this.updateSchema({
-        id: this.component.id,
-        schema: this.code,
+      this.updateSchemaAndValues({
+        schema: {
+          id: this.component.id,
+          schema: this.schema,
+        },
+        values: {
+          id: this.component.id,
+          values: JSON.parse(this.values),
+        },
       });
     },
   },
-};
+});
 </script>
 
 <style scoped>

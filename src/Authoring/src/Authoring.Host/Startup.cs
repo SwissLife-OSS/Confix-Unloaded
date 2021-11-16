@@ -9,7 +9,7 @@ using Microsoft.Extensions.Hosting;
 namespace Confix.Authoring
 {
     public class Startup
-    { 
+    {
         public IConfiguration Configuration { get; }
         public IWebHostEnvironment HostEnvironment { get; }
 
@@ -25,6 +25,14 @@ namespace Confix.Authoring
                 .AddConfixAuthoringServer(Configuration)
                 .AddMongoStore()
                 .AddGraphQLServer();
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: "Any",
+                                  builder =>
+                                  {
+                                      builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+                                  });
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -38,6 +46,7 @@ namespace Confix.Authoring
 
             //app.UseAuthentication();
             //app.UseAuthorization();
+            app.UseCors("Any");
 
             app.UseEndpoints(endpoints =>
             {

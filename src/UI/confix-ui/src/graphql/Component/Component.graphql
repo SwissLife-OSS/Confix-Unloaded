@@ -1,0 +1,13 @@
+fragment Component on Component {
+  id
+  name
+  state
+  schemaSdl
+  schema
+  values
+  defaults
+  schemaViolations {
+    path
+    code
+  }
+}

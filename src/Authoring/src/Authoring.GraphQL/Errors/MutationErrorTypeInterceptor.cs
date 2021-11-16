@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using HotChocolate.Configuration;
 using HotChocolate.Language;
@@ -71,7 +72,7 @@ namespace Confix.Authoring.GraphQL
                         field.MiddlewareDefinitions.Insert(0, new(middleware));
 
                         var unionTypeRef = new SchemaTypeReference(errorUnion);
-                        discoveryContext.RegisterDependency(new TypeDependency(unionTypeRef));
+                        discoveryContext.Dependencies.Add(new(unionTypeRef));
 
                         field.ContextData.Remove(ErrorDefinitions);
                     }
@@ -110,7 +111,9 @@ namespace Confix.Authoring.GraphQL
                     {
                         FieldMiddleware? middleware = FieldClassMiddlewareFactory
                             .Create<ReturnNullWhenErrorWasThrow>();
+                            
                         field.MiddlewareDefinitions.Insert(0, new(middleware));
+                        
                         field.Type = RewriteTypeToNullableType(field, firstContext.TypeInspector);
                     }
 
