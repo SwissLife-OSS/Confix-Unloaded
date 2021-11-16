@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
+using static MongoDB.Driver.Builders<Confix.Authoring.Store.Application>;
 
 namespace Confix.Authoring.Store.Mongo
 {
@@ -30,9 +31,10 @@ namespace Confix.Authoring.Store.Mongo
         public Task<Application?> GetByPartIdAsync(
             Guid partId,
             CancellationToken cancellationToken) =>
-            _dbContext.Applications.AsQueryable().FirstOrDefaultAsync(
-                x => x.Parts.Any(p => p.Id == partId),
-                cancellationToken)!;
+            _dbContext.Applications.AsQueryable()
+                .FirstOrDefaultAsync(
+                    x => x.Parts.Any(p => p.Id == partId),
+                    cancellationToken)!;
 
 
         public async Task<ApplicationPart?> GetPartByIdAsync(
@@ -72,8 +74,7 @@ namespace Confix.Authoring.Store.Mongo
         public IQueryable<Application> Query() =>
             _dbContext.Applications.AsQueryable();
 
-        public async Task<IEnumerable<Application>> GetAllAsync(
-            CancellationToken cancellationToken)
+        public async Task<IEnumerable<Application>> GetAllAsync(CancellationToken cancellationToken)
         {
             return await _dbContext.Applications
                 .AsQueryable()
@@ -122,8 +123,8 @@ namespace Confix.Authoring.Store.Mongo
             }
 
             UpdateResult result = await _dbContext.Applications.UpdateOneAsync(
-                Builders<Application>.Filter.Eq(t => t.Id, applicationId),
-                Builders<Application>.Update.Set(t => t.Name, name),
+                Filter.Eq(t => t.Id, applicationId),
+                Update.Set(t => t.Name, name),
                 cancellationToken: cancellationToken);
 
             if (result.MatchedCount == 0)
@@ -156,6 +157,59 @@ namespace Confix.Authoring.Store.Mongo
 
             application.Parts.First(t => t.Id == applicationPartId).Name = name;
             await ReplaceAsync(application, cancellationToken);
+        }
+
+        public async Task<Application?> AddPartToApplicationAsync(
+            Guid applicationId,
+            string name,
+            CancellationToken cancellationToken)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException(nameof(applicationId));
+            }
+
+            ApplicationPart part = new()
+            {
+                Id = Guid.NewGuid(),
+                Name = name,
+                Components = Array.Empty<ApplicationPartComponent>()
+            };
+
+            FilterDefinition<Application> filter = Filter.Eq(x => x.Id, applicationId);
+            UpdateDefinition<Application> update = Update.AddToSet(x => x.Parts, part);
+            FindOneAndUpdateOptions<Application> options = new()
+            {
+                IsUpsert = false, ReturnDocument = ReturnDocument.After
+            };
+
+            Application? application = await _dbContext.Applications
+                .FindOneAndUpdateAsync(filter, update, options, cancellationToken);
+
+            return application;
+        }
+
+        public async Task<Application?> RemovePartAsync(
+            Guid applicationPartId,
+            CancellationToken cancellationToken)
+        {
+            FilterDefinition<Application> filter = Filter
+                .Eq($"{nameof(Application.Parts)}.{nameof(ApplicationPart.Id)}", applicationPartId);
+
+            FilterDefinition<ApplicationPart> pullFilter =
+                Builders<ApplicationPart>.Filter.Eq(x => x.Id, applicationPartId);
+
+            UpdateDefinition<Application> update = Update.PullFilter(x => x.Parts,pullFilter);
+
+            FindOneAndUpdateOptions<Application> options = new()
+            {
+                IsUpsert = false, ReturnDocument = ReturnDocument.After
+            };
+
+            Application? application = await _dbContext.Applications
+                .FindOneAndUpdateAsync(filter, update, options, cancellationToken);
+
+            return application;
         }
     }
 }

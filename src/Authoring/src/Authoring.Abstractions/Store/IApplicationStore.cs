@@ -168,5 +168,32 @@ namespace Confix.Authoring.Store
             Guid applicationPartId,
             string name,
             CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Renames an application part
+        /// </summary>
+        /// <param name="applicationId"></param>
+        /// <param name="name">The new application part name.</param>
+        /// <param name="cancellationToken">
+        ///     The cancellation token.
+        /// </param>
+        /// <exception cref="ArgumentException">
+        /// <paramref name="name"/> is <c>null</c> or <see cref="String.Empty"/>.
+        /// </exception>
+        Task<Application?> AddPartToApplicationAsync(
+            Guid applicationId,
+            string name,
+            CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Remove an application part
+        /// </summary>
+        /// <param name="applicationPartId">The application part ID.</param>
+        /// <param name="cancellationToken">
+        /// The cancellation token.
+        /// </param>
+        Task<Application?> RemovePartAsync(
+            Guid applicationPartId,
+            CancellationToken cancellationToken);
     }
 }

@@ -1,3 +1,4 @@
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Confix.Authoring.Store;
@@ -72,7 +73,8 @@ namespace Confix.Authoring.GraphQL.Applications
         /// Adds a component to an application part.
         /// </summary>
         [Error(typeof(ApplicationPartIdInvalid))]
-        public async Task<AddComponentsToApplicationPartPayload> AddComponentsToApplicationPartAsync(
+        public async Task<AddComponentsToApplicationPartPayload>
+            AddComponentsToApplicationPartAsync(
             AddComponentsToApplicationPartInput input,
             CancellationToken cancellationToken)
         {
@@ -82,6 +84,37 @@ namespace Confix.Authoring.GraphQL.Applications
                 cancellationToken);
 
             return new AddComponentsToApplicationPartPayload(input.ApplicationPartId);
+        }
+
+        /// <summary>
+        /// Adds a component to an application part.
+        /// </summary>
+        [Error(typeof(ApplicationNotFoundError))]
+        [Error(typeof(ApplicationPartNameTaken))]
+        public async Task<AddPartToApplicationPayload> AddPartToApplicationAsync(
+            AddPartToApplicationInput input,
+            CancellationToken cancellationToken)
+        {
+            Application application = await _applicationService.AddPartToApplicationAsync(
+                input.ApplicationId,
+                input.PartName,
+                cancellationToken);
+
+            return new AddPartToApplicationPayload(application);
+        }
+
+        /// <summary>
+        /// Adds a component to an application part.
+        /// </summary>
+        [Error(typeof(ApplicationPartNotFoundError))]
+        public async Task<RemoveApplicationPartPayload> RemoveApplicationPartAsync(
+            RemoveApplicationPartInput input,
+            CancellationToken cancellationToken)
+        {
+            Application application = await _applicationService
+                .RemovePartAsync(input.ApplicationPartId, cancellationToken);
+
+            return new RemoveApplicationPartPayload(application);
         }
     }
 }
