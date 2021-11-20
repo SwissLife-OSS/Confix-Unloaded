@@ -1,56 +1,43 @@
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
-import { Input, Button } from "antd";
-import React, { useCallback, useState } from "react";
+import { Breadcrumb, BreadcrumbItemProps, Button } from "antd";
+import React from "react";
 import { EditIcon } from "../icons/icons";
-import { useStringEventHanlder } from "./useEventListener";
-import { useToggle } from "./useToggle";
 
-export const EditablePageHeader: React.FC<{
-  value: string;
-  onSave: (val: string) => void;
+export const EditableBreadcrumbHeader: React.FC<{
+  breadcrumbs: Array<{ text: string } & BreadcrumbItemProps>;
+  title: string;
+  onEdit?: () => void;
+  isEditable?: boolean;
   loading?: boolean;
-}> = ({ children, value: valueProps, onSave, loading = false }) => {
-  const [isEdit, , enable, disable] = useToggle();
-  const [value, setValue] = useState(valueProps);
-  const handleValueChange = useStringEventHanlder(setValue);
-  const handleSubmit = useCallback(() => {
-    onSave(value);
-    disable();
-  }, [value, onSave, disable]);
-
-  if (isEdit) {
-    return (
-      <Wrapper>
-        <HeaderButton type="primary" onClick={handleSubmit} loading={loading}>
-          Save
-        </HeaderButton>
-        <Title>
-          <Input
-            name="value"
-            value={value}
-            onBlur={disable}
-            onChange={handleValueChange}
-          ></Input>
-        </Title>
-        {children}
-      </Wrapper>
-    );
-  }
+}> = ({
+  title,
+  children,
+  onEdit = () => {},
+  breadcrumbs,
+  isEditable = true,
+}) => {
   return (
     <Wrapper>
       <Title>
-        <h2>
-          {value}
-          <HeaderButton
-            type="text"
-            css={css`
-              display: inline-block;
-            `}
-            onClick={enable}
-            icon={<EditIcon />}
-          ></HeaderButton>
-        </h2>
+        <Breadcrumb>
+          {breadcrumbs.map(({ text, ...props }, i) => (
+            <Breadcrumb.Item key={i} {...props}>{text}</Breadcrumb.Item>
+          ))}
+          <Breadcrumb.Item>
+            {title}
+            {isEditable && (
+              <HeaderButton
+                type="text"
+                css={css`
+                  display: inline-block;
+                `}
+                onClick={onEdit}
+                icon={<EditIcon />}
+              ></HeaderButton>
+            )}
+          </Breadcrumb.Item>
+        </Breadcrumb>
       </Title>
       {children}
     </Wrapper>
@@ -64,6 +51,12 @@ const Wrapper = styled("div")`
 
 const Title = styled("div")`
   flex: 1;
+  .ant-breadcrumb {
+    font-size: 14px;
+  }
+  .ant-breadcrumb > span:last-child {
+    font-size: 18px;
+  }
 `;
 
 export const HeaderButton = styled(Button)`

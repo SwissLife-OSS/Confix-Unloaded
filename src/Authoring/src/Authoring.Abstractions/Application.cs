@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring.Store
 {
@@ -20,7 +21,7 @@ namespace Confix.Authoring.Store
 
     public class ApplicationPart
     {
-        [Key]
+        [ID]
         public Guid Id { get; set; }
 
         [Required]
@@ -32,6 +33,9 @@ namespace Confix.Authoring.Store
 
     public class ApplicationPartComponent
     {
+        [ID]
+        public Guid Id { get; set; }
+
         public Guid ComponentId { get; set; }
 
         public string? Values { get; set; }

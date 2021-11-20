@@ -61,6 +61,7 @@ fragment ApplicationsList_applicationsEdge on Application {
     id
     name
     components {
+      id
       definition {
         id
         name
@@ -229,6 +230,7 @@ return {
                     "name": "components",
                     "plural": true,
                     "selections": [
+                      (v3/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -297,12 +299,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "79d2c2ab8e882017fd4a7c043b46106a",
+    "cacheID": "46eda21838e722c8c6e823bd6ffdbb83",
     "id": null,
     "metadata": {},
     "name": "NewApplicationMutation",
     "operationKind": "mutation",
-    "text": "mutation NewApplicationMutation(\n  $input: CreateApplicationInput!\n) {\n  createApplication(input: $input) {\n    application {\n      id\n      ...ApplicationsList_applicationsEdge\n    }\n    errors {\n      __typename\n      ... on IUserError {\n        __isIUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment ApplicationsList_applicationsEdge on Application {\n  id\n  name\n  namespace\n  parts {\n    id\n    name\n    components {\n      definition {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": "mutation NewApplicationMutation(\n  $input: CreateApplicationInput!\n) {\n  createApplication(input: $input) {\n    application {\n      id\n      ...ApplicationsList_applicationsEdge\n    }\n    errors {\n      __typename\n      ... on IUserError {\n        __isIUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment ApplicationsList_applicationsEdge on Application {\n  id\n  name\n  namespace\n  parts {\n    id\n    name\n    components {\n      id\n      definition {\n        id\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();

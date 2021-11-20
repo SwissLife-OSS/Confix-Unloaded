@@ -17,6 +17,14 @@ namespace Confix.Authoring
             Guid partId,
             CancellationToken cancellationToken = default);
 
+        Task<ApplicationPart?> GetApplicationPartByIdAsync(
+            Guid partId,
+            CancellationToken cancellationToken = default);
+
+        Task<ApplicationPartComponent?> GetApplicationPartComponentByIdAsync(
+            Guid partComponentId,
+            CancellationToken cancellationToken = default);
+
         Task<IReadOnlyCollection<Application>> GetManyByIdAsync(
             IEnumerable<Guid> ids,
             CancellationToken cancellationToken = default);
@@ -47,7 +55,7 @@ namespace Confix.Authoring
             string name,
             CancellationToken cancellationToken = default);
 
-        Task AddComponentsToPartAsync(
+        Task<Application> AddComponentsToPartAsync(
             Guid applicationPartId,
             IReadOnlyList<Guid> componentIds,
             CancellationToken cancellationToken = default);
@@ -68,6 +76,15 @@ namespace Confix.Authoring
 
         Task<Application> RemovePartAsync(
             Guid applicationPartId,
+            CancellationToken cancellationToken = default);
+
+        Task<ApplicationPart> RemoveComponentFromApplicationPartAsync(
+            Guid partComponentId,
+            CancellationToken cancellationToken = default);
+
+        Task<ApplicationPartComponent> SetApplicationPartComponentValues(
+            Guid partComponentId,
+            IDictionary<string, object?> values,
             CancellationToken cancellationToken = default);
     }
 }

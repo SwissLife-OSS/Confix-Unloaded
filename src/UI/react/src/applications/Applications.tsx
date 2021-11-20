@@ -1,13 +1,5 @@
-import React, { useCallback, useState } from "react";
-import {
-  matchPath,
-  Route,
-  Switch,
-  useHistory,
-  useLocation,
-  useParams,
-  useRouteMatch,
-} from "react-router-dom";
+import React, { useState } from "react";
+import { matchPath, Route, Switch, useLocation } from "react-router-dom";
 import { FullSizeBox, SidebarHeader } from "../shared/FullSizeBox";
 import { SearchBar } from "../shared/SearchBar";
 import { EditApplication } from "./EditApplication";
@@ -19,6 +11,8 @@ import { Button } from "antd";
 import { DefaultSuspense } from "../shared/DefaultSuspense";
 import { ApplicationList } from "./ApplicationsList";
 import { useGoTo } from "../shared/useGoTo";
+import { EditApplicationPart } from "./EditApplicationPart";
+import { EditApplicationPartComponent } from "./EditApplicationPartComponent";
 
 export const Applications: React.FC = (props) => {
   const [search, setSearch] = useState<string | undefined>();
@@ -57,7 +51,13 @@ export const Applications: React.FC = (props) => {
             <Route path={Routes.applications.new()}>
               <NewApplication />
             </Route>
-            <Route path={Routes.applications.edit()}>
+            <Route path={Routes.applicationPartComponents.edit()} strict>
+              <EditApplicationPartComponent />
+            </Route>
+            <Route path={Routes.applicationParts.edit()} strict>
+              <EditApplicationPart />
+            </Route>
+            <Route path={Routes.applications.edit()} strict>
               <EditApplication />
             </Route>
           </Switch>

@@ -65,6 +65,7 @@ fragment ApplicationsList_applicationsEdge on Application {
     id
     name
     components {
+      id
       definition {
         id
         name
@@ -93,6 +94,7 @@ fragment EditApplication_part on ApplicationPart {
       name
       state
     }
+    id
   }
 }
 */
@@ -259,6 +261,7 @@ return {
                     "name": "components",
                     "plural": true,
                     "selections": [
+                      (v2/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -295,12 +298,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "6e6fdd5703db890156a7bd37a1db9017",
+    "cacheID": "2750d0ae4cbf8fc539605942713b19f3",
     "id": null,
     "metadata": {},
     "name": "RemovePartFromApplicationDialogMutation",
     "operationKind": "mutation",
-    "text": "mutation RemovePartFromApplicationDialogMutation(\n  $input: RemoveApplicationPartInput!\n) {\n  removeApplicationPart(input: $input) {\n    application {\n      id\n      ...ApplicationsList_applicationsEdge\n      ...EditApplication_Application_Fragment\n    }\n    errors {\n      __typename\n      ... on IUserError {\n        __isIUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment ApplicationPartSectionHeaderFragment on Application {\n  id\n  name\n}\n\nfragment ApplicationsList_applicationsEdge on Application {\n  id\n  name\n  namespace\n  parts {\n    id\n    name\n    components {\n      definition {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment EditApplication_Application_Fragment on Application {\n  id\n  name\n  namespace\n  parts {\n    ...EditApplication_part\n    id\n  }\n  ...ApplicationPartSectionHeaderFragment\n}\n\nfragment EditApplication_part on ApplicationPart {\n  id\n  name\n  components {\n    definition {\n      id\n      name\n      state\n    }\n  }\n}\n"
+    "text": "mutation RemovePartFromApplicationDialogMutation(\n  $input: RemoveApplicationPartInput!\n) {\n  removeApplicationPart(input: $input) {\n    application {\n      id\n      ...ApplicationsList_applicationsEdge\n      ...EditApplication_Application_Fragment\n    }\n    errors {\n      __typename\n      ... on IUserError {\n        __isIUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment ApplicationPartSectionHeaderFragment on Application {\n  id\n  name\n}\n\nfragment ApplicationsList_applicationsEdge on Application {\n  id\n  name\n  namespace\n  parts {\n    id\n    name\n    components {\n      id\n      definition {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment EditApplication_Application_Fragment on Application {\n  id\n  name\n  namespace\n  parts {\n    ...EditApplication_part\n    id\n  }\n  ...ApplicationPartSectionHeaderFragment\n}\n\nfragment EditApplication_part on ApplicationPart {\n  id\n  name\n  components {\n    definition {\n      id\n      name\n      state\n    }\n    id\n  }\n}\n"
   }
 };
 })();

@@ -7,7 +7,7 @@ using Confix.Authoring.Store;
 using GreenDonut;
 using HotChocolate.Fetching;
 
-namespace Confix.Authoring.GraphQL.DataLoaders
+namespace Confix.Authoring.DataLoaders
 {
     public class ComponentByIdDataLoader : BatchDataLoader<Guid, Component?>
     {

@@ -66,6 +66,7 @@ fragment ApplicationsList_applicationsEdge on Application {
     id
     name
     components {
+      id
       definition {
         id
         name
@@ -94,6 +95,7 @@ fragment EditApplication_part on ApplicationPart {
       name
       state
     }
+    id
   }
 }
 */
@@ -260,6 +262,7 @@ return {
                     "name": "components",
                     "plural": true,
                     "selections": [
+                      (v2/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -296,12 +299,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "16a591b10a4447643056917f7e4149bc",
+    "cacheID": "ef4a3db8fc83b04f3bb58bb61f5347a8",
     "id": null,
     "metadata": {},
     "name": "AddComponentsToApplicationPartDialogMutation",
     "operationKind": "mutation",
-    "text": "mutation AddComponentsToApplicationPartDialogMutation(\n  $input: AddComponentsToApplicationPartInput!\n) {\n  addComponentsToApplicationPart(input: $input) {\n    application {\n      id\n      ...ApplicationsList_applicationsEdge\n      ...EditApplication_Application_Fragment\n    }\n    errors {\n      __typename\n      ... on IUserError {\n        __isIUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment ApplicationPartSectionHeaderFragment on Application {\n  id\n  name\n}\n\nfragment ApplicationsList_applicationsEdge on Application {\n  id\n  name\n  namespace\n  parts {\n    id\n    name\n    components {\n      definition {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment EditApplication_Application_Fragment on Application {\n  id\n  name\n  namespace\n  parts {\n    ...EditApplication_part\n    id\n  }\n  ...ApplicationPartSectionHeaderFragment\n}\n\nfragment EditApplication_part on ApplicationPart {\n  id\n  name\n  components {\n    definition {\n      id\n      name\n      state\n    }\n  }\n}\n"
+    "text": "mutation AddComponentsToApplicationPartDialogMutation(\n  $input: AddComponentsToApplicationPartInput!\n) {\n  addComponentsToApplicationPart(input: $input) {\n    application {\n      id\n      ...ApplicationsList_applicationsEdge\n      ...EditApplication_Application_Fragment\n    }\n    errors {\n      __typename\n      ... on IUserError {\n        __isIUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment ApplicationPartSectionHeaderFragment on Application {\n  id\n  name\n}\n\nfragment ApplicationsList_applicationsEdge on Application {\n  id\n  name\n  namespace\n  parts {\n    id\n    name\n    components {\n      id\n      definition {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment EditApplication_Application_Fragment on Application {\n  id\n  name\n  namespace\n  parts {\n    ...EditApplication_part\n    id\n  }\n  ...ApplicationPartSectionHeaderFragment\n}\n\nfragment EditApplication_part on ApplicationPart {\n  id\n  name\n  components {\n    definition {\n      id\n      name\n      state\n    }\n    id\n  }\n}\n"
   }
 };
 })();

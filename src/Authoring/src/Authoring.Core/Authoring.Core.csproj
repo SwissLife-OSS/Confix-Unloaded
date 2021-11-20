@@ -9,4 +9,8 @@
     <ProjectReference Include="..\Authoring.Abstractions\Authoring.Abstractions.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="GreenDonut" Version="$(HotChocolateVersion)" />
+  </ItemGroup>
+
 </Project>

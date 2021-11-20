@@ -1,3 +1,4 @@
+import styled from "@emotion/styled";
 import Icon from "@ant-design/icons";
 import { CustomIconComponentProps } from "@ant-design/icons/lib/components/Icon";
 import {
@@ -5,6 +6,8 @@ import {
   mdiCancel,
   mdiCheck,
   mdiChevronLeft,
+  mdiCircleOutline,
+  mdiCircleSlice8,
   mdiCloudUpload,
   mdiCogOutline,
   mdiDelete,
@@ -21,6 +24,7 @@ import {
   mdiToyBrickOutline,
   mdiVariable,
 } from "@mdi/js";
+import { Colors } from "../shared/colors";
 
 const createIcon =
   (mdiIcon: string): React.FC<typeof Icon.defaultProps> =>
@@ -56,3 +60,9 @@ export const FileTreeOutlineIcon = createIcon(mdiFileTreeOutline);
 export const CogOutlineIcon = createIcon(mdiCogOutline);
 export const SearchIcon = createIcon(mdiMagnify);
 export const AddIcon = createIcon(mdiPlus);
+
+const CircleSlice8 = createIcon(mdiCircleSlice8);
+export const ActiveIcon = styled(CircleSlice8)`
+  color: ${Colors.success};
+`;
+export const InactiveIcon = createIcon(mdiCircleOutline);

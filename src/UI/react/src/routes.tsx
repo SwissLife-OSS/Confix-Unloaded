@@ -77,6 +77,18 @@ export const Routes = {
     new: () => `${paths.applications}/new`,
     edit: (id?: string) => `${paths.applications}/edit/${id ?? ":id"}`,
   },
+  applicationParts: {
+    edit: (applicationId?: string, id?: string) =>
+      `${paths.applications}/edit/${applicationId ?? ":applicationId"}/edit/${
+        id ?? ":id"
+      }`,
+  },
+  applicationPartComponents: {
+    edit: (applicationId?: string, partComponentId?: string) =>
+      `${paths.applications}/edit/${applicationId ?? ":applicationId"}/edit/${
+        partComponentId ?? ":partComponentId"
+      }`,
+  },
   components: {
     new: () => `${paths.components}/new`,
     edit: (id?: string) => `${paths.components}/edit/${id ?? ":id"}`,

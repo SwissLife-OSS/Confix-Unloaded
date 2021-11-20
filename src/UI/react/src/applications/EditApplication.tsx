@@ -1,35 +1,25 @@
 import * as React from "react";
 import { useFragment, useLazyLoadQuery } from "react-relay";
 import { DetailView } from "../shared/DetailView";
-import { ReadOnlyFormField } from "../shared/FormField";
 import { graphql } from "babel-plugin-relay/macro";
 import { useRouteMatch } from "react-router";
 import { EditApplication_GetById_Query } from "./__generated__/EditApplication_GetById_Query.graphql";
-import {
-  Button,
-  Card,
-  Col,
-  Descriptions,
-  Empty,
-  List,
-  Row,
-  Typography,
-} from "antd";
-import { EditApplicationHeader } from "./components/EditApplicationHeader";
+import { Button, Card, Col, Empty, List, Row } from "antd";
 import styled from "@emotion/styled";
-import { HeaderButton } from "../shared/EditablePageHeader";
+import {
+  EditableBreadcrumbHeader,
+  HeaderButton,
+} from "../shared/EditablePageHeader";
 import { AddIcon, DeleteIcon, EditIcon, PublishIcon } from "../icons/icons";
 import { EditApplication_part$key } from "./__generated__/EditApplication_part.graphql";
 import { ApplicationPartSectionHeader } from "./components/ApplicationPartSectionHeader";
-import {
-  EditApplication_Application_Fragment,
-  EditApplication_Application_Fragment$key,
-} from "./__generated__/EditApplication_Application_Fragment.graphql";
-import { useGoTo } from "../shared/useGoTo";
-import { Routes } from "../routes";
+import { EditApplication_Application_Fragment$key } from "./__generated__/EditApplication_Application_Fragment.graphql";
 import { useToggle } from "../shared/useToggle";
 import { RemovePartFromApplicationDialog } from "./dialogs/RemovePartFromApplicationDialog";
 import { AddComponentsToApplicationPartDialog } from "./dialogs/AddComponentsToApplicationPartDialog";
+import { RenameApplicationDialog } from "./dialogs/RenameApplicationDialog";
+import { useGoTo } from "../shared/useGoTo";
+import { Routes } from "../routes";
 
 const applicationByIdQuery = graphql`
   query EditApplication_GetById_Query($id: ID!) {
@@ -72,18 +62,10 @@ export const EditApplication = () => {
     <DetailView style={{ padding: 1 }}>
       <Row>
         <Col xs={24}>
-          <EditApplicationHeader id={application.id} name={application.name}>
-            <HeaderButton type="primary" icon={<PublishIcon />}>
-              Publish
-            </HeaderButton>
-          </EditApplicationHeader>
-        </Col>
-      </Row>
-      <Row>
-        <Col xs={24}>
-          <ReadOnlyFormField
-            value={application.namespace ?? ""}
-            label="Namespace"
+          <Header
+            name={application.name}
+            namespace={application.namespace ?? ""}
+            id={application.id}
           />
         </Col>
       </Row>
@@ -98,7 +80,10 @@ export const EditApplication = () => {
             <Row gutter={[16, 16]}>
               {(application.parts.map((x) => ({ ...x })) ?? []).map((item) => (
                 <Col span={8}>
-                  <ApplicationPartsDisplay part={item} />
+                  <ApplicationPartsDisplay
+                    part={item}
+                    applicationId={application.id}
+                  />
                 </Col>
               ))}
             </Row>
@@ -123,35 +108,41 @@ const applicationPartFragment = graphql`
   }
 `;
 
-const ApplicationPartsDisplay: React.FC<{ part: EditApplication_part$key }> = ({
-  part,
-}) => {
+const ApplicationPartsDisplay: React.FC<{
+  applicationId: string;
+  part: EditApplication_part$key;
+}> = ({ applicationId, part }) => {
   const [isRemoveDialogShown, , enableRemoveDialog, disableRemoveDialog] =
     useToggle();
   const [isAddComponentVisible, , enableAddComponent, disableAddComponent] =
     useToggle();
   const { components, name, id } = useFragment(applicationPartFragment, part);
+  const goToPart = useGoTo(() =>
+    Routes.applicationParts.edit(applicationId, id)
+  );
   return (
     <>
       <Card
         title={name}
-        actions={[<EditIcon />, <AddIcon onClick={enableAddComponent} />]}
+        actions={[
+          <EditIcon onClick={goToPart} />,
+          <AddIcon onClick={enableAddComponent} />,
+        ]}
         extra={
           <Button icon={<DeleteIcon />} danger onClick={enableRemoveDialog} />
         }
       >
-        <List
-          dataSource={components.map((x) => ({ ...x }))}
-          renderItem={(item) => (
-            <List.Item>
-              <Descriptions title={item.definition.name}>
-                <Descriptions.Item label="State">
-                  {item.definition.state}
-                </Descriptions.Item>
-              </Descriptions>
-            </List.Item>
-          )}
-        />
+        <CardBody>
+          <List
+            dataSource={components.map((x) => ({ ...x }))}
+            renderItem={(item) => (
+              <ComponentListItem
+                name={item.definition.name}
+                id={item.definition.id}
+              />
+            )}
+          />
+        </CardBody>
       </Card>
       <RemovePartFromApplicationDialog
         applicationPartName={name}
@@ -166,5 +157,43 @@ const ApplicationPartsDisplay: React.FC<{ part: EditApplication_part$key }> = ({
         onClose={disableAddComponent}
       />
     </>
+  );
+};
+
+const ComponentListItem: React.FC<{ id: string; name: string }> = ({
+  id,
+  name,
+}) => {
+  return (
+    <List.Item>
+      <List.Item.Meta title={name} />
+    </List.Item>
+  );
+};
+
+const CardBody = styled("div")`
+  height: 200px;
+  overflow-y: scroll;
+`;
+
+const Header: React.FC<{ name: string; namespace: string; id: string }> = ({
+  name,
+  namespace,
+  id,
+}) => {
+  const [isEdit, , enable, disable] = useToggle();
+  return (
+    <EditableBreadcrumbHeader
+      onEdit={enable}
+      title={name}
+      breadcrumbs={[{ text: namespace }]}
+    >
+      <RenameApplicationDialog
+        name={name}
+        id={id}
+        onClose={disable}
+        visible={isEdit}
+      />
+    </EditableBreadcrumbHeader>
   );
 };

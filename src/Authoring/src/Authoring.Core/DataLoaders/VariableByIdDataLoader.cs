@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using GreenDonut;
 using HotChocolate.Fetching;
 
-namespace Confix.Authoring.GraphQL.DataLoaders
+namespace Confix.Authoring.DataLoaders
 {
     public class VariableByIdDataLoader : BatchDataLoader<Guid, Variable?>
     {

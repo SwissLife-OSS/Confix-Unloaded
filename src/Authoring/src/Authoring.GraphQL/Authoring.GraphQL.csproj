@@ -18,4 +18,8 @@
     <ProjectReference Include="..\Authoring.Core\Authoring.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DataLoaders" />
+  </ItemGroup>
+
 </Project>

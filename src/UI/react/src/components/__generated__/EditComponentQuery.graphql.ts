@@ -13,12 +13,12 @@ export type EditComponentQueryResponse = {
         readonly id: string;
         readonly name: string;
         readonly state: ComponentState;
-        readonly schemaSdl: unknown | null;
-        readonly schema: unknown | null;
-        readonly values: unknown | null;
-        readonly defaults: unknown | null;
+        readonly schemaSdl: string | null;
+        readonly schema: object | null;
+        readonly values: object | null;
+        readonly defaults: object | null;
         readonly schemaViolations: ReadonlyArray<{
-            readonly path: unknown;
+            readonly path: object;
             readonly code: string;
         }>;
     } | null;

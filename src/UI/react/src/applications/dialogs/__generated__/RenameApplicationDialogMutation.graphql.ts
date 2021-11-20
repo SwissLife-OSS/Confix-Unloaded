@@ -9,10 +9,10 @@ export type RenameApplicationInput = {
     id: string;
     name: string;
 };
-export type EditApplicationHeaderMutationVariables = {
+export type RenameApplicationDialogMutationVariables = {
     input: RenameApplicationInput;
 };
-export type EditApplicationHeaderMutationResponse = {
+export type RenameApplicationDialogMutationResponse = {
     readonly renameApplication: {
         readonly application: {
             readonly id: string;
@@ -24,15 +24,15 @@ export type EditApplicationHeaderMutationResponse = {
         }> | null;
     };
 };
-export type EditApplicationHeaderMutation = {
-    readonly response: EditApplicationHeaderMutationResponse;
-    readonly variables: EditApplicationHeaderMutationVariables;
+export type RenameApplicationDialogMutation = {
+    readonly response: RenameApplicationDialogMutationResponse;
+    readonly variables: RenameApplicationDialogMutationVariables;
 };
 
 
 
 /*
-mutation EditApplicationHeaderMutation(
+mutation RenameApplicationDialogMutation(
   $input: RenameApplicationInput!
 ) {
   renameApplication(input: $input) {
@@ -59,6 +59,7 @@ fragment ApplicationsList_applicationsEdge on Application {
     id
     name
     components {
+      id
       definition {
         id
         name
@@ -123,7 +124,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "EditApplicationHeaderMutation",
+    "name": "RenameApplicationDialogMutation",
     "selections": [
       {
         "alias": null,
@@ -173,7 +174,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "EditApplicationHeaderMutation",
+    "name": "RenameApplicationDialogMutation",
     "selections": [
       {
         "alias": null,
@@ -218,6 +219,7 @@ return {
                     "name": "components",
                     "plural": true,
                     "selections": [
+                      (v2/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -265,14 +267,14 @@ return {
     ]
   },
   "params": {
-    "cacheID": "e954a3792da6f9e2d6add838d334ae26",
+    "cacheID": "0893af4677884e91c2a21ff9137cf5d6",
     "id": null,
     "metadata": {},
-    "name": "EditApplicationHeaderMutation",
+    "name": "RenameApplicationDialogMutation",
     "operationKind": "mutation",
-    "text": "mutation EditApplicationHeaderMutation(\n  $input: RenameApplicationInput!\n) {\n  renameApplication(input: $input) {\n    application {\n      id\n      ...ApplicationsList_applicationsEdge\n    }\n    errors {\n      __typename\n      ... on IUserError {\n        __isIUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment ApplicationsList_applicationsEdge on Application {\n  id\n  name\n  namespace\n  parts {\n    id\n    name\n    components {\n      definition {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": "mutation RenameApplicationDialogMutation(\n  $input: RenameApplicationInput!\n) {\n  renameApplication(input: $input) {\n    application {\n      id\n      ...ApplicationsList_applicationsEdge\n    }\n    errors {\n      __typename\n      ... on IUserError {\n        __isIUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment ApplicationsList_applicationsEdge on Application {\n  id\n  name\n  namespace\n  parts {\n    id\n    name\n    components {\n      id\n      definition {\n        id\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
-(node as any).hash = 'c984e63535b193651e4b8aad51821321';
+(node as any).hash = 'b6814a34c2a6be233cd42fdeb1fdfc8c';
 export default node;

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Confix.Authoring.GraphQL.DataLoaders;
+using Confix.Authoring.DataLoaders;
 using Confix.Authoring.Store;
 
 namespace Confix.Authoring.GraphQL

@@ -94,6 +94,10 @@ namespace Confix.Authoring.Store
             IEnumerable<Guid> ids,
             CancellationToken cancellationToken);
 
+        Task<IReadOnlyCollection<ApplicationPartComponent>> GetManyComponentPartsByIdAsync(
+            IEnumerable<Guid> ids,
+            CancellationToken cancellationToken);
+
         /// <summary>
         /// Allows to query the application store.
         /// </summary>
@@ -194,6 +198,10 @@ namespace Confix.Authoring.Store
         /// </param>
         Task<Application?> RemovePartAsync(
             Guid applicationPartId,
+            CancellationToken cancellationToken);
+
+        Task<Application?> GetByComponentPartIdAsync(
+            Guid componentPartId,
             CancellationToken cancellationToken);
     }
 }

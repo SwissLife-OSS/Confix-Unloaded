@@ -36,6 +36,14 @@ namespace Confix.Authoring.Store.Mongo
                     x => x.Parts.Any(p => p.Id == partId),
                     cancellationToken)!;
 
+        public Task<Application?> GetByComponentPartIdAsync(
+            Guid componentPartId,
+            CancellationToken cancellationToken) =>
+            _dbContext.Applications.AsQueryable()
+                .FirstOrDefaultAsync(
+                    x => x.Parts.Any(p => p.Components.Any(y => y.Id == componentPartId)),
+                    cancellationToken)!;
+
 
         public async Task<ApplicationPart?> GetPartByIdAsync(
             Guid id,
@@ -68,6 +76,25 @@ namespace Confix.Authoring.Store.Mongo
             return applications
                 .SelectMany(x => x.Parts)
                 .Where(x => ids.Contains(x.Id))
+                .ToList();
+        }
+
+        public async Task<IReadOnlyCollection<ApplicationPartComponent>>
+            GetManyComponentPartsByIdAsync(
+            IEnumerable<Guid> ids,
+            CancellationToken cancellationToken)
+        {
+            var idSet = ids.ToHashSet();
+            FilterDefinition<Application> filter = Filter.In(
+                $"{nameof(Application.Parts)}.{nameof(ApplicationPart.Components)}.{nameof(ApplicationPartComponent.Id)}",
+                idSet);
+
+            List<Application> result =
+                await _dbContext.Applications.Find(filter).ToListAsync(cancellationToken);
+            return result.SelectMany(x => x.Parts)
+                .SelectMany(x => x.Components)
+                .Where(x => idSet.Contains(x.Id))
+                .DistinctBy(x => x.Id)
                 .ToList();
         }
 
@@ -199,7 +226,7 @@ namespace Confix.Authoring.Store.Mongo
             FilterDefinition<ApplicationPart> pullFilter =
                 Builders<ApplicationPart>.Filter.Eq(x => x.Id, applicationPartId);
 
-            UpdateDefinition<Application> update = Update.PullFilter(x => x.Parts,pullFilter);
+            UpdateDefinition<Application> update = Update.PullFilter(x => x.Parts, pullFilter);
 
             FindOneAndUpdateOptions<Application> options = new()
             {

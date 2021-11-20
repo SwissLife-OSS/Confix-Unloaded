@@ -1,7 +1,7 @@
 using System;
+using Confix.Authoring.DataLoaders;
 using Confix.Authoring.GraphQL.Applications;
 using Confix.Authoring.GraphQL.Components;
-using Confix.Authoring.GraphQL.DataLoaders;
 using Confix.Authoring.GraphQL.Serialization;
 using GreenDonut;
 using HotChocolate.Execution.Configuration;
@@ -78,6 +78,8 @@ namespace Confix.Authoring.GraphQL
                 .AddTypeExtension<ApplicationNode>()
                 .AddTypeExtension<ApplicationPartNode>()
                 .AddTypeExtension<ApplicationPartComponentNode>()
+                .AddTypeExtension<ApplicationApplicationPartExtensions>()
+                .AddTypeExtension<ApplicationPartComponentExtensions>()
                 .AddTypeExtension<ComponentNode>()
                 .AddType<SdlType>();
 
@@ -98,7 +100,7 @@ namespace Confix.Authoring.GraphQL
                 .AddDataLoader<ApplicationPartByIdDataLoader>()
                 .AddDataLoader<VariableByIdDataLoader>()
                 .AddDataLoader<ComponentByIdDataLoader>()
-
+                .AddDataLoader<ApplicationPartComponentByIdDataloader>()
                 // add additional dataloader lookups
                 .Services
                 .AddScoped<IDataLoader<Guid, Component?>>(

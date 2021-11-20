@@ -7,7 +7,7 @@ import { ConcreteRequest } from "relay-runtime";
 export type CreateComponentInput = {
     name: string;
     schema?: string | null | undefined;
-    values?: unknown | null | undefined;
+    values?: object | null | undefined;
 };
 export type NewComponentMutationVariables = {
     input: CreateComponentInput;

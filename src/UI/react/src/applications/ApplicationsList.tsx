@@ -21,6 +21,10 @@ import { AddIcon, DeleteIcon } from "../icons/icons";
 import { useToggle } from "../shared/useToggle";
 import { AddPartToApplicationDialog } from "./dialogs/AddPartToApplicationDialog";
 import { RemovePartFromApplicationDialog } from "./dialogs/RemovePartFromApplicationDialog";
+import { AddComponentsToApplicationPartDialog } from "./dialogs/AddComponentsToApplicationPartDialog";
+import { RemoveComponentFromApplicationPartDialog } from "./dialogs/RemoveComponentFromApplicationPartDialog";
+import { useGoTo } from "../shared/useGoTo";
+import { Routes } from "../routes";
 
 const applicationsQuery = graphql`
   query ApplicationsListQuery(
@@ -56,6 +60,7 @@ const applicationFragment = graphql`
       id
       name
       components {
+        id
         definition {
           id
           name
@@ -106,7 +111,7 @@ export const ApplicationList: React.FC<{
         item.id === selectedApplicationId ? (
           <SelectedApplicationListItem
             onItemSelect={handleOnItemSelected}
-            edge={item}
+            data={item}
             key={item.id}
           />
         ) : (
@@ -146,28 +151,26 @@ const ApplicationListItem: React.FC<{
 
 const SelectedApplicationListItem: React.FC<{
   onItemSelect: (applicationId: string) => void;
-  edge: ApplicationsList_applicationsEdge$key;
-}> = ({ onItemSelect, edge }) => {
+  data: ApplicationsList_applicationsEdge$key;
+}> = ({ onItemSelect, data }) => {
   const { name, parts, id } =
     useFragment<ApplicationsList_applicationsEdge$key>(
       applicationFragment,
-      edge
+      data
     );
   const handleClick = useCallback(() => onItemSelect(id), [onItemSelect, id]);
   const [isAddPartVisible, , enableAddPart, disableAddPart] = useToggle();
 
   return (
-    <SelectedListItem onClick={handleClick}>
-      <SubItem>
+    <SelectedListItem>
+      <SubItem onClick={handleClick}>
         <List.Item.Meta title={name} />
         <SubItemButton type="text" icon={<AddIcon />} onClick={enableAddPart} />
         <SubItemButton type="text" icon={<DeleteIcon />} />
       </SubItem>
-      <LeftPadBox>
-        {parts.map((x) => (
-          <ApplicationPart key={x.id} {...x} />
-        ))}
-      </LeftPadBox>
+      {parts.map((x) => (
+        <ApplicationPart key={x.id} data={x} applicationId={id} />
+      ))}
       <AddPartToApplicationDialog
         applicationName={name}
         applicationId={id}
@@ -178,52 +181,87 @@ const SelectedApplicationListItem: React.FC<{
   );
 };
 
-const ApplicationPart: React.FC<ApplicationsList_applicationsEdge["parts"][0]> =
-  ({ id, name, components }) => {
-    const [isRemoveDialogShown, , enableRemoveDialog, disableRemoveDialog] =
-      useToggle();
-    return (
-      <>
-        <SubItem key={id}>
-          <SubItemTitle>{name}</SubItemTitle>
-          <SubItemButton type="text" icon={<AddIcon />} />
-          <SubItemButton
-            type="text"
-            icon={<DeleteIcon />}
-            onClick={enableRemoveDialog}
-          />
-        </SubItem>
-        <LeftPadBox key={id + "box"}>
-          {components.map((y) => (
-            <Component key={y.definition.id} {...y} />
-          ))}
-        </LeftPadBox>
-        <RemovePartFromApplicationDialog
-          applicationPartName={name}
-          applicationPartId={id}
-          visible={isRemoveDialogShown}
-          onClose={disableRemoveDialog}
-        />
-      </>
-    );
-  };
-
-const Component: React.FC<
-  ApplicationsList_applicationsEdge["parts"][0]["components"][0]
-> = ({ definition: { id, name } }) => {
+const ApplicationPart: React.FC<{
+  applicationId: string;
+  data: ApplicationsList_applicationsEdge["parts"][0];
+}> = ({ applicationId, data: { id, name, components } }) => {
+  const [isRemoveDialogShown, , enableRemoveDialog, disableRemoveDialog] =
+    useToggle();
+  const [
+    isCompnentDialogShow,
+    ,
+    enableComponentDialog,
+    disableComponentDialog,
+  ] = useToggle();
+  const goToPart = useGoTo(() =>
+    Routes.applicationParts.edit(applicationId, id)
+  );
   return (
-    <SubItem key={id}>
-      <SubItemTitle>{name}</SubItemTitle>
-    </SubItem>
+    <>
+      <SubItem indent={1} onClick={goToPart}>
+        <SubItemTitle>{name}</SubItemTitle>
+        <SubItemButton
+          type="text"
+          icon={<AddIcon />}
+          onClick={enableComponentDialog}
+        />
+        <SubItemButton
+          type="text"
+          icon={<DeleteIcon />}
+          onClick={enableRemoveDialog}
+        />
+      </SubItem>
+      {components.map((y) => (
+        <Component applicationId={id} key={y.definition.id} data={y} />
+      ))}
+      <RemovePartFromApplicationDialog
+        applicationPartName={name}
+        applicationPartId={id}
+        visible={isRemoveDialogShown}
+        onClose={disableRemoveDialog}
+      />
+      <AddComponentsToApplicationPartDialog
+        applicationPartName={name}
+        applicationPartId={id}
+        visible={isCompnentDialogShow}
+        onClose={disableComponentDialog}
+      />
+    </>
   );
 };
 
-const LeftPadBox = styled("div")`
-  padding-left: 20px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-`;
+const Component: React.FC<{
+  applicationId: string;
+  data: ApplicationsList_applicationsEdge["parts"][0]["components"][0];
+}> = ({
+  applicationId,
+  data: {
+    id: partComponentId,
+    definition: { name },
+  },
+}) => {
+  const [isRemoveDialogShown, , enableRemoveDialog, disableRemoveDialog] =
+    useToggle();
+  const goToComponent = useGoTo(() =>
+    Routes.applicationPartComponents.edit(applicationId, partComponentId)
+  );
+  return (
+    <SubItem indent={2} onClick={goToComponent}>
+      <SubItemTitle>{name}</SubItemTitle>
+      <SubItemButton
+        type="text"
+        icon={<DeleteIcon />}
+        onClick={enableRemoveDialog}
+      />
+      <RemoveComponentFromApplicationPartDialog
+        partComponentId={partComponentId}
+        componentName={name}
+        visible={isRemoveDialogShown}
+        onClose={disableRemoveDialog}
+      />
+    </SubItem>
+  );
+};
 
 const SubItemTitle = styled("div")`
   flex: 1;
@@ -233,12 +271,27 @@ const SubItemButton = styled(Button)`
   flex: 0;
 `;
 
-const SubItem = styled("div")`
+const SubItem = styled("div")<{ indent?: number }>`
   display: flex;
   flex-direction: row;
   padding: 5px 0;
   width: 100%;
+  line-height: 32px;
+  padding-left: ${(props) => (props.indent ?? 0) * 20 + 5}px;
+  :hover {
+    background-color: ${Colors.gray[5]};
+  }
+  .ant-list-item-meta-content {
+    display: table;
+    height: 100%;
+  }
+  h4 {
+    display: table-cell;
+    vertical-align: middle;
+    margin: 0;
+  }
 `;
+
 const ListItem = styled(List.Item)`
   cursor: pointer;
   :hover {

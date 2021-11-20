@@ -55,17 +55,20 @@ export const ComponentsSelect: React.FC<{
     [env]
   );
 
-  const debouncedSearch = useDebounce(
-    (search: string) => fetchData(search),
-    300
-  );
+  const debouncedSearch = useDebounce((search: string) => {
+    fetchData(search);
+  }, 500);
+
   const handleChange = useCallback(
-    (values: ComponentOption[]) => {
-      onChange(values);
-      setValue(values);
+    (ids: ComponentOption[], t: any) => {
+      onChange(t);
+      setValue(ids);
+      fetchData("");
     },
-    [onChange, setValue]
+    [onChange, setValue, fetchData]
   );
+
+  // initial data fetch
   useEffect(() => {
     fetchData("");
   }, [fetchData]);
@@ -77,9 +80,11 @@ export const ComponentsSelect: React.FC<{
       style={{ width: "100%" }}
       value={value}
       placeholder="Please select"
+      filterOption={false}
       onChange={handleChange}
       notFoundContent={isLoading ? <Spin size="small" /> : null}
       onSearch={debouncedSearch}
+      showArrow
       options={options}
     />
   );

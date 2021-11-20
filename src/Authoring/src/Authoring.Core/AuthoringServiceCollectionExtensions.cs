@@ -1,3 +1,4 @@
+using Confix.Authoring.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,9 +10,10 @@ namespace Confix.Authoring
             this IServiceCollection services,
             IConfiguration configuration)
         {
-            services.AddSingleton<IApplicationService, ApplicationService>();
+            services.AddScoped<IApplicationService, ApplicationService>();
             services.AddScoped<IComponentService, ComponentService>();
-            services.AddSingleton<IVariableService, VariableService>();
+            services.AddScoped<IVariableService, VariableService>();
+            services.AddScoped<ISchemaService, SchemaService>();
             services.AddSingleton<IVariableCryptoProvider, DoNotUseVariableCrypoProvider>();
 
             return services;
