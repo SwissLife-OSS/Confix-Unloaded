@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using MongoDB.Driver;
@@ -55,6 +56,7 @@ public class EnvironmentStore : IEnvironmentStore
         Environment? result = await _dbContext.Environments.FindOneAndUpdateAsync(
             Builders<Environment>.Filter.Eq(t => t.Id, environmentId),
             Builders<Environment>.Update.Set(t => t.Name, name),
+            new FindOneAndUpdateOptions<Environment>(){ReturnDocument = ReturnDocument.After},
             cancellationToken: cancellationToken);
 
         return result;
@@ -73,8 +75,8 @@ public class EnvironmentStore : IEnvironmentStore
 
     public IQueryable<Environment> SearchAsync(
         string? search,
-        CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
-    }
+        CancellationToken cancellationToken = default) =>
+        search is null
+            ? _dbContext.Environments.AsQueryable()
+            : _dbContext.Environments.AsQueryable().Where(x => x.Name.Contains(search));
 }

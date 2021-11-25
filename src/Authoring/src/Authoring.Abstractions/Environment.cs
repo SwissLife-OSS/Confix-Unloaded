@@ -1,13 +1,12 @@
 using System;
-using System.ComponentModel.DataAnnotations;
+using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring;
 
 public class Environment
 {
-    [Key]
+    [ID]
     public Guid Id { get; set; }
 
-    [Required]
-    public string? Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 }

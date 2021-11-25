@@ -269,12 +269,15 @@ type CreateComponentPayload {
   query: Query!
 }
 
+union CreateEnvironmentError = EnvironmentNameCollisionError
+
 input CreateEnvironmentInput {
   name: String!
 }
 
 type CreateEnvironmentPayload {
   environment: Environment
+  errors: [CreateEnvironmentError!]
   query: Query!
 }
 
@@ -283,16 +286,6 @@ input CreateVariableInput {
   isSecret: Boolean!
   namespace: String
   defaultValue: String
-}
-
-input DeleteEnvironmentInput {
-  id: UUID!
-}
-
-type DeleteEnvironmentPayload {
-  deletedId: UUID
-  environment: Environment
-  query: Query!
 }
 
 input DeleteVariableValueInput {
@@ -306,8 +299,20 @@ type DeleteVariableValuePayload {
 }
 
 type Environment {
-  id: UUID!
+  id: ID!
   name: String!
+}
+
+type EnvironmentNameCollisionError implements IUserError {
+  name: String!
+  code: String!
+  message: String!
+}
+
+type EnvironmentNotFoundError implements IUserError {
+  environmentId: UUID!
+  code: String!
+  message: String!
 }
 
 interface IUserError {
@@ -344,7 +349,7 @@ type Mutation {
   deleteVariableValue(input: DeleteVariableValueInput!): DeleteVariableValuePayload!
   createEnvironment(input: CreateEnvironmentInput!): CreateEnvironmentPayload!
   renameEnvironment(input: RenameEnvironmentInput!): RenameEnvironmentPayload!
-  deleteEnvironmentById(input: DeleteEnvironmentInput!): DeleteEnvironmentPayload!
+  removeEnvironmentById(input: RemoveEnvironmentInput!): RemoveEnvironmentPayload!
   createComponent(input: CreateComponentInput!): CreateComponentPayload!
   renameComponent(input: RenameComponentInput!): RenameComponentPayload!
   updateComponentSchema(input: UpdateComponentSchemaInput!): UpdateComponentSchemaPayload!
@@ -417,7 +422,7 @@ type Query {
   applicationPartComponentById(partComponentId: ID!): ApplicationPartComponent
   variables: [Variable!]!
   variable(id: ID!): Variable!
-  searchEnvironmentsAsync(
+  searchEnvironments(
     search: String
 
     """Returns the first _n_ elements from the list."""
@@ -433,7 +438,7 @@ type Query {
     Returns the elements in the list that come before the specified cursor.
     """
     before: String
-  ): SearchEnvironmentsAsyncConnection
+  ): SearchEnvironmentsConnection
   environmentById(id: ID!): Environment
   components(
     """Returns the first _n_ elements from the list."""
@@ -478,6 +483,19 @@ type RemoveComponentFromApplicationPartPayload {
   query: Query!
 }
 
+union RemoveEnvironmentByIdError = EnvironmentNotFoundError
+
+input RemoveEnvironmentInput {
+  id: ID!
+}
+
+type RemoveEnvironmentPayload {
+  removedId: UUID
+  environment: Environment
+  errors: [RemoveEnvironmentByIdError!]
+  query: Query!
+}
+
 union RenameApplicationError = ApplicationIdInvalid | ApplicationNameTaken
 
 input RenameApplicationInput {
@@ -516,13 +534,16 @@ type RenameComponentPayload {
   query: Query!
 }
 
+union RenameEnvironmentError = EnvironmentNotFoundError | EnvironmentNameCollisionError
+
 input RenameEnvironmentInput {
-  id: UUID!
+  id: ID!
   name: String!
 }
 
 type RenameEnvironmentPayload {
   environment: Environment
+  errors: [RenameEnvironmentError!]
   query: Query!
 }
 
@@ -543,19 +564,19 @@ type SchemaViolation {
 scalar SDL
 
 """A connection to a list of items."""
-type SearchEnvironmentsAsyncConnection {
+type SearchEnvironmentsConnection {
   """Information to aid in pagination."""
   pageInfo: PageInfo!
 
   """A list of edges."""
-  edges: [SearchEnvironmentsAsyncEdge!]
+  edges: [SearchEnvironmentsEdge!]
 
   """A flattened list of the nodes."""
   nodes: [Environment!]
 }
 
 """An edge in a connection."""
-type SearchEnvironmentsAsyncEdge {
+type SearchEnvironmentsEdge {
   """A cursor for use in pagination."""
   cursor: String!
 

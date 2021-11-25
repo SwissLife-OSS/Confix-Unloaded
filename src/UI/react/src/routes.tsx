@@ -1,6 +1,7 @@
 import { UpCircleOutlined } from "@ant-design/icons";
 import { Applications } from "./applications/Applications";
 import { Components } from "./components/Components";
+import { Environments } from "./environment/Environments";
 import {
   CogOutlineIcon,
   FileTreeOutlineIcon,
@@ -49,7 +50,7 @@ const routes: RouteDefinition[] = [
   {
     name: "Environments",
     path: paths.environments,
-    component: () => <div>bar</div>,
+    component: () => <Environments />,
     icon: ServerIcon,
   },
   {
@@ -93,5 +94,10 @@ export const Routes = {
   components: {
     new: () => `${paths.components}/new`,
     edit: (id?: string) => `${paths.components}/edit/${id ?? ":id"}`,
+  },
+  environments: {
+    overview: () => `${paths.environments}`,
+    new: () => `${paths.environments}/new`,
+    edit: (id?: string) => `${paths.environments}/edit/${id ?? ":id"}`,
   },
 };

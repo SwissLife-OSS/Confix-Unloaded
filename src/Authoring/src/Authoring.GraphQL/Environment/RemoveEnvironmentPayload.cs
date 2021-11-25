@@ -3,14 +3,14 @@ using System.Collections.Generic;
 
 namespace Confix.Authoring.GraphQL;
 
-public class DeleteEnvironmentPayload
+public class RemoveEnvironmentPayload
 {
-    public Guid? DeletedId { get; }
+    public Guid? RemovedId { get; }
     public Environment? Environment { get; }
 
-    public DeleteEnvironmentPayload(Guid deletedId, Environment? environment)
+    public RemoveEnvironmentPayload(Guid deletedId, Environment? environment)
     {
-        DeletedId = deletedId;
+        RemovedId = deletedId;
         Environment = environment;
     }
 }

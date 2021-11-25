@@ -3,4 +3,4 @@ using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring.GraphQL;
 
-public record DeleteEnvironmentInput([ID(nameof(Environment))] Guid Id);
+public record RemoveEnvironmentInput([property: ID(nameof(Environment))] Guid Id);
