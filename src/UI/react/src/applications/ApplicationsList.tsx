@@ -212,7 +212,11 @@ const ApplicationPart: React.FC<{
         />
       </SubItem>
       {components.map((y) => (
-        <Component applicationId={id} key={y.definition.id} data={y} />
+        <Component
+          applicationId={applicationId}
+          key={y.definition.id}
+          data={y}
+        />
       ))}
       <RemovePartFromApplicationDialog
         applicationPartName={name}

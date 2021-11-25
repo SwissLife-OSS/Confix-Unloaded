@@ -1,51 +1,74 @@
-import { useFormik } from "formik";
-import { useLazyLoadQuery, useMutation } from "react-relay";
-import { Button, Col, Form, Row } from "antd";
+import { useFragment, useLazyLoadQuery, useMutation } from "react-relay";
+import { Button, Col, Row } from "antd";
 import { DetailView } from "../shared/DetailView";
 import { FormActions, FormField } from "../shared/FormField";
 import { graphql } from "babel-plugin-relay/macro";
-import { EditComponentRenameMutation } from "./__generated__/EditComponentRenameMutation.graphql";
 import { useRouteMatch } from "react-router";
 import { EditComponentQuery } from "./__generated__/EditComponentQuery.graphql";
 import {
+  pipeCommitFn,
   withErrorNotifications,
+  withOnSuccess,
   withSuccessMessage,
 } from "../shared/pipeCommitFn";
 import { useCommitForm } from "../shared/useCommitForm";
+import { EditableBreadcrumbHeader } from "../shared/EditablePageHeader";
+import { useToggle } from "../shared/useToggle";
+import { RenameComponentDialog } from "./controls/dialogs/RenameComponentDialog";
+import { ComponentEditor } from "../applications/components/ComponentEditor";
+import {
+  EditComponentUpdateMutation,
+  EditComponentUpdateMutationResponse,
+} from "./__generated__/EditComponentUpdateMutation.graphql";
+import React, { useState } from "react";
+import {
+  EditComponent_component,
+  EditComponent_component$data,
+  EditComponent_component$key,
+} from "./__generated__/EditComponent_component.graphql";
+import { css } from "@emotion/react";
+import { SectionHeader } from "../shared/SectionHeader";
 
 const componentByIdQuery = graphql`
   query EditComponentQuery($id: ID!) {
     componentById(id: $id) {
       id
-      name
-      state
-      schemaSdl
-      schema
-      values
-      defaults
-      schemaViolations {
-        path
-        code
-      }
+      ...EditComponent_component
     }
   }
 `;
 
-const editComponentRenameMutation = graphql`
-  mutation EditComponentRenameMutation($input: RenameComponentInput!) {
-    renameComponent(input: $input) {
+const editComponentFragment = graphql`
+  fragment EditComponent_component on Component {
+    id
+    name
+    state
+    schemaSdl
+    schema
+    values
+    defaults
+    schemaViolations {
+      path
+      code
+    }
+  }
+`;
+
+const editComponentMutation = graphql`
+  mutation EditComponentUpdateMutation(
+    $valuesInput: UpdateComponentValuesInput!
+    $schemaInput: UpdateComponentSchemaInput!
+  ) {
+    updateComponentSchema(input: $schemaInput) {
       component {
         id
-        name
-        state
-        schemaSdl
-        schema
-        values
-        defaults
-        schemaViolations {
-          path
-          code
-        }
+        ...EditComponent_component
+      }
+    }
+    updateComponentValues(input: $valuesInput) {
+      component {
+        id
+        ...EditComponent_component
       }
     }
   }
@@ -56,56 +79,93 @@ export const EditComponent = () => {
   const component = useLazyLoadQuery<EditComponentQuery>(componentByIdQuery, {
     id: route.params.id,
   });
-  if (!component.componentById?.id) {
+  const id = component.componentById?.id;
+  if (!id) {
     return (
       <DetailView style={{ padding: 1 }}>Coult not find component</DetailView>
     );
   }
-  return <EditComponentForm component={component.componentById} />;
+  return <EditComponentForm data={component.componentById} id={id} />;
 };
 
 const EditComponentForm: React.FC<{
-  component: NonNullable<EditComponentQuery["response"]["componentById"]>;
-}> = ({ component }) => {
-  const [commit, isInFlight] = useMutation<EditComponentRenameMutation>(
-    editComponentRenameMutation
+  id: string;
+  data: NonNullable<EditComponentQuery["response"]["componentById"]>;
+}> = ({ data, id }) => {
+  const component = useFragment<EditComponent_component$key>(
+    editComponentFragment,
+    data
   );
-  const form = useCommitForm(
-    commit,
-    {
-      name: component.name,
-      id: component.id,
-    },
-    (input) => ({ input }),
-    {
-      pipes: [
-        withSuccessMessage(
-          (x) => x.renameComponent.component?.id,
-          "Renamed Application"
-        ),
-        withErrorNotifications(),
-      ],
-    }
+  const [commit, isInFlight] = useMutation<EditComponentUpdateMutation>(
+    editComponentMutation
   );
+
+  const [schema, setSchema] = useState<string | undefined>(
+    component.schemaSdl ?? ""
+  );
+  const [values, setValues] = useState<Record<string, object> | undefined>(
+    component.values as any
+  );
+  const handleUpdate = React.useCallback(() => {
+    const isSuccess = (r: EditComponentUpdateMutationResponse) =>
+      !!r.updateComponentSchema.component?.id &&
+      !!r.updateComponentValues.component?.id;
+
+    pipeCommitFn(commit, [withSuccessMessage(isSuccess, "Updated Component")])({
+      variables: {
+        schemaInput: { id, schema: schema ?? "" },
+        valuesInput: { id, values },
+      },
+    });
+  }, [commit, schema, values, id]);
+
   return (
-    <DetailView style={{ padding: 1 }}>
+    <DetailView
+      style={{ padding: 1 }}
+      css={css`
+        padding: 1;
+        display: flex;
+        flex-direction: column;
+      `}
+    >
       <Row>
         <Col xs={24}>
-          <h2>Edit Component</h2>
+          <Header name={component.name} id={component.id} />
         </Col>
       </Row>
       <Row>
         <Col xs={24}>
-          <form onSubmitCapture={form.handleSubmit}>
-            <FormField form={form} field="name" label="Name" />
-            <FormActions>
-              <Button type="primary" htmlType="submit" loading={isInFlight}>
-                Submit
-              </Button>
-            </FormActions>
-          </form>
+          <SectionHeader
+            loading={isInFlight}
+            title={`Component ${component.name}`}
+            disabled={!schema}
+            onSave={handleUpdate}
+          ></SectionHeader>
         </Col>
       </Row>
+      <ComponentEditor
+        key={component.id}
+        onValuesChanged={setValues}
+        onSchemaChange={setSchema}
+        values={JSON.stringify(component.values)}
+        schema={component.schemaSdl ?? ""}
+        editSchema
+      />
     </DetailView>
+  );
+};
+
+const Header: React.FC<{ name: string; id: string }> = ({ name, id }) => {
+  const [isEdit, , enable, disable] = useToggle();
+  return (
+    <EditableBreadcrumbHeader onEdit={enable} title={name}>
+      <RenameComponentDialog
+        name={name}
+        key={name}
+        id={id}
+        onClose={disable}
+        visible={isEdit}
+      />
+    </EditableBreadcrumbHeader>
   );
 };

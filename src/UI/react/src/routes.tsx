@@ -32,7 +32,7 @@ const routes: RouteDefinition[] = [
     name: "Applications",
     path: paths.applications,
     component: () => <Applications />,
-    icon: UpCircleOutlined,
+    icon: PackageVariantIcon,
   },
   {
     name: "Components",
@@ -75,7 +75,8 @@ export const Routes = {
   navigation: routes,
   applications: {
     new: () => `${paths.applications}/new`,
-    edit: (id?: string) => `${paths.applications}/edit/${id ?? ":id"}`,
+    edit: (id?: string) =>
+      `${paths.applications}/edit/${id ?? ":applicationId"}`,
   },
   applicationParts: {
     edit: (applicationId?: string, id?: string) =>
@@ -85,9 +86,9 @@ export const Routes = {
   },
   applicationPartComponents: {
     edit: (applicationId?: string, partComponentId?: string) =>
-      `${paths.applications}/edit/${applicationId ?? ":applicationId"}/edit/${
-        partComponentId ?? ":partComponentId"
-      }`,
+      `${paths.applications}/edit/${
+        applicationId ?? ":applicationId"
+      }/component/${partComponentId ?? ":partComponentId"}/edit`,
   },
   components: {
     new: () => `${paths.components}/new`,

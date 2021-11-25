@@ -4,8 +4,10 @@ import { Breadcrumb, BreadcrumbItemProps, Button } from "antd";
 import React from "react";
 import { EditIcon } from "../icons/icons";
 
+const empty: any[] = [];
+const noop = () => {};
 export const EditableBreadcrumbHeader: React.FC<{
-  breadcrumbs: Array<{ text: string } & BreadcrumbItemProps>;
+  breadcrumbs?: Array<{ text: string } & BreadcrumbItemProps>;
   title: string;
   onEdit?: () => void;
   isEditable?: boolean;
@@ -13,8 +15,8 @@ export const EditableBreadcrumbHeader: React.FC<{
 }> = ({
   title,
   children,
-  onEdit = () => {},
-  breadcrumbs,
+  onEdit = noop,
+  breadcrumbs = empty,
   isEditable = true,
 }) => {
   return (
@@ -22,7 +24,9 @@ export const EditableBreadcrumbHeader: React.FC<{
       <Title>
         <Breadcrumb>
           {breadcrumbs.map(({ text, ...props }, i) => (
-            <Breadcrumb.Item key={i} {...props}>{text}</Breadcrumb.Item>
+            <Breadcrumb.Item key={i} {...props}>
+              {text}
+            </Breadcrumb.Item>
           ))}
           <Breadcrumb.Item>
             {title}

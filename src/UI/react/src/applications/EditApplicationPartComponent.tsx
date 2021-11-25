@@ -75,7 +75,6 @@ export const EditApplicationPartComponent = () => {
   } = useRouteMatch<{
     partComponentId: string;
   }>();
-  console.log(partComponentId);
   const data = useLazyLoadQuery<EditApplicationPartComponent_GetById_Query>(
     applicationPartComponentQuery,
     {

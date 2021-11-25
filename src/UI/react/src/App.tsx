@@ -4,6 +4,7 @@ import { NavLink, Route, Switch, useRouteMatch } from "react-router-dom";
 import { Layout, Menu } from "antd";
 import { Content } from "antd/lib/layout/layout";
 import { Routes } from "./routes";
+import { css } from "@emotion/react";
 
 function App() {
   const [open, setOpen] = React.useState(true);
@@ -17,7 +18,13 @@ function App() {
         <Navigation open={open} toggleDrawer={toggleDrawer} />
       </Layout.Sider>
       <Layout className="site-layout">
-        <Content style={{ margin: "0 16px" }}>
+        <Content
+          css={css`
+            margin: 0 16px;
+            display: flex;
+            flex-direction: column;
+          `}
+        >
           <Switch>
             {Routes.navigation.map((x) => (
               <Route key={x.path} path={x.path}>

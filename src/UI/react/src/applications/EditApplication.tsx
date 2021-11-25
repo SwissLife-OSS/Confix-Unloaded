@@ -42,10 +42,10 @@ const applicationByIdFragment = graphql`
 `;
 
 export const EditApplication = () => {
-  const route = useRouteMatch<{ id: string }>();
+  const route = useRouteMatch<{ applicationId: string }>();
   const data = useLazyLoadQuery<EditApplication_GetById_Query>(
     applicationByIdQuery,
-    { id: route.params.id }
+    { id: route.params.applicationId }
   );
   const application = useFragment<EditApplication_Application_Fragment$key>(
     applicationByIdFragment,

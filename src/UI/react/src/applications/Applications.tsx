@@ -14,7 +14,7 @@ import { useGoTo } from "../shared/useGoTo";
 import { EditApplicationPart } from "./EditApplicationPart";
 import { EditApplicationPartComponent } from "./EditApplicationPartComponent";
 
-export const Applications: React.FC = (props) => {
+export const Applications: React.FC = () => {
   const [search, setSearch] = useState<string | undefined>();
 
   const applicationId = useApplicationIdFromRoute();
@@ -69,8 +69,9 @@ export const Applications: React.FC = (props) => {
 
 const useApplicationIdFromRoute = (): string | undefined => {
   const routeMatch = useLocation();
-  const match = matchPath<{ id?: string }>(routeMatch.pathname, {
+  const match = matchPath<{ applicationId?: string }>(routeMatch.pathname, {
     path: Routes.applications.edit(),
+    strict: false,
   });
-  return match?.params?.id;
+  return match?.params?.applicationId;
 };
