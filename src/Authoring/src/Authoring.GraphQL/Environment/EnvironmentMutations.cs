@@ -14,44 +14,36 @@ public class EnvironmentMutations
         _environmentService = environmentService;
     }
 
-    public async Task<UpdateEnvironmentPayload> CreateEnvironmentAsync(
+    public async Task<CreateEnvironmentPayload> CreateEnvironmentAsync(
         CreateEnvironmentInput input,
         CancellationToken cancellationToken)
     {
         Environment environment = await _environmentService.CreateAsync(
-            new CreateEnvironmentRequest(input.Name, input.IsSecret)
-            {
-                DefaultValue = input.DefaultValue,
-                Namespace = input.Namespace
-            },
+            input.Name,
             cancellationToken);
 
-        return new UpdateEnvironmentPayload(environment);
+        return new CreateEnvironmentPayload(environment);
     }
 
-    public async Task<UpdateEnvironmentValuePayload> SaveEnvironmentValueAsync(
-        SaveEnvironmentValueInput input,
+    public async Task<RenameEnvironmentPayload> RenameEnvironmentAsync(
+        RenameEnvironmentInput input,
         CancellationToken cancellationToken)
     {
-        EnvironmentValue value = await _environmentService.SaveValueAsync(
-            new SaveEnvironmentValueRequest(input.EnvironmentId, input.Value)
-            {
-                ApplicationId = input.ApplicationId,
-                PartId = input.PartId,
-                ValueId = input.ValueId,
-                EnvironmentId = input.EnvironmentId
-            },
+        var value = await _environmentService.RenameAsync(
+            input.Id,
+            input.Name,
             cancellationToken);
 
-        return new UpdateEnvironmentValuePayload(value);
+        return new RenameEnvironmentPayload(value);
     }
 
-    public async Task<DeleteEnvironmentValuePayload> DeleteEnvironmentValueAsync(
-        DeleteEnvironmentValueInput input,
+    public async Task<DeleteEnvironmentPayload> DeleteEnvironmentByIdAsync(
+        DeleteEnvironmentInput input,
         CancellationToken cancellationToken)
     {
-        Environment environment = await _environmentService.DeleteValueAsync(input.id, cancellationToken);
+        Environment? environment =
+            await _environmentService.DeleteById(input.Id, cancellationToken);
 
-        return new DeleteEnvironmentValuePayload(input.id, environment);
+        return new DeleteEnvironmentPayload(input.Id, environment);
     }
 }

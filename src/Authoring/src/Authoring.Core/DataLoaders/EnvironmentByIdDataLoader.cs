@@ -1,21 +1,23 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Confix.Authoring.Store;
 using GreenDonut;
 
 namespace Confix.Authoring.DataLoaders;
 
 public class EnvironmentByIdDataLoader : BatchDataLoader<Guid, Environment?>
 {
-    private readonly IEnvironmentService _applicationService;
+    private readonly IEnvironmentStore _applicationStore;
 
     public EnvironmentByIdDataLoader(
-        IEnvironmentService applicationService,
+        IEnvironmentStore applicationStore,
         IBatchScheduler batchScheduler)
         : base(batchScheduler)
     {
-        _applicationService = applicationService;
+        _applicationStore = applicationStore;
     }
 
     protected override async Task<IReadOnlyDictionary<Guid, Environment?>> LoadBatchAsync(
@@ -23,7 +25,7 @@ public class EnvironmentByIdDataLoader : BatchDataLoader<Guid, Environment?>
         CancellationToken cancellationToken)
     {
         IEnumerable<Environment> applications =
-            await _applicationService.GetManyByIdAsync(
+            await _applicationStore.GetManyByIdAsync(
                 keys,
                 cancellationToken);
 

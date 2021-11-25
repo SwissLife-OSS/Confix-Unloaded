@@ -8,6 +8,6 @@ using HotChocolate.Types.Relay;
 namespace Confix.Authoring.GraphQL.Applications
 {
     public record UpdateApplicationPartComponentValuesInput(
-        [property: ID(nameof(Component))] Guid PartComponentId,
+        [property: ID(nameof(ApplicationPartComponent))] Guid PartComponentId,
         [property: GraphQLType(typeof(AnyType))] IDictionary<string, object?> Values);
 }

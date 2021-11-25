@@ -8,233 +8,73 @@ using MongoDB.Driver.Linq;
 
 namespace Confix.Authoring.Store.Mongo;
 
-public class EnvironmentStore : IApplicationStore
+public class EnvironmentStore : IEnvironmentStore
 {
     private readonly IConfixAuthorDbContext _dbContext;
 
-    public ApplicationStore(IConfixAuthorDbContext dbContext)
+    public EnvironmentStore(IConfixAuthorDbContext dbContext)
     {
         _dbContext = dbContext;
     }
 
-    public async Task<Application?> GetByIdAsync(
+    public async Task<Environment?> GetByIdAsync(
         Guid id,
         CancellationToken cancellationToken)
     {
-        return await _dbContext.Applications
+        return await _dbContext.Environments
             .AsQueryable()
             .Where(x => x.Id == id)
             .SingleAsync(cancellationToken);
     }
 
-    public Task<Application?> GetByPartIdAsync(
-        Guid partId,
-        CancellationToken cancellationToken) =>
-        _dbContext.Applications.AsQueryable()
-            .FirstOrDefaultAsync(
-                x => x.Parts.Any(p => p.Id == partId),
-                cancellationToken)!;
-
-    public Task<Application?> GetByComponentPartIdAsync(
-        Guid componentPartId,
-        CancellationToken cancellationToken) =>
-        _dbContext.Applications.AsQueryable()
-            .FirstOrDefaultAsync(
-                x => x.Parts.Any(p => p.Components.Any(y => y.Id == componentPartId)),
-                cancellationToken)!;
-
-
-    public async Task<ApplicationPart?> GetPartByIdAsync(
-        Guid id,
-        CancellationToken cancellationToken)
-    {
-        Application? application = await GetByPartIdAsync(id, cancellationToken);
-        return application?.Parts.First(t => t.Id == id);
-    }
-
-    public async Task<IReadOnlyCollection<Application>> GetManyByIdAsync(
+    public async Task<IReadOnlyCollection<Environment>> GetManyByIdAsync(
         IEnumerable<Guid> ids,
         CancellationToken cancellationToken)
     {
-        return await _dbContext.Applications
+        return await _dbContext.Environments
             .AsQueryable()
             .Where(x => ids.Contains(x.Id))
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<IReadOnlyCollection<ApplicationPart>> GetManyPartsByIdAsync(
-        IEnumerable<Guid> ids,
-        CancellationToken cancellationToken)
+    public Task AddAsync(Environment environment, CancellationToken cancellationToken)
     {
-        List<Application> applications =
-            await _dbContext.Applications
-                .AsQueryable()
-                .Where(x => x.Parts.Any(p => ids.Contains(p.Id)))
-                .ToListAsync(cancellationToken);
-
-        return applications
-            .SelectMany(x => x.Parts)
-            .Where(x => ids.Contains(x.Id))
-            .ToList();
+        return _dbContext.Environments.InsertOneAsync(environment, default, cancellationToken);
     }
 
-    public async Task<IReadOnlyCollection<ApplicationPartComponent>>
-        GetManyComponentPartsByIdAsync(
-        IEnumerable<Guid> ids,
-        CancellationToken cancellationToken)
-    {
-        var idSet = ids.ToHashSet();
-        FilterDefinition<Application> filter = Builders<Application>.Filter.In(
-            $"{nameof(Application.Parts)}.{nameof(ApplicationPart.Components)}.{nameof(ApplicationPartComponent.Id)}",
-            idSet);
-
-        List<Application> result =
-            await _dbContext.Applications.Find(filter).ToListAsync(cancellationToken);
-        return result.SelectMany(x => x.Parts)
-            .SelectMany(x => x.Components)
-            .Where(x => idSet.Contains(x.Id))
-            .DistinctBy(x => x.Id)
-            .ToList();
-    }
-
-    public IQueryable<Application> Query() =>
-        _dbContext.Applications.AsQueryable();
-
-    public async Task<IEnumerable<Application>> GetAllAsync(CancellationToken cancellationToken)
-    {
-        return await _dbContext.Applications
-            .AsQueryable()
-            .ToListAsync(cancellationToken);
-    }
-
-    public async Task AddAsync(
-        Application application,
-        CancellationToken cancellationToken)
-    {
-        if (application is null)
-        {
-            throw new ArgumentNullException(nameof(application));
-        }
-
-        await _dbContext.Applications.InsertOneAsync(
-            application,
-            options: null,
-            cancellationToken);
-    }
-
-    public async Task ReplaceAsync(
-        Application application,
-        CancellationToken cancellationToken)
-    {
-        if (application is null)
-        {
-            throw new ArgumentNullException(nameof(application));
-        }
-
-        await _dbContext.Applications.ReplaceOneAsync(
-            x => x.Id == application.Id,
-            application,
-            new ReplaceOptions { IsUpsert = false },
-            cancellationToken);
-    }
-
-    public async Task RenameAsync(
-        Guid applicationId,
+    public async Task<Environment?> RenameAsync(
+        Guid environmentId,
         string name,
         CancellationToken cancellationToken)
     {
         if (string.IsNullOrEmpty(name))
         {
-            throw new ArgumentNullException(nameof(applicationId));
+            throw new ArgumentNullException(nameof(environmentId));
         }
 
-        UpdateResult result = await _dbContext.Applications.UpdateOneAsync(
-            Builders<Application>.Filter.Eq(t => t.Id, applicationId),
-            Builders<Application>.Update.Set(t => t.Name, name),
+        Environment? result = await _dbContext.Environments.FindOneAndUpdateAsync(
+            Builders<Environment>.Filter.Eq(t => t.Id, environmentId),
+            Builders<Environment>.Update.Set(t => t.Name, name),
             cancellationToken: cancellationToken);
 
-        if (result.MatchedCount == 0)
-        {
-            throw new EntityIdInvalidException(nameof(Application), applicationId);
-        }
+        return result;
     }
 
-    public async Task RenamePartAsync(
-        Guid applicationPartId,
-        string name,
+    public async Task<Environment?> RemoveByIdAsync(
+        Guid environmentId,
         CancellationToken cancellationToken)
     {
-        if (string.IsNullOrEmpty(name))
-        {
-            throw new ArgumentNullException(nameof(applicationPartId));
-        }
+        FilterDefinition<Environment>? filter =
+            Builders<Environment>.Filter.Eq(x => x.Id, environmentId);
 
-        Application application =
-            await _dbContext.Applications
-                .AsQueryable()
-                .FirstOrDefaultAsync(
-                    x => x.Parts.Any(p => p.Id == applicationPartId),
-                    cancellationToken);
-
-        if (application is null)
-        {
-            throw new EntityIdInvalidException(nameof(ApplicationPart), applicationPartId);
-        }
-
-        application.Parts.First(t => t.Id == applicationPartId).Name = name;
-        await ReplaceAsync(application, cancellationToken);
+        return await _dbContext.Environments
+            .FindOneAndDeleteAsync(filter, default, cancellationToken);
     }
 
-    public async Task<Application?> AddPartToApplicationAsync(
-        Guid applicationId,
-        string name,
-        CancellationToken cancellationToken)
+    public IQueryable<Environment> SearchAsync(
+        string? search,
+        CancellationToken cancellationToken = default)
     {
-        if (string.IsNullOrEmpty(name))
-        {
-            throw new ArgumentNullException(nameof(applicationId));
-        }
-
-        ApplicationPart part = new()
-        {
-            Id = Guid.NewGuid(),
-            Name = name,
-            Components = Array.Empty<ApplicationPartComponent>()
-        };
-
-        FilterDefinition<Application> filter = Builders<Application>.Filter.Eq(x => x.Id, applicationId);
-        UpdateDefinition<Application> update = Builders<Application>.Update.AddToSet(x => x.Parts, part);
-        FindOneAndUpdateOptions<Application> options = new()
-        {
-            IsUpsert = false, ReturnDocument = ReturnDocument.After
-        };
-
-        Application? application = await _dbContext.Applications
-            .FindOneAndUpdateAsync(filter, update, options, cancellationToken);
-
-        return application;
-    }
-
-    public async Task<Application?> RemovePartAsync(
-        Guid applicationPartId,
-        CancellationToken cancellationToken)
-    {
-        FilterDefinition<Application> filter = Builders<Application>.Filter
-            .Eq($"{nameof(Application.Parts)}.{nameof(ApplicationPart.Id)}", applicationPartId);
-
-        FilterDefinition<ApplicationPart> pullFilter =
-            Builders<ApplicationPart>.Filter.Eq(x => x.Id, applicationPartId);
-
-        UpdateDefinition<Application> update = Builders<Application>.Update.PullFilter(x => x.Parts, pullFilter);
-
-        FindOneAndUpdateOptions<Application> options = new()
-        {
-            IsUpsert = false, ReturnDocument = ReturnDocument.After
-        };
-
-        Application? application = await _dbContext.Applications
-            .FindOneAndUpdateAsync(filter, update, options, cancellationToken);
-
-        return application;
+        throw new NotImplementedException();
     }
 }

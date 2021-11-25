@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -241,7 +242,7 @@ namespace Confix.Authoring
             ApplicationPartComponent? applicationPartComponent = application
                 ?.Parts
                 .SelectMany(x => x.Components)
-                .FirstOrDefault(x => x.ComponentId == partComponentId);
+                .FirstOrDefault(x => x.Id == partComponentId);
 
             if (application is null || applicationPartComponent is null)
             {

@@ -98,7 +98,7 @@ namespace Confix.Authoring.Internal
 
                 if (value.TryGetValue(field.Name, out var fieldValue))
                 {
-                    Validate(fieldValue, field.Type, path, schemaViolations);
+                    Validate(fieldValue, field.Type, path.Append(field.Name), schemaViolations);
                 }
                 else if (field.Type.IsNonNullType())
                 {

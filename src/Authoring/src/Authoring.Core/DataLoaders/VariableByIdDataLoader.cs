@@ -3,21 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Confix.Authoring.Store;
 using GreenDonut;
-using HotChocolate.Fetching;
 
 namespace Confix.Authoring.DataLoaders
 {
     public class VariableByIdDataLoader : BatchDataLoader<Guid, Variable?>
     {
-        private readonly IVariableService _variableService;
+        private readonly IVariableStore _variableStore;
 
         public VariableByIdDataLoader(
-            IVariableService variableService,
+            IVariableStore variableStore,
             IBatchScheduler batchScheduler)
             : base(batchScheduler)
         {
-            _variableService = variableService;
+            _variableStore = variableStore;
         }
 
         protected override async Task<IReadOnlyDictionary<Guid, Variable?>> LoadBatchAsync(
@@ -25,7 +25,7 @@ namespace Confix.Authoring.DataLoaders
             CancellationToken cancellationToken)
         {
             IEnumerable<Variable> variables =
-                await _variableService.GetManyAsync(
+                await _variableStore.GetManyAsync(
                     keys,
                     cancellationToken);
 

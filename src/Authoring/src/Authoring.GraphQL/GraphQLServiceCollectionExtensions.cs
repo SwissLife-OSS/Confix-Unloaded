@@ -54,6 +54,7 @@ namespace Confix.Authoring.GraphQL
                 .AddQueryType()
                 .AddTypeExtension<ApplicationQueries>()
                 .AddTypeExtension<VariableQueries>()
+                .AddTypeExtension<EnvironmentQueries>()
                 .AddTypeExtension<ComponentQueries>();
 
             return builder;
@@ -65,6 +66,7 @@ namespace Confix.Authoring.GraphQL
                 .AddMutationType()
                 .AddTypeExtension<ApplicationMutations>()
                 .AddTypeExtension<VariableMutations>()
+                .AddTypeExtension<EnvironmentMutations>()
                 .AddTypeExtension<ComponentMutations>();
 
             return builder;
@@ -101,10 +103,13 @@ namespace Confix.Authoring.GraphQL
                 .AddDataLoader<VariableByIdDataLoader>()
                 .AddDataLoader<ComponentByIdDataLoader>()
                 .AddDataLoader<ApplicationPartComponentByIdDataloader>()
+                .AddDataLoader<EnvironmentByIdDataLoader>()
                 // add additional dataloader lookups
                 .Services
                 .AddScoped<IDataLoader<Guid, Component?>>(
-                    sp => sp.GetRequiredService<ComponentByIdDataLoader>());
+                    sp => sp.GetRequiredService<ComponentByIdDataLoader>())
+                .AddScoped<IDataLoader<Guid, Environment?>>(
+                    sp => sp.GetRequiredService<EnvironmentByIdDataLoader>());
 
             return builder;
         }

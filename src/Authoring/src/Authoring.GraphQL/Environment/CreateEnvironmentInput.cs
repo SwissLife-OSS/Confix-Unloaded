@@ -1,3 +1,3 @@
 namespace Confix.Authoring.GraphQL;
 
-public record CreateEnvironmentInput(string name);
+public record CreateEnvironmentInput(string Name);

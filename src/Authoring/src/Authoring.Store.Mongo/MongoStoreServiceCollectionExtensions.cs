@@ -6,8 +6,7 @@ namespace Confix.Authoring.Store.Mongo
 {
     public static class MongoStoreServiceCollectionExtensions
     {
-        public static IConfixServerBuilder AddMongoStore(
-            this IConfixServerBuilder builder)
+        public static IConfixServerBuilder AddMongoStore(this IConfixServerBuilder builder)
         {
             builder.Services.AddMongoStore(builder.Configuration);
 
@@ -23,6 +22,7 @@ namespace Confix.Authoring.Store.Mongo
 
             services.AddSingleton<IConfixAuthorDbContext>(new ConfixAuthorDbContext(options));
             services.AddSingleton<IApplicationStore, ApplicationStore>();
+            services.AddSingleton<IEnvironmentStore, EnvironmentStore>();
             services.AddSingleton<IComponentStore, ComponentStore>();
             services.AddSingleton<IVariableStore, VariableStore>();
             services.AddSingleton<IVariableValueStore, VariableValueStore>();

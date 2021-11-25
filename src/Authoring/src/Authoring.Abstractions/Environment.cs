@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Confix.Authoring.Store;
+namespace Confix.Authoring;
 
 public class Environment
 {

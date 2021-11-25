@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Confix.Authoring.Store
 {
+    // <summary>
     /// <summary>
     /// Represents the application store abstraction.
     /// </summary>

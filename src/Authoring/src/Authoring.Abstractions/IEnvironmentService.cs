@@ -1,7 +1,7 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Environment = Confix.Authoring.Store.Environment;
 
 namespace Confix.Authoring;
 
@@ -10,13 +10,21 @@ public interface IEnvironmentService
     Task<Environment?> GetByIdAsync(
         Guid id,
         CancellationToken cancellationToken = default);
+
     Task<Environment> CreateAsync(
         string name,
         CancellationToken cancellationToken = default);
-        
-    Task RenameAsync(
+
+    Task<Environment?> RenameAsync(
         Guid environmentId,
         string name,
         CancellationToken cancellationToken = default);
-        
+
+    Task<Environment?> DeleteById(
+        Guid environmentId,
+        CancellationToken cancellationToken = default);
+
+    IQueryable<Environment> SearchAsync(
+        string? search,
+        CancellationToken cancellationToken = default);
 }

@@ -1,10 +1,10 @@
 ﻿namespace Confix.Authoring.GraphQL;
 
-public class UpdateEnvironmentNamePayload
+public class RenameEnvironmentPayload
 {
     public Environment? Environment { get; }
 
-    public UpdateEnvironmentNamePayload(Environment environment)
+    public RenameEnvironmentPayload(Environment? environment)
     {
         Environment = environment;
     }

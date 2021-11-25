@@ -5,20 +5,19 @@ using System.Threading;
 using System.Threading.Tasks;
 using Confix.Authoring.Store;
 using GreenDonut;
-using HotChocolate.Fetching;
 
 namespace Confix.Authoring.DataLoaders
 {
     public class ApplicationByIdDataLoader : BatchDataLoader<Guid, Application?>
     {
-        private readonly IApplicationService _applicationService;
+        private readonly IApplicationStore _applicationStore;
 
         public ApplicationByIdDataLoader(
-            IApplicationService applicationService,
+            IApplicationStore applicationStore,
             IBatchScheduler batchScheduler)
             : base(batchScheduler)
         {
-            _applicationService = applicationService;
+            _applicationStore = applicationStore;
         }
 
         protected override async Task<IReadOnlyDictionary<Guid, Application?>> LoadBatchAsync(
@@ -26,7 +25,7 @@ namespace Confix.Authoring.DataLoaders
             CancellationToken cancellationToken)
         {
             IEnumerable<Application> applications =
-                await _applicationService.GetManyByIdAsync(
+                await _applicationStore.GetManyByIdAsync(
                     keys,
                     cancellationToken);
 

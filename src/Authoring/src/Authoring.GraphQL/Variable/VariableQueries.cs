@@ -27,7 +27,7 @@ namespace Confix.Authoring.GraphQL
             [ID(nameof(Variable))] Guid id,
             CancellationToken cancellationToken)
         {
-            return await _variableService.GetByIdAsync(id,cancellationToken);
+            return await _variableService.GetByIdAsync(id, cancellationToken);
         }
     }
 }
