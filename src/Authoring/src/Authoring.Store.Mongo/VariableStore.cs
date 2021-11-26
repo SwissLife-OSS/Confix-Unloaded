@@ -17,8 +17,7 @@ namespace Confix.Authoring.Store.Mongo
             _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<Variable>> GetAllAsync(
-            CancellationToken cancellationToken)
+        public async Task<IEnumerable<Variable>> GetAllAsync(CancellationToken cancellationToken)
         {
             return await _dbContext.Variables.AsQueryable()
                 .ToListAsync(cancellationToken);
@@ -66,5 +65,7 @@ namespace Confix.Authoring.Store.Mongo
 
             return Variable;
         }
+
+        public IQueryable<Variable> Query() => _dbContext.Variables.AsQueryable();
     }
 }

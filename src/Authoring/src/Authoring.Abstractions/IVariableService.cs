@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -7,15 +8,38 @@ namespace Confix.Authoring
 {
     public interface IVariableService
     {
-        Task<Variable> CreateAsync(CreateVariableRequest request, CancellationToken cancellationToken);
+        Task<Variable> CreateAsync(
+            CreateVariableRequest request,
+            CancellationToken cancellationToken);
+
         Task<Variable> DeleteValueAsync(Guid id, CancellationToken cancellationToken);
         Task<IEnumerable<Variable>> GetAllAsync(CancellationToken cancellationToken);
 
+        IQueryable<Variable> SearchVariables(string? search);
+
         Task<Variable> GetByIdAsync(Guid id, CancellationToken cancellationToken);
-        Task<IEnumerable<Variable>> GetManyAsync(IEnumerable<Guid> ids, CancellationToken cancellationToken);
-        Task<IEnumerable<VariableValue>> GetValuesAsync(GetVariableValuesRequest request, CancellationToken cancellationToken);
-        Task<IEnumerable<VariableValue>> GetValuesAsync(Variable variable, GetVariableValuesRequest request, CancellationToken cancellationToken);
-        Task<VariableValue> SaveValueAsync(SaveVariableValueRequest request, CancellationToken cancellationToken);
+
+        Task<IEnumerable<Variable>> GetManyAsync(
+            IEnumerable<Guid> ids,
+            CancellationToken cancellationToken);
+
+        Task<IEnumerable<VariableValue>> GetValuesAsync(
+            GetVariableValuesRequest request,
+            CancellationToken cancellationToken);
+
+        Task<IEnumerable<VariableValue>> GetValuesAsync(
+            Variable variable,
+            GetVariableValuesRequest request,
+            CancellationToken cancellationToken);
+
+        Task<VariableValue> SaveValueAsync(
+            SaveVariableValueRequest request,
+            CancellationToken cancellationToken);
+
+        Task<Variable> RenameAsync(
+            Guid id,
+            string name,
+            CancellationToken cancellationToken);
     }
 
     public interface IVariableCryptoProvider

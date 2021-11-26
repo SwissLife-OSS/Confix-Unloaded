@@ -1,6 +1,6 @@
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
-import { Input, InputProps, Row, Select } from "antd";
+import { Checkbox, Input, InputProps, Row, Select } from "antd";
 import React, { useCallback } from "react";
 import { Colors } from "./colors";
 import { UseFormik } from "./UseFormik";
@@ -67,7 +67,33 @@ export function FormField<TValues>(props: {
       <Input
         id={String(field)}
         name={String(field)}
-        value={String(form.values[field])}
+        value={
+          form.values[field] === null || form.values[field] === undefined
+            ? undefined
+            : String(form.values[field])
+        }
+        onChange={form.handleChange}
+      />
+    </Field>
+  );
+}
+
+export function FormCheckbox<TValues>(props: {
+  form: UseFormik<TValues>;
+  field: keyof UseFormik<TValues>["values"];
+  label: string;
+}): React.ReactElement {
+  const { form, field, label } = props;
+  return (
+    <Field
+      name={String(field)}
+      label={label}
+      isError={(form.touched[field] && Boolean(form.errors[field])) || false}
+    >
+      <Checkbox
+        id={String(field)}
+        name={String(field)}
+        checked={Boolean(form.values[field])}
         onChange={form.handleChange}
       />
     </Field>

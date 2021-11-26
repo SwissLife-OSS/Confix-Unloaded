@@ -11,6 +11,7 @@ import {
   ToyBrickOutlineIcon,
   VariablesIcon,
 } from "./icons/icons";
+import { Variables } from "./variables/Variables";
 
 export interface RouteDefinition {
   name: string;
@@ -44,7 +45,7 @@ const routes: RouteDefinition[] = [
   {
     name: "Variables",
     path: paths.variables,
-    component: () => <div>bar</div>,
+    component: () => <Variables />,
     icon: VariablesIcon,
   },
   {
@@ -99,5 +100,9 @@ export const Routes = {
     overview: () => `${paths.environments}`,
     new: () => `${paths.environments}/new`,
     edit: (id?: string) => `${paths.environments}/edit/${id ?? ":id"}`,
+  },
+  variables: {
+    new: () => `${paths.variables}/new`,
+    edit: (id?: string) => `${paths.variables}/edit/${id ?? ":id"}`,
   },
 };

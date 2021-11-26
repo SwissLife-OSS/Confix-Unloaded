@@ -8,10 +8,9 @@ import {
   mdiChevronLeft,
   mdiCircleOutline,
   mdiCircleSlice8,
+  mdiClose,
   mdiCloudUpload,
   mdiCogOutline,
-  mdiDelete,
-  mdiDeleteCircleOutline,
   mdiDeleteOutline,
   mdiFileTreeOutline,
   mdiMagnify,
@@ -52,6 +51,7 @@ export const ToyBrickOutlineIcon = createIcon(mdiToyBrickOutline);
 export const VariablesIcon = createIcon(mdiVariable);
 export const ServerIcon = createIcon(mdiServer);
 export const CheckIcon = createIcon(mdiCheck);
+export const NotCheckIcon = createIcon(mdiClose);
 export const EditIcon = createIcon(mdiPencil);
 export const CancelIcon = createIcon(mdiCancel);
 export const PublishIcon = createIcon(mdiCloudUpload);

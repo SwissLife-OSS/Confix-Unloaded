@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Confix.Authoring.DataLoaders;
 using Confix.Authoring.Store;
+using HotChocolate;
 
 namespace Confix.Authoring.GraphQL
 {
@@ -26,7 +27,7 @@ namespace Confix.Authoring.GraphQL
         }
 
         public async Task<Application?> GetApplicationAsync(
-            VariableValue value,
+            [Parent] VariableValue value,
             ApplicationByIdDataLoader applicationById,
             CancellationToken cancellationToken)
         {
@@ -35,14 +36,13 @@ namespace Confix.Authoring.GraphQL
                 return await applicationById.LoadAsync(
                     value.Key.ApplicationId.Value,
                     cancellationToken);
-
             }
 
             return null;
         }
 
         public async Task<ApplicationPart?> GetApplicationPartAsync(
-            VariableValue value,
+            [Parent] VariableValue value,
             ApplicationPartByIdDataLoader applicationPartById,
             CancellationToken cancellationToken)
         {
@@ -57,7 +57,7 @@ namespace Confix.Authoring.GraphQL
         }
 
         public Task<IEnumerable<VariableValue>> GetVariableValuesAsync(
-            Variable variable,
+            [Parent] Variable variable,
             CancellationToken cancellationToken)
         {
             return _variableService.GetValuesAsync(

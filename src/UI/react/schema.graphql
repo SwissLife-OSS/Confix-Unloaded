@@ -347,6 +347,7 @@ type Mutation {
   createVariable(input: CreateVariableInput!): UpdateVariablePayload!
   saveVariableValue(input: SaveVariableValueInput!): UpdateVariableValuePayload!
   deleteVariableValue(input: DeleteVariableValueInput!): DeleteVariableValuePayload!
+  renameVariable(input: RenameVariableInput!): RenameVariablePayload!
   createEnvironment(input: CreateEnvironmentInput!): CreateEnvironmentPayload!
   renameEnvironment(input: RenameEnvironmentInput!): RenameEnvironmentPayload!
   removeEnvironmentById(input: RemoveEnvironmentInput!): RemoveEnvironmentPayload!
@@ -421,6 +422,23 @@ type Query {
   applicationPartById(id: ID!): ApplicationPart
   applicationPartComponentById(partComponentId: ID!): ApplicationPartComponent
   variables: [Variable!]!
+  searchVariables(
+    search: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+  ): SearchVariablesConnection
   variable(id: ID!): Variable!
   searchEnvironments(
     search: String
@@ -547,6 +565,16 @@ type RenameEnvironmentPayload {
   query: Query!
 }
 
+input RenameVariableInput {
+  id: UUID!
+  name: String!
+}
+
+type RenameVariablePayload {
+  variable: Variable
+  query: Query!
+}
+
 input SaveVariableValueInput {
   variableId: UUID!
   value: String!
@@ -582,6 +610,27 @@ type SearchEnvironmentsEdge {
 
   """The item at the end of the edge."""
   node: Environment!
+}
+
+"""A connection to a list of items."""
+type SearchVariablesConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [SearchVariablesEdge!]
+
+  """A flattened list of the nodes."""
+  nodes: [Variable!]
+}
+
+"""An edge in a connection."""
+type SearchVariablesEdge {
+  """A cursor for use in pagination."""
+  cursor: String!
+
+  """The item at the end of the edge."""
+  node: Variable!
 }
 
 input StringOperationFilterInput {

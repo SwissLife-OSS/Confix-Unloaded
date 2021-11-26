@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 import {
   useLazyLoadQuery,
   usePaginationFragment,
@@ -12,7 +12,7 @@ import { EnvironmentsList_EnvironmentEdge$key } from "./__generated__/Environmen
 import { EnvironmentsList_Environments$key } from "./__generated__/EnvironmentsList_Environments.graphql";
 import styled from "@emotion/styled";
 import { Button, List } from "antd";
-import { AddIcon, DeleteIcon } from "../icons/icons";
+import { DeleteIcon } from "../icons/icons";
 import { Colors } from "../shared/colors";
 import { useToggle } from "../shared/useToggle";
 import { RemoveEnvironmentDialog } from "./controls/dialogs/RemoveEnvironmentDialog";
