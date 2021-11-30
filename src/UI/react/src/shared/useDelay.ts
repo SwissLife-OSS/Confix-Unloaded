@@ -6,5 +6,6 @@ export const useDelay = (cb: () => void, delay: number) => {
       await new Promise((x) => setTimeout(x, delay));
       cb();
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 };

@@ -4,7 +4,7 @@ import {
   useLazyLoadQuery,
   useRelayEnvironment,
 } from "react-relay";
-import { Col, Descriptions, Empty, Form, Row, Select, Spin } from "antd";
+import { Col, Descriptions, Empty, Row, Select, Spin } from "antd";
 import { DetailView } from "../shared/DetailView";
 import { graphql } from "babel-plugin-relay/macro";
 import { useRouteMatch } from "react-router";
@@ -16,7 +16,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { EditVariable_Variable$key } from "./__generated__/EditVariable_Variable.graphql";
 import { css } from "@emotion/react";
 import { CheckIcon, NotCheckIcon } from "../icons/icons";
-import { Field, FieldInput } from "../shared/FormField";
+import { Field } from "../shared/FormField";
 import { useDebounce } from "../shared/debounce";
 import { EditVariableApplicationsQuery } from "./__generated__/EditVariableApplicationsQuery.graphql";
 import { ApplicationsList_applicationsEdge$key } from "../applications/__generated__/ApplicationsList_applicationsEdge.graphql";

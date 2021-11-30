@@ -1,16 +1,10 @@
-import { useFormik } from "formik";
 import React from "react";
 import { Button, Col, Row } from "antd";
 import { useMutation } from "react-relay";
 import { DetailView } from "../shared/DetailView";
 import { FormActions, FormCheckbox, FormField } from "../shared/FormField";
-import { variableSchema } from "./variableSchema";
 import { graphql } from "babel-plugin-relay/macro";
-import {
-  withErrorNotifications,
-  withOnSuccess,
-  withSuccessMessage,
-} from "../shared/pipeCommitFn";
+import { withOnSuccess, withSuccessMessage } from "../shared/pipeCommitFn";
 import { useConnectionId } from "../shared/useConnectionId";
 import { useGoTo } from "../shared/useGoTo";
 import { Routes } from "../routes";

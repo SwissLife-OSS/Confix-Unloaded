@@ -1,4 +1,3 @@
-import { UpCircleOutlined } from "@ant-design/icons";
 import { Applications } from "./applications/Applications";
 import { Components } from "./components/Components";
 import { Environments } from "./environment/Environments";

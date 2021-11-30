@@ -6,5 +6,6 @@ export const useMultiplexer = <TArgs>(
 ): ((...a: TArgs[]) => void) => {
   return useCallback((...a) => {
     fns.forEach((x) => x(...a));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
 };

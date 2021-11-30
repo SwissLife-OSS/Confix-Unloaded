@@ -11,12 +11,8 @@ import { VariablesListQuery } from "./__generated__/VariablesListQuery.graphql";
 import { VariablesList_VariableEdge$key } from "./__generated__/VariablesList_VariableEdge.graphql";
 import { VariablesList_Variables$key } from "./__generated__/VariablesList_Variables.graphql";
 import styled from "@emotion/styled";
-import { Button, List } from "antd";
-import { DeleteIcon } from "../icons/icons";
+import { List } from "antd";
 import { Colors } from "../shared/colors";
-import { useToggle } from "../shared/useToggle";
-import { useGoTo } from "../shared/useGoTo";
-import { Routes } from "../routes";
 
 const VariablesQuery = graphql`
   query VariablesListQuery($cursor: String, $count: Int, $search: String) {

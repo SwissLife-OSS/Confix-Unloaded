@@ -141,7 +141,7 @@ export function TagSelectField<TValues>(props: {
     (value: string[], option: any) => {
       form.setFieldValue(String(field), value);
     },
-    [form]
+    [field, form]
   );
   return (
     <Field
