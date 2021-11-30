@@ -13,14 +13,6 @@ export type EditVariableQueryResponse = {
         readonly id: string;
         readonly " $fragmentRefs": FragmentRefs<"EditVariable_Variable">;
     };
-    readonly searchEnvironments: {
-        readonly edges: ReadonlyArray<{
-            readonly node: {
-                readonly id: string;
-                readonly name: string;
-            };
-        }> | null;
-    } | null;
 };
 export type EditVariableQuery = {
     readonly response: EditVariableQueryResponse;
@@ -37,14 +29,6 @@ query EditVariableQuery(
     id
     ...EditVariable_Variable
   }
-  searchEnvironments {
-    edges {
-      node {
-        id
-        name
-      }
-    }
-  }
 }
 
 fragment EditVariable_Variable on Variable {
@@ -57,7 +41,7 @@ fragment EditVariable_Variable on Variable {
     application {
       id
     }
-    part {
+    applicationPart {
       id
     }
     id
@@ -93,49 +77,7 @@ v2 = {
   "name": "id",
   "storageKey": null
 },
-v3 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "name",
-  "storageKey": null
-},
-v4 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "SearchEnvironmentsConnection",
-  "kind": "LinkedField",
-  "name": "searchEnvironments",
-  "plural": false,
-  "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "SearchEnvironmentsEdge",
-      "kind": "LinkedField",
-      "name": "edges",
-      "plural": true,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "Environment",
-          "kind": "LinkedField",
-          "name": "node",
-          "plural": false,
-          "selections": [
-            (v2/*: any*/),
-            (v3/*: any*/)
-          ],
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
-    }
-  ],
-  "storageKey": null
-},
-v5 = [
+v3 = [
   (v2/*: any*/)
 ];
 return {
@@ -161,8 +103,7 @@ return {
           }
         ],
         "storageKey": null
-      },
-      (v4/*: any*/)
+      }
     ],
     "type": "Query",
     "abstractKey": null
@@ -182,7 +123,13 @@ return {
         "plural": false,
         "selections": [
           (v2/*: any*/),
-          (v3/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "name",
+            "storageKey": null
+          },
           {
             "alias": null,
             "args": null,
@@ -219,7 +166,7 @@ return {
                 "kind": "LinkedField",
                 "name": "application",
                 "plural": false,
-                "selections": (v5/*: any*/),
+                "selections": (v3/*: any*/),
                 "storageKey": null
               },
               {
@@ -227,9 +174,9 @@ return {
                 "args": null,
                 "concreteType": "ApplicationPart",
                 "kind": "LinkedField",
-                "name": "part",
+                "name": "applicationPart",
                 "plural": false,
-                "selections": (v5/*: any*/),
+                "selections": (v3/*: any*/),
                 "storageKey": null
               },
               (v2/*: any*/),
@@ -277,19 +224,18 @@ return {
           }
         ],
         "storageKey": null
-      },
-      (v4/*: any*/)
+      }
     ]
   },
   "params": {
-    "cacheID": "7169961ff0fb168272383e586dcd1359",
+    "cacheID": "62cae485fcdebd825ab0165e9e6fc290",
     "id": null,
     "metadata": {},
     "name": "EditVariableQuery",
     "operationKind": "query",
-    "text": "query EditVariableQuery(\n  $id: ID!\n) {\n  variable(id: $id) {\n    id\n    ...EditVariable_Variable\n  }\n  searchEnvironments {\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment EditVariable_Variable on Variable {\n  id\n  name\n  namespace\n  isSecret\n  state\n  values {\n    application {\n      id\n    }\n    part {\n      id\n    }\n    id\n    value\n    encryption {\n      keyProvider\n      key\n      algorithm\n    }\n  }\n}\n"
+    "text": "query EditVariableQuery(\n  $id: ID!\n) {\n  variable(id: $id) {\n    id\n    ...EditVariable_Variable\n  }\n}\n\nfragment EditVariable_Variable on Variable {\n  id\n  name\n  namespace\n  isSecret\n  state\n  values {\n    application {\n      id\n    }\n    applicationPart {\n      id\n    }\n    id\n    value\n    encryption {\n      keyProvider\n      key\n      algorithm\n    }\n  }\n}\n"
   }
 };
 })();
-(node as any).hash = 'e7d238e9320558842a520f104863abb8';
+(node as any).hash = '38837be259c52dc88c6a02d558b61b48';
 export default node;

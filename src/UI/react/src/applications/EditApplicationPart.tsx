@@ -4,7 +4,18 @@ import { DetailView } from "../shared/DetailView";
 import { graphql } from "babel-plugin-relay/macro";
 import { useRouteMatch } from "react-router";
 import { EditApplicationPart_GetById_Query } from "./__generated__/EditApplicationPart_GetById_Query.graphql";
-import { Button, Card, Col, Descriptions, Empty, Row } from "antd";
+import {
+  Button,
+  Card,
+  Col,
+  Descriptions,
+  Empty,
+  List,
+  Row,
+  Tabs,
+  Tag,
+  Typography,
+} from "antd";
 import styled from "@emotion/styled";
 import {
   EditableBreadcrumbHeader,
@@ -14,11 +25,24 @@ import { DeleteIcon, EditIcon, PublishIcon } from "../icons/icons";
 import { useToggle } from "../shared/useToggle";
 import { ApplicationPartComponentSectionHeader } from "./components/ApplicationPartComponentSectionHeader";
 import { EditApplicationPartComponent_component$key } from "./__generated__/EditApplicationPartComponent_component.graphql";
-import { EditApplicationPart_fragment$key } from "./__generated__/EditApplicationPart_fragment.graphql";
+import {
+  EditApplicationPart_fragment,
+  EditApplicationPart_fragment$key,
+} from "./__generated__/EditApplicationPart_fragment.graphql";
 import { RenameApplicationPartDialog } from "./dialogs/RenameApplicationPartDialog";
 import { RemoveComponentFromApplicationPartDialog } from "./dialogs/RemoveComponentFromApplicationPartDialog";
 import { useGoTo } from "../shared/useGoTo";
 import { Routes } from "../routes";
+import {
+  VariableOption,
+  VariablesSelect,
+} from "../variables/controls/VariableSelect";
+import { DefaultSuspense } from "../shared/DefaultSuspense";
+import { EditApplicationPartVariableOverviewQuery } from "./__generated__/EditApplicationPartVariableOverviewQuery.graphql";
+import { useCallback, useMemo, useState } from "react";
+import { groupBy } from "../shared/groupBy";
+import { VariableEditor } from "../variables/controls/VariableEditor";
+import { ColorTag } from "../shared/ColorTag";
 
 const applicationByIdQuery = graphql`
   query EditApplicationPart_GetById_Query($id: ID!) {
@@ -95,25 +119,100 @@ export const EditApplicationPart = () => {
           />
         </Col>
         <Col xs={24}>
-          {components.length === 0 ? (
-            <Empty description="No Application Parts"></Empty>
-          ) : (
-            <Row gutter={[16, 16]}>
-              {(components.map((x) => ({ ...x })) ?? []).map((item) => (
-                <Col span={8} key={item.definition.id}>
-                  <ApplicationPartComponentsDisplay
-                    applicationId={applicationId}
-                    part={item}
-                    componentPartId={item.id}
-                  />
-                </Col>
-              ))}
-            </Row>
-          )}
+          <Tabs defaultActiveKey="1">
+            <Tabs.TabPane tab="Parts" key="1">
+              <ApplicationParts
+                applicationId={applicationId}
+                components={components}
+              />
+            </Tabs.TabPane>
+            <Tabs.TabPane tab="Variables" key="2">
+              <Variables
+                applicationId={applicationId}
+                applicationPartId={applicationPartById.id}
+              />
+            </Tabs.TabPane>
+          </Tabs>
         </Col>
       </Row>
     </DetailView>
   );
+};
+
+const Variables: React.FC<{
+  applicationId: string;
+  applicationPartId: string;
+}> = ({ applicationId, applicationPartId }) => {
+  const [selected, setSelected] = useState<VariableOption>();
+  const handleVariableValueEditClick = useCallback(
+    (id: string, name: string) => {
+      setSelected({ label: name, value: id });
+    },
+    []
+  );
+  const [fetchKey, setFetchKey] = useState(0);
+  const refresh = useCallback(() => {
+    setFetchKey((p) => (p += 1));
+  }, [setFetchKey]);
+  return (
+    <>
+      <Row gutter={[16, 16]}>
+        <Col xs={24}>
+          <Typography.Title level={4}>Configure Variables</Typography.Title>
+        </Col>
+        <Col xs={24}>
+          <VariablesSelect onChange={setSelected} value={selected} />
+        </Col>
+        {!!selected && (
+          <Col xs={24}>
+            <DefaultSuspense>
+              <VariableEditor
+                applicationId={applicationId}
+                applicationPartId={applicationPartId}
+                variableId={selected.value}
+                refresh={refresh}
+              />
+            </DefaultSuspense>
+          </Col>
+        )}
+        <Col xs={24}>
+          <Typography.Title level={4}>Variable Overview</Typography.Title>
+        </Col>
+        <Col xs={24}>
+          <DefaultSuspense>
+            <VariableValueOverview
+              onEdit={handleVariableValueEditClick}
+              applicationPartId={applicationPartId}
+              fetchKey={fetchKey}
+            />
+          </DefaultSuspense>
+        </Col>
+      </Row>
+    </>
+  );
+};
+
+const ApplicationParts: React.FC<{
+  applicationId: string;
+  components: EditApplicationPart_fragment["components"];
+}> = ({ applicationId, components }) => {
+  if (components.length === 0) {
+    return <Empty description="No Application Parts"></Empty>;
+  } else {
+    return (
+      <Row gutter={[16, 16]}>
+        {(components.map((x) => ({ ...x })) ?? []).map((item) => (
+          <Col span={8} key={item.definition.id}>
+            <ApplicationPartComponentsDisplay
+              applicationId={applicationId}
+              part={item}
+              componentPartId={item.id}
+            />
+          </Col>
+        ))}
+      </Row>
+    );
+  }
 };
 
 const applicationPartComponentFragment = graphql`
@@ -195,5 +294,75 @@ const Header: React.FC<{
         visible={isEdit}
       />
     </EditableBreadcrumbHeader>
+  );
+};
+
+const variableOverview = graphql`
+  query EditApplicationPartVariableOverviewQuery($id: ID!) {
+    applicationPartById(id: $id) {
+      id
+      variableValues {
+        id
+        environment {
+          id
+          name
+        }
+        variable {
+          id
+          name
+        }
+        value
+      }
+    }
+  }
+`;
+
+const VariableValueOverview: React.FC<{
+  applicationPartId: string;
+  fetchKey?: number;
+  onEdit: (id: string, name: string) => void;
+}> = ({ applicationPartId, onEdit, fetchKey }) => {
+  const data = useLazyLoadQuery<EditApplicationPartVariableOverviewQuery>(
+    variableOverview,
+    { id: applicationPartId },
+    { fetchKey, fetchPolicy: "store-and-network" }
+  );
+
+  const values = data.applicationPartById?.variableValues;
+  const grouped = useMemo(
+    () =>
+      groupBy(
+        values?.map((x) => ({ ...x })) ?? [],
+        (x) => x.variable?.id ?? ""
+      ),
+    [values]
+  );
+
+  return (
+    <List>
+      {Object.keys(grouped).map((x) => {
+        const variable = grouped[x][0].variable;
+        const tags = grouped[x]
+          .map((x) => x.environment?.name)
+          .filter((x) => !!x)
+          .map((x) => <ColorTag value={x ?? "-"}>{x}</ColorTag>);
+        return (
+          <List.Item
+            actions={[
+              <Button
+                onClick={() => variable && onEdit(variable.id, variable.name)}
+              >
+                Edit
+              </Button>,
+            ]}
+          >
+            <List.Item.Meta
+              title={variable?.name ?? "Unkonw"}
+              description={tags}
+            />
+          </List.Item>
+        );
+      })}
+    </List>
   );
 };

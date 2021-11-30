@@ -19,12 +19,12 @@ import { RemoveEnvironmentDialog } from "./controls/dialogs/RemoveEnvironmentDia
 import { useGoTo } from "../shared/useGoTo";
 import { Routes } from "../routes";
 
-const EnvironmentsQuery = graphql`
+const environmentsQuery = graphql`
   query EnvironmentsListQuery($cursor: String, $count: Int, $search: String) {
     ...EnvironmentsList_Environments
   }
 `;
-const EnvironmentsConnectionFragment = graphql`
+const environmentsConnectionFragment = graphql`
   fragment EnvironmentsList_Environments on Query
   @refetchable(queryName: "EnvironmentsListPaginationQuery") {
     searchEnvironments(after: $cursor, first: $count, search: $search)
@@ -52,7 +52,7 @@ export const EnvironmentsList: React.FC<{
   onItemSelect: (item: string) => void;
   search: string | undefined;
 }> = ({ search, onItemSelect, selectedEnvironmentId }) => {
-  const queryData = useLazyLoadQuery<EnvironmentsListQuery>(EnvironmentsQuery, {
+  const queryData = useLazyLoadQuery<EnvironmentsListQuery>(environmentsQuery, {
     count: Settings.pagination.pageSize,
     search,
   });
@@ -64,7 +64,7 @@ export const EnvironmentsList: React.FC<{
   } = usePaginationFragment<
     EnvironmentsListQuery,
     EnvironmentsList_Environments$key
-  >(EnvironmentsConnectionFragment, queryData);
+  >(environmentsConnectionFragment, queryData);
   const data = connection?.searchEnvironments?.edges?.map((x) => x.node) ?? [];
   const handleOnItemSelected = useCallback(
     (id: string) => onItemSelect(id),

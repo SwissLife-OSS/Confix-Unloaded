@@ -76,13 +76,12 @@ namespace Confix.Authoring.GraphQL
         {
             builder
                 .AddType<VariableType>()
-                .AddType<VariableValueType>()
-                .AddTypeExtension<ApplicationNode>()
-                .AddTypeExtension<ApplicationPartNode>()
+                .AddTypeExtension<VariableValueExtensions>()
                 .AddTypeExtension<ApplicationPartComponentNode>()
                 .AddTypeExtension<ApplicationApplicationPartExtensions>()
                 .AddTypeExtension<ApplicationPartComponentExtensions>()
                 .AddTypeExtension<ComponentNode>()
+                .AddTypeExtension<ApplicationPartVariablesExtensions>()
                 .AddType<SdlType>();
 
             builder

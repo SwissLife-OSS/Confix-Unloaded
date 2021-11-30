@@ -77,7 +77,7 @@ namespace Confix.Authoring.GraphQL
     public record DeleteVariableValueInput([property: ID(nameof(VariableValue))] Guid id);
 
     public record SaveVariableValueInput(
-        [ID(nameof(Variable))] Guid VariableId,
+        [property: ID(nameof(Variable))] Guid VariableId,
         string Value)
     {
         [ID(nameof(VariableValue))]
@@ -89,7 +89,7 @@ namespace Confix.Authoring.GraphQL
         [ID(nameof(ApplicationPart))]
         public Guid? PartId { get; init; }
 
-        //[ID(nameof(Environment))]
+        [ID(nameof(Environment))]
         public Guid? EnvironmentId { get; init; }
     }
 }

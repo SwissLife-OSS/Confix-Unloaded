@@ -31,6 +31,7 @@ export const Field: React.FC<{
   <Row
     css={css`
       padding: 0px 0px 5px 0px;
+      flex: 1;
     `}
   >
     <Label htmlFor={name ?? label} title={label} isError={isError}>
@@ -49,6 +50,36 @@ export const FieldInput: React.FC<
 > = ({ name, label, isError = false, ...inputProps }) => (
   <Field name={name} label={label} isError={isError}>
     <Input name={name ?? label} {...inputProps} />
+  </Field>
+);
+
+export const FieldInputGroup: React.FC<
+  {
+    name?: string;
+    label: string;
+    isError?: boolean;
+    compact?: boolean;
+  } & InputProps
+> = ({ name, label, isError = false, compact, children, ...inputProps }) => (
+  <Field name={name} label={label} isError={isError}>
+    <Input.Group
+      compact={compact}
+      css={css`
+        display: flex;
+        > * {
+          flex: 0;
+        }
+      `}
+    >
+      <Input
+        name={name ?? label}
+        {...inputProps}
+        style={{
+          flex: "1",
+        }}
+      />
+      {children}
+    </Input.Group>
   </Field>
 );
 

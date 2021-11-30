@@ -13,21 +13,41 @@ import {
 import { JSONSchema6, JSONSchema6Definition } from "json-schema";
 
 const typeMappings: Record<string, JSONSchema6> = {
-  String: { type: "string" },
+  String: {
+    oneOf: [{ type: "string" }, { $ref: `#/definitions/__Variables` }],
+  },
   Float: { type: "number" },
   Short: { type: "number" },
   Decimal: { type: "number" },
   Int: { type: "number" },
   Boolean: { type: "boolean" },
-  ID: { type: "string" },
-  UUID: { type: "string" },
-  Byte: { type: "string" },
-  ByteArray: { type: "string" },
-  Url: { type: "string", format: "uri" },
-  URL: { type: "string", format: "uri" },
-  Date: { type: "string", format: "date" },
-  DateTime: { type: "string", format: "date-time" },
-  Any: { type: "object" },
+  ID: {
+    oneOf: [{ type: "string" }, { $ref: `#/definitions/__Variables` }],
+  },
+  UUID: {
+    oneOf: [{ type: "string" }, { $ref: `#/definitions/__Variables` }],
+  },
+  Byte: {
+    oneOf: [{ type: "string" }, { $ref: `#/definitions/__Variables` }],
+  },
+  ByteArray: {
+    oneOf: [{ type: "string" }, { $ref: `#/definitions/__Variables` }],
+  },
+  Url: {
+    oneOf: [{ type: "string" }, { $ref: `#/definitions/__Variables` }],
+  },
+  URL: {
+    oneOf: [{ type: "string" }, { $ref: `#/definitions/__Variables` }],
+  },
+  Date: {
+    oneOf: [{ type: "string" }, { $ref: `#/definitions/__Variables` }],
+  },
+  DateTime: {
+    oneOf: [{ type: "string" }, { $ref: `#/definitions/__Variables` }],
+  },
+  Any: {
+    oneOf: [{ type: "string" }, { $ref: `#/definitions/__Variables` }],
+  },
 };
 
 export const translateType = (
@@ -60,16 +80,22 @@ export const translateType = (
   }
 };
 
-export const sdlToJsonSchema = (doc: string): JSONSchema6 | undefined => {
+export const sdlToJsonSchema = (
+  doc: string,
+  variables: string[]
+): JSONSchema6 | undefined => {
   try {
     if (doc) {
       var root = parse(doc);
-      return buildJsonSchema(root);
+      return buildJsonSchema(root, variables);
     }
   } catch (e) {}
 };
-export const buildJsonSchema = (doc: DocumentNode): JSONSchema6 => {
-  const definitions: Record<string, JSONSchema6Definition> = doc.definitions
+export const buildJsonSchema = (
+  doc: DocumentNode,
+  variables: string[]
+): JSONSchema6 => {
+  let definitions: Record<string, JSONSchema6Definition> = doc.definitions
     .filter(
       (x) =>
         x.kind === Kind.OBJECT_TYPE_DEFINITION ||
@@ -103,6 +129,10 @@ export const buildJsonSchema = (doc: DocumentNode): JSONSchema6 => {
 
   const { properties, required } = createObjectTypeDefinition(rootType);
 
+  definitions["__Variables"] = {
+    enum: variables.map((x) => `{${x}}`),
+  };
+
   return {
     $schema: "http://json-schema.org/draft-06/schema#",
     definitions,
@@ -115,9 +145,14 @@ const createEnumTypeDefinition = (
   node: EnumTypeDefinitionNode
 ): JSONSchema6 => {
   return {
-    title: node.name.value,
-    description: node.description?.value,
-    enum: node?.values?.map((v) => v.name.value),
+    oneOf: [
+      {
+        title: node.name.value,
+        description: node.description?.value,
+        enum: node?.values?.map((v) => v.name.value),
+      },
+      { $ref: `#/definitions/__Variables` },
+    ],
   };
 };
 

@@ -13,6 +13,11 @@ export type EditApplicationPartComponent_fragment = {
             readonly name: string;
             readonly namespace: string | null;
         } | null;
+        readonly variableValues: ReadonlyArray<{
+            readonly variable: {
+                readonly name: string;
+            } | null;
+        }>;
     } | null;
     readonly definition: {
         readonly id: string;
@@ -82,6 +87,29 @@ return {
               "args": null,
               "kind": "ScalarField",
               "name": "namespace",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "VariableValue",
+          "kind": "LinkedField",
+          "name": "variableValues",
+          "plural": true,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "Variable",
+              "kind": "LinkedField",
+              "name": "variable",
+              "plural": false,
+              "selections": [
+                (v0/*: any*/)
+              ],
               "storageKey": null
             }
           ],
@@ -169,5 +197,5 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = 'd2e8f7ed02c47dcc04c69cec2bab2957';
+(node as any).hash = 'f5d32a899a2e59ec1aa4435791798616';
 export default node;

@@ -46,14 +46,17 @@ export const NewEnvironment: React.FC = () => {
     newEnvironmentMutation
   );
 
-  const connectionId = useConnectionId("Query_searchEnvironments");
+  const connectionIds = [
+    useConnectionId("useEnvironments_searchEnvironments"),
+    useConnectionId("Query_searchEnvironments"),
+  ];
   const goToEdit = useGoTo(Routes.environments.edit);
   const form = useCommitForm(
     commit,
     {
       name: "",
     },
-    (input) => ({ input, connectionIds: [connectionId] }),
+    (input) => ({ input, connectionIds }),
     {
       pipes: [
         withErrorNotifications((x) => x.createEnvironment?.errors),

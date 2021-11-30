@@ -3,31 +3,30 @@
 // @ts-nocheck
 
 import { ReaderFragment } from "relay-runtime";
-import ApplicationsListPaginationQuery from "./ApplicationsListPaginationQuery.graphql";
+import useEnvironmentsPaginationQuery from "./useEnvironmentsPaginationQuery.graphql";
 import { FragmentRefs } from "relay-runtime";
-export type ApplicationsList_applications = {
-    readonly applications: {
+export type useEnvironments_searchEnvironments = {
+    readonly searchEnvironments: {
         readonly edges: ReadonlyArray<{
             readonly node: {
                 readonly id: string;
                 readonly name: string;
-                readonly " $fragmentRefs": FragmentRefs<"ApplicationsList_applicationsEdge">;
             };
         }> | null;
     } | null;
-    readonly " $refType": "ApplicationsList_applications";
+    readonly " $refType": "useEnvironments_searchEnvironments";
 };
-export type ApplicationsList_applications$data = ApplicationsList_applications;
-export type ApplicationsList_applications$key = {
-    readonly " $data"?: ApplicationsList_applications$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"ApplicationsList_applications">;
+export type useEnvironments_searchEnvironments$data = useEnvironments_searchEnvironments;
+export type useEnvironments_searchEnvironments$key = {
+    readonly " $data"?: useEnvironments_searchEnvironments$data | undefined;
+    readonly " $fragmentRefs": FragmentRefs<"useEnvironments_searchEnvironments">;
 };
 
 
 
 const node: ReaderFragment = (function(){
 var v0 = [
-  "applications"
+  "searchEnvironments"
 ];
 return {
   "argumentDefinitions": [
@@ -38,10 +37,6 @@ return {
     {
       "kind": "RootArgument",
       "name": "cursor"
-    },
-    {
-      "kind": "RootArgument",
-      "name": "where"
     }
   ],
   "kind": "Fragment",
@@ -64,29 +59,23 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": ApplicationsListPaginationQuery
+      "operation": useEnvironmentsPaginationQuery
     }
   },
-  "name": "ApplicationsList_applications",
+  "name": "useEnvironments_searchEnvironments",
   "selections": [
     {
-      "alias": "applications",
-      "args": [
-        {
-          "kind": "Variable",
-          "name": "where",
-          "variableName": "where"
-        }
-      ],
-      "concreteType": "ApplicationsConnection",
+      "alias": "searchEnvironments",
+      "args": null,
+      "concreteType": "SearchEnvironmentsConnection",
       "kind": "LinkedField",
-      "name": "__Query_applications_connection",
+      "name": "__useEnvironments_searchEnvironments_connection",
       "plural": false,
       "selections": [
         {
           "alias": null,
           "args": null,
-          "concreteType": "ApplicationsEdge",
+          "concreteType": "SearchEnvironmentsEdge",
           "kind": "LinkedField",
           "name": "edges",
           "plural": true,
@@ -94,7 +83,7 @@ return {
             {
               "alias": null,
               "args": null,
-              "concreteType": "Application",
+              "concreteType": "Environment",
               "kind": "LinkedField",
               "name": "node",
               "plural": false,
@@ -119,11 +108,6 @@ return {
                   "kind": "ScalarField",
                   "name": "__typename",
                   "storageKey": null
-                },
-                {
-                  "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "ApplicationsList_applicationsEdge"
                 }
               ],
               "storageKey": null
@@ -171,5 +155,5 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = '0f0154047f5af2c4603c0c0a9abfe895';
+(node as any).hash = '919293b06c3e60921850070d82637bb1';
 export default node;

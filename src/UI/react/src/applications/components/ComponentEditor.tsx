@@ -1,14 +1,8 @@
 import styled from "@emotion/styled";
-import Editor, { Monaco, useMonaco } from "@monaco-editor/react";
+import Editor, { useMonaco } from "@monaco-editor/react";
 import { Colors } from "../../shared/colors";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import { editor, Uri } from "monaco-editor";
+import React, { useCallback, useRef } from "react";
+import { editor } from "monaco-editor";
 import { css } from "@emotion/react";
 import { Button } from "antd";
 import {
@@ -53,6 +47,7 @@ const useValueEditorRef = () => {
     format();
   };
   const setSchema = (jsonSchema: JSONSchema6) => {
+    console.log(monacoRef.current?.languages);
     monacoRef.current?.languages.json.jsonDefaults.setDiagnosticsOptions({
       validate: true,
       enableSchemaRequest: false,
@@ -95,22 +90,24 @@ export const ComponentEditor: React.FC<{
   values: string;
   schema: string;
   editSchema?: boolean;
+  variables?: string[];
 }> = ({
   values,
   schema,
   onValuesChanged = noop,
   onSchemaChange = noop,
   editSchema = false,
+  variables = [],
 }) => {
   const valueEditor = useValueEditorRef();
   const schemaEditor = useSchemaEditorRef();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const updateSchema = useCallback(
     (value: string | undefined) => {
-      const schema = value && sdlToJsonSchema(value);
+      const schema = value && sdlToJsonSchema(value, variables);
       schema && valueEditor.setSchema(schema);
     },
-    [valueEditor]
+    [valueEditor, variables]
   );
   const handleSchemaChange = useCallback(
     (value: string | undefined) => {

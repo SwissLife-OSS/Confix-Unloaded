@@ -96,7 +96,7 @@ type AddPartToApplicationPayload {
 
 scalar Any
 
-type Application implements Node {
+type Application {
   id: ID!
   name: String!
   namespace: String
@@ -128,11 +128,12 @@ type ApplicationNotFoundError implements IUserError {
   message: String!
 }
 
-type ApplicationPart implements Node {
+type ApplicationPart {
   id: ID!
   name: String!
   components: [ApplicationPartComponent!]!
   application: Application
+  variableValues: [VariableValue!]!
 }
 
 type ApplicationPartComponent {
@@ -289,7 +290,7 @@ input CreateVariableInput {
 }
 
 input DeleteVariableValueInput {
-  id: UUID!
+  id: ID!
 }
 
 type DeleteVariableValuePayload {
@@ -440,6 +441,7 @@ type Query {
     before: String
   ): SearchVariablesConnection
   variable(id: ID!): Variable!
+  variableValuesOfApplicationPart(variableId: ID!, applicationId: ID!, applicationPartId: ID!): [VariableValue!]!
   searchEnvironments(
     search: String
 
@@ -566,7 +568,7 @@ type RenameEnvironmentPayload {
 }
 
 input RenameVariableInput {
-  id: UUID!
+  id: ID!
   name: String!
 }
 
@@ -576,12 +578,12 @@ type RenameVariablePayload {
 }
 
 input SaveVariableValueInput {
-  variableId: UUID!
+  variableId: ID!
   value: String!
   valueId: ID
   applicationId: ID
   partId: ID
-  environmentId: UUID
+  environmentId: ID
 }
 
 type SchemaViolation {
@@ -730,12 +732,13 @@ enum VariableState {
 }
 
 type VariableValue {
-  variable: Variable
-  application: Application
-  part: ApplicationPart
-  id: UUID!
+  id: ID!
   key: VariableKey!
   value: String!
   encryption: VariableEncryptionInfo
+  variable: Variable
+  application: Application
+  applicationPart: ApplicationPart
+  environment: Environment
 }
 

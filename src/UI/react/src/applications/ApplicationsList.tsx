@@ -44,6 +44,7 @@ const applicationsConnectionFragment = graphql`
       edges {
         node {
           id
+          name
           ...ApplicationsList_applicationsEdge
         }
       }
@@ -51,7 +52,7 @@ const applicationsConnectionFragment = graphql`
   }
 `;
 
-const applicationFragment = graphql`
+export const applicationFragment = graphql`
   fragment ApplicationsList_applicationsEdge on Application {
     id
     name

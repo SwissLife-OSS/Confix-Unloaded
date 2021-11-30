@@ -1,11 +1,12 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring
 {
     public class Component
     {
-        [Key]
+        [ID]
         public Guid Id { get; set; }
 
         [Required]

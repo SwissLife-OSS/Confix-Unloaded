@@ -16,10 +16,10 @@ export type EditVariable_Variable = {
         readonly application: {
             readonly id: string;
         } | null;
-        readonly part: {
+        readonly applicationPart: {
             readonly id: string;
         } | null;
-        readonly id: unknown;
+        readonly id: string;
         readonly value: string;
         readonly encryption: {
             readonly keyProvider: string;
@@ -106,7 +106,7 @@ return {
           "args": null,
           "concreteType": "ApplicationPart",
           "kind": "LinkedField",
-          "name": "part",
+          "name": "applicationPart",
           "plural": false,
           "selections": (v1/*: any*/),
           "storageKey": null
@@ -159,5 +159,5 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = '0fd48e317336db56f4e0431d6fd42128';
+(node as any).hash = '71ef50c2a6ccab9eedda7a06442bb525';
 export default node;

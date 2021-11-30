@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring
 {
@@ -25,6 +26,10 @@ namespace Confix.Authoring
 
         Task<IEnumerable<VariableValue>> GetValuesAsync(
             GetVariableValuesRequest request,
+            CancellationToken cancellationToken);
+
+        Task<IEnumerable<VariableValue>> GetValuesByApplicationPartAsync(
+            Guid applicationPartId,
             CancellationToken cancellationToken);
 
         Task<IEnumerable<VariableValue>> GetValuesAsync(

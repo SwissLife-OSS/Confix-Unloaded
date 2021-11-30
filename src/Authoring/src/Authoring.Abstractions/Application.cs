@@ -7,7 +7,7 @@ namespace Confix.Authoring.Store
 {
     public class Application
     {
-        [Key]
+        [ID]
         public Guid Id { get; set; }
 
         [Required]

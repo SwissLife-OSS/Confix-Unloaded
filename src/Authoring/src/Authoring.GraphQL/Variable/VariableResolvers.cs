@@ -16,45 +16,6 @@ namespace Confix.Authoring.GraphQL
             _variableService = variableService;
         }
 
-        public async Task<Variable?> GetVariableAsync(
-            VariableValue value,
-            VariableByIdDataLoader variableById,
-            CancellationToken cancellationToken)
-        {
-            return await variableById.LoadAsync(
-                value.Key.VariableId,
-                cancellationToken);
-        }
-
-        public async Task<Application?> GetApplicationAsync(
-            [Parent] VariableValue value,
-            ApplicationByIdDataLoader applicationById,
-            CancellationToken cancellationToken)
-        {
-            if (value.Key.ApplicationId.HasValue)
-            {
-                return await applicationById.LoadAsync(
-                    value.Key.ApplicationId.Value,
-                    cancellationToken);
-            }
-
-            return null;
-        }
-
-        public async Task<ApplicationPart?> GetApplicationPartAsync(
-            [Parent] VariableValue value,
-            ApplicationPartByIdDataLoader applicationPartById,
-            CancellationToken cancellationToken)
-        {
-            if (value.Key.PartId.HasValue)
-            {
-                return await applicationPartById.LoadAsync(
-                    value.Key.PartId.Value,
-                    cancellationToken);
-            }
-
-            return null;
-        }
 
         public Task<IEnumerable<VariableValue>> GetVariableValuesAsync(
             [Parent] Variable variable,

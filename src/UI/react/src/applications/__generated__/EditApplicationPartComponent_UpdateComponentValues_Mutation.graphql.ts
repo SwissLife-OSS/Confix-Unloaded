@@ -58,6 +58,13 @@ fragment EditApplicationPartComponent_fragment on ApplicationPartComponent {
       namespace
       id
     }
+    variableValues {
+      variable {
+        name
+        id
+      }
+      id
+    }
     id
   }
   definition {
@@ -236,6 +243,31 @@ return {
                     ],
                     "storageKey": null
                   },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "VariableValue",
+                    "kind": "LinkedField",
+                    "name": "variableValues",
+                    "plural": true,
+                    "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "Variable",
+                        "kind": "LinkedField",
+                        "name": "variable",
+                        "plural": false,
+                        "selections": [
+                          (v4/*: any*/),
+                          (v5/*: any*/)
+                        ],
+                        "storageKey": null
+                      },
+                      (v5/*: any*/)
+                    ],
+                    "storageKey": null
+                  },
                   (v5/*: any*/)
                 ],
                 "storageKey": null
@@ -331,12 +363,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "45e32c0b9ad6a29d5714a51019bd281d",
+    "cacheID": "d1913b2a6de8af3633f5e6df759afb58",
     "id": null,
     "metadata": {},
     "name": "EditApplicationPartComponent_UpdateComponentValues_Mutation",
     "operationKind": "mutation",
-    "text": "mutation EditApplicationPartComponent_UpdateComponentValues_Mutation(\n  $input: UpdateApplicationPartComponentValuesInput!\n) {\n  updateApplicationPartComponentValues(input: $input) {\n    component {\n      ...EditApplicationPartComponent_fragment\n      id\n    }\n    errors {\n      __typename\n      ... on IUserError {\n        __isIUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment EditApplicationPartComponent_fragment on ApplicationPartComponent {\n  applicationPart {\n    name\n    application {\n      name\n      namespace\n      id\n    }\n    id\n  }\n  definition {\n    id\n    name\n    state\n    schemaSdl\n    schema\n    values\n    defaults\n    schemaViolations {\n      path\n      code\n    }\n  }\n  values\n}\n"
+    "text": "mutation EditApplicationPartComponent_UpdateComponentValues_Mutation(\n  $input: UpdateApplicationPartComponentValuesInput!\n) {\n  updateApplicationPartComponentValues(input: $input) {\n    component {\n      ...EditApplicationPartComponent_fragment\n      id\n    }\n    errors {\n      __typename\n      ... on IUserError {\n        __isIUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment EditApplicationPartComponent_fragment on ApplicationPartComponent {\n  applicationPart {\n    name\n    application {\n      name\n      namespace\n      id\n    }\n    variableValues {\n      variable {\n        name\n        id\n      }\n      id\n    }\n    id\n  }\n  definition {\n    id\n    name\n    state\n    schemaSdl\n    schema\n    values\n    defaults\n    schemaViolations {\n      path\n      code\n    }\n  }\n  values\n}\n"
   }
 };
 })();

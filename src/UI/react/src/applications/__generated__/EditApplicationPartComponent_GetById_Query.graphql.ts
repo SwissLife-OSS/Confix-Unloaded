@@ -38,6 +38,13 @@ fragment EditApplicationPartComponent_fragment on ApplicationPartComponent {
       namespace
       id
     }
+    variableValues {
+      variable {
+        name
+        id
+      }
+      id
+    }
     id
   }
   definition {
@@ -163,6 +170,31 @@ return {
                 ],
                 "storageKey": null
               },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "VariableValue",
+                "kind": "LinkedField",
+                "name": "variableValues",
+                "plural": true,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Variable",
+                    "kind": "LinkedField",
+                    "name": "variable",
+                    "plural": false,
+                    "selections": [
+                      (v2/*: any*/),
+                      (v3/*: any*/)
+                    ],
+                    "storageKey": null
+                  },
+                  (v3/*: any*/)
+                ],
+                "storageKey": null
+              },
               (v3/*: any*/)
             ],
             "storageKey": null
@@ -242,12 +274,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "20414f07920cb9d429c97762f652cb23",
+    "cacheID": "8025a996bd638e420bef066ed5b8b858",
     "id": null,
     "metadata": {},
     "name": "EditApplicationPartComponent_GetById_Query",
     "operationKind": "query",
-    "text": "query EditApplicationPartComponent_GetById_Query(\n  $partComponentId: ID!\n) {\n  applicationPartComponentById(partComponentId: $partComponentId) {\n    ...EditApplicationPartComponent_fragment\n    id\n  }\n}\n\nfragment EditApplicationPartComponent_fragment on ApplicationPartComponent {\n  applicationPart {\n    name\n    application {\n      name\n      namespace\n      id\n    }\n    id\n  }\n  definition {\n    id\n    name\n    state\n    schemaSdl\n    schema\n    values\n    defaults\n    schemaViolations {\n      path\n      code\n    }\n  }\n  values\n}\n"
+    "text": "query EditApplicationPartComponent_GetById_Query(\n  $partComponentId: ID!\n) {\n  applicationPartComponentById(partComponentId: $partComponentId) {\n    ...EditApplicationPartComponent_fragment\n    id\n  }\n}\n\nfragment EditApplicationPartComponent_fragment on ApplicationPartComponent {\n  applicationPart {\n    name\n    application {\n      name\n      namespace\n      id\n    }\n    variableValues {\n      variable {\n        name\n        id\n      }\n      id\n    }\n    id\n  }\n  definition {\n    id\n    name\n    state\n    schemaSdl\n    schema\n    values\n    defaults\n    schemaViolations {\n      path\n      code\n    }\n  }\n  values\n}\n"
   }
 };
 })();

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { useFragment, useLazyLoadQuery, useMutation } from "react-relay";
 import { DetailView } from "../shared/DetailView";
 import { graphql } from "babel-plugin-relay/macro";
@@ -32,6 +32,11 @@ const applicationPartComponentFragment = graphql`
       application {
         name
         namespace
+      }
+      variableValues {
+        variable {
+          name
+        }
       }
     }
     definition {
@@ -109,6 +114,14 @@ export const EditApplicationPartComponent = () => {
       },
     });
   }, [commit, partComponentId, componentValues]);
+  const variableValues = component?.applicationPart?.variableValues;
+  const variables = useMemo(
+    () =>
+      Array.from(
+        new Set((variableValues ?? []).map((x) => x.variable?.name ?? "-"))
+      ),
+    [variableValues]
+  );
 
   if (!component || !component.applicationPart?.application) {
     return (
@@ -160,6 +173,7 @@ export const EditApplicationPartComponent = () => {
         onValuesChanged={setComponentValues}
         values={JSON.stringify(values)}
         schema={definition.schemaSdl ?? ""}
+        variables={variables}
       />
     </DetailView>
   );

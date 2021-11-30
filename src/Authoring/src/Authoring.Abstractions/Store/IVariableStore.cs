@@ -11,7 +11,15 @@ namespace Confix.Authoring.Store
         Task<Variable> CreateAsync(Variable variable, CancellationToken cancellationToken);
         Task<IEnumerable<Variable>> GetAllAsync(CancellationToken cancellationToken);
         Task<Variable> GetByIdAsync(Guid id, CancellationToken cancellationToken);
-        Task<IEnumerable<Variable>> GetManyAsync(IEnumerable<Guid> ids, CancellationToken cancellationToken);
+
+        Task<IEnumerable<VariableValue>> GetByApplicationPartIdAsync(
+            Guid partId,
+            CancellationToken cancellationToken);
+
+        Task<IEnumerable<Variable>> GetManyAsync(
+            IEnumerable<Guid> ids,
+            CancellationToken cancellationToken);
+
         Task<Variable> UpdateAsync(Variable variable, CancellationToken cancellationToken);
         IQueryable<Variable> Query();
     }

@@ -6,7 +6,7 @@ import { ConcreteRequest } from "relay-runtime";
 
 import { FragmentRefs } from "relay-runtime";
 export type RenameVariableInput = {
-    id: unknown;
+    id: string;
     name: string;
 };
 export type RenameVariableDialogMutationVariables = {

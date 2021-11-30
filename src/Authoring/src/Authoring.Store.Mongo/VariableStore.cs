@@ -32,6 +32,15 @@ namespace Confix.Authoring.Store.Mongo
                 .FirstOrDefaultAsync(cancellationToken);
         }
 
+        public async Task<IEnumerable<VariableValue>> GetByApplicationPartIdAsync(
+            Guid partId,
+            CancellationToken cancellationToken)
+        {
+            FilterDefinition<VariableValue> filter =
+                Builders<VariableValue>.Filter.Eq(x => x.Key.PartId, partId);
+            return await _dbContext.VariableValues.Find(filter).ToListAsync(cancellationToken);
+        }
+
         public async Task<IEnumerable<Variable>> GetManyAsync(
             IEnumerable<Guid> ids,
             CancellationToken cancellationToken)

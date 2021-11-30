@@ -98,6 +98,14 @@ namespace Confix.Authoring
             return await GetValuesAsync(variable, request, cancellationToken);
         }
 
+        public async Task<IEnumerable<VariableValue>> GetValuesByApplicationPartAsync(
+            Guid applicationPartId,
+            CancellationToken cancellationToken)
+        {
+            return await _variableStore.GetByApplicationPartIdAsync(applicationPartId,
+                cancellationToken);
+        }
+
         public async Task<IEnumerable<VariableValue>> GetValuesAsync(
             Variable variable,
             GetVariableValuesRequest request,

@@ -4,30 +4,11 @@
 
 import { ConcreteRequest } from "relay-runtime";
 
-export type VariableFilterInput = {
-    and?: Array<VariableFilterInput> | null | undefined;
-    or?: Array<VariableFilterInput> | null | undefined;
-    name?: StringOperationFilterInput | null | undefined;
+export type VariableSelectQueryVariables = {
+    search?: string | null | undefined;
 };
-export type StringOperationFilterInput = {
-    and?: Array<StringOperationFilterInput> | null | undefined;
-    or?: Array<StringOperationFilterInput> | null | undefined;
-    eq?: string | null | undefined;
-    neq?: string | null | undefined;
-    contains?: string | null | undefined;
-    ncontains?: string | null | undefined;
-    in?: Array<string | null> | null | undefined;
-    nin?: Array<string | null> | null | undefined;
-    startsWith?: string | null | undefined;
-    nstartsWith?: string | null | undefined;
-    endsWith?: string | null | undefined;
-    nendsWith?: string | null | undefined;
-};
-export type VariablesSelectQueryVariables = {
-    where?: VariableFilterInput | null | undefined;
-};
-export type VariablesSelectQueryResponse = {
-    readonly Variables: {
+export type VariableSelectQueryResponse = {
+    readonly searchVariables: {
         readonly edges: ReadonlyArray<{
             readonly node: {
                 readonly id: string;
@@ -36,18 +17,18 @@ export type VariablesSelectQueryResponse = {
         }> | null;
     } | null;
 };
-export type VariablesSelectQuery = {
-    readonly response: VariablesSelectQueryResponse;
-    readonly variables: VariablesSelectQueryVariables;
+export type VariableSelectQuery = {
+    readonly response: VariableSelectQueryResponse;
+    readonly variables: VariableSelectQueryVariables;
 };
 
 
 
 /*
-query VariablesSelectQuery(
-  $where: VariableFilterInput
+query VariableSelectQuery(
+  $search: String
 ) {
-  Variables(where: $where) {
+  searchVariables(search: $search) {
     edges {
       node {
         id
@@ -63,7 +44,7 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "where"
+    "name": "search"
   }
 ],
 v1 = [
@@ -72,19 +53,19 @@ v1 = [
     "args": [
       {
         "kind": "Variable",
-        "name": "where",
-        "variableName": "where"
+        "name": "search",
+        "variableName": "search"
       }
     ],
-    "concreteType": "VariablesConnection",
+    "concreteType": "SearchVariablesConnection",
     "kind": "LinkedField",
-    "name": "Variables",
+    "name": "searchVariables",
     "plural": false,
     "selections": [
       {
         "alias": null,
         "args": null,
-        "concreteType": "VariablesEdge",
+        "concreteType": "SearchVariablesEdge",
         "kind": "LinkedField",
         "name": "edges",
         "plural": true,
@@ -126,7 +107,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "VariablesSelectQuery",
+    "name": "VariableSelectQuery",
     "selections": (v1/*: any*/),
     "type": "Query",
     "abstractKey": null
@@ -135,18 +116,18 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "VariablesSelectQuery",
+    "name": "VariableSelectQuery",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "1b05e6a55bb62a174861720deb80b892",
+    "cacheID": "fd744c38bb7257b888a8ad54362a5a1f",
     "id": null,
     "metadata": {},
-    "name": "VariablesSelectQuery",
+    "name": "VariableSelectQuery",
     "operationKind": "query",
-    "text": "query VariablesSelectQuery(\n  $where: VariableFilterInput\n) {\n  Variables(where: $where) {\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": "query VariableSelectQuery(\n  $search: String\n) {\n  searchVariables(search: $search) {\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
-(node as any).hash = 'e508c4a8a83d3e985121e888459f528f';
+(node as any).hash = '7cd7565e65cda8d072ef74a58ada5b5e';
 export default node;
