@@ -1,5 +1,9 @@
 import * as React from "react";
-import { useFragment, useLazyLoadQuery } from "react-relay";
+import {
+  useFragment,
+  useLazyLoadQuery,
+  useRefetchableFragment,
+} from "react-relay";
 import { DetailView } from "../shared/DetailView";
 import { graphql } from "babel-plugin-relay/macro";
 import { useRouteMatch } from "react-router";
@@ -10,10 +14,8 @@ import {
   Col,
   Descriptions,
   Empty,
-  List,
   Row,
   Tabs,
-  Tag,
   Typography,
 } from "antd";
 import styled from "@emotion/styled";
@@ -38,11 +40,11 @@ import {
   VariablesSelect,
 } from "../variables/controls/VariableSelect";
 import { DefaultSuspense } from "../shared/DefaultSuspense";
-import { EditApplicationPartVariableOverviewQuery } from "./__generated__/EditApplicationPartVariableOverviewQuery.graphql";
-import { useCallback, useMemo, useState } from "react";
-import { groupBy } from "../shared/groupBy";
+import { useCallback, useState } from "react";
 import { VariableEditor } from "../variables/controls/VariableEditor";
-import { ColorTag } from "../shared/ColorTag";
+import { EditApplicationPartRefetchPartQuery } from "./__generated__/EditApplicationPartRefetchPartQuery.graphql";
+import { VariableValueList } from "../variables/controls/VariableValueList";
+import { useSilentRefresh } from "../shared/useDefaultRefetch";
 
 const applicationByIdQuery = graphql`
   query EditApplicationPart_GetById_Query($id: ID!) {
@@ -54,7 +56,8 @@ const applicationByIdQuery = graphql`
 `;
 
 const applicationPartfragment = graphql`
-  fragment EditApplicationPart_fragment on ApplicationPart {
+  fragment EditApplicationPart_fragment on ApplicationPart
+  @refetchable(queryName: "EditApplicationPartRefetchPartQuery") {
     id
     name
     application {
@@ -69,6 +72,9 @@ const applicationPartfragment = graphql`
       }
       ...EditApplicationPartComponent_component
     }
+    variableValues {
+      ...VariableValueList_values
+    }
   }
 `;
 
@@ -76,13 +82,20 @@ export const EditApplicationPart = () => {
   const {
     params: { applicationId, id: applicationPartId },
   } = useRouteMatch<{ applicationId: string; id: string }>();
+  const variables = { id: applicationPartId };
   const data = useLazyLoadQuery<EditApplicationPart_GetById_Query>(
     applicationByIdQuery,
-    { id: applicationPartId }
+    variables
   );
-  const applicationPartById = useFragment<EditApplicationPart_fragment$key>(
-    applicationPartfragment,
-    data.applicationPartById
+  const [applicationPartById, refetch] = useRefetchableFragment<
+    EditApplicationPartRefetchPartQuery,
+    EditApplicationPart_fragment$key
+  >(applicationPartfragment, data.applicationPartById);
+
+  const { refresh } = useSilentRefresh(
+    applicationByIdQuery,
+    refetch,
+    variables
   );
 
   if (!applicationPartById) {
@@ -121,16 +134,13 @@ export const EditApplicationPart = () => {
         <Col xs={24}>
           <Tabs defaultActiveKey="1">
             <Tabs.TabPane tab="Parts" key="1">
-              <ApplicationParts
+              <Components
                 applicationId={applicationId}
                 components={components}
               />
             </Tabs.TabPane>
             <Tabs.TabPane tab="Variables" key="2">
-              <Variables
-                applicationId={applicationId}
-                applicationPartId={applicationPartById.id}
-              />
+              <Variables refetch={refresh} data={applicationPartById} />
             </Tabs.TabPane>
           </Tabs>
         </Col>
@@ -140,9 +150,9 @@ export const EditApplicationPart = () => {
 };
 
 const Variables: React.FC<{
-  applicationId: string;
-  applicationPartId: string;
-}> = ({ applicationId, applicationPartId }) => {
+  data: EditApplicationPart_fragment;
+  refetch: () => void;
+}> = ({ data, refetch }) => {
   const [selected, setSelected] = useState<VariableOption>();
   const handleVariableValueEditClick = useCallback(
     (id: string, name: string) => {
@@ -150,10 +160,6 @@ const Variables: React.FC<{
     },
     []
   );
-  const [fetchKey, setFetchKey] = useState(0);
-  const refresh = useCallback(() => {
-    setFetchKey((p) => (p += 1));
-  }, [setFetchKey]);
   return (
     <>
       <Row gutter={[16, 16]}>
@@ -167,10 +173,10 @@ const Variables: React.FC<{
           <Col xs={24}>
             <DefaultSuspense>
               <VariableEditor
-                applicationId={applicationId}
-                applicationPartId={applicationPartId}
+                applicationId={data.application?.id}
+                applicationPartId={data.id}
                 variableId={selected.value}
-                refresh={refresh}
+                refresh={refetch}
               />
             </DefaultSuspense>
           </Col>
@@ -180,10 +186,9 @@ const Variables: React.FC<{
         </Col>
         <Col xs={24}>
           <DefaultSuspense>
-            <VariableValueOverview
+            <VariableValueList
               onEdit={handleVariableValueEditClick}
-              applicationPartId={applicationPartId}
-              fetchKey={fetchKey}
+              data={data.variableValues}
             />
           </DefaultSuspense>
         </Col>
@@ -192,7 +197,7 @@ const Variables: React.FC<{
   );
 };
 
-const ApplicationParts: React.FC<{
+const Components: React.FC<{
   applicationId: string;
   components: EditApplicationPart_fragment["components"];
 }> = ({ applicationId, components }) => {
@@ -294,75 +299,5 @@ const Header: React.FC<{
         visible={isEdit}
       />
     </EditableBreadcrumbHeader>
-  );
-};
-
-const variableOverview = graphql`
-  query EditApplicationPartVariableOverviewQuery($id: ID!) {
-    applicationPartById(id: $id) {
-      id
-      variableValues {
-        id
-        environment {
-          id
-          name
-        }
-        variable {
-          id
-          name
-        }
-        value
-      }
-    }
-  }
-`;
-
-const VariableValueOverview: React.FC<{
-  applicationPartId: string;
-  fetchKey?: number;
-  onEdit: (id: string, name: string) => void;
-}> = ({ applicationPartId, onEdit, fetchKey }) => {
-  const data = useLazyLoadQuery<EditApplicationPartVariableOverviewQuery>(
-    variableOverview,
-    { id: applicationPartId },
-    { fetchKey, fetchPolicy: "store-and-network" }
-  );
-
-  const values = data.applicationPartById?.variableValues;
-  const grouped = useMemo(
-    () =>
-      groupBy(
-        values?.map((x) => ({ ...x })) ?? [],
-        (x) => x.variable?.id ?? ""
-      ),
-    [values]
-  );
-
-  return (
-    <List>
-      {Object.keys(grouped).map((x) => {
-        const variable = grouped[x][0].variable;
-        const tags = grouped[x]
-          .map((x) => x.environment?.name)
-          .filter((x) => !!x)
-          .map((x) => <ColorTag value={x ?? "-"}>{x}</ColorTag>);
-        return (
-          <List.Item
-            actions={[
-              <Button
-                onClick={() => variable && onEdit(variable.id, variable.name)}
-              >
-                Edit
-              </Button>,
-            ]}
-          >
-            <List.Item.Meta
-              title={variable?.name ?? "Unkonw"}
-              description={tags}
-            />
-          </List.Item>
-        );
-      })}
-    </List>
   );
 };

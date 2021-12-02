@@ -96,11 +96,12 @@ type AddPartToApplicationPayload {
 
 scalar Any
 
-type Application {
+type Application implements Node {
   id: ID!
   name: String!
   namespace: String
   parts: [ApplicationPart!]!
+  variableValues: [VariableValue!]!
 }
 
 input ApplicationFilterInput {
@@ -128,7 +129,7 @@ type ApplicationNotFoundError implements IUserError {
   message: String!
 }
 
-type ApplicationPart {
+type ApplicationPart implements Node {
   id: ID!
   name: String!
   components: [ApplicationPartComponent!]!
@@ -441,7 +442,7 @@ type Query {
     before: String
   ): SearchVariablesConnection
   variable(id: ID!): Variable!
-  variableValuesOfApplicationPart(variableId: ID!, applicationId: ID!, applicationPartId: ID!): [VariableValue!]!
+  variableValues(variableId: ID!, applicationId: ID, applicationPartId: ID): [VariableValue!]!
   searchEnvironments(
     search: String
 
@@ -477,6 +478,7 @@ type Query {
     where: ComponentFilterInput
   ): ComponentsConnection
   componentById(id: ID!): Component
+  globalVariableValues: [VariableValue!]!
 }
 
 union RemoveApplicationPartError = ApplicationPartNotFoundError

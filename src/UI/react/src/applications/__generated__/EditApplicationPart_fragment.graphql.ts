@@ -3,7 +3,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from "relay-runtime";
-
+import EditApplicationPartRefetchPartQuery from "./EditApplicationPartRefetchPartQuery.graphql";
 import { FragmentRefs } from "relay-runtime";
 export type EditApplicationPart_fragment = {
     readonly id: string;
@@ -19,6 +19,9 @@ export type EditApplicationPart_fragment = {
             readonly id: string;
         };
         readonly " $fragmentRefs": FragmentRefs<"EditApplicationPartComponent_component">;
+    }>;
+    readonly variableValues: ReadonlyArray<{
+        readonly " $fragmentRefs": FragmentRefs<"VariableValueList_values">;
     }>;
     readonly " $refType": "EditApplicationPart_fragment";
 };
@@ -48,7 +51,16 @@ v1 = {
 return {
   "argumentDefinitions": [],
   "kind": "Fragment",
-  "metadata": null,
+  "metadata": {
+    "refetch": {
+      "connection": null,
+      "fragmentPathInResult": [
+        "node"
+      ],
+      "operation": EditApplicationPartRefetchPartQuery,
+      "identifierField": "id"
+    }
+  },
   "name": "EditApplicationPart_fragment",
   "selections": [
     (v0/*: any*/),
@@ -101,11 +113,27 @@ return {
         }
       ],
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "VariableValue",
+      "kind": "LinkedField",
+      "name": "variableValues",
+      "plural": true,
+      "selections": [
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "VariableValueList_values"
+        }
+      ],
+      "storageKey": null
     }
   ],
   "type": "ApplicationPart",
   "abstractKey": null
 };
 })();
-(node as any).hash = '231d0883d387c163619e25d9bed65823';
+(node as any).hash = 'd323e5f54e6357ee7f9923aca22b7b89';
 export default node;

@@ -22,6 +22,11 @@ const applicationPartComponentQuery = graphql`
     applicationPartComponentById(partComponentId: $partComponentId) {
       ...EditApplicationPartComponent_fragment
     }
+    globalVariableValues {
+      variable {
+        name
+      }
+    }
   }
 `;
 
@@ -36,6 +41,13 @@ const applicationPartComponentFragment = graphql`
       variableValues {
         variable {
           name
+        }
+      }
+      application {
+        variableValues {
+          variable {
+            name
+          }
         }
       }
     }
@@ -84,7 +96,8 @@ export const EditApplicationPartComponent = () => {
     applicationPartComponentQuery,
     {
       partComponentId: partComponentId,
-    }
+    },
+    { fetchPolicy: "network-only" }
   );
   const component = useFragment<EditApplicationPartComponent_fragment$key>(
     applicationPartComponentFragment,
@@ -114,14 +127,21 @@ export const EditApplicationPartComponent = () => {
       },
     });
   }, [commit, partComponentId, componentValues]);
-  const variableValues = component?.applicationPart?.variableValues;
-  const variables = useMemo(
-    () =>
-      Array.from(
-        new Set((variableValues ?? []).map((x) => x.variable?.name ?? "-"))
-      ),
-    [variableValues]
-  );
+  const variables = useMemo(() => {
+    return Array.from(
+      new Set([
+        ...[
+          ...data.globalVariableValues,
+          ...(component?.applicationPart?.variableValues ?? []),
+          ...(component?.applicationPart?.application?.variableValues ?? []),
+        ].map((x) => x.variable?.name ?? "-"),
+      ])
+    );
+  }, [
+    component?.applicationPart?.application?.variableValues,
+    component?.applicationPart?.variableValues,
+    data.globalVariableValues,
+  ]);
 
   if (!component || !component.applicationPart?.application) {
     return (

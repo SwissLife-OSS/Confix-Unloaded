@@ -99,6 +99,23 @@ fragment EditApplicationPart_fragment on ApplicationPart {
     }
     ...EditApplicationPartComponent_component
   }
+  variableValues {
+    ...VariableValueList_values
+    id
+  }
+}
+
+fragment VariableValueList_values on VariableValue {
+  id
+  environment {
+    id
+    name
+  }
+  variable {
+    id
+    name
+  }
+  value
 }
 */
 
@@ -158,7 +175,11 @@ v5 = {
   "kind": "ScalarField",
   "name": "namespace",
   "storageKey": null
-};
+},
+v6 = [
+  (v2/*: any*/),
+  (v4/*: any*/)
+];
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -277,10 +298,7 @@ return {
                         "kind": "LinkedField",
                         "name": "definition",
                         "plural": false,
-                        "selections": [
-                          (v2/*: any*/),
-                          (v4/*: any*/)
-                        ],
+                        "selections": (v6/*: any*/),
                         "storageKey": null
                       }
                     ],
@@ -347,6 +365,45 @@ return {
                   }
                 ],
                 "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "VariableValue",
+                "kind": "LinkedField",
+                "name": "variableValues",
+                "plural": true,
+                "selections": [
+                  (v2/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Environment",
+                    "kind": "LinkedField",
+                    "name": "environment",
+                    "plural": false,
+                    "selections": (v6/*: any*/),
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Variable",
+                    "kind": "LinkedField",
+                    "name": "variable",
+                    "plural": false,
+                    "selections": (v6/*: any*/),
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "value",
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
               }
             ],
             "storageKey": null
@@ -376,12 +433,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "e24f8a48b2ad37b2c361e5f0b19cc790",
+    "cacheID": "62356dd7fe90fb071253abcdbe0783ac",
     "id": null,
     "metadata": {},
     "name": "RenameApplicationPartDialogMutation",
     "operationKind": "mutation",
-    "text": "mutation RenameApplicationPartDialogMutation(\n  $input: RenameApplicationPartInput!\n) {\n  renameApplicationPart(input: $input) {\n    application {\n      id\n      ...ApplicationsList_applicationsEdge\n    }\n    applicationPart {\n      ...EditApplicationPart_fragment\n      id\n    }\n    errors {\n      __typename\n      ... on IUserError {\n        __isIUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment ApplicationsList_applicationsEdge on Application {\n  id\n  name\n  namespace\n  parts {\n    id\n    name\n    components {\n      id\n      definition {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment EditApplicationPartComponent_component on ApplicationPartComponent {\n  id\n  definition {\n    id\n    name\n    state\n  }\n}\n\nfragment EditApplicationPart_fragment on ApplicationPart {\n  id\n  name\n  application {\n    id\n    namespace\n    name\n  }\n  components {\n    id\n    definition {\n      id\n    }\n    ...EditApplicationPartComponent_component\n  }\n}\n"
+    "text": "mutation RenameApplicationPartDialogMutation(\n  $input: RenameApplicationPartInput!\n) {\n  renameApplicationPart(input: $input) {\n    application {\n      id\n      ...ApplicationsList_applicationsEdge\n    }\n    applicationPart {\n      ...EditApplicationPart_fragment\n      id\n    }\n    errors {\n      __typename\n      ... on IUserError {\n        __isIUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment ApplicationsList_applicationsEdge on Application {\n  id\n  name\n  namespace\n  parts {\n    id\n    name\n    components {\n      id\n      definition {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment EditApplicationPartComponent_component on ApplicationPartComponent {\n  id\n  definition {\n    id\n    name\n    state\n  }\n}\n\nfragment EditApplicationPart_fragment on ApplicationPart {\n  id\n  name\n  application {\n    id\n    namespace\n    name\n  }\n  components {\n    id\n    definition {\n      id\n    }\n    ...EditApplicationPartComponent_component\n  }\n  variableValues {\n    ...VariableValueList_values\n    id\n  }\n}\n\nfragment VariableValueList_values on VariableValue {\n  id\n  environment {\n    id\n    name\n  }\n  variable {\n    id\n    name\n  }\n  value\n}\n"
   }
 };
 })();

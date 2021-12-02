@@ -16,6 +16,13 @@ namespace Confix.Authoring.Store
             Guid partId,
             CancellationToken cancellationToken);
 
+        Task<IEnumerable<VariableValue>> GetByApplicationIdAsync(
+            Guid applicationId,
+            CancellationToken cancellationToken);
+
+        Task<IEnumerable<VariableValue>> GetGlobalVariableValue(
+            CancellationToken cancellationToken);
+
         Task<IEnumerable<Variable>> GetManyAsync(
             IEnumerable<Guid> ids,
             CancellationToken cancellationToken);

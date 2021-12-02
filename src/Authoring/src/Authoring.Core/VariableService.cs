@@ -106,6 +106,17 @@ namespace Confix.Authoring
                 cancellationToken);
         }
 
+        public async Task<IEnumerable<VariableValue>> GetValuesByApplicationAsync(
+            Guid applicationId,
+            CancellationToken cancellationToken)
+        {
+            return await _variableStore.GetByApplicationIdAsync(applicationId, cancellationToken);
+        }
+
+        public async Task<IEnumerable<VariableValue>> GetGlobalValues(
+            CancellationToken cancellationToken) =>
+            await _variableStore.GetGlobalVariableValue(cancellationToken);
+
         public async Task<IEnumerable<VariableValue>> GetValuesAsync(
             Variable variable,
             GetVariableValuesRequest request,

@@ -21,10 +21,10 @@ import { VariableEditorSaveVariableMutation } from "./__generated__/VariableEdit
 const variableEditorQuery = graphql`
   query VariableEditorQuery(
     $variableId: ID!
-    $applicationId: ID!
-    $applicationPartId: ID!
+    $applicationId: ID
+    $applicationPartId: ID
   ) {
-    variableValuesOfApplicationPart(
+    variableValues(
       variableId: $variableId
       applicationId: $applicationId
       applicationPartId: $applicationPartId
@@ -53,8 +53,8 @@ const variableEditorQuery = graphql`
 
 export const VariableEditor: React.FC<{
   variableId: string;
-  applicationId: string;
-  applicationPartId: string;
+  applicationId?: string;
+  applicationPartId?: string;
   refresh?: () => void;
 }> = ({
   variableId,
@@ -74,8 +74,8 @@ export const VariableEditor: React.FC<{
   );
   const valueByEnv: Record<
     string,
-    VariableEditorQueryResponse["variableValuesOfApplicationPart"][0]
-  > = data.variableValuesOfApplicationPart.reduce(
+    VariableEditorQueryResponse["variableValues"][0]
+  > = data.variableValues.reduce(
     (p, c) => ({
       ...p,
       [c.environment?.id ?? "-"]: c,
@@ -96,7 +96,12 @@ export const VariableEditor: React.FC<{
       {environments.map((x) => (
         <Row key={x.id}>
           <EnvironementVariableValue
-            key={applicationId + applicationPartId + x.id + variableId}
+            key={
+              (applicationId ?? "-") +
+              (applicationPartId ?? "-") +
+              x.id +
+              variableId
+            }
             environment={x}
             value={valueByEnv[x.id]?.value}
             valueId={valueByEnv[x.id]?.id}
@@ -141,11 +146,11 @@ const variableEditorDeleteVariableValue = graphql`
 const useSaveVariable = (
   environmentId: string,
   variableId: string,
-  applicationId: string,
-  applicationPartId: string,
-  value: string | undefined,
-  valueId: string | undefined,
-  refresh: () => void
+  refresh: () => void,
+  applicationId?: string,
+  applicationPartId?: string,
+  value?: string | undefined,
+  valueId?: string | undefined
 ) => {
   const [commit, isSaving] = useMutation<VariableEditorSaveVariableMutation>(
     variableEditorSaveVariableValue
@@ -218,8 +223,8 @@ const useDeleteVariableValue = (
 const EnvironementVariableValue: React.FC<{
   environment: { id: string; name: string };
   variableId: string;
-  applicationId: string;
-  applicationPartId: string;
+  applicationId?: string;
+  applicationPartId?: string;
   value: string | undefined;
   valueId: string | undefined;
   refresh: () => void;
@@ -241,11 +246,11 @@ const EnvironementVariableValue: React.FC<{
   const { isSaving, saveVariable } = useSaveVariable(
     environment.id,
     variableId,
+    refresh,
     applicationId,
     applicationPartId,
     value,
-    valueId,
-    refresh
+    valueId
   );
 
   // reset the input when the variable is changed from the outside

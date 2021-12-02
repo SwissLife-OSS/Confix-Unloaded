@@ -127,26 +127,29 @@ const EditVariableForm: React.FC<{
       </Row>
       <VariableEditorOrPlaceholder
         key={id}
-        applicationId={application?.value}
-        applicationPartId={applicationPart?.id}
+        applicationOption={application}
+        applicationPartOption={applicationPart}
         variableId={id}
       />
     </DetailView>
   );
 };
 
+const nullWhenGlobal = (val?: string | "__global"): string | undefined =>
+  !val || val === "__global" ? undefined : val;
+
 export const VariableEditorOrPlaceholder: React.FC<{
   variableId?: string;
-  applicationId?: string;
-  applicationPartId?: string;
-}> = ({ variableId, applicationId, applicationPartId }) => {
-  if (variableId && applicationId && applicationPartId) {
+  applicationOption?: ApplicationOption;
+  applicationPartOption?: ApplicationPartOption;
+}> = ({ variableId, applicationOption, applicationPartOption }) => {
+  if (variableId && applicationOption && applicationPartOption) {
     return (
       <DefaultSuspense>
         <VariableEditor
           variableId={variableId}
-          applicationId={applicationId}
-          applicationPartId={applicationPartId}
+          applicationId={nullWhenGlobal(applicationOption?.edge?.id)}
+          applicationPartId={nullWhenGlobal(applicationPartOption.id)}
         />
       </DefaultSuspense>
     );
@@ -157,7 +160,6 @@ export const VariableEditorOrPlaceholder: React.FC<{
         image={Empty.PRESENTED_IMAGE_SIMPLE}
         description="Select a application part first"
       />
-      ,
     </Row>
   );
 };
@@ -207,7 +209,13 @@ const applicationsQuery = graphql`
 export type ApplicationOption = {
   label: string;
   value: string;
-  edge: ApplicationsList_applicationsEdge$key;
+  edge?: ApplicationsList_applicationsEdge$key & { id: string };
+};
+
+const globalOption: ApplicationOption = {
+  label: "Global",
+  value: "__global",
+  edge: undefined,
 };
 
 const ApplicationSelector: React.FC<{
@@ -264,6 +272,11 @@ const ApplicationSelector: React.FC<{
     fetchData("");
   }, [fetchData]);
 
+  const optionsWithGlobal = useMemo(
+    () => [globalOption, ...options],
+    [options]
+  );
+
   return (
     <Field label="Application">
       <Select<ApplicationOption[]>
@@ -277,7 +290,7 @@ const ApplicationSelector: React.FC<{
         notFoundContent={isLoading ? <Spin size="small" /> : null}
         onSearch={debouncedSearch}
         showArrow
-        options={options}
+        options={optionsWithGlobal}
       />
     </Field>
   );
@@ -324,6 +337,11 @@ const ApplicationPartSelector: React.FC<{
     [onChange]
   );
 
+  const optionsWithGlobal = useMemo(
+    () => [globalOption, ...options],
+    [options]
+  );
+
   return (
     <Field label="Application Part">
       <Select<ApplicationPartOption[]>
@@ -335,7 +353,7 @@ const ApplicationPartSelector: React.FC<{
         value={value ? [value] : []}
         onChange={handleChange}
         showArrow
-        options={options}
+        options={optionsWithGlobal}
       />
     </Field>
   );

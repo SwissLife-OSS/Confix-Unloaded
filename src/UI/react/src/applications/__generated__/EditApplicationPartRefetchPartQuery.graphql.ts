@@ -5,49 +5,29 @@
 import { ConcreteRequest } from "relay-runtime";
 
 import { FragmentRefs } from "relay-runtime";
-export type RemoveComponentFromApplicationPartInput = {
-    partComponentId: string;
+export type EditApplicationPartRefetchPartQueryVariables = {
+    id: string;
 };
-export type RemoveComponentFromApplicationPartDialogMutationVariables = {
-    input: RemoveComponentFromApplicationPartInput;
+export type EditApplicationPartRefetchPartQueryResponse = {
+    readonly node: {
+        readonly " $fragmentRefs": FragmentRefs<"EditApplicationPart_fragment">;
+    } | null;
 };
-export type RemoveComponentFromApplicationPartDialogMutationResponse = {
-    readonly removeComponentFromApplicationPart: {
-        readonly applicationPart: {
-            readonly id: string;
-            readonly " $fragmentRefs": FragmentRefs<"EditApplicationPart_fragment">;
-        } | null;
-        readonly errors: ReadonlyArray<{
-            readonly __typename: string;
-            readonly message?: string | undefined;
-            readonly code?: string | undefined;
-        }> | null;
-    };
-};
-export type RemoveComponentFromApplicationPartDialogMutation = {
-    readonly response: RemoveComponentFromApplicationPartDialogMutationResponse;
-    readonly variables: RemoveComponentFromApplicationPartDialogMutationVariables;
+export type EditApplicationPartRefetchPartQuery = {
+    readonly response: EditApplicationPartRefetchPartQueryResponse;
+    readonly variables: EditApplicationPartRefetchPartQueryVariables;
 };
 
 
 
 /*
-mutation RemoveComponentFromApplicationPartDialogMutation(
-  $input: RemoveComponentFromApplicationPartInput!
+query EditApplicationPartRefetchPartQuery(
+  $id: ID!
 ) {
-  removeComponentFromApplicationPart(input: $input) {
-    applicationPart {
-      id
-      ...EditApplicationPart_fragment
-    }
-    errors {
-      __typename
-      ... on IUserError {
-        __isIUserError: __typename
-        message
-        code
-      }
-    }
+  node(id: $id) {
+    __typename
+    ...EditApplicationPart_fragment
+    id
   }
 }
 
@@ -100,14 +80,14 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "input"
+    "name": "id"
   }
 ],
 v1 = [
   {
     "kind": "Variable",
-    "name": "input",
-    "variableName": "input"
+    "name": "id",
+    "variableName": "id"
   }
 ],
 v2 = {
@@ -120,117 +100,67 @@ v2 = {
 v3 = {
   "alias": null,
   "args": null,
-  "concreteType": null,
-  "kind": "LinkedField",
-  "name": "errors",
-  "plural": true,
-  "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "__typename",
-      "storageKey": null
-    },
-    {
-      "kind": "InlineFragment",
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "message",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "code",
-          "storageKey": null
-        }
-      ],
-      "type": "IUserError",
-      "abstractKey": "__isIUserError"
-    }
-  ],
-  "storageKey": null
-},
-v4 = {
-  "alias": null,
-  "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v5 = [
+v4 = [
   (v2/*: any*/),
-  (v4/*: any*/)
+  (v3/*: any*/)
 ];
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "RemoveComponentFromApplicationPartDialogMutation",
+    "name": "EditApplicationPartRefetchPartQuery",
     "selections": [
       {
         "alias": null,
         "args": (v1/*: any*/),
-        "concreteType": "RemoveComponentFromApplicationPartPayload",
+        "concreteType": null,
         "kind": "LinkedField",
-        "name": "removeComponentFromApplicationPart",
+        "name": "node",
         "plural": false,
         "selections": [
           {
-            "alias": null,
             "args": null,
-            "concreteType": "ApplicationPart",
-            "kind": "LinkedField",
-            "name": "applicationPart",
-            "plural": false,
-            "selections": [
-              (v2/*: any*/),
-              {
-                "args": null,
-                "kind": "FragmentSpread",
-                "name": "EditApplicationPart_fragment"
-              }
-            ],
-            "storageKey": null
-          },
-          (v3/*: any*/)
+            "kind": "FragmentSpread",
+            "name": "EditApplicationPart_fragment"
+          }
         ],
         "storageKey": null
       }
     ],
-    "type": "Mutation",
+    "type": "Query",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "RemoveComponentFromApplicationPartDialogMutation",
+    "name": "EditApplicationPartRefetchPartQuery",
     "selections": [
       {
         "alias": null,
         "args": (v1/*: any*/),
-        "concreteType": "RemoveComponentFromApplicationPartPayload",
+        "concreteType": null,
         "kind": "LinkedField",
-        "name": "removeComponentFromApplicationPart",
+        "name": "node",
         "plural": false,
         "selections": [
           {
             "alias": null,
             "args": null,
-            "concreteType": "ApplicationPart",
-            "kind": "LinkedField",
-            "name": "applicationPart",
-            "plural": false,
+            "kind": "ScalarField",
+            "name": "__typename",
+            "storageKey": null
+          },
+          (v2/*: any*/),
+          {
+            "kind": "InlineFragment",
             "selections": [
-              (v2/*: any*/),
-              (v4/*: any*/),
+              (v3/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -247,7 +177,7 @@ return {
                     "name": "namespace",
                     "storageKey": null
                   },
-                  (v4/*: any*/)
+                  (v3/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -269,7 +199,7 @@ return {
                     "plural": false,
                     "selections": [
                       (v2/*: any*/),
-                      (v4/*: any*/),
+                      (v3/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -299,7 +229,7 @@ return {
                     "kind": "LinkedField",
                     "name": "environment",
                     "plural": false,
-                    "selections": (v5/*: any*/),
+                    "selections": (v4/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -309,7 +239,7 @@ return {
                     "kind": "LinkedField",
                     "name": "variable",
                     "plural": false,
-                    "selections": (v5/*: any*/),
+                    "selections": (v4/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -323,23 +253,23 @@ return {
                 "storageKey": null
               }
             ],
-            "storageKey": null
-          },
-          (v3/*: any*/)
+            "type": "ApplicationPart",
+            "abstractKey": null
+          }
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "9fbe0838a74e2e20ad06bd56d5dae1f9",
+    "cacheID": "f321637764eb18dfa842ea0e075b88de",
     "id": null,
     "metadata": {},
-    "name": "RemoveComponentFromApplicationPartDialogMutation",
-    "operationKind": "mutation",
-    "text": "mutation RemoveComponentFromApplicationPartDialogMutation(\n  $input: RemoveComponentFromApplicationPartInput!\n) {\n  removeComponentFromApplicationPart(input: $input) {\n    applicationPart {\n      id\n      ...EditApplicationPart_fragment\n    }\n    errors {\n      __typename\n      ... on IUserError {\n        __isIUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment EditApplicationPartComponent_component on ApplicationPartComponent {\n  id\n  definition {\n    id\n    name\n    state\n  }\n}\n\nfragment EditApplicationPart_fragment on ApplicationPart {\n  id\n  name\n  application {\n    id\n    namespace\n    name\n  }\n  components {\n    id\n    definition {\n      id\n    }\n    ...EditApplicationPartComponent_component\n  }\n  variableValues {\n    ...VariableValueList_values\n    id\n  }\n}\n\nfragment VariableValueList_values on VariableValue {\n  id\n  environment {\n    id\n    name\n  }\n  variable {\n    id\n    name\n  }\n  value\n}\n"
+    "name": "EditApplicationPartRefetchPartQuery",
+    "operationKind": "query",
+    "text": "query EditApplicationPartRefetchPartQuery(\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...EditApplicationPart_fragment\n    id\n  }\n}\n\nfragment EditApplicationPartComponent_component on ApplicationPartComponent {\n  id\n  definition {\n    id\n    name\n    state\n  }\n}\n\nfragment EditApplicationPart_fragment on ApplicationPart {\n  id\n  name\n  application {\n    id\n    namespace\n    name\n  }\n  components {\n    id\n    definition {\n      id\n    }\n    ...EditApplicationPartComponent_component\n  }\n  variableValues {\n    ...VariableValueList_values\n    id\n  }\n}\n\nfragment VariableValueList_values on VariableValue {\n  id\n  environment {\n    id\n    name\n  }\n  variable {\n    id\n    name\n  }\n  value\n}\n"
   }
 };
 })();
-(node as any).hash = 'a785e9aa48cf282d70c074978b753319';
+(node as any).hash = 'd323e5f54e6357ee7f9923aca22b7b89';
 export default node;

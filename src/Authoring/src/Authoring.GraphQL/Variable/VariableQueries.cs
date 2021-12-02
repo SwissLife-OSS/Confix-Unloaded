@@ -37,11 +37,11 @@ public class VariableQueries
         return await variableService.GetByIdAsync(id, cancellationToken);
     }
 
-    public async Task<IEnumerable<VariableValue>> GetVariableValuesOfApplicationPartAsync(
+    public async Task<IEnumerable<VariableValue>> GetVariableValuesAsync(
         [Service] IVariableService variableService,
         [ID(nameof(Variable))] Guid variableId,
-        [ID(nameof(Application))] Guid applicationId,
-        [ID(nameof(ApplicationPart))] Guid applicationPartId,
+        [ID(nameof(Application))] Optional<Guid?> applicationId,
+        [ID(nameof(ApplicationPart))] Optional<Guid?> applicationPartId,
         CancellationToken cancellationToken)
     {
         VariableValueFilter filter = new(variableId)

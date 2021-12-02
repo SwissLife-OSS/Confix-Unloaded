@@ -14,7 +14,7 @@ import { JSONSchema6, JSONSchema6Definition } from "json-schema";
 
 const typeMappings: Record<string, JSONSchema6> = {
   String: {
-    oneOf: [{ type: "string" }, { $ref: `#/definitions/__Variables` }],
+    anyOf: [{ type: "string" }, { $ref: `#/definitions/__Variables` }],
   },
   Float: { type: "number" },
   Short: { type: "number" },
@@ -22,31 +22,31 @@ const typeMappings: Record<string, JSONSchema6> = {
   Int: { type: "number" },
   Boolean: { type: "boolean" },
   ID: {
-    oneOf: [{ type: "string" }, { $ref: `#/definitions/__Variables` }],
+    anyOf: [{ type: "string" }, { $ref: `#/definitions/__Variables` }],
   },
   UUID: {
-    oneOf: [{ type: "string" }, { $ref: `#/definitions/__Variables` }],
+    anyOf: [{ type: "string" }, { $ref: `#/definitions/__Variables` }],
   },
   Byte: {
-    oneOf: [{ type: "string" }, { $ref: `#/definitions/__Variables` }],
+    anyOf: [{ type: "string" }, { $ref: `#/definitions/__Variables` }],
   },
   ByteArray: {
-    oneOf: [{ type: "string" }, { $ref: `#/definitions/__Variables` }],
+    anyOf: [{ type: "string" }, { $ref: `#/definitions/__Variables` }],
   },
   Url: {
-    oneOf: [{ type: "string" }, { $ref: `#/definitions/__Variables` }],
+    anyOf: [{ type: "string" }, { $ref: `#/definitions/__Variables` }],
   },
   URL: {
-    oneOf: [{ type: "string" }, { $ref: `#/definitions/__Variables` }],
+    anyOf: [{ type: "string" }, { $ref: `#/definitions/__Variables` }],
   },
   Date: {
-    oneOf: [{ type: "string" }, { $ref: `#/definitions/__Variables` }],
+    anyOf: [{ type: "string" }, { $ref: `#/definitions/__Variables` }],
   },
   DateTime: {
-    oneOf: [{ type: "string" }, { $ref: `#/definitions/__Variables` }],
+    anyOf: [{ type: "string" }, { $ref: `#/definitions/__Variables` }],
   },
   Any: {
-    oneOf: [{ type: "string" }, { $ref: `#/definitions/__Variables` }],
+    anyOf: [{ type: "string" }, { $ref: `#/definitions/__Variables` }],
   },
 };
 
@@ -145,7 +145,7 @@ const createEnumTypeDefinition = (
   node: EnumTypeDefinitionNode
 ): JSONSchema6 => {
   return {
-    oneOf: [
+    anyOf: [
       {
         title: node.name.value,
         description: node.description?.value,
@@ -162,7 +162,7 @@ const createUnionTypeDefinition = (
   return {
     title: node.name.value,
     description: node.description?.value,
-    oneOf: node?.types
+    anyOf: node?.types
       ?.map((x) => ({
         $ref: `#/definitions/${x.name.value}`,
       }))

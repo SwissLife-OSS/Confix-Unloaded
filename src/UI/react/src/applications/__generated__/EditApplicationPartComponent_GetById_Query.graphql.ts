@@ -12,6 +12,11 @@ export type EditApplicationPartComponent_GetById_QueryResponse = {
     readonly applicationPartComponentById: {
         readonly " $fragmentRefs": FragmentRefs<"EditApplicationPartComponent_fragment">;
     } | null;
+    readonly globalVariableValues: ReadonlyArray<{
+        readonly variable: {
+            readonly name: string;
+        } | null;
+    }>;
 };
 export type EditApplicationPartComponent_GetById_Query = {
     readonly response: EditApplicationPartComponent_GetById_QueryResponse;
@@ -28,6 +33,13 @@ query EditApplicationPartComponent_GetById_Query(
     ...EditApplicationPartComponent_fragment
     id
   }
+  globalVariableValues {
+    variable {
+      name
+      id
+    }
+    id
+  }
 }
 
 fragment EditApplicationPartComponent_fragment on ApplicationPartComponent {
@@ -37,6 +49,13 @@ fragment EditApplicationPartComponent_fragment on ApplicationPartComponent {
       name
       namespace
       id
+      variableValues {
+        variable {
+          name
+          id
+        }
+        id
+      }
     }
     variableValues {
       variable {
@@ -93,7 +112,33 @@ v3 = {
   "name": "id",
   "storageKey": null
 },
-v4 = {
+v4 = [
+  {
+    "alias": null,
+    "args": null,
+    "concreteType": "Variable",
+    "kind": "LinkedField",
+    "name": "variable",
+    "plural": false,
+    "selections": [
+      (v2/*: any*/),
+      (v3/*: any*/)
+    ],
+    "storageKey": null
+  },
+  (v3/*: any*/)
+],
+v5 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "VariableValue",
+  "kind": "LinkedField",
+  "name": "variableValues",
+  "plural": true,
+  "selections": (v4/*: any*/),
+  "storageKey": null
+},
+v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -119,6 +164,29 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "EditApplicationPartComponent_fragment"
+          }
+        ],
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "VariableValue",
+        "kind": "LinkedField",
+        "name": "globalVariableValues",
+        "plural": true,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Variable",
+            "kind": "LinkedField",
+            "name": "variable",
+            "plural": false,
+            "selections": [
+              (v2/*: any*/)
+            ],
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -166,35 +234,12 @@ return {
                     "name": "namespace",
                     "storageKey": null
                   },
-                  (v3/*: any*/)
+                  (v3/*: any*/),
+                  (v5/*: any*/)
                 ],
                 "storageKey": null
               },
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "VariableValue",
-                "kind": "LinkedField",
-                "name": "variableValues",
-                "plural": true,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "Variable",
-                    "kind": "LinkedField",
-                    "name": "variable",
-                    "plural": false,
-                    "selections": [
-                      (v2/*: any*/),
-                      (v3/*: any*/)
-                    ],
-                    "storageKey": null
-                  },
-                  (v3/*: any*/)
-                ],
-                "storageKey": null
-              },
+              (v5/*: any*/),
               (v3/*: any*/)
             ],
             "storageKey": null
@@ -230,7 +275,7 @@ return {
                 "name": "schema",
                 "storageKey": null
               },
-              (v4/*: any*/),
+              (v6/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -266,22 +311,32 @@ return {
             ],
             "storageKey": null
           },
-          (v4/*: any*/),
+          (v6/*: any*/),
           (v3/*: any*/)
         ],
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "VariableValue",
+        "kind": "LinkedField",
+        "name": "globalVariableValues",
+        "plural": true,
+        "selections": (v4/*: any*/),
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "8025a996bd638e420bef066ed5b8b858",
+    "cacheID": "66b2ad8c67df53931ac0c50be869e815",
     "id": null,
     "metadata": {},
     "name": "EditApplicationPartComponent_GetById_Query",
     "operationKind": "query",
-    "text": "query EditApplicationPartComponent_GetById_Query(\n  $partComponentId: ID!\n) {\n  applicationPartComponentById(partComponentId: $partComponentId) {\n    ...EditApplicationPartComponent_fragment\n    id\n  }\n}\n\nfragment EditApplicationPartComponent_fragment on ApplicationPartComponent {\n  applicationPart {\n    name\n    application {\n      name\n      namespace\n      id\n    }\n    variableValues {\n      variable {\n        name\n        id\n      }\n      id\n    }\n    id\n  }\n  definition {\n    id\n    name\n    state\n    schemaSdl\n    schema\n    values\n    defaults\n    schemaViolations {\n      path\n      code\n    }\n  }\n  values\n}\n"
+    "text": "query EditApplicationPartComponent_GetById_Query(\n  $partComponentId: ID!\n) {\n  applicationPartComponentById(partComponentId: $partComponentId) {\n    ...EditApplicationPartComponent_fragment\n    id\n  }\n  globalVariableValues {\n    variable {\n      name\n      id\n    }\n    id\n  }\n}\n\nfragment EditApplicationPartComponent_fragment on ApplicationPartComponent {\n  applicationPart {\n    name\n    application {\n      name\n      namespace\n      id\n      variableValues {\n        variable {\n          name\n          id\n        }\n        id\n      }\n    }\n    variableValues {\n      variable {\n        name\n        id\n      }\n      id\n    }\n    id\n  }\n  definition {\n    id\n    name\n    state\n    schemaSdl\n    schema\n    values\n    defaults\n    schemaViolations {\n      path\n      code\n    }\n  }\n  values\n}\n"
   }
 };
 })();
-(node as any).hash = '34ac4687a3cadea83f1d15f9c7c313ad';
+(node as any).hash = 'cf9799837e0dfa74036b0b2434ce1301';
 export default node;

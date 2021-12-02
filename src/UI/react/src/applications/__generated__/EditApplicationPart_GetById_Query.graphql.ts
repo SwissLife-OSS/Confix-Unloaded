@@ -55,6 +55,23 @@ fragment EditApplicationPart_fragment on ApplicationPart {
     }
     ...EditApplicationPartComponent_component
   }
+  variableValues {
+    ...VariableValueList_values
+    id
+  }
+}
+
+fragment VariableValueList_values on VariableValue {
+  id
+  environment {
+    id
+    name
+  }
+  variable {
+    id
+    name
+  }
+  value
 }
 */
 
@@ -86,7 +103,11 @@ v3 = {
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
-};
+},
+v4 = [
+  (v2/*: any*/),
+  (v3/*: any*/)
+];
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -182,6 +203,45 @@ return {
               }
             ],
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "VariableValue",
+            "kind": "LinkedField",
+            "name": "variableValues",
+            "plural": true,
+            "selections": [
+              (v2/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Environment",
+                "kind": "LinkedField",
+                "name": "environment",
+                "plural": false,
+                "selections": (v4/*: any*/),
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Variable",
+                "kind": "LinkedField",
+                "name": "variable",
+                "plural": false,
+                "selections": (v4/*: any*/),
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "value",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -189,12 +249,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "c67711f3fb841770d1301a37f9714e18",
+    "cacheID": "d3aa5cc0b419b21386ea96df74d056d4",
     "id": null,
     "metadata": {},
     "name": "EditApplicationPart_GetById_Query",
     "operationKind": "query",
-    "text": "query EditApplicationPart_GetById_Query(\n  $id: ID!\n) {\n  applicationPartById(id: $id) {\n    id\n    ...EditApplicationPart_fragment\n  }\n}\n\nfragment EditApplicationPartComponent_component on ApplicationPartComponent {\n  id\n  definition {\n    id\n    name\n    state\n  }\n}\n\nfragment EditApplicationPart_fragment on ApplicationPart {\n  id\n  name\n  application {\n    id\n    namespace\n    name\n  }\n  components {\n    id\n    definition {\n      id\n    }\n    ...EditApplicationPartComponent_component\n  }\n}\n"
+    "text": "query EditApplicationPart_GetById_Query(\n  $id: ID!\n) {\n  applicationPartById(id: $id) {\n    id\n    ...EditApplicationPart_fragment\n  }\n}\n\nfragment EditApplicationPartComponent_component on ApplicationPartComponent {\n  id\n  definition {\n    id\n    name\n    state\n  }\n}\n\nfragment EditApplicationPart_fragment on ApplicationPart {\n  id\n  name\n  application {\n    id\n    namespace\n    name\n  }\n  components {\n    id\n    definition {\n      id\n    }\n    ...EditApplicationPartComponent_component\n  }\n  variableValues {\n    ...VariableValueList_values\n    id\n  }\n}\n\nfragment VariableValueList_values on VariableValue {\n  id\n  environment {\n    id\n    name\n  }\n  variable {\n    id\n    name\n  }\n  value\n}\n"
   }
 };
 })();

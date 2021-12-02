@@ -57,6 +57,13 @@ fragment EditApplicationPartComponent_fragment on ApplicationPartComponent {
       name
       namespace
       id
+      variableValues {
+        variable {
+          name
+          id
+        }
+        id
+      }
     }
     variableValues {
       variable {
@@ -136,6 +143,31 @@ v5 = {
   "storageKey": null
 },
 v6 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "VariableValue",
+  "kind": "LinkedField",
+  "name": "variableValues",
+  "plural": true,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "Variable",
+      "kind": "LinkedField",
+      "name": "variable",
+      "plural": false,
+      "selections": [
+        (v4/*: any*/),
+        (v5/*: any*/)
+      ],
+      "storageKey": null
+    },
+    (v5/*: any*/)
+  ],
+  "storageKey": null
+},
+v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -239,35 +271,12 @@ return {
                         "name": "namespace",
                         "storageKey": null
                       },
-                      (v5/*: any*/)
+                      (v5/*: any*/),
+                      (v6/*: any*/)
                     ],
                     "storageKey": null
                   },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "VariableValue",
-                    "kind": "LinkedField",
-                    "name": "variableValues",
-                    "plural": true,
-                    "selections": [
-                      {
-                        "alias": null,
-                        "args": null,
-                        "concreteType": "Variable",
-                        "kind": "LinkedField",
-                        "name": "variable",
-                        "plural": false,
-                        "selections": [
-                          (v4/*: any*/),
-                          (v5/*: any*/)
-                        ],
-                        "storageKey": null
-                      },
-                      (v5/*: any*/)
-                    ],
-                    "storageKey": null
-                  },
+                  (v6/*: any*/),
                   (v5/*: any*/)
                 ],
                 "storageKey": null
@@ -303,7 +312,7 @@ return {
                     "name": "schema",
                     "storageKey": null
                   },
-                  (v6/*: any*/),
+                  (v7/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -333,7 +342,7 @@ return {
                 ],
                 "storageKey": null
               },
-              (v6/*: any*/),
+              (v7/*: any*/),
               (v5/*: any*/)
             ],
             "storageKey": null
@@ -363,12 +372,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "d1913b2a6de8af3633f5e6df759afb58",
+    "cacheID": "4df4cdfa4cdb554e64cf29104ff31c5e",
     "id": null,
     "metadata": {},
     "name": "EditApplicationPartComponent_UpdateComponentValues_Mutation",
     "operationKind": "mutation",
-    "text": "mutation EditApplicationPartComponent_UpdateComponentValues_Mutation(\n  $input: UpdateApplicationPartComponentValuesInput!\n) {\n  updateApplicationPartComponentValues(input: $input) {\n    component {\n      ...EditApplicationPartComponent_fragment\n      id\n    }\n    errors {\n      __typename\n      ... on IUserError {\n        __isIUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment EditApplicationPartComponent_fragment on ApplicationPartComponent {\n  applicationPart {\n    name\n    application {\n      name\n      namespace\n      id\n    }\n    variableValues {\n      variable {\n        name\n        id\n      }\n      id\n    }\n    id\n  }\n  definition {\n    id\n    name\n    state\n    schemaSdl\n    schema\n    values\n    defaults\n    schemaViolations {\n      path\n      code\n    }\n  }\n  values\n}\n"
+    "text": "mutation EditApplicationPartComponent_UpdateComponentValues_Mutation(\n  $input: UpdateApplicationPartComponentValuesInput!\n) {\n  updateApplicationPartComponentValues(input: $input) {\n    component {\n      ...EditApplicationPartComponent_fragment\n      id\n    }\n    errors {\n      __typename\n      ... on IUserError {\n        __isIUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment EditApplicationPartComponent_fragment on ApplicationPartComponent {\n  applicationPart {\n    name\n    application {\n      name\n      namespace\n      id\n      variableValues {\n        variable {\n          name\n          id\n        }\n        id\n      }\n    }\n    variableValues {\n      variable {\n        name\n        id\n      }\n      id\n    }\n    id\n  }\n  definition {\n    id\n    name\n    state\n    schemaSdl\n    schema\n    values\n    defaults\n    schemaViolations {\n      path\n      code\n    }\n  }\n  values\n}\n"
   }
 };
 })();

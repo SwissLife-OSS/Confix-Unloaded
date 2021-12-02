@@ -6,11 +6,11 @@ import { ConcreteRequest } from "relay-runtime";
 
 export type VariableEditorQueryVariables = {
     variableId: string;
-    applicationId: string;
-    applicationPartId: string;
+    applicationId?: string | null | undefined;
+    applicationPartId?: string | null | undefined;
 };
 export type VariableEditorQueryResponse = {
-    readonly variableValuesOfApplicationPart: ReadonlyArray<{
+    readonly variableValues: ReadonlyArray<{
         readonly id: string;
         readonly application: {
             readonly id: string;
@@ -41,10 +41,10 @@ export type VariableEditorQuery = {
 /*
 query VariableEditorQuery(
   $variableId: ID!
-  $applicationId: ID!
-  $applicationPartId: ID!
+  $applicationId: ID
+  $applicationPartId: ID
 ) {
-  variableValuesOfApplicationPart(variableId: $variableId, applicationId: $applicationId, applicationPartId: $applicationPartId) {
+  variableValues(variableId: $variableId, applicationId: $applicationId, applicationPartId: $applicationPartId) {
     id
     application {
       id
@@ -122,7 +122,7 @@ v5 = [
     ],
     "concreteType": "VariableValue",
     "kind": "LinkedField",
-    "name": "variableValuesOfApplicationPart",
+    "name": "variableValues",
     "plural": true,
     "selections": [
       (v3/*: any*/),
@@ -203,14 +203,14 @@ return {
     "selections": (v5/*: any*/)
   },
   "params": {
-    "cacheID": "a21b8f7853b669e3f3b8f277c9c06709",
+    "cacheID": "ea87c34b0a17d70e730b02fd5cb6d6c4",
     "id": null,
     "metadata": {},
     "name": "VariableEditorQuery",
     "operationKind": "query",
-    "text": "query VariableEditorQuery(\n  $variableId: ID!\n  $applicationId: ID!\n  $applicationPartId: ID!\n) {\n  variableValuesOfApplicationPart(variableId: $variableId, applicationId: $applicationId, applicationPartId: $applicationPartId) {\n    id\n    application {\n      id\n      name\n    }\n    variable {\n      id\n      name\n    }\n    environment {\n      id\n      name\n    }\n    applicationPart {\n      id\n      name\n    }\n    value\n  }\n}\n"
+    "text": "query VariableEditorQuery(\n  $variableId: ID!\n  $applicationId: ID\n  $applicationPartId: ID\n) {\n  variableValues(variableId: $variableId, applicationId: $applicationId, applicationPartId: $applicationPartId) {\n    id\n    application {\n      id\n      name\n    }\n    variable {\n      id\n      name\n    }\n    environment {\n      id\n      name\n    }\n    applicationPart {\n      id\n      name\n    }\n    value\n  }\n}\n"
   }
 };
 })();
-(node as any).hash = '12f30d1028cfd4fd562fe0027f711aa9';
+(node as any).hash = '47fd6ec0499faf67a267fab92bb41836';
 export default node;

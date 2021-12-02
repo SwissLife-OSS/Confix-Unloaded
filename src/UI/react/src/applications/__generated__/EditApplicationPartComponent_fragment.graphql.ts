@@ -12,6 +12,11 @@ export type EditApplicationPartComponent_fragment = {
         readonly application: {
             readonly name: string;
             readonly namespace: string | null;
+            readonly variableValues: ReadonlyArray<{
+                readonly variable: {
+                    readonly name: string;
+                } | null;
+            }>;
         } | null;
         readonly variableValues: ReadonlyArray<{
             readonly variable: {
@@ -54,6 +59,29 @@ var v0 = {
 v1 = {
   "alias": null,
   "args": null,
+  "concreteType": "VariableValue",
+  "kind": "LinkedField",
+  "name": "variableValues",
+  "plural": true,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "Variable",
+      "kind": "LinkedField",
+      "name": "variable",
+      "plural": false,
+      "selections": [
+        (v0/*: any*/)
+      ],
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
+},
+v2 = {
+  "alias": null,
+  "args": null,
   "kind": "ScalarField",
   "name": "values",
   "storageKey": null
@@ -88,33 +116,12 @@ return {
               "kind": "ScalarField",
               "name": "namespace",
               "storageKey": null
-            }
+            },
+            (v1/*: any*/)
           ],
           "storageKey": null
         },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "VariableValue",
-          "kind": "LinkedField",
-          "name": "variableValues",
-          "plural": true,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "concreteType": "Variable",
-              "kind": "LinkedField",
-              "name": "variable",
-              "plural": false,
-              "selections": [
-                (v0/*: any*/)
-              ],
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
-        }
+        (v1/*: any*/)
       ],
       "storageKey": null
     },
@@ -155,7 +162,7 @@ return {
           "name": "schema",
           "storageKey": null
         },
-        (v1/*: any*/),
+        (v2/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -191,11 +198,11 @@ return {
       ],
       "storageKey": null
     },
-    (v1/*: any*/)
+    (v2/*: any*/)
   ],
   "type": "ApplicationPartComponent",
   "abstractKey": null
 };
 })();
-(node as any).hash = 'f5d32a899a2e59ec1aa4435791798616';
+(node as any).hash = '99bddf18d2e63f83cfdd7024675f6fde';
 export default node;
