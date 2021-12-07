@@ -1,17 +1,9 @@
 import { useFragment, useLazyLoadQuery, useMutation } from "react-relay";
-import { Button, Col, Row } from "antd";
+import { Col, Row } from "antd";
 import { DetailView } from "../shared/DetailView";
-import { FormActions, FormField } from "../shared/FormField";
 import { graphql } from "babel-plugin-relay/macro";
-import { useRouteMatch } from "react-router";
 import { EditComponentQuery } from "./__generated__/EditComponentQuery.graphql";
-import {
-  pipeCommitFn,
-  withErrorNotifications,
-  withOnSuccess,
-  withSuccessMessage,
-} from "../shared/pipeCommitFn";
-import { useCommitForm } from "../shared/useCommitForm";
+import { pipeCommitFn, withSuccessMessage } from "../shared/pipeCommitFn";
 import { EditableBreadcrumbHeader } from "../shared/EditablePageHeader";
 import { useToggle } from "../shared/useToggle";
 import { RenameComponentDialog } from "./controls/dialogs/RenameComponentDialog";
@@ -21,13 +13,10 @@ import {
   EditComponentUpdateMutationResponse,
 } from "./__generated__/EditComponentUpdateMutation.graphql";
 import React, { useState } from "react";
-import {
-  EditComponent_component,
-  EditComponent_component$data,
-  EditComponent_component$key,
-} from "./__generated__/EditComponent_component.graphql";
+import { EditComponent_component$key } from "./__generated__/EditComponent_component.graphql";
 import { css } from "@emotion/react";
 import { SectionHeader } from "../shared/SectionHeader";
+import { useParams } from "react-router";
 
 const componentByIdQuery = graphql`
   query EditComponentQuery($id: ID!) {
@@ -75,9 +64,9 @@ const editComponentMutation = graphql`
 `;
 
 export const EditComponent = () => {
-  const route = useRouteMatch<{ id: string }>();
+  const { id: componentId = "" } = useParams();
   const component = useLazyLoadQuery<EditComponentQuery>(componentByIdQuery, {
-    id: route.params.id,
+    id: componentId,
   });
   const id = component.componentById?.id;
   if (!id) {

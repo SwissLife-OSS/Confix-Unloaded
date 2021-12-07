@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useState } from "react";
 import { useFragment, useLazyLoadQuery, useMutation } from "react-relay";
 import { DetailView } from "../shared/DetailView";
 import { graphql } from "babel-plugin-relay/macro";
-import { useRouteMatch } from "react-router";
+import { useParams } from "react-router";
 import { EditApplicationPartComponent_GetById_Query } from "./__generated__/EditApplicationPartComponent_GetById_Query.graphql";
 import { Col, Row } from "antd";
 import { EditableBreadcrumbHeader } from "../shared/EditablePageHeader";
@@ -87,11 +87,7 @@ const updateComponentValuesMutation = graphql`
 `;
 
 export const EditApplicationPartComponent = () => {
-  const {
-    params: { partComponentId },
-  } = useRouteMatch<{
-    partComponentId: string;
-  }>();
+  const { partComponentId = "" } = useParams();
   const data = useLazyLoadQuery<EditApplicationPartComponent_GetById_Query>(
     applicationPartComponentQuery,
     {

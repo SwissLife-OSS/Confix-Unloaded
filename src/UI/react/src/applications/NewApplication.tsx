@@ -1,23 +1,18 @@
-import { useFormik } from "formik";
 import React from "react";
 import { useMutation } from "react-relay";
 import { DetailView } from "../shared/DetailView";
 import { FormActions, FormField, TagSelectField } from "../shared/FormField";
-import { applicationSchema } from "./validation/applicationSchema";
 import { graphql } from "babel-plugin-relay/macro";
 import { NewApplicationMutation } from "./__generated__/NewApplicationMutation.graphql";
 import { Button, Col, Row } from "antd";
 import {
-  pipeCommitFn,
   withErrorNotifications,
   withOnSuccess,
   withSuccessMessage,
 } from "../shared/pipeCommitFn";
 import { useConnectionId } from "../shared/useConnectionId";
 import { useGoTo } from "../shared/useGoTo";
-import { Routes } from "../routes";
 import { Connections } from "../Connections";
-import { withSuccess } from "antd/lib/modal/confirm";
 import { useCommitForm } from "../shared/useCommitForm";
 
 const newApplicationMutation = graphql`
@@ -48,7 +43,7 @@ export const NewApplication: React.FC = () => {
   const [commit, isInFlight] = useMutation<NewApplicationMutation>(
     newApplicationMutation
   );
-  const goToEdit = useGoTo(Routes.applications.edit);
+  const goToEdit = useGoTo((id?: string) => `${id}/edit`);
   const connectionId = useConnectionId(Connections.applications.name);
   const form = useCommitForm(
     commit,

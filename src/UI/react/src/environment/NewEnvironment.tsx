@@ -1,20 +1,16 @@
-import { useFormik } from "formik";
 import React from "react";
 import { Button, Col, Row } from "antd";
 import { useMutation } from "react-relay";
 import { DetailView } from "../shared/DetailView";
 import { FormActions, FormField } from "../shared/FormField";
-import { environmentSchema } from "./environmentSchema";
 import { graphql } from "babel-plugin-relay/macro";
 import {
-  pipeCommitFn,
   withErrorNotifications,
   withOnSuccess,
   withSuccessMessage,
 } from "../shared/pipeCommitFn";
 import { useConnectionId } from "../shared/useConnectionId";
 import { useGoTo } from "../shared/useGoTo";
-import { Routes } from "../routes";
 import { useCommitForm } from "../shared/useCommitForm";
 import { NewEnvironmentMutation } from "./__generated__/NewEnvironmentMutation.graphql";
 
@@ -50,7 +46,7 @@ export const NewEnvironment: React.FC = () => {
     useConnectionId("useEnvironments_searchEnvironments"),
     useConnectionId("Query_searchEnvironments"),
   ];
-  const goToEdit = useGoTo(Routes.environments.edit);
+  const goToEdit = useGoTo((id: string) => `${id}/edit`);
   const form = useCommitForm(
     commit,
     {

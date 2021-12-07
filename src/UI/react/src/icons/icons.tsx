@@ -2,10 +2,14 @@ import styled from "@emotion/styled";
 import Icon from "@ant-design/icons";
 import { CustomIconComponentProps } from "@ant-design/icons/lib/components/Icon";
 import {
+  mdiArrowCollapseDown,
+  mdiArrowCollapseRight,
   mdiBell,
   mdiCancel,
   mdiCheck,
+  mdiChevronDown,
   mdiChevronLeft,
+  mdiChevronRight,
   mdiCircleOutline,
   mdiCircleSlice8,
   mdiClose,
@@ -15,6 +19,7 @@ import {
   mdiFileTreeOutline,
   mdiMagnify,
   mdiMenu,
+  mdiPackage,
   mdiPackageVariant,
   mdiPencil,
   mdiPlus,
@@ -60,6 +65,16 @@ export const FileTreeOutlineIcon = createIcon(mdiFileTreeOutline);
 export const CogOutlineIcon = createIcon(mdiCogOutline);
 export const SearchIcon = createIcon(mdiMagnify);
 export const AddIcon = createIcon(mdiPlus);
+
+export const ApplicationIcon = PackageVariantIcon;
+export const ApplicationPartIcon = createIcon(mdiPackage);
+export const CollapsedIcon = createIcon(mdiChevronRight);
+export const NotCollapsedIcon = createIcon(mdiChevronDown);
+export const ComponentIcon = ToyBrickOutlineIcon;
+export const EnvironmentIcon = ServerIcon;
+export const VaultIcon = ShieldStartOutlineIcon;
+export const ExplorerIcon = FileTreeOutlineIcon;
+export const SettingsIcon = CogOutlineIcon;
 
 const CircleSlice8 = createIcon(mdiCircleSlice8);
 export const ActiveIcon = styled(CircleSlice8)`

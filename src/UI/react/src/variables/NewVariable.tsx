@@ -7,7 +7,6 @@ import { graphql } from "babel-plugin-relay/macro";
 import { withOnSuccess, withSuccessMessage } from "../shared/pipeCommitFn";
 import { useConnectionId } from "../shared/useConnectionId";
 import { useGoTo } from "../shared/useGoTo";
-import { Routes } from "../routes";
 import { useCommitForm } from "../shared/useCommitForm";
 import { NewVariableMutation } from "./__generated__/NewVariableMutation.graphql";
 
@@ -33,7 +32,7 @@ export const NewVariable: React.FC = () => {
     useMutation<NewVariableMutation>(newVariableMutation);
 
   const connectionId = useConnectionId("Query_searchVariables");
-  const goToEdit = useGoTo(Routes.variables.edit);
+  const goToEdit = useGoTo((id: string) => `${id}/edit`);
   const form = useCommitForm(
     commit,
     {

@@ -1,6 +1,7 @@
 import React from "react";
 import { Tag, TagProps } from "antd";
 import { hashCode } from "./hashCode";
+import styled from "@emotion/styled";
 
 const colors = [
   "pink",
@@ -29,3 +30,8 @@ export const ColorTag: React.FC<{ value: string } & TagProps> = ({
     </Tag>
   );
 };
+
+export const TagBar = styled("div")`
+  display: flex;
+  flex-direction: row;
+`;

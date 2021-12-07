@@ -16,7 +16,6 @@ import {
 import styled from "@emotion/styled";
 import { Button, List } from "antd";
 import { Colors } from "../shared/colors";
-import { PlusCircleFilled } from "@ant-design/icons";
 import { AddIcon, DeleteIcon } from "../icons/icons";
 import { useToggle } from "../shared/useToggle";
 import { AddPartToApplicationDialog } from "./dialogs/AddPartToApplicationDialog";
@@ -24,7 +23,7 @@ import { RemovePartFromApplicationDialog } from "./dialogs/RemovePartFromApplica
 import { AddComponentsToApplicationPartDialog } from "./dialogs/AddComponentsToApplicationPartDialog";
 import { RemoveComponentFromApplicationPartDialog } from "./dialogs/RemoveComponentFromApplicationPartDialog";
 import { useGoTo } from "../shared/useGoTo";
-import { Routes } from "../routes";
+import { generatePath, useHref } from "react-router";
 
 const applicationsQuery = graphql`
   query ApplicationsListQuery(
@@ -194,8 +193,11 @@ const ApplicationPart: React.FC<{
     enableComponentDialog,
     disableComponentDialog,
   ] = useToggle();
-  const goToPart = useGoTo(() =>
-    Routes.applicationParts.edit(applicationId, id)
+  useHref({});
+  const goToPart = useGoTo(
+    ":applicationId/parts/:partId/edit",
+    {},
+    { applicationId, partId: id }
   );
   return (
     <>
@@ -247,8 +249,10 @@ const Component: React.FC<{
 }) => {
   const [isRemoveDialogShown, , enableRemoveDialog, disableRemoveDialog] =
     useToggle();
-  const goToComponent = useGoTo(() =>
-    Routes.applicationPartComponents.edit(applicationId, partComponentId)
+  const goToComponent = useGoTo(
+    ":applicationId/components/:partComponentId/edit",
+    {},
+    { applicationId, partComponentId }
   );
   return (
     <SubItem indent={2} onClick={goToComponent}>

@@ -17,7 +17,6 @@ import { Colors } from "../shared/colors";
 import { useToggle } from "../shared/useToggle";
 import { RemoveEnvironmentDialog } from "./controls/dialogs/RemoveEnvironmentDialog";
 import { useGoTo } from "../shared/useGoTo";
-import { Routes } from "../routes";
 
 const environmentsQuery = graphql`
   query EnvironmentsListQuery($cursor: String, $count: Int, $search: String) {
@@ -99,7 +98,7 @@ const EnvironmentListItem: React.FC<{
   );
   const handleClick = useCallback(() => onItemSelect(id), [onItemSelect, id]);
   const [isRemoveEnvVisible, , enableRemoveEnv, disableRemoveEnv] = useToggle();
-  const goToOverview = useGoTo(Routes.environments.overview);
+  const goToOverview = useGoTo("/");
   const handleOnClose = useCallback(
     (removed: boolean) => {
       disableRemoveEnv();

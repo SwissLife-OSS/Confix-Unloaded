@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import { matchPath, Route, Switch, useLocation } from "react-router-dom";
+import { Route, Routes, useMatch } from "react-router-dom";
 import { FullSizeBox, SidebarHeader } from "../shared/FullSizeBox";
 import { SearchBar } from "../shared/SearchBar";
 import { EditApplication } from "./EditApplication";
 import { NewApplication } from "./NewApplication";
 import { Page } from "../shared/Page";
-import { Routes } from "../routes";
 import { css } from "@emotion/react";
 import { Button } from "antd";
 import { DefaultSuspense } from "../shared/DefaultSuspense";
@@ -18,8 +17,8 @@ export const Applications: React.FC = () => {
   const [search, setSearch] = useState<string | undefined>();
 
   const applicationId = useApplicationIdFromRoute();
-  const handleAdd = useGoTo(Routes.applications.new);
-  const handleOnItemSelected = useGoTo(Routes.applications.edit);
+  const handleAdd = useGoTo(() => "new");
+  const handleOnItemSelected = useGoTo((id?: string) => `${id}/edit`);
 
   return (
     <Page title="Applications">
@@ -47,31 +46,29 @@ export const Applications: React.FC = () => {
         `}
       >
         <DefaultSuspense>
-          <Switch>
-            <Route path={Routes.applications.new()}>
-              <NewApplication />
-            </Route>
-            <Route path={Routes.applicationPartComponents.edit()} strict>
-              <EditApplicationPartComponent />
-            </Route>
-            <Route path={Routes.applicationParts.edit()} strict>
-              <EditApplicationPart />
-            </Route>
-            <Route path={Routes.applications.edit()} strict>
-              <EditApplication />
-            </Route>
-          </Switch>
+          <ApplicationRoutes />
         </DefaultSuspense>
       </FullSizeBox>
     </Page>
   );
 };
 
+export const ApplicationRoutes: React.VFC = () => (
+  <Routes>
+    <Route path={"new"} element={<NewApplication />} />
+    <Route
+      path={":applicationId/components/:partComponentId/edit"}
+      element={<EditApplicationPartComponent />}
+    />
+    <Route
+      path={":applicationId/parts/:id/edit"}
+      element={<EditApplicationPart />}
+    />
+    <Route path={":applicationId/edit"} element={<EditApplication />} />
+  </Routes>
+);
+
 const useApplicationIdFromRoute = (): string | undefined => {
-  const routeMatch = useLocation();
-  const match = matchPath<{ applicationId?: string }>(routeMatch.pathname, {
-    path: Routes.applications.edit(),
-    strict: false,
-  });
+  const match = useMatch("/applications/:applicationId/*");
   return match?.params?.applicationId;
 };

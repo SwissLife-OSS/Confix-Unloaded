@@ -7,7 +7,6 @@ import {
 import { Col, Descriptions, Empty, Row, Select, Spin } from "antd";
 import { DetailView } from "../shared/DetailView";
 import { graphql } from "babel-plugin-relay/macro";
-import { useRouteMatch } from "react-router";
 import { EditVariableQuery } from "./__generated__/EditVariableQuery.graphql";
 import { EditableBreadcrumbHeader } from "../shared/EditablePageHeader";
 import { useToggle } from "../shared/useToggle";
@@ -24,6 +23,7 @@ import { applicationFragment } from "../applications/ApplicationsList";
 import { useMultiplexer } from "../shared/useMultiplexer";
 import { VariableEditor } from "./controls/VariableEditor";
 import { DefaultSuspense } from "../shared/DefaultSuspense";
+import { useParams } from "react-router";
 
 const variableByIdQuery = graphql`
   query EditVariableQuery($id: ID!) {
@@ -60,9 +60,9 @@ const editVariableFragment = graphql`
 `;
 
 export const EditVariable = () => {
-  const route = useRouteMatch<{ id: string }>();
+  const { variableId = "" } = useParams();
   const { variable } = useLazyLoadQuery<EditVariableQuery>(variableByIdQuery, {
-    id: route.params.id,
+    id: variableId,
   });
   const id = variable?.id;
   if (!id) {

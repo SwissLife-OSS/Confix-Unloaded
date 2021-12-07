@@ -6,7 +6,6 @@ import {
 } from "react-relay";
 import { DetailView } from "../shared/DetailView";
 import { graphql } from "babel-plugin-relay/macro";
-import { useRouteMatch } from "react-router";
 import { EditApplication_GetById_Query } from "./__generated__/EditApplication_GetById_Query.graphql";
 import { Button, Card, Col, Empty, List, Row, Tabs, Typography } from "antd";
 import styled from "@emotion/styled";
@@ -23,14 +22,16 @@ import { RemovePartFromApplicationDialog } from "./dialogs/RemovePartFromApplica
 import { AddComponentsToApplicationPartDialog } from "./dialogs/AddComponentsToApplicationPartDialog";
 import { RenameApplicationDialog } from "./dialogs/RenameApplicationDialog";
 import { useGoTo } from "../shared/useGoTo";
-import { Routes } from "../routes";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { VariablesSelect } from "../variables/controls/VariableSelect";
 import { DefaultSuspense } from "../shared/DefaultSuspense";
 import { VariableEditor } from "../variables/controls/VariableEditor";
 import { EditApplicationRefetchApplicationQuery } from "./__generated__/EditApplicationRefetchApplicationQuery.graphql";
 import { VariableValueList } from "../variables/controls/VariableValueList";
 import { useSilentRefresh } from "../shared/useDefaultRefetch";
+import { generatePath, useLocation, useMatch, useParams } from "react-router";
+import { Link, useSearchParams } from "react-router-dom";
+import { useTabFromState } from "../shared/useTabFromState";
 
 const applicationByIdQuery = graphql`
   query EditApplication_GetById_Query($id: ID!) {
@@ -57,8 +58,9 @@ const applicationByIdFragment = graphql`
 `;
 
 export const EditApplication = () => {
-  const route = useRouteMatch<{ applicationId: string }>();
-  const variables = { id: route.params.applicationId };
+  const route = useParams();
+  const variables = { id: route.applicationId ?? "" };
+  const tab = useTabFromState("parts", "variables");
   const data = useLazyLoadQuery<EditApplication_GetById_Query>(
     applicationByIdQuery,
     variables
@@ -76,7 +78,7 @@ export const EditApplication = () => {
 
   if (!application?.id) {
     return (
-      <DetailView style={{ padding: 1 }}>Coult not find application</DetailView>
+      <DetailView style={{ padding: 1 }}>Could not find application</DetailView>
     );
   }
 
@@ -96,11 +98,11 @@ export const EditApplication = () => {
           <ApplicationPartSectionHeader applicationKey={application} />
         </Col>
         <Col xs={24}>
-          <Tabs defaultActiveKey="1">
-            <Tabs.TabPane tab="Parts" key="1">
+          <Tabs defaultActiveKey={tab} key={tab}>
+            <Tabs.TabPane tab="Parts" key="parts">
               <ApplicationParts application={application} />
             </Tabs.TabPane>
-            <Tabs.TabPane tab="Variables" key="2">
+            <Tabs.TabPane tab="Variables" key="variables">
               <Variables data={application} refetch={refresh} />
             </Tabs.TabPane>
           </Tabs>
@@ -116,13 +118,21 @@ const Variables: React.FC<{
   data: EditApplication_Application_Fragment;
   refetch: () => void;
 }> = ({ data, refetch }) => {
-  const [selected, setSelected] = useState<VariableOption>();
+  const { state } = useLocation();
+  const [selected, setSelected] = useState<VariableOption>(
+    state?.variableOption
+  );
+  useEffect(
+    () => state?.variableOption && setSelected(state?.variableOption),
+    [state?.variableOption]
+  );
   const handleVariableValueEditClick = useCallback(
     (id: string, name: string) => {
       setSelected({ label: name, value: id });
     },
     []
   );
+
   return (
     <>
       <Row gutter={[16, 16]}>
@@ -203,15 +213,18 @@ const ApplicationPartsDisplay: React.FC<{
   const [isAddComponentVisible, , enableAddComponent, disableAddComponent] =
     useToggle();
   const { components, name, id } = useFragment(applicationPartFragment, part);
-  const goToPart = useGoTo(() =>
-    Routes.applicationParts.edit(applicationId, id)
-  );
+  const linkToPart = generatePath(`../:applicationId/parts/:partId/edit`, {
+    applicationId,
+    partId: id,
+  });
   return (
     <>
       <Card
         title={name}
         actions={[
-          <EditIcon onClick={goToPart} />,
+          <Link to={linkToPart}>
+            <EditIcon />
+          </Link>,
           <AddIcon onClick={enableAddComponent} />,
         ]}
         extra={

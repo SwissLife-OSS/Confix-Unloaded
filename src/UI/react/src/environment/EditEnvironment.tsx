@@ -2,7 +2,6 @@ import { useFragment, useLazyLoadQuery } from "react-relay";
 import { Col, Row } from "antd";
 import { DetailView } from "../shared/DetailView";
 import { graphql } from "babel-plugin-relay/macro";
-import { useRouteMatch } from "react-router";
 import { EditEnvironmentQuery } from "./__generated__/EditEnvironmentQuery.graphql";
 import { EditableBreadcrumbHeader } from "../shared/EditablePageHeader";
 import { useToggle } from "../shared/useToggle";
@@ -10,6 +9,7 @@ import { RenameEnvironmentDialog } from "./controls/dialogs/RenameEnvironmentDia
 import React from "react";
 import { EditEnvironment_Environment$key } from "./__generated__/EditEnvironment_Environment.graphql";
 import { css } from "@emotion/react";
+import { useParams } from "react-router";
 
 const EnvironmentByIdQuery = graphql`
   query EditEnvironmentQuery($id: ID!) {
@@ -28,11 +28,11 @@ const editEnvironmentFragment = graphql`
 `;
 
 export const EditEnvironment = () => {
-  const route = useRouteMatch<{ id: string }>();
+  const { environmentId = "" } = useParams();
   const Environment = useLazyLoadQuery<EditEnvironmentQuery>(
     EnvironmentByIdQuery,
     {
-      id: route.params.id,
+      id: environmentId,
     }
   );
   const id = Environment.environmentById?.id;

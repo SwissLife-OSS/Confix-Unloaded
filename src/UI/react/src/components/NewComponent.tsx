@@ -1,21 +1,17 @@
-import { useFormik } from "formik";
 import React from "react";
 import { Button, Col, Row } from "antd";
 import { useMutation } from "react-relay";
 import { DetailView } from "../shared/DetailView";
 import { FormActions, FormField } from "../shared/FormField";
-import { componentSchema } from "./componentSchema";
 import { graphql } from "babel-plugin-relay/macro";
 import { NewComponentMutation } from "./__generated__/NewComponentMutation.graphql";
 import {
-  pipeCommitFn,
   withErrorNotifications,
   withOnSuccess,
   withSuccessMessage,
 } from "../shared/pipeCommitFn";
 import { useConnectionId } from "../shared/useConnectionId";
 import { useGoTo } from "../shared/useGoTo";
-import { Routes } from "../routes";
 import { useCommitForm } from "../shared/useCommitForm";
 
 const newComponentMutation = graphql`
@@ -46,7 +42,7 @@ export const NewComponent: React.FC = () => {
     useMutation<NewComponentMutation>(newComponentMutation);
 
   const connectionId = useConnectionId("Query_components");
-  const goToEdit = useGoTo(Routes.components.edit);
+  const goToEdit = useGoTo((id: string) => `${id}/edit`);
   const form = useCommitForm(
     commit,
     {

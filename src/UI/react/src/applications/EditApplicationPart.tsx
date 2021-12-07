@@ -6,7 +6,7 @@ import {
 } from "react-relay";
 import { DetailView } from "../shared/DetailView";
 import { graphql } from "babel-plugin-relay/macro";
-import { useRouteMatch } from "react-router";
+import { useParams } from "react-router";
 import { EditApplicationPart_GetById_Query } from "./__generated__/EditApplicationPart_GetById_Query.graphql";
 import {
   Button,
@@ -34,17 +34,18 @@ import {
 import { RenameApplicationPartDialog } from "./dialogs/RenameApplicationPartDialog";
 import { RemoveComponentFromApplicationPartDialog } from "./dialogs/RemoveComponentFromApplicationPartDialog";
 import { useGoTo } from "../shared/useGoTo";
-import { Routes } from "../routes";
 import {
   VariableOption,
   VariablesSelect,
 } from "../variables/controls/VariableSelect";
 import { DefaultSuspense } from "../shared/DefaultSuspense";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { VariableEditor } from "../variables/controls/VariableEditor";
 import { EditApplicationPartRefetchPartQuery } from "./__generated__/EditApplicationPartRefetchPartQuery.graphql";
 import { VariableValueList } from "../variables/controls/VariableValueList";
 import { useSilentRefresh } from "../shared/useDefaultRefetch";
+import { useTabFromState } from "../shared/useTabFromState";
+import { generatePath, Link, useLocation } from "react-router-dom";
 
 const applicationByIdQuery = graphql`
   query EditApplicationPart_GetById_Query($id: ID!) {
@@ -79,10 +80,9 @@ const applicationPartfragment = graphql`
 `;
 
 export const EditApplicationPart = () => {
-  const {
-    params: { applicationId, id: applicationPartId },
-  } = useRouteMatch<{ applicationId: string; id: string }>();
+  const { applicationId = "", id: applicationPartId = "" } = useParams();
   const variables = { id: applicationPartId };
+  const tab = useTabFromState("parts", "variables");
   const data = useLazyLoadQuery<EditApplicationPart_GetById_Query>(
     applicationByIdQuery,
     variables
@@ -132,14 +132,14 @@ export const EditApplicationPart = () => {
           />
         </Col>
         <Col xs={24}>
-          <Tabs defaultActiveKey="1">
-            <Tabs.TabPane tab="Parts" key="1">
+          <Tabs defaultActiveKey={tab} key={tab}>
+            <Tabs.TabPane tab="Parts" key="parts">
               <Components
                 applicationId={applicationId}
                 components={components}
               />
             </Tabs.TabPane>
-            <Tabs.TabPane tab="Variables" key="2">
+            <Tabs.TabPane tab="Variables" key="variables">
               <Variables refetch={refresh} data={applicationPartById} />
             </Tabs.TabPane>
           </Tabs>
@@ -153,7 +153,14 @@ const Variables: React.FC<{
   data: EditApplicationPart_fragment;
   refetch: () => void;
 }> = ({ data, refetch }) => {
-  const [selected, setSelected] = useState<VariableOption>();
+  const { state } = useLocation();
+  const [selected, setSelected] = useState<VariableOption>(
+    state?.variableOption
+  );
+  useEffect(
+    () => state?.variableOption && setSelected(state?.variableOption),
+    [state?.variableOption]
+  );
   const handleVariableValueEditClick = useCallback(
     (id: string, name: string) => {
       setSelected({ label: name, value: id });
@@ -242,14 +249,22 @@ const ApplicationPartComponentsDisplay: React.FC<{
     id,
     definition: { name, state },
   } = useFragment(applicationPartComponentFragment, part);
-  const goToComponent = useGoTo(() =>
-    Routes.applicationPartComponents.edit(applicationId, componentPartId)
+  const linkToPart = generatePath(
+    `../:applicationId/components/:componentId/edit`,
+    {
+      applicationId,
+      componentId: id,
+    }
   );
   return (
     <>
       <Card
         title={name}
-        actions={[<EditIcon onClick={goToComponent} />]}
+        actions={[
+          <Link to={linkToPart}>
+            <EditIcon />
+          </Link>,
+        ]}
         extra={
           <Button icon={<DeleteIcon />} danger onClick={enableRemoveDialog} />
         }

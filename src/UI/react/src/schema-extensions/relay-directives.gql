@@ -1,0 +1,33 @@
+directive @connection(
+  key: String!
+  filters: [String]
+  handler: String
+  dynamicKey_UNSTABLE: String
+) on FIELD
+
+directive @stream_connection(
+  key: String!
+  filters: [String]
+  handler: String
+  label: String!
+  initial_count: Int!
+  if: Boolean = true
+  dynamicKey_UNSTABLE: String
+) on FIELD
+
+directive @relay(
+  # Marks a fragment as being backed by a GraphQLList.
+  plural: Boolean
+
+  # Marks a fragment spread which should be unmasked if provided false
+  mask: Boolean = true
+) on FRAGMENT_DEFINITION | FRAGMENT_SPREAD
+
+directive @fetchable(field_name: String!) on OBJECT
+directive @refetchable(queryName: String!) on FRAGMENT_DEFINITION
+directive @appendEdge(connections: [String!]!) on FIELD
+directive @prependEdge(connections: [String!]!) on FIELD
+directive @appendNode(connections: [String!]!, edgeTypeName: String!) on FIELD
+directive @prependNode(connections: [String!]!, edgeTypeName: String!) on FIELD
+
+directive @deleteNode on FIELD
