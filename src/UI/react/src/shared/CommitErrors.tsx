@@ -4,12 +4,14 @@ import { PayloadError } from "relay-runtime";
 export type CommitErrors =
   | Error
   | PayloadError[]
+  | SyntaxError
   | readonly { readonly message?: String | null | undefined }[]
   | undefined
   | null;
 
 export const reportError = (error: CommitErrors) => {
-  if (error instanceof Error) {
+  if (error instanceof SyntaxError) {
+  } else if (error instanceof Error) {
     notification.error({
       message: "There was a fatal error",
       description: (

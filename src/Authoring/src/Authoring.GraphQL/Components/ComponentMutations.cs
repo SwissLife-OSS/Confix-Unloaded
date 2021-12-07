@@ -1,5 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
+using HotChocolate;
 using HotChocolate.Types;
 
 namespace Confix.Authoring.GraphQL.Components
@@ -7,19 +8,13 @@ namespace Confix.Authoring.GraphQL.Components
     [ExtendObjectType(OperationTypeNames.Mutation)]
     public class ComponentMutations
     {
-        private readonly IComponentService _componentService;
-
-        public ComponentMutations(IComponentService componentService)
-        {
-            _componentService = componentService;
-        }
-
         [Error(typeof(ValueSchemaViolation))]
         public async Task<CreateComponentPayload> CreateComponentAsync(
+            [Service] IComponentService service,
             CreateComponentInput input,
             CancellationToken cancellationToken)
         {
-            Component component = await _componentService.CreateAsync(
+            Component component = await service.CreateAsync(
                 input.Name,
                 input.Schema,
                 input.Values,
@@ -29,10 +24,11 @@ namespace Confix.Authoring.GraphQL.Components
         }
 
         public async Task<RenameComponentPayload> RenameComponentAsync(
+            [Service] IComponentService service,
             RenameComponentInput input,
             CancellationToken cancellationToken)
         {
-            Component component = await _componentService.RenameAsync(
+            Component component = await service.RenameAsync(
                 input.Id,
                 input.Name,
                 cancellationToken);
@@ -41,10 +37,11 @@ namespace Confix.Authoring.GraphQL.Components
         }
 
         public async Task<UpdateComponentSchemaPayload> UpdateComponentSchemaAsync(
+            [Service] IComponentService service,
             UpdateComponentSchemaInput input,
             CancellationToken cancellationToken)
         {
-            Component component = await _componentService.SetSchemaAsync(
+            Component component = await service.SetSchemaAsync(
                 input.Id,
                 input.Schema,
                 cancellationToken);
@@ -54,10 +51,11 @@ namespace Confix.Authoring.GraphQL.Components
 
         [Error(typeof(ValueSchemaViolation))]
         public async Task<UpdateComponentValuesPayload> UpdateComponentValuesAsync(
+            [Service] IComponentService service,
             UpdateComponentValuesInput input,
             CancellationToken cancellationToken)
         {
-            Component component = await _componentService.SetValuesAsync(
+            Component component = await service.SetValuesAsync(
                 input.Id,
                 input.Values,
                 cancellationToken);

@@ -1,6 +1,6 @@
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
-import { Input, InputProps, Row, Select } from "antd";
+import { Checkbox, Input, InputProps, Row, Select } from "antd";
 import React, { useCallback } from "react";
 import { Colors } from "./colors";
 import { UseFormik } from "./UseFormik";
@@ -31,6 +31,7 @@ export const Field: React.FC<{
   <Row
     css={css`
       padding: 0px 0px 5px 0px;
+      flex: 1;
     `}
   >
     <Label htmlFor={name ?? label} title={label} isError={isError}>
@@ -52,6 +53,36 @@ export const FieldInput: React.FC<
   </Field>
 );
 
+export const FieldInputGroup: React.FC<
+  {
+    name?: string;
+    label: string;
+    isError?: boolean;
+    compact?: boolean;
+  } & InputProps
+> = ({ name, label, isError = false, compact, children, ...inputProps }) => (
+  <Field name={name} label={label} isError={isError}>
+    <Input.Group
+      compact={compact}
+      css={css`
+        display: flex;
+        > * {
+          flex: 0;
+        }
+      `}
+    >
+      <Input
+        name={name ?? label}
+        {...inputProps}
+        style={{
+          flex: "1",
+        }}
+      />
+      {children}
+    </Input.Group>
+  </Field>
+);
+
 export function FormField<TValues>(props: {
   form: UseFormik<TValues>;
   field: keyof UseFormik<TValues>["values"];
@@ -67,7 +98,33 @@ export function FormField<TValues>(props: {
       <Input
         id={String(field)}
         name={String(field)}
-        value={String(form.values[field])}
+        value={
+          form.values[field] === null || form.values[field] === undefined
+            ? undefined
+            : String(form.values[field])
+        }
+        onChange={form.handleChange}
+      />
+    </Field>
+  );
+}
+
+export function FormCheckbox<TValues>(props: {
+  form: UseFormik<TValues>;
+  field: keyof UseFormik<TValues>["values"];
+  label: string;
+}): React.ReactElement {
+  const { form, field, label } = props;
+  return (
+    <Field
+      name={String(field)}
+      label={label}
+      isError={(form.touched[field] && Boolean(form.errors[field])) || false}
+    >
+      <Checkbox
+        id={String(field)}
+        name={String(field)}
+        checked={Boolean(form.values[field])}
         onChange={form.handleChange}
       />
     </Field>
@@ -84,7 +141,7 @@ export function TagSelectField<TValues>(props: {
     (value: string[], option: any) => {
       form.setFieldValue(String(field), value);
     },
-    [form]
+    [field, form]
   );
   return (
     <Field

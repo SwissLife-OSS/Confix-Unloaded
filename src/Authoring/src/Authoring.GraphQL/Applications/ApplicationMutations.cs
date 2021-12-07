@@ -1,4 +1,3 @@
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Confix.Authoring.Store;
@@ -78,12 +77,13 @@ namespace Confix.Authoring.GraphQL.Applications
             AddComponentsToApplicationPartInput input,
             CancellationToken cancellationToken)
         {
-            await _applicationService.AddComponentsToPartAsync(
-                input.ApplicationPartId,
-                input.ComponentIds,
-                cancellationToken);
+            Application application = await _applicationService
+                .AddComponentsToPartAsync(
+                    input.ApplicationPartId,
+                    input.ComponentIds,
+                    cancellationToken);
 
-            return new AddComponentsToApplicationPartPayload(input.ApplicationPartId);
+            return new AddComponentsToApplicationPartPayload(application, input.ApplicationPartId);
         }
 
         /// <summary>
@@ -115,6 +115,42 @@ namespace Confix.Authoring.GraphQL.Applications
                 .RemovePartAsync(input.ApplicationPartId, cancellationToken);
 
             return new RemoveApplicationPartPayload(application);
+        }
+
+        /// <summary>
+        /// Adds a component to an application part.
+        /// </summary>
+        [Error(typeof(ApplicationPartNotFoundError))]
+        public async Task<RemoveComponentFromApplicationPartPayload>
+            RemoveComponentFromApplicationPartAsync(
+            RemoveComponentFromApplicationPartInput input,
+            CancellationToken cancellationToken)
+        {
+            ApplicationPart applicationPart = await _applicationService
+                .RemoveComponentFromApplicationPartAsync(
+                    input.PartComponentId,
+                    cancellationToken);
+
+            return new RemoveComponentFromApplicationPartPayload(applicationPart);
+        }
+
+        /// <summary>
+        /// Adds a component to an application part.
+        /// </summary>
+        [Error(typeof(ApplicationPartComponentNotFoundError))]
+        [Error(typeof(ComponentNotFoundError))]
+        public async Task<UpdateApplicationPartComponentValuesPayload>
+            UpdateApplicationPartComponentValuesAsync(
+            UpdateApplicationPartComponentValuesInput input,
+            CancellationToken cancellationToken)
+        {
+            ApplicationPartComponent component = await _applicationService
+                .SetApplicationPartComponentValues(
+                    input.PartComponentId,
+                    input.Values,
+                    cancellationToken);
+
+            return new UpdateApplicationPartComponentValuesPayload(component);
         }
     }
 }

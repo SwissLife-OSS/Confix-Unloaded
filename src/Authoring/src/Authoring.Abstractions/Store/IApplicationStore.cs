@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Confix.Authoring.Store
 {
+    // <summary>
     /// <summary>
     /// Represents the application store abstraction.
     /// </summary>
@@ -91,6 +92,10 @@ namespace Confix.Authoring.Store
         /// Returns a list of application parts that matched the <paramref name="ids"/>.
         /// </returns>
         Task<IReadOnlyCollection<ApplicationPart>> GetManyPartsByIdAsync(
+            IEnumerable<Guid> ids,
+            CancellationToken cancellationToken);
+
+        Task<IReadOnlyCollection<ApplicationPartComponent>> GetManyComponentPartsByIdAsync(
             IEnumerable<Guid> ids,
             CancellationToken cancellationToken);
 
@@ -194,6 +199,10 @@ namespace Confix.Authoring.Store
         /// </param>
         Task<Application?> RemovePartAsync(
             Guid applicationPartId,
+            CancellationToken cancellationToken);
+
+        Task<Application?> GetByComponentPartIdAsync(
+            Guid componentPartId,
             CancellationToken cancellationToken);
     }
 }

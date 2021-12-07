@@ -21,6 +21,7 @@ namespace Confix.Authoring.Store.Mongo
                 .ConfigureConnection(con => con.WriteConcern = WriteConcern.WMajority)
                 .ConfigureConnection(con => con.ReadPreference = ReadPreference.Primary)
                 .ConfigureCollection(new ApplicationCollectionConfiguration())
+                .ConfigureCollection(new EnvironmentCollectionConfiguration())
                 .ConfigureCollection(new VariableCollectionConfiguration())
                 .ConfigureCollection(new VariableValueCollectionConfiguration())
                 .ConfigureCollection(new ComponentCollectionConfiguration());
@@ -28,6 +29,9 @@ namespace Confix.Authoring.Store.Mongo
 
         public IMongoCollection<Application> Applications
             => CreateCollection<Application>();
+
+        public IMongoCollection<Environment> Environments
+            => CreateCollection<Environment>();
 
         public IMongoCollection<Component> Components
             => CreateCollection<Component>();

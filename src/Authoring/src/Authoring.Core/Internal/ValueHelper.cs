@@ -68,7 +68,7 @@ namespace Confix.Authoring.Internal
             new() { CreateDefaultValue(type.ElementType()) };
 
         public static List<SchemaViolation> ValidateDictionary(
-            Dictionary<string, object?> value,
+            IDictionary<string, object?> value,
             IType type)
         {
             var schemaViolations = new List<SchemaViolation>();
@@ -77,7 +77,7 @@ namespace Confix.Authoring.Internal
         }
 
         private static void ValidateDictionary(
-            Dictionary<string, object?> value,
+            IDictionary<string, object?> value,
             IType type,
             Path path,
             List<SchemaViolation> schemaViolations)
@@ -98,7 +98,7 @@ namespace Confix.Authoring.Internal
 
                 if (value.TryGetValue(field.Name, out var fieldValue))
                 {
-                    Validate(fieldValue, field.Type, path, schemaViolations);
+                    Validate(fieldValue, field.Type, path.Append(field.Name), schemaViolations);
                 }
                 else if (field.Type.IsNonNullType())
                 {

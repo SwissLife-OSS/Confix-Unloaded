@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
+using static MongoDB.Driver.Builders<Confix.Authoring.VariableValue>;
 
 namespace Confix.Authoring.Store.Mongo
 {
@@ -17,8 +19,7 @@ namespace Confix.Authoring.Store.Mongo
             _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<Variable>> GetAllAsync(
-            CancellationToken cancellationToken)
+        public async Task<IEnumerable<Variable>> GetAllAsync(CancellationToken cancellationToken)
         {
             return await _dbContext.Variables.AsQueryable()
                 .ToListAsync(cancellationToken);
@@ -31,6 +32,36 @@ namespace Confix.Authoring.Store.Mongo
             return await _dbContext.Variables.AsQueryable()
                 .Where(x => x.Id == id)
                 .FirstOrDefaultAsync(cancellationToken);
+        }
+
+        public async Task<IEnumerable<VariableValue>> GetByApplicationPartIdAsync(
+            Guid partId,
+            CancellationToken cancellationToken)
+        {
+            FilterDefinition<VariableValue> filter =
+                Filter.Eq(x => x.Key.PartId, partId);
+            return await _dbContext.VariableValues.Find(filter).ToListAsync(cancellationToken);
+        }
+
+        public async Task<IEnumerable<VariableValue>> GetByApplicationIdAsync(
+            Guid applicationId,
+            CancellationToken cancellationToken)
+        {
+            FilterDefinition<VariableValue> filter =
+                Filter.And(
+                    Filter.Eq(x => x.Key.ApplicationId, applicationId),
+                    Filter.Type(x => x.Key.PartId, BsonType.Null));
+            return await _dbContext.VariableValues.Find(filter).ToListAsync(cancellationToken);
+        }
+
+        public async Task<IEnumerable<VariableValue>> GetGlobalVariableValue(
+            CancellationToken cancellationToken)
+        {
+            FilterDefinition<VariableValue> filter =
+                Filter.And(
+                    Filter.Type(x => x.Key.ApplicationId, BsonType.Null),
+                    Filter.Type(x => x.Key.PartId, BsonType.Null));
+            return await _dbContext.VariableValues.Find(filter).ToListAsync(cancellationToken);
         }
 
         public async Task<IEnumerable<Variable>> GetManyAsync(
@@ -66,5 +97,7 @@ namespace Confix.Authoring.Store.Mongo
 
             return Variable;
         }
+
+        public IQueryable<Variable> Query() => _dbContext.Variables.AsQueryable();
     }
 }

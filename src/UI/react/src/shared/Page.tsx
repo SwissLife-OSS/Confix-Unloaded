@@ -18,7 +18,7 @@ export const Page: React.FC<{ title: string; subTitle?: string }> = ({
           );
           min-height: 500px;
           display: flex;
-          flex: 0 1 auto;
+          flex: 1 1 auto;
         `}
       >
         {children}

@@ -1,6 +1,5 @@
 import styled from "@emotion/styled";
-import { Button, Divider, List, Skeleton, Space } from "antd";
-import Search from "antd/lib/input/Search";
+import { Divider, List, Skeleton } from "antd";
 import React, { useCallback } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Colors } from "./colors";

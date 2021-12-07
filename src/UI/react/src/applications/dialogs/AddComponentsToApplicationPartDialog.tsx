@@ -48,6 +48,7 @@ export const AddComponentsToApplicationPartDialog: React.FC<{
     );
   const [options, setOptions] = useState<ComponentOption[]>([]);
   const handleAddParts = useCallback(() => {
+    console.log(options);
     pipeCommitFn(commit, [
       withSuccessMessage(
         (x) => x.addComponentsToApplicationPart.application?.id,

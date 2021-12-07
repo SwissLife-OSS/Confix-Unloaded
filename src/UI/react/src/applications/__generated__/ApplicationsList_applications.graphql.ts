@@ -10,6 +10,7 @@ export type ApplicationsList_applications = {
         readonly edges: ReadonlyArray<{
             readonly node: {
                 readonly id: string;
+                readonly name: string;
                 readonly " $fragmentRefs": FragmentRefs<"ApplicationsList_applicationsEdge">;
             };
         }> | null;
@@ -109,6 +110,13 @@ return {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
+                  "name": "name",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
                   "name": "__typename",
                   "storageKey": null
                 },
@@ -163,5 +171,5 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = '58d64fd293cb70974f388e822860dc91';
+(node as any).hash = '0f0154047f5af2c4603c0c0a9abfe895';
 export default node;

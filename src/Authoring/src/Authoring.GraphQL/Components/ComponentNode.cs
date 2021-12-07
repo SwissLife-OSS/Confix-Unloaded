@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Confix.Authoring.GraphQL.DataLoaders;
+using Confix.Authoring.DataLoaders;
 using Confix.Authoring.Internal;
 using HotChocolate;
 using HotChocolate.Language;

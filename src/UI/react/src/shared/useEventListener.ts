@@ -3,12 +3,6 @@ import { DependencyList, useCallback } from "react";
 type EventsWithTargetValue = React.ChangeEvent<
   HTMLTextAreaElement | HTMLInputElement
 >;
-type EventsWithCurrentTarget<T> =
-  | React.ChangeEvent<T>
-  | React.MouseEvent<T>
-  | React.KeyboardEvent<T>
-  | React.FocusEvent<T>;
-
 export const useIntEventHanlder = <
   T extends (value: number, e: E) => K,
   K,
@@ -20,6 +14,7 @@ export const useIntEventHanlder = <
   useCallback((e: E) => {
     const value = parseInt(e.target.value, 10);
     return callback(value, e);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
 
 export const useStringEventHanlder = <
@@ -32,4 +27,5 @@ export const useStringEventHanlder = <
 ): ((e: E) => K) =>
   useCallback((e: E) => {
     return callback(e.target.value, e);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Confix.Authoring.Store;
@@ -49,10 +50,19 @@ namespace Confix.Authoring
             return variable;
         }
 
-        public async Task<IEnumerable<Variable>> GetAllAsync(
-            CancellationToken cancellationToken)
+        public async Task<IEnumerable<Variable>> GetAllAsync(CancellationToken cancellationToken)
         {
             return await _variableStore.GetAllAsync(cancellationToken);
+        }
+
+        public IQueryable<Variable> SearchVariables(string? search)
+        {
+            return search is null
+                ? _variableStore.Query()
+                : _variableStore.Query()
+                    .Where(x =>
+                        x.Name.Contains(search) ||
+                        (x.Namespace != null && x.Namespace.Contains(search)));
         }
 
         public async Task<IEnumerable<Variable>> GetManyAsync(
@@ -82,10 +92,30 @@ namespace Confix.Authoring
             GetVariableValuesRequest request,
             CancellationToken cancellationToken)
         {
-            Variable variable = await _variableStore.GetByIdAsync(request.Filter.Id, cancellationToken);
+            Variable variable =
+                await _variableStore.GetByIdAsync(request.Filter.Id, cancellationToken);
 
             return await GetValuesAsync(variable, request, cancellationToken);
         }
+
+        public async Task<IEnumerable<VariableValue>> GetValuesByApplicationPartAsync(
+            Guid applicationPartId,
+            CancellationToken cancellationToken)
+        {
+            return await _variableStore.GetByApplicationPartIdAsync(applicationPartId,
+                cancellationToken);
+        }
+
+        public async Task<IEnumerable<VariableValue>> GetValuesByApplicationAsync(
+            Guid applicationId,
+            CancellationToken cancellationToken)
+        {
+            return await _variableStore.GetByApplicationIdAsync(applicationId, cancellationToken);
+        }
+
+        public async Task<IEnumerable<VariableValue>> GetGlobalValues(
+            CancellationToken cancellationToken) =>
+            await _variableStore.GetGlobalVariableValue(cancellationToken);
 
         public async Task<IEnumerable<VariableValue>> GetValuesAsync(
             Variable variable,
@@ -123,6 +153,18 @@ namespace Confix.Authoring
             return variable;
         }
 
+        public async Task<Variable> RenameAsync(
+            Guid id,
+            string name,
+            CancellationToken cancellationToken)
+        {
+            Variable variable = await _variableStore.GetByIdAsync(id, cancellationToken);
+            variable.Name = name;
+            await _variableStore.UpdateAsync(variable, cancellationToken);
+
+            return variable;
+        }
+
         private async Task<VariableValue> SaveVariableValueAsync(
             Variable variable,
             SaveVariableValueRequest request,
@@ -148,7 +190,7 @@ namespace Confix.Authoring
 
                 value.Value = encrypted.CipherValue;
                 value.Encryption = encrypted.EncryptionInfo;
-            }   
+            }
             else
             {
                 value.Value = request.Value;

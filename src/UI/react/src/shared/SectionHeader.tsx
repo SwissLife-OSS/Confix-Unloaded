@@ -1,18 +1,38 @@
 import styled from "@emotion/styled";
-import { Button, Typography } from "antd";
+import { Button } from "antd";
 import React from "react";
 export const SectionHeader: React.FC<{
   title: string;
-  onAdd: () => void;
-}> = ({ title, onAdd }) => {
+  loading?: boolean;
+  disabled?: boolean;
+  onAdd?: () => void;
+  onSave?: () => void;
+}> = ({ title, onSave, onAdd, loading, disabled }) => {
   return (
     <Wrapper>
       <Title>
         <h2>{title}</h2>
       </Title>
-      <HeaderButton type="primary" onClick={onAdd}>
-        Add
-      </HeaderButton>
+      {onAdd && (
+        <HeaderButton
+          type="primary"
+          onClick={onAdd}
+          disabled={disabled}
+          loading={loading}
+        >
+          Add
+        </HeaderButton>
+      )}
+      {onSave && (
+        <HeaderButton
+          type="primary"
+          onClick={onSave}
+          disabled={disabled}
+          loading={loading}
+        >
+          Save
+        </HeaderButton>
+      )}
     </Wrapper>
   );
 };

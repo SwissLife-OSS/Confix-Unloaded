@@ -1,16 +1,12 @@
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Confix.Authoring.Internal;
 using Confix.Authoring.Store;
 using GreenDonut;
 using HotChocolate;
-using HotChocolate.Language;
 using static Confix.Authoring.Internal.ValueHelper;
 
 namespace Confix.Authoring
@@ -19,14 +15,16 @@ namespace Confix.Authoring
     {
         private readonly IComponentStore _componentStore;
         private readonly IDataLoader<Guid, Component> _componentById;
-        private readonly ConcurrentDictionary<string, ISchema> _schemas = new();
+        private readonly ISchemaService _schemaService;
 
         public ComponentService(
             IComponentStore componentStore,
-            IDataLoader<Guid, Component> componentById)
+            IDataLoader<Guid, Component> componentById,
+            ISchemaService schemaService)
         {
             _componentStore = componentStore;
             _componentById = componentById;
+            _schemaService = schemaService;
         }
 
         public async Task<Component?> GetByIdAsync(
@@ -45,7 +43,7 @@ namespace Confix.Authoring
                 return null;
             }
 
-            return CreateSchema(component.Schema);
+            return _schemaService.CreateSchema(component.Schema);
         }
 
         public async Task<IReadOnlyCollection<Component>> GetManyByIdAsync(
@@ -66,23 +64,15 @@ namespace Confix.Authoring
                 throw new ArgumentException("Value cannot be null or empty.", nameof(name));
             }
 
+            string? serializedValues = null;
             if (schemaSdl is not null)
             {
-                ISchema schema = CreateSchema(schemaSdl);
+                ISchema schema = _schemaService.CreateSchema(schemaSdl);
 
                 if (values is not null)
                 {
-                    List<SchemaViolation> violations = ValidateDictionary(values, schema.QueryType);
-
-                    if (violations.Count > 0)
-                    {
-                        throw new SchemaViolationException(violations);
-                    }
+                    serializedValues = _schemaService.CreateValuesForSchema(schema, values);
                 }
-            }
-            else
-            {
-                values = null;
             }
 
             var component = new Component
@@ -90,7 +80,7 @@ namespace Confix.Authoring
                 Id = Guid.NewGuid(),
                 Name = name,
                 Schema = schemaSdl,
-                Values = values is not null ? JsonSerializer.Serialize(values) : null,
+                Values = serializedValues,
                 State = ComponentState.Active
             };
 
@@ -124,7 +114,7 @@ namespace Confix.Authoring
             }
 
             // we ensure that the schema is valid.
-            CreateSchema(schemaSdl);
+            _schemaService.CreateSchema(schemaSdl);
 
             Component component = await _componentById.LoadAsync(
                 componentId,
@@ -151,15 +141,7 @@ namespace Confix.Authoring
                 throw new InvalidOperationException("There is no schema.");
             }
 
-            ISchema schema = CreateSchema(component.Schema);
-            List<SchemaViolation> violations = ValidateDictionary(values, schema.QueryType);
-
-            if (violations.Count > 0)
-            {
-                throw new SchemaViolationException(violations);
-            }
-
-            component.Values = JsonSerializer.Serialize(values);
+            component.Values = _schemaService.CreateValuesForSchema(component.Schema, values);
 
             await _componentStore.UpdateAsync(component, cancellationToken);
 
@@ -177,10 +159,11 @@ namespace Confix.Authoring
 
             if (component.Schema is null)
             {
+                // TODO proper exception
                 throw new InvalidOperationException("There is no schema.");
             }
 
-            ISchema schema = CreateSchema(component.Schema);
+            ISchema schema = _schemaService.CreateSchema(component.Schema);
 
             return ValidateDictionary(values, schema.QueryType);
         }
@@ -193,39 +176,14 @@ namespace Confix.Authoring
                 id,
                 cancellationToken);
 
-            if (component.Schema is null)
+            if (component?.Schema is null)
             {
                 return null;
             }
 
-            ISchema schema = CreateSchema(component.Schema);
+            ISchema schema = _schemaService.CreateSchema(component.Schema);
             return CreateDefaultObjectValue(schema.QueryType);
         }
 
-        private ISchema CreateSchema(string schema)
-        {
-            var stopwatch = Stopwatch.StartNew();
-
-            DocumentNode schemaDoc = Utf8GraphQLParser.Parse(schema);
-            string rootTypeName = schemaDoc.Definitions
-                .OfType<ObjectTypeDefinitionNode>()
-                .FirstOrDefault()?.Name.Value ?? 
-                "Component";
-
-            ISchema temp = _schemas.GetOrAdd(schema, s =>
-                SchemaBuilder.New()
-                    .AddDocument(schemaDoc)
-                    .Use(next => next)
-                    .ModifyOptions(c =>
-                    {
-                        c.QueryTypeName = rootTypeName;
-                        c.StrictValidation = false;
-                    })
-                    .Create());
-
-            var time = stopwatch.Elapsed;
-
-            return temp;
-        }
     }
 }

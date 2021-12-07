@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
+using static MongoDB.Driver.Builders<Confix.Authoring.VariableValue>;
 
 namespace Confix.Authoring.Store.Mongo
 {
@@ -83,40 +86,55 @@ namespace Confix.Authoring.Store.Mongo
                 cancellationToken);
         }
 
-        private static FilterDefinition<VariableValue> BuildUniqueKeyFilter(
-            VariableKey variableKey)
+        private static FilterDefinition<VariableValue> BuildUniqueKeyFilter(VariableKey variableKey)
         {
-            return Builders<VariableValue>.Filter.And(
-                Builders<VariableValue>.Filter.Eq(u => u.Key.VariableId, variableKey.VariableId),
-                Builders<VariableValue>.Filter.Eq(u => u.Key.ApplicationId, variableKey.ApplicationId),
-                Builders<VariableValue>.Filter.Eq(u => u.Key.PartId, variableKey.PartId),
-                Builders<VariableValue>.Filter.Eq(u => u.Key.EnvironmentId, variableKey.EnvironmentId));
+            return Filter.And(
+                Filter.EqOrNull(u => u.Key.VariableId, variableKey.VariableId),
+                Filter.EqOrNull(u => u.Key.ApplicationId, variableKey.ApplicationId),
+                Filter.EqOrNull(u => u.Key.PartId, variableKey.PartId),
+                Filter.EqOrNull(u => u.Key.EnvironmentId, variableKey.EnvironmentId));
         }
 
-        private static FilterDefinition<VariableValue> BuildFindKeyFilter(VariableValueFilter filter)
+        private static FilterDefinition<VariableValue> BuildFindKeyFilter(
+            VariableValueFilter filter)
         {
-            FilterDefinition<VariableValue> dbFilter = Builders<VariableValue>
-                .Filter.Eq(x => x.Key.VariableId, filter.Id);
+            FilterDefinition<VariableValue> dbFilter = Filter.Eq(x => x.Key.VariableId, filter.Id);
 
             if (filter.EnvironmentId.HasValue)
             {
-                dbFilter &= Builders<VariableValue>.Filter
-                    .Eq(x => x.Key.EnvironmentId, filter.EnvironmentId.Value);
+                dbFilter &= Filter
+                    .EqOrNull(x => x.Key.EnvironmentId, filter.EnvironmentId.Value);
             }
 
             if (filter.ApplicationId.HasValue)
             {
-                dbFilter &= Builders<VariableValue>.Filter
-                    .Eq(x => x.Key.ApplicationId, filter.ApplicationId.Value);
+                dbFilter &= Filter
+                    .EqOrNull(x => x.Key.ApplicationId, filter.ApplicationId.Value);
             }
 
             if (filter.PartId.HasValue)
             {
-                dbFilter &= Builders<VariableValue>.Filter
-                    .Eq(x => x.Key.PartId, filter.PartId.Value);
+                dbFilter &= Filter
+                    .EqOrNull(x => x.Key.PartId, filter.PartId.Value);
             }
 
             return dbFilter;
+        }
+    }
+
+    public static class FilterDefinitionBuilderExtensions
+    {
+        public static FilterDefinition<TDocument> EqOrNull<TDocument, TField>(
+            this FilterDefinitionBuilder<TDocument> builder,
+            Expression<Func<TDocument, object?>> field,
+            TField value)
+        {
+            if (value is null)
+            {
+                return builder.Type(field, BsonType.Null);
+            }
+
+            return builder.Eq(field, value);
         }
     }
 }

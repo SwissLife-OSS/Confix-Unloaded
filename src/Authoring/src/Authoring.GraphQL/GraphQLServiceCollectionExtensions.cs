@@ -1,7 +1,7 @@
 using System;
+using Confix.Authoring.DataLoaders;
 using Confix.Authoring.GraphQL.Applications;
 using Confix.Authoring.GraphQL.Components;
-using Confix.Authoring.GraphQL.DataLoaders;
 using Confix.Authoring.GraphQL.Serialization;
 using GreenDonut;
 using HotChocolate.Execution.Configuration;
@@ -54,6 +54,7 @@ namespace Confix.Authoring.GraphQL
                 .AddQueryType()
                 .AddTypeExtension<ApplicationQueries>()
                 .AddTypeExtension<VariableQueries>()
+                .AddTypeExtension<EnvironmentQueries>()
                 .AddTypeExtension<ComponentQueries>();
 
             return builder;
@@ -65,6 +66,7 @@ namespace Confix.Authoring.GraphQL
                 .AddMutationType()
                 .AddTypeExtension<ApplicationMutations>()
                 .AddTypeExtension<VariableMutations>()
+                .AddTypeExtension<EnvironmentMutations>()
                 .AddTypeExtension<ComponentMutations>();
 
             return builder;
@@ -74,11 +76,16 @@ namespace Confix.Authoring.GraphQL
         {
             builder
                 .AddType<VariableType>()
-                .AddType<VariableValueType>()
-                .AddTypeExtension<ApplicationNode>()
-                .AddTypeExtension<ApplicationPartNode>()
+                .AddTypeExtension<VariableValueExtensions>()
                 .AddTypeExtension<ApplicationPartComponentNode>()
+                .AddTypeExtension<ApplicationApplicationPartExtensions>()
+                .AddTypeExtension<ApplicationPartComponentExtensions>()
                 .AddTypeExtension<ComponentNode>()
+                .AddTypeExtension<ApplicationPartVariablesExtensions>()
+                .AddTypeExtension<ApplicationVariablesExtensions>()
+                .AddTypeExtension<QueryVariablesExtensions>()
+                .AddTypeExtension<ApplicationPartNode>()
+                .AddTypeExtension<ApplicationNode>()
                 .AddType<SdlType>();
 
             builder
@@ -98,11 +105,14 @@ namespace Confix.Authoring.GraphQL
                 .AddDataLoader<ApplicationPartByIdDataLoader>()
                 .AddDataLoader<VariableByIdDataLoader>()
                 .AddDataLoader<ComponentByIdDataLoader>()
-
+                .AddDataLoader<ApplicationPartComponentByIdDataloader>()
+                .AddDataLoader<EnvironmentByIdDataLoader>()
                 // add additional dataloader lookups
                 .Services
                 .AddScoped<IDataLoader<Guid, Component?>>(
-                    sp => sp.GetRequiredService<ComponentByIdDataLoader>());
+                    sp => sp.GetRequiredService<ComponentByIdDataLoader>())
+                .AddScoped<IDataLoader<Guid, Environment?>>(
+                    sp => sp.GetRequiredService<EnvironmentByIdDataLoader>());
 
             return builder;
         }

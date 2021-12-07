@@ -3,7 +3,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from "relay-runtime";
-
+import EditApplicationRefetchApplicationQuery from "./EditApplicationRefetchApplicationQuery.graphql";
 import { FragmentRefs } from "relay-runtime";
 export type EditApplication_Application_Fragment = {
     readonly id: string;
@@ -11,6 +11,9 @@ export type EditApplication_Application_Fragment = {
     readonly namespace: string | null;
     readonly parts: ReadonlyArray<{
         readonly " $fragmentRefs": FragmentRefs<"EditApplication_part">;
+    }>;
+    readonly variableValues: ReadonlyArray<{
+        readonly " $fragmentRefs": FragmentRefs<"VariableValueList_values">;
     }>;
     readonly " $fragmentRefs": FragmentRefs<"ApplicationPartSectionHeaderFragment">;
     readonly " $refType": "EditApplication_Application_Fragment";
@@ -26,7 +29,16 @@ export type EditApplication_Application_Fragment$key = {
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
-  "metadata": null,
+  "metadata": {
+    "refetch": {
+      "connection": null,
+      "fragmentPathInResult": [
+        "node"
+      ],
+      "operation": EditApplicationRefetchApplicationQuery,
+      "identifierField": "id"
+    }
+  },
   "name": "EditApplication_Application_Fragment",
   "selections": [
     {
@@ -67,6 +79,22 @@ const node: ReaderFragment = {
       "storageKey": null
     },
     {
+      "alias": null,
+      "args": null,
+      "concreteType": "VariableValue",
+      "kind": "LinkedField",
+      "name": "variableValues",
+      "plural": true,
+      "selections": [
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "VariableValueList_values"
+        }
+      ],
+      "storageKey": null
+    },
+    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "ApplicationPartSectionHeaderFragment"
@@ -75,5 +103,5 @@ const node: ReaderFragment = {
   "type": "Application",
   "abstractKey": null
 };
-(node as any).hash = 'a4aeb676ddbcf4e92a1c262a3f6bc20a';
+(node as any).hash = 'c74541fbb2578d5babd1b6abe2cf2798';
 export default node;

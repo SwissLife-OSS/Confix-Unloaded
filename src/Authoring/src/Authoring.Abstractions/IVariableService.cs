@@ -1,21 +1,57 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using HotChocolate;
+using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring
 {
     public interface IVariableService
     {
-        Task<Variable> CreateAsync(CreateVariableRequest request, CancellationToken cancellationToken);
+        Task<Variable> CreateAsync(
+            CreateVariableRequest request,
+            CancellationToken cancellationToken);
+
         Task<Variable> DeleteValueAsync(Guid id, CancellationToken cancellationToken);
         Task<IEnumerable<Variable>> GetAllAsync(CancellationToken cancellationToken);
 
+        IQueryable<Variable> SearchVariables(string? search);
+
         Task<Variable> GetByIdAsync(Guid id, CancellationToken cancellationToken);
-        Task<IEnumerable<Variable>> GetManyAsync(IEnumerable<Guid> ids, CancellationToken cancellationToken);
-        Task<IEnumerable<VariableValue>> GetValuesAsync(GetVariableValuesRequest request, CancellationToken cancellationToken);
-        Task<IEnumerable<VariableValue>> GetValuesAsync(Variable variable, GetVariableValuesRequest request, CancellationToken cancellationToken);
-        Task<VariableValue> SaveValueAsync(SaveVariableValueRequest request, CancellationToken cancellationToken);
+
+        Task<IEnumerable<Variable>> GetManyAsync(
+            IEnumerable<Guid> ids,
+            CancellationToken cancellationToken);
+
+        Task<IEnumerable<VariableValue>> GetValuesAsync(
+            GetVariableValuesRequest request,
+            CancellationToken cancellationToken);
+
+        Task<IEnumerable<VariableValue>> GetValuesByApplicationPartAsync(
+            Guid applicationPartId,
+            CancellationToken cancellationToken);
+
+        Task<IEnumerable<VariableValue>> GetGlobalValues(CancellationToken cancellationToken);
+
+        Task<IEnumerable<VariableValue>> GetValuesByApplicationAsync(
+            Guid applicationId,
+            CancellationToken cancellationToken);
+
+        Task<IEnumerable<VariableValue>> GetValuesAsync(
+            Variable variable,
+            GetVariableValuesRequest request,
+            CancellationToken cancellationToken);
+
+        Task<VariableValue> SaveValueAsync(
+            SaveVariableValueRequest request,
+            CancellationToken cancellationToken);
+
+        Task<Variable> RenameAsync(
+            Guid id,
+            string name,
+            CancellationToken cancellationToken);
     }
 
     public interface IVariableCryptoProvider
@@ -59,10 +95,10 @@ namespace Confix.Authoring
 
     public record VariableValueFilter(Guid Id)
     {
-        public Guid? EnvironmentId { get; init; }
+        public Optional<Guid?> EnvironmentId { get; init; }
 
-        public Guid? ApplicationId { get; init; }
+        public Optional<Guid?> ApplicationId { get; init; }
 
-        public Guid? PartId { get; init; }
+        public Optional<Guid?> PartId { get; init; }
     }
 }

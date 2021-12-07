@@ -27,11 +27,11 @@ namespace Confix.Authoring
                 .AddGraphQLServer();
             services.AddCors(options =>
             {
-                options.AddPolicy(name: "Any",
-                                  builder =>
-                                  {
-                                      builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
-                                  });
+                options.AddPolicy("Any",
+                    builder =>
+                    {
+                        builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+                    });
             });
         }
 

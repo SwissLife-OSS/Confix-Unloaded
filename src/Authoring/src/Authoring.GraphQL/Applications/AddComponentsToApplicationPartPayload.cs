@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Confix.Authoring.GraphQL.DataLoaders;
 using Confix.Authoring.Store;
 using HotChocolate;
 
@@ -14,8 +13,10 @@ namespace Confix.Authoring.GraphQL.Applications
         private Application? _application;
 
         public AddComponentsToApplicationPartPayload(
+            Application application,
             Guid applicationPartId)
         {
+            _application = application;
             _applicationPartId = applicationPartId;
         }
 

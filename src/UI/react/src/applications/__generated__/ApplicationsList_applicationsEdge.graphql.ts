@@ -13,6 +13,7 @@ export type ApplicationsList_applicationsEdge = {
         readonly id: string;
         readonly name: string;
         readonly components: ReadonlyArray<{
+            readonly id: string;
             readonly definition: {
                 readonly id: string;
                 readonly name: string;
@@ -77,6 +78,7 @@ return {
           "name": "components",
           "plural": true,
           "selections": [
+            (v0/*: any*/),
             {
               "alias": null,
               "args": null,
@@ -101,5 +103,5 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = '1686668e6902f6b2aead9d6e3ee98640';
+(node as any).hash = 'b13ef3817de6dd565836f0daba25eb2c';
 export default node;

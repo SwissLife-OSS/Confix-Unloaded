@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Confix.Authoring.GraphQL.DataLoaders;
+using Confix.Authoring.DataLoaders;
 using Confix.Authoring.Internal;
 using Confix.Authoring.Store;
 using HotChocolate;

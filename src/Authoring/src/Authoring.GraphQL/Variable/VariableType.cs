@@ -1,7 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Confix.Authoring.GraphQL.DataLoaders;
+using Confix.Authoring.DataLoaders;
 using HotChocolate.Types;
 
 namespace Confix.Authoring.GraphQL

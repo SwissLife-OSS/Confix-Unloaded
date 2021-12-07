@@ -54,6 +54,7 @@ fragment ApplicationsList_applications on Query {
     edges {
       node {
         id
+        name
         ...ApplicationsList_applicationsEdge
         __typename
       }
@@ -74,6 +75,7 @@ fragment ApplicationsList_applicationsEdge on Application {
     id
     name
     components {
+      id
       definition {
         id
         name
@@ -205,6 +207,7 @@ return {
                         "name": "components",
                         "plural": true,
                         "selections": [
+                          (v2/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -286,14 +289,14 @@ return {
     ]
   },
   "params": {
-    "cacheID": "3d9b845e6643e7ccd158a98b7131cdc1",
+    "cacheID": "344f96e62d41629159c0c3feb73c149b",
     "id": null,
     "metadata": {},
     "name": "ApplicationsListPaginationQuery",
     "operationKind": "query",
-    "text": "query ApplicationsListPaginationQuery(\n  $count: Int\n  $cursor: String\n  $where: ApplicationFilterInput\n) {\n  ...ApplicationsList_applications\n}\n\nfragment ApplicationsList_applications on Query {\n  applications(after: $cursor, first: $count, where: $where) {\n    edges {\n      node {\n        id\n        ...ApplicationsList_applicationsEdge\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment ApplicationsList_applicationsEdge on Application {\n  id\n  name\n  namespace\n  parts {\n    id\n    name\n    components {\n      definition {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": "query ApplicationsListPaginationQuery(\n  $count: Int\n  $cursor: String\n  $where: ApplicationFilterInput\n) {\n  ...ApplicationsList_applications\n}\n\nfragment ApplicationsList_applications on Query {\n  applications(after: $cursor, first: $count, where: $where) {\n    edges {\n      node {\n        id\n        name\n        ...ApplicationsList_applicationsEdge\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment ApplicationsList_applicationsEdge on Application {\n  id\n  name\n  namespace\n  parts {\n    id\n    name\n    components {\n      id\n      definition {\n        id\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
-(node as any).hash = '58d64fd293cb70974f388e822860dc91';
+(node as any).hash = '0f0154047f5af2c4603c0c0a9abfe895';
 export default node;
