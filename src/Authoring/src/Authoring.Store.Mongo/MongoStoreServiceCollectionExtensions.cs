@@ -22,6 +22,7 @@ namespace Confix.Authoring.Store.Mongo
 
             services.AddSingleton<IConfixAuthorDbContext>(new ConfixAuthorDbContext(options));
             services.AddSingleton<IApplicationStore, ApplicationStore>();
+            services.AddSingleton<IChangeLogStore, ChangeLogStore>();
             services.AddSingleton<IEnvironmentStore, EnvironmentStore>();
             services.AddSingleton<IComponentStore, ComponentStore>();
             services.AddSingleton<IVariableStore, VariableStore>();

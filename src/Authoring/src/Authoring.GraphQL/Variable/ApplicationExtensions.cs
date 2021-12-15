@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,7 +9,7 @@ using HotChocolate.Types;
 namespace Confix.Authoring.GraphQL;
 
 [ExtendObjectType(typeof(Application))]
-public class ApplicationVariablesExtensions
+public class ApplicationExtensions
 {
     public async Task<IEnumerable<VariableValue>> GetVariableValuesAsync(
         [Service] IVariableService service,
@@ -16,5 +17,13 @@ public class ApplicationVariablesExtensions
         CancellationToken cancellationToken)
     {
         return await service.GetValuesByApplicationAsync(application.Id, cancellationToken);
+    }
+
+    public async Task<IEnumerable<ChangeLog>> GetChangeLogAsync(
+        [Service] IChangeLogService service,
+        [Parent] Application application,
+        CancellationToken cancellationToken)
+    {
+        return await service.GetByApplicationId(application.Id, cancellationToken);
     }
 }

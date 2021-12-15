@@ -1,6 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Confix.Authoring.Store;
+using HotChocolate;
 using HotChocolate.Types;
 
 namespace Confix.Authoring.GraphQL.Applications
@@ -8,23 +9,17 @@ namespace Confix.Authoring.GraphQL.Applications
     [ExtendObjectType(OperationTypeNames.Mutation)]
     public class ApplicationMutations
     {
-        private readonly IApplicationService _applicationService;
-
-        public ApplicationMutations(IApplicationService applicationService)
-        {
-            _applicationService = applicationService;
-        }
-
         /// <summary>
         /// Creates a new application configuration.
         /// </summary>
         [Error(typeof(ApplicationNameTaken))]
         public async Task<CreateApplicationPayload> CreateApplicationAsync(
+            [Service] IApplicationService applicationService,
             CreateApplicationInput input,
             CancellationToken cancellationToken)
         {
             Application application =
-                await _applicationService.CreateAsync(
+                await applicationService.CreateAsync(
                     input.Name,
                     input.Namespace,
                     input.Parts,
@@ -39,10 +34,11 @@ namespace Confix.Authoring.GraphQL.Applications
         [Error(typeof(ApplicationIdInvalid))]
         [Error(typeof(ApplicationNameTaken))]
         public async Task<RenameApplicationPayload> RenameApplicationAsync(
+            [Service] IApplicationService applicationService,
             RenameApplicationInput input,
             CancellationToken cancellationToken)
         {
-            await _applicationService.RenameAsync(
+            await applicationService.RenameAsync(
                 input.Id,
                 input.Name,
                 cancellationToken);
@@ -57,10 +53,11 @@ namespace Confix.Authoring.GraphQL.Applications
         [Error(typeof(ApplicationPartIdInvalid))]
         [Error(typeof(ApplicationPartNameTaken))]
         public async Task<RenameApplicationPartPayload> RenameApplicationPartAsync(
+            [Service] IApplicationService applicationService,
             RenameApplicationPartInput input,
             CancellationToken cancellationToken)
         {
-            await _applicationService.RenamePartAsync(
+            await applicationService.RenamePartAsync(
                 input.ApplicationPartId,
                 input.Name,
                 cancellationToken);
@@ -74,10 +71,11 @@ namespace Confix.Authoring.GraphQL.Applications
         [Error(typeof(ApplicationPartIdInvalid))]
         public async Task<AddComponentsToApplicationPartPayload>
             AddComponentsToApplicationPartAsync(
+            [Service] IApplicationService applicationService,
             AddComponentsToApplicationPartInput input,
             CancellationToken cancellationToken)
         {
-            Application application = await _applicationService
+            Application application = await applicationService
                 .AddComponentsToPartAsync(
                     input.ApplicationPartId,
                     input.ComponentIds,
@@ -92,10 +90,11 @@ namespace Confix.Authoring.GraphQL.Applications
         [Error(typeof(ApplicationNotFoundError))]
         [Error(typeof(ApplicationPartNameTaken))]
         public async Task<AddPartToApplicationPayload> AddPartToApplicationAsync(
+            [Service] IApplicationService applicationService,
             AddPartToApplicationInput input,
             CancellationToken cancellationToken)
         {
-            Application application = await _applicationService.AddPartToApplicationAsync(
+            Application application = await applicationService.AddPartToApplicationAsync(
                 input.ApplicationId,
                 input.PartName,
                 cancellationToken);
@@ -108,10 +107,11 @@ namespace Confix.Authoring.GraphQL.Applications
         /// </summary>
         [Error(typeof(ApplicationPartNotFoundError))]
         public async Task<RemoveApplicationPartPayload> RemoveApplicationPartAsync(
+            [Service] IApplicationService applicationService,
             RemoveApplicationPartInput input,
             CancellationToken cancellationToken)
         {
-            Application application = await _applicationService
+            Application application = await applicationService
                 .RemovePartAsync(input.ApplicationPartId, cancellationToken);
 
             return new RemoveApplicationPartPayload(application);
@@ -123,10 +123,11 @@ namespace Confix.Authoring.GraphQL.Applications
         [Error(typeof(ApplicationPartNotFoundError))]
         public async Task<RemoveComponentFromApplicationPartPayload>
             RemoveComponentFromApplicationPartAsync(
+            [Service] IApplicationService applicationService,
             RemoveComponentFromApplicationPartInput input,
             CancellationToken cancellationToken)
         {
-            ApplicationPart applicationPart = await _applicationService
+            ApplicationPart applicationPart = await applicationService
                 .RemoveComponentFromApplicationPartAsync(
                     input.PartComponentId,
                     cancellationToken);
@@ -141,10 +142,11 @@ namespace Confix.Authoring.GraphQL.Applications
         [Error(typeof(ComponentNotFoundError))]
         public async Task<UpdateApplicationPartComponentValuesPayload>
             UpdateApplicationPartComponentValuesAsync(
+            [Service] IApplicationService applicationService,
             UpdateApplicationPartComponentValuesInput input,
             CancellationToken cancellationToken)
         {
-            ApplicationPartComponent component = await _applicationService
+            ApplicationPartComponent component = await applicationService
                 .SetApplicationPartComponentValues(
                     input.PartComponentId,
                     input.Values,

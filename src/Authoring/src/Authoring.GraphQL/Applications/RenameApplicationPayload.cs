@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Confix.Authoring.DataLoaders;
@@ -16,7 +17,7 @@ namespace Confix.Authoring.GraphQL.Applications
         }
 
         public Task<Application?> GetApplicationAsync(
-            ApplicationByIdDataLoader applicationById,
+            IApplicationDataLoader applicationById,
             CancellationToken cancellationToken) =>
             _applicationId.HasValue
                 ? applicationById.LoadAsync(_applicationId.Value, cancellationToken)

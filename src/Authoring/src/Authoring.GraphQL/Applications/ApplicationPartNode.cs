@@ -15,7 +15,7 @@ namespace Confix.Authoring.GraphQL.Applications
         [NodeResolver]
         public static Task<ApplicationPart?> GetApplicationPartAsync(
             Guid id,
-            ApplicationPartByIdDataLoader applicationPartById,
+            IApplicationPartDataLoader applicationPartById,
             CancellationToken cancellationToken) =>
             applicationPartById.LoadAsync(id, cancellationToken);
     }

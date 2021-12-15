@@ -20,9 +20,7 @@ export type EditApplicationPart_fragment = {
         };
         readonly " $fragmentRefs": FragmentRefs<"EditApplicationPartComponent_component">;
     }>;
-    readonly variableValues: ReadonlyArray<{
-        readonly " $fragmentRefs": FragmentRefs<"VariableValueList_values">;
-    }>;
+    readonly " $fragmentRefs": FragmentRefs<"EditApplicationPart_VariableValues_Fragment" | "EditApplicationPart_ChangeLog_Fragment">;
     readonly " $refType": "EditApplicationPart_fragment";
 };
 export type EditApplicationPart_fragment$data = EditApplicationPart_fragment;
@@ -115,25 +113,29 @@ return {
       "storageKey": null
     },
     {
-      "alias": null,
-      "args": null,
-      "concreteType": "VariableValue",
-      "kind": "LinkedField",
-      "name": "variableValues",
-      "plural": true,
+      "kind": "Defer",
       "selections": [
         {
           "args": null,
           "kind": "FragmentSpread",
-          "name": "VariableValueList_values"
+          "name": "EditApplicationPart_VariableValues_Fragment"
         }
-      ],
-      "storageKey": null
+      ]
+    },
+    {
+      "kind": "Defer",
+      "selections": [
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "EditApplicationPart_ChangeLog_Fragment"
+        }
+      ]
     }
   ],
   "type": "ApplicationPart",
   "abstractKey": null
 };
 })();
-(node as any).hash = 'd323e5f54e6357ee7f9923aca22b7b89';
+(node as any).hash = '28b4550393d1a8b057fc14fd5f2f129d';
 export default node;

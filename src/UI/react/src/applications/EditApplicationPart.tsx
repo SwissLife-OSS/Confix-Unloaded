@@ -33,7 +33,6 @@ import {
 } from "./__generated__/EditApplicationPart_fragment.graphql";
 import { RenameApplicationPartDialog } from "./dialogs/RenameApplicationPartDialog";
 import { RemoveComponentFromApplicationPartDialog } from "./dialogs/RemoveComponentFromApplicationPartDialog";
-import { useGoTo } from "../shared/useGoTo";
 import {
   VariableOption,
   VariablesSelect,
@@ -44,8 +43,11 @@ import { VariableEditor } from "../variables/controls/VariableEditor";
 import { EditApplicationPartRefetchPartQuery } from "./__generated__/EditApplicationPartRefetchPartQuery.graphql";
 import { VariableValueList } from "../variables/controls/VariableValueList";
 import { useSilentRefresh } from "../shared/useDefaultRefetch";
-import { useTabFromState } from "../shared/useTabFromState";
 import { generatePath, Link, useLocation } from "react-router-dom";
+import { EditApplicationPart_VariableValues_Fragment$key } from "./__generated__/EditApplicationPart_VariableValues_Fragment.graphql";
+import { EditApplicationPart_ChangeLog_Fragment$key } from "./__generated__/EditApplicationPart_ChangeLog_Fragment.graphql";
+import { ChangeLog } from "../shared/ChangeLog";
+import { useTabSwitcher } from "../shared/useTabSwitcher";
 
 const applicationByIdQuery = graphql`
   query EditApplicationPart_GetById_Query($id: ID!) {
@@ -73,16 +75,30 @@ const applicationPartfragment = graphql`
       }
       ...EditApplicationPartComponent_component
     }
+    ...EditApplicationPart_VariableValues_Fragment @defer
+    ...EditApplicationPart_ChangeLog_Fragment @defer
+  }
+`;
+
+const applicationVariableValuesFragment = graphql`
+  fragment EditApplicationPart_VariableValues_Fragment on ApplicationPart {
     variableValues {
       ...VariableValueList_values
     }
   }
 `;
 
+const applicationPartChangeLog = graphql`
+  fragment EditApplicationPart_ChangeLog_Fragment on ApplicationPart {
+    changeLog {
+      ...ChangeLog_fragment
+    }
+  }
+`;
 export const EditApplicationPart = () => {
   const { applicationId = "", id: applicationPartId = "" } = useParams();
   const variables = { id: applicationPartId };
-  const tab = useTabFromState("parts", "variables");
+  const { tab, navigateToTab } = useTabSwitcher();
   const data = useLazyLoadQuery<EditApplicationPart_GetById_Query>(
     applicationByIdQuery,
     variables
@@ -132,15 +148,22 @@ export const EditApplicationPart = () => {
           />
         </Col>
         <Col xs={24}>
-          <Tabs defaultActiveKey={tab} key={tab}>
-            <Tabs.TabPane tab="Parts" key="parts">
+          <Tabs defaultActiveKey={tab} key={tab} onChange={navigateToTab}>
+            <Tabs.TabPane tab="Components" key="edit">
               <Components
                 applicationId={applicationId}
                 components={components}
               />
             </Tabs.TabPane>
             <Tabs.TabPane tab="Variables" key="variables">
-              <Variables refetch={refresh} data={applicationPartById} />
+              <DefaultSuspense>
+                <Variables data={applicationPartById} refetch={refresh} />
+              </DefaultSuspense>
+            </Tabs.TabPane>
+            <Tabs.TabPane tab="Change Log" key="changelog">
+              <DefaultSuspense>
+                <ApplicationPartChangeLog data={applicationPartById} />
+              </DefaultSuspense>
             </Tabs.TabPane>
           </Tabs>
         </Col>
@@ -153,6 +176,11 @@ const Variables: React.FC<{
   data: EditApplicationPart_fragment;
   refetch: () => void;
 }> = ({ data, refetch }) => {
+  const { variableValues } =
+    useFragment<EditApplicationPart_VariableValues_Fragment$key>(
+      applicationVariableValuesFragment,
+      data
+    );
   const { state } = useLocation();
   const [selected, setSelected] = useState<VariableOption>(
     state?.variableOption
@@ -195,7 +223,7 @@ const Variables: React.FC<{
           <DefaultSuspense>
             <VariableValueList
               onEdit={handleVariableValueEditClick}
-              data={data.variableValues}
+              data={variableValues}
             />
           </DefaultSuspense>
         </Col>
@@ -315,4 +343,15 @@ const Header: React.FC<{
       />
     </EditableBreadcrumbHeader>
   );
+};
+
+const ApplicationPartChangeLog: React.FC<{
+  data: EditApplicationPart_ChangeLog_Fragment$key;
+}> = ({ data }) => {
+  const { changeLog } = useFragment<EditApplicationPart_ChangeLog_Fragment$key>(
+    applicationPartChangeLog,
+    data
+  );
+
+  return <ChangeLog data={changeLog} />;
 };

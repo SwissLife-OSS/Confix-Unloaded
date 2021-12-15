@@ -12,10 +12,7 @@ export type EditApplication_Application_Fragment = {
     readonly parts: ReadonlyArray<{
         readonly " $fragmentRefs": FragmentRefs<"EditApplication_part">;
     }>;
-    readonly variableValues: ReadonlyArray<{
-        readonly " $fragmentRefs": FragmentRefs<"VariableValueList_values">;
-    }>;
-    readonly " $fragmentRefs": FragmentRefs<"ApplicationPartSectionHeaderFragment">;
+    readonly " $fragmentRefs": FragmentRefs<"EditApplication_VariableValues_Fragment" | "EditApplication_ChangeLog_Fragment" | "ApplicationPartSectionHeaderFragment">;
     readonly " $refType": "EditApplication_Application_Fragment";
 };
 export type EditApplication_Application_Fragment$data = EditApplication_Application_Fragment;
@@ -79,20 +76,24 @@ const node: ReaderFragment = {
       "storageKey": null
     },
     {
-      "alias": null,
-      "args": null,
-      "concreteType": "VariableValue",
-      "kind": "LinkedField",
-      "name": "variableValues",
-      "plural": true,
+      "kind": "Defer",
       "selections": [
         {
           "args": null,
           "kind": "FragmentSpread",
-          "name": "VariableValueList_values"
+          "name": "EditApplication_VariableValues_Fragment"
         }
-      ],
-      "storageKey": null
+      ]
+    },
+    {
+      "kind": "Defer",
+      "selections": [
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "EditApplication_ChangeLog_Fragment"
+        }
+      ]
     },
     {
       "args": null,
@@ -103,5 +104,5 @@ const node: ReaderFragment = {
   "type": "Application",
   "abstractKey": null
 };
-(node as any).hash = 'c74541fbb2578d5babd1b6abe2cf2798';
+(node as any).hash = 'a27ad84c13cc32ede2bf2b354ce275e2';
 export default node;

@@ -18,6 +18,7 @@
     "@types/react-dom": "^17.0.11",
     "@types/yup": "^0.29.13",
     "antd": "4.17.2",
+    "date-fns": "^2.27.0",
     "formik": "^2.2.9",
     "graphql-2-json-schema": "^0.9.0",
     "meros": "^1.1.4",

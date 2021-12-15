@@ -3,6 +3,7 @@ using Confix.Authoring.DataLoaders;
 using Confix.Authoring.GraphQL.Applications;
 using Confix.Authoring.GraphQL.Components;
 using Confix.Authoring.GraphQL.Serialization;
+using Confix.Authoring.Store;
 using GreenDonut;
 using HotChocolate.Execution.Configuration;
 using HotChocolate.Types;
@@ -53,6 +54,7 @@ namespace Confix.Authoring.GraphQL
             builder
                 .AddQueryType()
                 .AddTypeExtension<ApplicationQueries>()
+                .AddTypeExtension<ChangeLogQueries>()
                 .AddTypeExtension<VariableQueries>()
                 .AddTypeExtension<EnvironmentQueries>()
                 .AddTypeExtension<ComponentQueries>();
@@ -81,11 +83,13 @@ namespace Confix.Authoring.GraphQL
                 .AddTypeExtension<ApplicationApplicationPartExtensions>()
                 .AddTypeExtension<ApplicationPartComponentExtensions>()
                 .AddTypeExtension<ComponentNode>()
-                .AddTypeExtension<ApplicationPartVariablesExtensions>()
-                .AddTypeExtension<ApplicationVariablesExtensions>()
+                .AddTypeExtension<ApplicationPartExtensions>()
+                .AddTypeExtension<ApplicationExtensions>()
+                .AddTypeExtension<ApplicationPartComponentChangeLogExtensions>()
                 .AddTypeExtension<QueryVariablesExtensions>()
                 .AddTypeExtension<ApplicationPartNode>()
                 .AddTypeExtension<ApplicationNode>()
+                .AddTypeExtension<ChangeLogNode>()
                 .AddType<SdlType>();
 
             builder
@@ -95,17 +99,36 @@ namespace Confix.Authoring.GraphQL
                 .AddObjectType<ApplicationNameTaken>()
                 .AddType<SchemaViolationType>();
 
+            builder.AddInterfaceType<IChange>(x => x.Name("Change"));
+            builder.AddInterfaceType<IApplicationPartChange>(x => x.Name("ApplicationPartChange"));
+            builder.AddInterfaceType<IApplicationChange>(x => x.Name("ApplicationChange"));
+            builder.AddInterfaceType<IApplicationPartComponentChange>(x =>
+                x.Name("ApplicationPartComponentChange"));
+            builder.AddType<CreateApplicationChange>();
+            builder.AddType<RenameApplicationChange>();
+            builder.AddType<RenameApplicationPartChange>();
+            builder.AddType<AddComponentToApplicationPartChange>();
+            builder.AddType<AddPartToApplicationChange>();
+            builder.AddType<RemovePartFromApplicationChange>();
+            builder.AddType<RemoveComponentFromApplicationPartChange>();
+            builder.AddType<ApplicationPartComponentValuesChange>();
+
             return builder;
         }
 
         private static IRequestExecutorBuilder AddDataLoaders(this IRequestExecutorBuilder builder)
         {
             builder
-                .AddDataLoader<ApplicationByIdDataLoader>()
-                .AddDataLoader<ApplicationPartByIdDataLoader>()
+                .AddDataLoader<IApplicationDataLoader, ApplicationByIdDataLoader>()
+                .AddDataLoader<IApplicationPartDataLoader, ApplicationPartByIdDataLoader>()
                 .AddDataLoader<VariableByIdDataLoader>()
                 .AddDataLoader<ComponentByIdDataLoader>()
-                .AddDataLoader<ApplicationPartComponentByIdDataloader>()
+                .AddDataLoader<IApplicationPartComponentDataLoader,
+                    ApplicationPartComponentByIdDataloader>()
+                .AddDataLoader<ChangeLogByIdDataloader>()
+                .AddDataLoader<ChangeLogByApplicationIdDataloader>()
+                .AddDataLoader<ChangeLogByApplicationPartIdDataloader>()
+                .AddDataLoader<ChangeLogByApplicationPartComponentIdDataloader>()
                 .AddDataLoader<EnvironmentByIdDataLoader>()
                 // add additional dataloader lookups
                 .Services

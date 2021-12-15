@@ -24,7 +24,7 @@ public class VariableValueExtensions
     public async Task<Application?> GetApplicationAsync(
         [Parent] VariableValue value,
         [Service] IVariableService variableService,
-        ApplicationByIdDataLoader applicationById,
+        IApplicationDataLoader applicationById,
         CancellationToken cancellationToken)
     {
         if (value.Key.ApplicationId.HasValue)
@@ -40,7 +40,7 @@ public class VariableValueExtensions
     public async Task<ApplicationPart?> GetApplicationPartAsync(
         [Parent] VariableValue value,
         [Service] IVariableService variableService,
-        ApplicationPartByIdDataLoader applicationPartById,
+        IApplicationPartDataLoader applicationPartById,
         CancellationToken cancellationToken)
     {
         if (value.Key.PartId.HasValue)
