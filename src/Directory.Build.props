@@ -10,7 +10,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <RootNamespace>ConfiX</RootNamespace>
     <Nullable>enable</Nullable>
-    <LangVersion>10.0</LangVersion>
+    <LangVersion>preview</LangVersion>
   </PropertyGroup>
 
 </Project>

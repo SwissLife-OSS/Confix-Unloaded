@@ -37,7 +37,9 @@ export type EditApplicationPartComponent_fragment = {
             readonly code: string;
         }>;
     };
-    readonly values: object | null;
+    readonly version: number;
+    readonly values: string | null;
+    readonly " $fragmentRefs": FragmentRefs<"EditApplicationPartComponent_ChangeLog_Fragment">;
     readonly " $refType": "EditApplicationPartComponent_fragment";
 };
 export type EditApplicationPartComponent_fragment$data = EditApplicationPartComponent_fragment;
@@ -198,11 +200,28 @@ return {
       ],
       "storageKey": null
     },
-    (v2/*: any*/)
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "version",
+      "storageKey": null
+    },
+    (v2/*: any*/),
+    {
+      "kind": "Defer",
+      "selections": [
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "EditApplicationPartComponent_ChangeLog_Fragment"
+        }
+      ]
+    }
   ],
   "type": "ApplicationPartComponent",
   "abstractKey": null
 };
 })();
-(node as any).hash = '99bddf18d2e63f83cfdd7024675f6fde';
+(node as any).hash = 'f00b4d66d4ba8893c488a8a8c455a56b';
 export default node;

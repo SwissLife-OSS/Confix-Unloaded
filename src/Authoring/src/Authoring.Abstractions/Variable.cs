@@ -15,6 +15,8 @@ public class Variable
     public bool IsSecret { get; set; }
 
     public string? Namespace { get; set; }
+
+    public int Version { get; set; }
 }
 
 public class VariableValue
@@ -27,6 +29,8 @@ public class VariableValue
     public string Value { get; set; }
 
     public VariableEncryptionInfo? Encryption { get; set; }
+
+    public int Version { get; set; }
 }
 
 public class VariableEncryptionInfo

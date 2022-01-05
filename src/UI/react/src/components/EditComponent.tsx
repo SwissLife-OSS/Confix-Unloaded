@@ -1,5 +1,5 @@
 import { useFragment, useLazyLoadQuery, useMutation } from "react-relay";
-import { Col, Row } from "antd";
+import { Button, Col, Row, Tabs } from "antd";
 import { DetailView } from "../shared/DetailView";
 import { graphql } from "babel-plugin-relay/macro";
 import { EditComponentQuery } from "./__generated__/EditComponentQuery.graphql";
@@ -17,11 +17,17 @@ import { EditComponent_component$key } from "./__generated__/EditComponent_compo
 import { css } from "@emotion/react";
 import { SectionHeader } from "../shared/SectionHeader";
 import { useParams } from "react-router";
+import { useTabSwitcher } from "../shared/useTabSwitcher";
+import { DefaultSuspense } from "../shared/DefaultSuspense";
+import { ChangeLog } from "../shared/ChangeLog";
+import { TabRow } from "../shared/TabRow";
+import { ButtonBar } from "../shared/ButtonBar";
 
 const componentByIdQuery = graphql`
   query EditComponentQuery($id: ID!) {
     componentById(id: $id) {
       id
+      name
       ...EditComponent_component
     }
   }
@@ -39,6 +45,9 @@ const editComponentFragment = graphql`
     schemaViolations {
       path
       code
+    }
+    changeLog {
+      ...ChangeLog_fragment
     }
   }
 `;
@@ -65,16 +74,51 @@ const editComponentMutation = graphql`
 
 export const EditComponent = () => {
   const { id: componentId = "" } = useParams();
+
+  const { tab, navigateToTab } = useTabSwitcher();
   const component = useLazyLoadQuery<EditComponentQuery>(componentByIdQuery, {
     id: componentId,
   });
   const id = component.componentById?.id;
+  const name = component.componentById?.name;
   if (!id) {
     return (
       <DetailView style={{ padding: 1 }}>Coult not find component</DetailView>
     );
   }
-  return <EditComponentForm data={component.componentById} id={id} />;
+  return (
+    <DetailView
+      style={{ padding: 1 }}
+      css={css`
+        padding: 1;
+        display: flex;
+        flex-direction: column;
+      `}
+    >
+      <Row>
+        <Col xs={24}>
+          <Header name={name ?? "unkonw"} id={id} />
+        </Col>
+      </Row>
+      <Row>
+        <Col xs={24}>
+          <SectionHeader title={`Component ${name}`}></SectionHeader>
+        </Col>
+      </Row>
+      <TabRow>
+        <Tabs defaultActiveKey={tab} key={tab} onChange={navigateToTab}>
+          <Tabs.TabPane tab="Parts" key="edit">
+            <EditComponentForm id={id} data={component.componentById} />
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="Change Log" key="changelog">
+            <DefaultSuspense>
+              <ComponentChangeLog data={component.componentById} />
+            </DefaultSuspense>
+          </Tabs.TabPane>
+        </Tabs>
+      </TabRow>
+    </DetailView>
+  );
 };
 
 const EditComponentForm: React.FC<{
@@ -109,29 +153,7 @@ const EditComponentForm: React.FC<{
   }, [commit, schema, values, id]);
 
   return (
-    <DetailView
-      style={{ padding: 1 }}
-      css={css`
-        padding: 1;
-        display: flex;
-        flex-direction: column;
-      `}
-    >
-      <Row>
-        <Col xs={24}>
-          <Header name={component.name} id={component.id} />
-        </Col>
-      </Row>
-      <Row>
-        <Col xs={24}>
-          <SectionHeader
-            loading={isInFlight}
-            title={`Component ${component.name}`}
-            disabled={!schema}
-            onSave={handleUpdate}
-          ></SectionHeader>
-        </Col>
-      </Row>
+    <>
       <ComponentEditor
         key={component.id}
         onValuesChanged={setValues}
@@ -140,7 +162,12 @@ const EditComponentForm: React.FC<{
         schema={component.schemaSdl ?? ""}
         editSchema
       />
-    </DetailView>
+      <ButtonBar>
+        <Button loading={isInFlight} onClick={handleUpdate}>
+          Save
+        </Button>
+      </ButtonBar>
+    </>
   );
 };
 
@@ -157,4 +184,15 @@ const Header: React.FC<{ name: string; id: string }> = ({ name, id }) => {
       />
     </EditableBreadcrumbHeader>
   );
+};
+
+const ComponentChangeLog: React.FC<{
+  data: EditComponent_component$key;
+}> = ({ data }) => {
+  const { changeLog } = useFragment<EditComponent_component$key>(
+    editComponentFragment,
+    data
+  );
+
+  return <ChangeLog data={changeLog} />;
 };

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Route, Routes, useMatch } from "react-router-dom";
+import { Link, Route, Routes, useMatch } from "react-router-dom";
 import { FullSizeBox, SidebarHeader } from "../shared/FullSizeBox";
 import { SearchBar } from "../shared/SearchBar";
 import { EditApplication } from "./EditApplication";
@@ -17,7 +17,6 @@ export const Applications: React.FC = () => {
   const [search, setSearch] = useState<string | undefined>();
 
   const applicationId = useApplicationIdFromRoute();
-  const handleAdd = useGoTo(() => "new");
   const handleOnItemSelected = useGoTo((id?: string) => `${id}/edit`);
 
   return (
@@ -25,9 +24,9 @@ export const Applications: React.FC = () => {
       <FullSizeBox>
         <SidebarHeader>
           <SearchBar onSearch={setSearch} />
-          <Button type="primary" onClick={handleAdd}>
-            Add
-          </Button>
+          <Link to={"new"}>
+            <Button type="primary">Add</Button>
+          </Link>
         </SidebarHeader>
         <DefaultSuspense>
           <ApplicationList
@@ -57,14 +56,14 @@ export const ApplicationRoutes: React.VFC = () => (
   <Routes>
     <Route path={"new"} element={<NewApplication />} />
     <Route
-      path={":applicationId/components/:partComponentId/edit"}
+      path={":applicationId/components/:partComponentId/:tab"}
       element={<EditApplicationPartComponent />}
     />
     <Route
-      path={":applicationId/parts/:id/edit"}
+      path={":applicationId/parts/:id/:tab"}
       element={<EditApplicationPart />}
     />
-    <Route path={":applicationId/edit"} element={<EditApplication />} />
+    <Route path={":applicationId/:tab"} element={<EditApplication />} />
   </Routes>
 );
 

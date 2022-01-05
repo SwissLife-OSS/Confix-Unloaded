@@ -9,7 +9,7 @@ using HotChocolate.Fetching;
 
 namespace Confix.Authoring.DataLoaders
 {
-    public class ComponentByIdDataLoader : BatchDataLoader<Guid, Component?>
+    public class ComponentByIdDataLoader : BatchDataLoader<Guid, Component?>, IComponentDataLoader
     {
         private readonly IComponentStore _componentStore;
 

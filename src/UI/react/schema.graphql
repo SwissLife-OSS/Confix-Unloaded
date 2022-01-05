@@ -81,6 +81,26 @@ type AddComponentsToApplicationPartPayload {
   query: Query!
 }
 
+type AddComponentToApplicationPartChange implements ApplicationPartComponentChange & ApplicationPartChange & ApplicationChange & Change {
+  kind: String!
+  application: Application
+  applicationVersion: Int!
+  part: ApplicationPart
+  partVersion: Int!
+  partComponent: ApplicationPartComponent
+  partComponentVersion: Int!
+  addedComponent: ApplicationPartComponent!
+}
+
+type AddPartToApplicationChange implements ApplicationPartChange & ApplicationChange & Change {
+  kind: String!
+  application: Application
+  applicationVersion: Int!
+  part: ApplicationPart
+  partVersion: Int!
+  addedPart: ApplicationPart!
+}
+
 union AddPartToApplicationError = ApplicationNotFoundError | ApplicationPartNameTaken
 
 input AddPartToApplicationInput {
@@ -100,8 +120,16 @@ type Application implements Node {
   id: ID!
   name: String!
   namespace: String
+  version: Int!
   parts: [ApplicationPart!]!
   variableValues: [VariableValue!]!
+  changeLog: [ChangeLog!]!
+}
+
+interface ApplicationChange {
+  application: Application
+  applicationVersion: Int!
+  kind: String!
 }
 
 input ApplicationFilterInput {
@@ -132,22 +160,55 @@ type ApplicationNotFoundError implements IUserError {
 type ApplicationPart implements Node {
   id: ID!
   name: String!
+  version: Int!
   components: [ApplicationPartComponent!]!
   application: Application
   variableValues: [VariableValue!]!
+  changeLog: [ChangeLog!]!
+}
+
+interface ApplicationPartChange {
+  part: ApplicationPart
+  partVersion: Int!
+  application: Application
+  applicationVersion: Int!
+  kind: String!
 }
 
 type ApplicationPartComponent {
   id: ID!
+  version: Int!
   definition: Component!
-  values: Any
   applicationPart: ApplicationPart
+  values(version: Int): String
+  changeLog: [ChangeLog!]!
+}
+
+interface ApplicationPartComponentChange {
+  partComponent: ApplicationPartComponent
+  partComponentVersion: Int!
+  part: ApplicationPart
+  partVersion: Int!
+  application: Application
+  applicationVersion: Int!
+  kind: String!
 }
 
 type ApplicationPartComponentNotFoundError implements IUserError {
   componentPartId: UUID!
   code: String!
   message: String!
+}
+
+type ApplicationPartComponentValuesChange implements ApplicationPartComponentChange & ApplicationPartChange & ApplicationChange & Change {
+  kind: String!
+  application: Application
+  applicationVersion: Int!
+  part: ApplicationPart
+  partVersion: Int!
+  partComponent: ApplicationPartComponent
+  partComponentVersion: Int!
+  values: String!
 }
 
 type ApplicationPartIdInvalid implements IUserError {
@@ -194,15 +255,34 @@ enum ApplyPolicy {
   AFTER_RESOLVER
 }
 
+interface Change {
+  kind: String!
+}
+
+type ChangeLog {
+  id: ID!
+  change: Change!
+  modifiedBy: UserInfo!
+  modifiedAt: DateTime!
+}
+
 type Component implements Node {
   id: ID!
   name: String!
+  version: Int!
   state: ComponentState!
+  changeLog: [ChangeLog!]!
   schemaSdl: SDL
   schema: Any
   values: Any
   defaults: Any
   schemaViolations: [SchemaViolation!]!
+}
+
+interface ComponentChange {
+  component: Component
+  componentVersion: Int!
+  kind: String!
 }
 
 input ComponentFilterInput {
@@ -215,6 +295,13 @@ type ComponentNotFoundError implements IUserError {
   componentId: UUID!
   code: String!
   message: String!
+}
+
+type ComponentSchemaChange implements ComponentChange & Change {
+  kind: String!
+  component: Component
+  componentVersion: Int!
+  schema: String!
 }
 
 """A connection to a list of items."""
@@ -243,6 +330,19 @@ enum ComponentState {
   DEPRECATED
 }
 
+type ComponentValuesChange implements ComponentChange & Change {
+  kind: String!
+  component: Component
+  componentVersion: Int!
+  values: String!
+}
+
+type CreateApplicationChange implements ApplicationChange & Change {
+  kind: String!
+  application: Application
+  applicationVersion: Int!
+}
+
 union CreateApplicationError = ApplicationNameTaken
 
 input CreateApplicationInput {
@@ -255,6 +355,12 @@ type CreateApplicationPayload {
   application: Application
   errors: [CreateApplicationError!]
   query: Query!
+}
+
+type CreateComponentChange implements ComponentChange & Change {
+  kind: String!
+  component: Component
+  componentVersion: Int!
 }
 
 union CreateComponentError = ValueSchemaViolation
@@ -283,11 +389,29 @@ type CreateEnvironmentPayload {
   query: Query!
 }
 
+type CreateVariableChange implements VariableChange & Change {
+  variable: Variable
+  variableVersion: Int!
+  value: Variable!
+  kind: String!
+}
+
 input CreateVariableInput {
   name: String!
   isSecret: Boolean!
   namespace: String
   defaultValue: String
+}
+
+"""The `DateTime` scalar represents an ISO-8601 compliant date time type."""
+scalar DateTime
+
+type DeleteVariableValueChange implements VariableChange & Change {
+  variable: Variable
+  variableVersion: Int!
+  key: VariableKey!
+  variableValue: VariableValue!
+  kind: String!
 }
 
 input DeleteVariableValueInput {
@@ -423,6 +547,7 @@ type Query {
   ): Application
   applicationPartById(id: ID!): ApplicationPart
   applicationPartComponentById(partComponentId: ID!): ApplicationPartComponent
+  changeLogById(id: ID!): ChangeLog
   variables: [Variable!]!
   searchVariables(
     search: String
@@ -493,6 +618,23 @@ type RemoveApplicationPartPayload {
   query: Query!
 }
 
+type RemoveComponentChange implements ComponentChange & Change {
+  kind: String!
+  component: Component
+  componentVersion: Int!
+}
+
+type RemoveComponentFromApplicationPartChange implements ApplicationPartComponentChange & ApplicationPartChange & ApplicationChange & Change {
+  kind: String!
+  application: Application
+  applicationVersion: Int!
+  part: ApplicationPart
+  partVersion: Int!
+  partComponent: ApplicationPartComponent
+  partComponentVersion: Int!
+  removedComponent: ApplicationPartComponent!
+}
+
 union RemoveComponentFromApplicationPartError = ApplicationPartNotFoundError
 
 input RemoveComponentFromApplicationPartInput {
@@ -518,10 +660,35 @@ type RemoveEnvironmentPayload {
   query: Query!
 }
 
+type RemovePartFromApplicationChange implements ApplicationPartChange & ApplicationChange & Change {
+  kind: String!
+  application: Application
+  removedPart: ApplicationPart!
+  applicationVersion: Int!
+  part: ApplicationPart
+  partVersion: Int!
+}
+
+type RenameApplicationChange implements ApplicationChange & Change {
+  kind: String!
+  application: Application
+  applicationVersion: Int!
+  name: String!
+}
+
 union RenameApplicationError = ApplicationIdInvalid | ApplicationNameTaken
 
 input RenameApplicationInput {
   id: ID!
+  name: String!
+}
+
+type RenameApplicationPartChange implements ApplicationPartChange & ApplicationChange & Change {
+  kind: String!
+  application: Application
+  applicationVersion: Int!
+  part: ApplicationPart
+  partVersion: Int!
   name: String!
 }
 
@@ -546,6 +713,13 @@ type RenameApplicationPayload {
   query: Query!
 }
 
+type RenameComponentChange implements ComponentChange & Change {
+  kind: String!
+  component: Component
+  componentVersion: Int!
+  name: String!
+}
+
 input RenameComponentInput {
   id: ID!
   name: String!
@@ -567,6 +741,13 @@ type RenameEnvironmentPayload {
   environment: Environment
   errors: [RenameEnvironmentError!]
   query: Query!
+}
+
+type RenameVariableChange implements VariableChange & Change {
+  variable: Variable
+  variableVersion: Int!
+  name: String!
+  kind: String!
 }
 
 input RenameVariableInput {
@@ -698,6 +879,10 @@ type UpdateVariableValuePayload {
   query: Query!
 }
 
+type UserInfo {
+  email: String!
+}
+
 scalar UUID
 
 type ValueSchemaViolation implements IUserError {
@@ -713,6 +898,14 @@ type Variable implements Node {
   name: String!
   isSecret: Boolean!
   namespace: String
+  version: Int!
+  changeLog: [ChangeLog!]!
+}
+
+interface VariableChange {
+  variable: Variable
+  variableVersion: Int!
+  kind: String!
 }
 
 type VariableEncryptionInfo {
@@ -738,9 +931,18 @@ type VariableValue {
   key: VariableKey!
   value: String!
   encryption: VariableEncryptionInfo
+  version: Int!
   variable: Variable
   application: Application
   applicationPart: ApplicationPart
   environment: Environment
+}
+
+type VariableValueChange implements VariableChange & Change {
+  variable: Variable
+  variableVersion: Int!
+  key: VariableKey!
+  value: String!
+  kind: String!
 }
 

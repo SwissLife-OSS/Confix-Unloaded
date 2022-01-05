@@ -8,7 +8,9 @@ using GreenDonut;
 
 namespace Confix.Authoring.DataLoaders
 {
-    public class ApplicationByIdDataLoader : BatchDataLoader<Guid, Application?>
+    public class ApplicationByIdDataLoader
+        : BatchDataLoader<Guid, Application?>
+        , IApplicationDataLoader
     {
         private readonly IApplicationStore _applicationStore;
 

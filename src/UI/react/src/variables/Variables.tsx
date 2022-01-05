@@ -47,6 +47,6 @@ export const Variables: React.FC = (props) => {
 export const VariableRoutes: React.VFC = () => (
   <Routes>
     <Route path={"new"} element={<NewVariable />} />
-    <Route path={"edit/:variableId"} element={<EditVariable />} />
+    <Route path={":variableId/*"} element={<EditVariable />} />
   </Routes>
 );

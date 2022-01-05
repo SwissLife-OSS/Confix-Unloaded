@@ -18,6 +18,9 @@ export type EditComponent_component = {
         readonly path: object;
         readonly code: string;
     }>;
+    readonly changeLog: ReadonlyArray<{
+        readonly " $fragmentRefs": FragmentRefs<"ChangeLog_fragment">;
+    }>;
     readonly " $refType": "EditComponent_component";
 };
 export type EditComponent_component$data = EditComponent_component;
@@ -107,10 +110,26 @@ const node: ReaderFragment = {
         }
       ],
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "ChangeLog",
+      "kind": "LinkedField",
+      "name": "changeLog",
+      "plural": true,
+      "selections": [
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "ChangeLog_fragment"
+        }
+      ],
+      "storageKey": null
     }
   ],
   "type": "Component",
   "abstractKey": null
 };
-(node as any).hash = 'b18d2c058d97c60c6cdec26604ccafa3';
+(node as any).hash = '0bc4b461c49a6c830c8ccbdaa2e19b9f';
 export default node;

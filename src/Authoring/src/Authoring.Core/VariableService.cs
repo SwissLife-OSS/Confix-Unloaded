@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Transactions;
 using Confix.Authoring.Store;
 using Confix.Authoring.Store.Mongo;
+using Confix.Authoring.Variables.Changes;
 
 namespace Confix.Authoring
 {
@@ -12,15 +14,18 @@ namespace Confix.Authoring
     {
         private readonly IVariableStore _variableStore;
         private readonly IVariableValueStore _variableValueStore;
+        private readonly IChangeLogService _changeLogService;
         private readonly IVariableCryptoProvider _cryptoProvider;
 
         public VariableService(
             IVariableStore variableStore,
             IVariableValueStore variableValueStore,
+            IChangeLogService changeLogService,
             IVariableCryptoProvider cryptoProvider)
         {
             _variableStore = variableStore;
             _variableValueStore = variableValueStore;
+            _changeLogService = changeLogService;
             _cryptoProvider = cryptoProvider;
         }
 
@@ -41,10 +46,22 @@ namespace Confix.Authoring
 
             if (request.DefaultValue != null)
             {
-                await SaveVariableValueAsync(
-                    variable,
-                    new SaveVariableValueRequest(variable.Id, request.DefaultValue),
-                    cancellationToken);
+                CreateVariableChange log = new()
+                {
+                    VariableId = variable.Id, VariableVersion = variable.Version, Value = variable,
+                };
+
+                using (var transaction =
+                       new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                {
+                    await _changeLogService.CreateAsync(log, cancellationToken);
+                    await SaveVariableValueAsync(
+                        variable,
+                        new SaveVariableValueRequest(variable.Id, request.DefaultValue),
+                        cancellationToken);
+
+                    transaction.Complete();
+                }
             }
 
             return variable;
@@ -143,12 +160,28 @@ namespace Confix.Authoring
         public async Task<Variable> DeleteValueAsync(Guid id, CancellationToken cancellationToken)
         {
             VariableValue value = await _variableValueStore.GetByIdAsync(id, cancellationToken);
-
-            await _variableValueStore.DeleteAsync(id, cancellationToken);
-
             Variable variable = await _variableStore.GetByIdAsync(
                 value.Key.VariableId,
                 cancellationToken);
+
+            variable.Version++;
+
+            DeleteVariableValueChange log = new()
+            {
+                VariableId = variable.Id,
+                VariableVersion = variable.Version,
+                VariableValue = value,
+                Key = value.Key
+            };
+            using (var transaction =
+                   new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            {
+                await _changeLogService.CreateAsync(log, cancellationToken);
+                await _variableStore.UpdateAsync(variable, cancellationToken);
+                await _variableValueStore.DeleteAsync(id, cancellationToken);
+
+                transaction.Complete();
+            }
 
             return variable;
         }
@@ -160,7 +193,22 @@ namespace Confix.Authoring
         {
             Variable variable = await _variableStore.GetByIdAsync(id, cancellationToken);
             variable.Name = name;
-            await _variableStore.UpdateAsync(variable, cancellationToken);
+
+            variable.Version++;
+
+            RenameVariableChange log = new()
+            {
+                VariableId = variable.Id, VariableVersion = variable.Version, Name = name
+            };
+
+            using (var transaction =
+                   new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            {
+                await _changeLogService.CreateAsync(log, cancellationToken);
+                await _variableStore.UpdateAsync(variable, cancellationToken);
+
+                transaction.Complete();
+            }
 
             return variable;
         }
@@ -170,9 +218,16 @@ namespace Confix.Authoring
             SaveVariableValueRequest request,
             CancellationToken cancellationToken)
         {
-            var value = new VariableValue
+            VariableValue? value = null;
+            if (request.ValueId is not null)
             {
-                Id = request.ValueId ?? Guid.NewGuid(),
+                value = await _variableValueStore
+                    .GetByIdAsync(request.ValueId.Value, cancellationToken);
+            }
+
+            value ??= new VariableValue
+            {
+                Id = Guid.NewGuid(),
                 Key = new VariableKey
                 {
                     VariableId = request.VariableId,
@@ -184,9 +239,8 @@ namespace Confix.Authoring
 
             if (variable.IsSecret)
             {
-                ValueEncryptionResult encrypted = await _cryptoProvider.EncryptAsync(
-                    request.Value,
-                    cancellationToken);
+                ValueEncryptionResult encrypted =
+                    await _cryptoProvider.EncryptAsync(request.Value, cancellationToken);
 
                 value.Value = encrypted.CipherValue;
                 value.Encryption = encrypted.EncryptionInfo;
@@ -196,7 +250,21 @@ namespace Confix.Authoring
                 value.Value = request.Value;
             }
 
-            await _variableValueStore.SaveAsync(value, cancellationToken);
+            VariableValueChange log = new()
+            {
+                VariableId = variable.Id,
+                VariableVersion = variable.Version,
+                Value = value.Value,
+                Key = value.Key
+            };
+
+            using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            {
+                await _changeLogService.CreateAsync(log, cancellationToken);
+                await _variableValueStore.SaveAsync(value, cancellationToken);
+
+                transaction.Complete();
+            }
 
             return value;
         }

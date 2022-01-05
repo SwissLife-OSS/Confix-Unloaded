@@ -27,6 +27,9 @@ export type EditVariable_Variable = {
             readonly algorithm: string;
         } | null;
     }>;
+    readonly changeLog: ReadonlyArray<{
+        readonly " $fragmentRefs": FragmentRefs<"ChangeLog_fragment">;
+    }>;
     readonly " $refType": "EditVariable_Variable";
 };
 export type EditVariable_Variable$data = EditVariable_Variable;
@@ -153,11 +156,27 @@ return {
         }
       ],
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "ChangeLog",
+      "kind": "LinkedField",
+      "name": "changeLog",
+      "plural": true,
+      "selections": [
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "ChangeLog_fragment"
+        }
+      ],
+      "storageKey": null
     }
   ],
   "type": "Variable",
   "abstractKey": null
 };
 })();
-(node as any).hash = '71ef50c2a6ccab9eedda7a06442bb525';
+(node as any).hash = '84ddf2f768d2a7f284d5eadfb6b518fa';
 export default node;

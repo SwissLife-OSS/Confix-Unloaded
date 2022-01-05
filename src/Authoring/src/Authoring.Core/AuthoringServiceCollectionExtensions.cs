@@ -10,6 +10,8 @@ public static class AuthoringServiceCollectionExtensions
         this IServiceCollection services,
         IConfiguration configuration)
     {
+        services.AddScoped<IUserSessionAccessor, DoNotUserSessionAccessor>();
+        services.AddScoped<IChangeLogService, ChangeLogService>();
         services.AddScoped<IApplicationService, ApplicationService>();
         services.AddScoped<IEnvironmentService, EnvironmentService>();
         services.AddScoped<IComponentService, ComponentService>();

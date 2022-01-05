@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import { Button } from "antd";
 import React from "react";
 export const SectionHeader: React.FC<{
-  title: string;
+  title?: string;
   loading?: boolean;
   disabled?: boolean;
   onAdd?: () => void;
@@ -10,9 +10,7 @@ export const SectionHeader: React.FC<{
 }> = ({ title, onSave, onAdd, loading, disabled }) => {
   return (
     <Wrapper>
-      <Title>
-        <h2>{title}</h2>
-      </Title>
+      <Title>{title && <h2>{title}</h2>}</Title>
       {onAdd && (
         <HeaderButton
           type="primary"

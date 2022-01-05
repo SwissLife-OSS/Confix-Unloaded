@@ -4,7 +4,7 @@ import {
   useLazyLoadQuery,
   useRelayEnvironment,
 } from "react-relay";
-import { Col, Descriptions, Empty, Row, Select, Spin } from "antd";
+import { Col, Descriptions, Empty, Row, Select, Spin, Tabs } from "antd";
 import { DetailView } from "../shared/DetailView";
 import { graphql } from "babel-plugin-relay/macro";
 import { EditVariableQuery } from "./__generated__/EditVariableQuery.graphql";
@@ -24,11 +24,16 @@ import { useMultiplexer } from "../shared/useMultiplexer";
 import { VariableEditor } from "./controls/VariableEditor";
 import { DefaultSuspense } from "../shared/DefaultSuspense";
 import { useParams } from "react-router";
+import { TabRow } from "../shared/TabRow";
+import { useTabSwitcher } from "../shared/useTabSwitcher";
+import { ChangeLog } from "../shared/ChangeLog";
 
 const variableByIdQuery = graphql`
   query EditVariableQuery($id: ID!) {
     variable(id: $id) {
       id
+      name
+      namespace
       ...EditVariable_Variable
     }
   }
@@ -56,6 +61,9 @@ const editVariableFragment = graphql`
         algorithm
       }
     }
+    changeLog {
+      ...ChangeLog_fragment
+    }
   }
 `;
 
@@ -64,13 +72,42 @@ export const EditVariable = () => {
   const { variable } = useLazyLoadQuery<EditVariableQuery>(variableByIdQuery, {
     id: variableId,
   });
+  const { tab, navigateToTab } = useTabSwitcher();
   const id = variable?.id;
   if (!id) {
     return (
       <DetailView style={{ padding: 1 }}>Coult not find Variable</DetailView>
     );
   }
-  return <EditVariableForm data={variable} id={id} />;
+  return (
+    <DetailView
+      style={{ padding: 1 }}
+      css={css`
+        padding: 1;
+        display: flex;
+        flex-direction: column;
+      `}
+    >
+      <Row>
+        <Col xs={24}>
+          <Header namespace={variable.namespace} name={variable.name} id={id} />
+        </Col>
+      </Row>
+
+      <TabRow>
+        <Tabs defaultActiveKey={tab} key={tab} onChange={navigateToTab}>
+          <Tabs.TabPane tab="Parts" key="edit">
+            <EditVariableForm id={id} data={variable} />
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="Change Log" key="changelog">
+            <DefaultSuspense>
+              <VariableChangeLog data={variable} />
+            </DefaultSuspense>
+          </Tabs.TabPane>
+        </Tabs>
+      </TabRow>
+    </DetailView>
+  );
 };
 
 const EditVariableForm: React.FC<{
@@ -164,29 +201,32 @@ export const VariableEditorOrPlaceholder: React.FC<{
   );
 };
 
-const Header: React.FC<{ name: string; namespace: string | null; id: string }> =
-  ({ name, namespace, id }) => {
-    const [isEdit, , enable, disable] = useToggle();
-    return (
-      <EditableBreadcrumbHeader
-        onEdit={enable}
-        title={name}
-        breadcrumbs={[
-          {
-            text: namespace ?? "-",
-          },
-        ]}
-      >
-        <RenameVariableDialog
-          name={name}
-          key={name}
-          id={id}
-          onClose={disable}
-          visible={isEdit}
-        />
-      </EditableBreadcrumbHeader>
-    );
-  };
+const Header: React.FC<{
+  name: string;
+  namespace: string | null;
+  id: string;
+}> = ({ name, namespace, id }) => {
+  const [isEdit, , enable, disable] = useToggle();
+  return (
+    <EditableBreadcrumbHeader
+      onEdit={enable}
+      title={name}
+      breadcrumbs={[
+        {
+          text: namespace ?? "-",
+        },
+      ]}
+    >
+      <RenameVariableDialog
+        name={name}
+        key={name}
+        id={id}
+        onClose={disable}
+        visible={isEdit}
+      />
+    </EditableBreadcrumbHeader>
+  );
+};
 
 const applicationsQuery = graphql`
   query EditVariableApplicationsQuery(
@@ -357,4 +397,15 @@ const ApplicationPartSelector: React.FC<{
       />
     </Field>
   );
+};
+
+const VariableChangeLog: React.FC<{
+  data: EditVariable_Variable$key;
+}> = ({ data }) => {
+  const { changeLog } = useFragment<EditVariable_Variable$key>(
+    editVariableFragment,
+    data
+  );
+
+  return <ChangeLog data={changeLog} />;
 };
