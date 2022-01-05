@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Transactions;
-using Confix.Authoring.DataLoaders;
 using Confix.Authoring.Internal;
 using Confix.Authoring.Store;
 using GreenDonut;

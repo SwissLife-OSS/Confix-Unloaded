@@ -73,6 +73,42 @@ fragment ChangeLog_ApplicationPartComponentValuesChange on ApplicationPartCompon
   partComponentVersion
 }
 
+fragment ChangeLog_ComponentSchemaChange on ComponentSchemaChange {
+  kind
+}
+
+fragment ChangeLog_ComponentValuesChange on ComponentValuesChange {
+  kind
+}
+
+fragment ChangeLog_CreateComponentChange on CreateComponentChange {
+  component {
+    name
+    id
+  }
+}
+
+fragment ChangeLog_CreateVariableChange on CreateVariableChange {
+  variable {
+    name
+    id
+  }
+}
+
+fragment ChangeLog_DeleteVariableValueChange on DeleteVariableValueChange {
+  variable {
+    name
+    id
+  }
+}
+
+fragment ChangeLog_RemoveComponentChange on RemoveComponentChange {
+  component {
+    name
+    id
+  }
+}
+
 fragment ChangeLog_RemoveComponentFromApplicationPartChange on RemoveComponentFromApplicationPartChange {
   removedComponent {
     definition {
@@ -98,6 +134,27 @@ fragment ChangeLog_RenameApplicationPartChange on RenameApplicationPartChange {
   name
 }
 
+fragment ChangeLog_RenameComponentChange on RenameComponentChange {
+  component {
+    name
+    id
+  }
+}
+
+fragment ChangeLog_RenameVariableChange on RenameVariableChange {
+  variable {
+    name
+    id
+  }
+}
+
+fragment ChangeLog_VariableValueChange on VariableValueChange {
+  variable {
+    name
+    id
+  }
+}
+
 fragment ChangeLog_fragment on ChangeLog {
   id
   change {
@@ -110,6 +167,15 @@ fragment ChangeLog_fragment on ChangeLog {
     ...ChangeLog_RemoveComponentFromApplicationPartChange
     ...ChangeLog_RemovePartFromApplicationChange
     ...ChangeLog_ApplicationPartComponentValuesChange
+    ...ChangeLog_ComponentSchemaChange
+    ...ChangeLog_ComponentValuesChange
+    ...ChangeLog_CreateComponentChange
+    ...ChangeLog_RemoveComponentChange
+    ...ChangeLog_RenameComponentChange
+    ...ChangeLog_CreateVariableChange
+    ...ChangeLog_DeleteVariableValueChange
+    ...ChangeLog_RenameVariableChange
+    ...ChangeLog_VariableValueChange
   }
   modifiedAt
   modifiedBy {
@@ -203,44 +269,45 @@ v5 = [
   (v2/*: any*/),
   (v4/*: any*/)
 ],
-v6 = [
-  {
-    "alias": null,
-    "args": null,
-    "concreteType": "Variable",
-    "kind": "LinkedField",
-    "name": "variable",
-    "plural": false,
-    "selections": (v5/*: any*/),
-    "storageKey": null
-  },
+v6 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "Variable",
+  "kind": "LinkedField",
+  "name": "variable",
+  "plural": false,
+  "selections": (v5/*: any*/),
+  "storageKey": null
+},
+v7 = [
+  (v6/*: any*/),
   (v4/*: any*/)
 ],
-v7 = {
+v8 = {
   "alias": null,
   "args": null,
   "concreteType": "VariableValue",
   "kind": "LinkedField",
   "name": "variableValues",
   "plural": true,
-  "selections": (v6/*: any*/),
-  "storageKey": null
-},
-v8 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "values",
+  "selections": (v7/*: any*/),
   "storageKey": null
 },
 v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "values",
+  "storageKey": null
+},
+v10 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "version",
   "storageKey": null
 },
-v10 = [
+v11 = [
   {
     "alias": null,
     "args": null,
@@ -253,8 +320,23 @@ v10 = [
   },
   (v4/*: any*/)
 ],
-v11 = [
+v12 = [
   (v4/*: any*/)
+],
+v13 = [
+  {
+    "alias": null,
+    "args": null,
+    "concreteType": "Component",
+    "kind": "LinkedField",
+    "name": "component",
+    "plural": false,
+    "selections": (v5/*: any*/),
+    "storageKey": null
+  }
+],
+v14 = [
+  (v6/*: any*/)
 ];
 return {
   "fragment": {
@@ -344,11 +426,11 @@ return {
                     "storageKey": null
                   },
                   (v4/*: any*/),
-                  (v7/*: any*/)
+                  (v8/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v7/*: any*/),
+              (v8/*: any*/),
               (v4/*: any*/)
             ],
             "storageKey": null
@@ -384,7 +466,7 @@ return {
                 "name": "schema",
                 "storageKey": null
               },
-              (v8/*: any*/),
+              (v9/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -420,8 +502,8 @@ return {
             ],
             "storageKey": null
           },
+          (v10/*: any*/),
           (v9/*: any*/),
-          (v8/*: any*/),
           (v4/*: any*/),
           {
             "if": null,
@@ -481,7 +563,7 @@ return {
                             "kind": "LinkedField",
                             "name": "addedComponent",
                             "plural": false,
-                            "selections": (v10/*: any*/),
+                            "selections": (v11/*: any*/),
                             "storageKey": null
                           }
                         ],
@@ -515,7 +597,7 @@ return {
                             "kind": "LinkedField",
                             "name": "removedComponent",
                             "plural": false,
-                            "selections": (v10/*: any*/),
+                            "selections": (v11/*: any*/),
                             "storageKey": null
                           }
                         ],
@@ -549,7 +631,7 @@ return {
                             "kind": "LinkedField",
                             "name": "part",
                             "plural": false,
-                            "selections": (v11/*: any*/),
+                            "selections": (v12/*: any*/),
                             "storageKey": null
                           },
                           {
@@ -559,7 +641,7 @@ return {
                             "kind": "LinkedField",
                             "name": "application",
                             "plural": false,
-                            "selections": (v11/*: any*/),
+                            "selections": (v12/*: any*/),
                             "storageKey": null
                           },
                           {
@@ -571,7 +653,7 @@ return {
                             "plural": false,
                             "selections": [
                               (v4/*: any*/),
-                              (v9/*: any*/)
+                              (v10/*: any*/)
                             ],
                             "storageKey": null
                           },
@@ -584,6 +666,48 @@ return {
                           }
                         ],
                         "type": "ApplicationPartComponentValuesChange",
+                        "abstractKey": null
+                      },
+                      {
+                        "kind": "InlineFragment",
+                        "selections": (v13/*: any*/),
+                        "type": "CreateComponentChange",
+                        "abstractKey": null
+                      },
+                      {
+                        "kind": "InlineFragment",
+                        "selections": (v13/*: any*/),
+                        "type": "RemoveComponentChange",
+                        "abstractKey": null
+                      },
+                      {
+                        "kind": "InlineFragment",
+                        "selections": (v13/*: any*/),
+                        "type": "RenameComponentChange",
+                        "abstractKey": null
+                      },
+                      {
+                        "kind": "InlineFragment",
+                        "selections": (v14/*: any*/),
+                        "type": "CreateVariableChange",
+                        "abstractKey": null
+                      },
+                      {
+                        "kind": "InlineFragment",
+                        "selections": (v14/*: any*/),
+                        "type": "DeleteVariableValueChange",
+                        "abstractKey": null
+                      },
+                      {
+                        "kind": "InlineFragment",
+                        "selections": (v14/*: any*/),
+                        "type": "RenameVariableChange",
+                        "abstractKey": null
+                      },
+                      {
+                        "kind": "InlineFragment",
+                        "selections": (v14/*: any*/),
+                        "type": "VariableValueChange",
                         "abstractKey": null
                       }
                     ],
@@ -629,18 +753,18 @@ return {
         "kind": "LinkedField",
         "name": "globalVariableValues",
         "plural": true,
-        "selections": (v6/*: any*/),
+        "selections": (v7/*: any*/),
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "24b7d09000141a6da4b49505f83e0864",
+    "cacheID": "196cfcb5f887d7f9dccbe624a279d00f",
     "id": null,
     "metadata": {},
     "name": "EditApplicationPartComponent_GetById_Query",
     "operationKind": "query",
-    "text": "query EditApplicationPartComponent_GetById_Query(\n  $partComponentId: ID!\n) {\n  applicationPartComponentById(partComponentId: $partComponentId) {\n    ...EditApplicationPartComponent_fragment\n    id\n  }\n  globalVariableValues {\n    variable {\n      name\n      id\n    }\n    id\n  }\n}\n\nfragment ChangeLog_AddComponentToApplicationPartChange on AddComponentToApplicationPartChange {\n  addedComponent {\n    definition {\n      name\n      id\n    }\n    id\n  }\n}\n\nfragment ChangeLog_AddPartToApplicationChange on AddPartToApplicationChange {\n  addedPart {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_ApplicationPartComponentValuesChange on ApplicationPartComponentValuesChange {\n  part {\n    id\n  }\n  application {\n    id\n  }\n  partComponent {\n    id\n    version\n  }\n  partComponentVersion\n}\n\nfragment ChangeLog_RemoveComponentFromApplicationPartChange on RemoveComponentFromApplicationPartChange {\n  removedComponent {\n    definition {\n      name\n      id\n    }\n    id\n  }\n}\n\nfragment ChangeLog_RemovePartFromApplicationChange on RemovePartFromApplicationChange {\n  removedPart {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_RenameApplicationChange on RenameApplicationChange {\n  name\n}\n\nfragment ChangeLog_RenameApplicationPartChange on RenameApplicationPartChange {\n  name\n}\n\nfragment ChangeLog_fragment on ChangeLog {\n  id\n  change {\n    kind\n    __typename\n    ...ChangeLog_RenameApplicationChange\n    ...ChangeLog_RenameApplicationPartChange\n    ...ChangeLog_AddComponentToApplicationPartChange\n    ...ChangeLog_AddPartToApplicationChange\n    ...ChangeLog_RemoveComponentFromApplicationPartChange\n    ...ChangeLog_RemovePartFromApplicationChange\n    ...ChangeLog_ApplicationPartComponentValuesChange\n  }\n  modifiedAt\n  modifiedBy {\n    email\n  }\n}\n\nfragment EditApplicationPartComponent_ChangeLog_Fragment on ApplicationPartComponent {\n  changeLog {\n    ...ChangeLog_fragment\n    id\n  }\n}\n\nfragment EditApplicationPartComponent_fragment on ApplicationPartComponent {\n  applicationPart {\n    name\n    application {\n      name\n      namespace\n      id\n      variableValues {\n        variable {\n          name\n          id\n        }\n        id\n      }\n    }\n    variableValues {\n      variable {\n        name\n        id\n      }\n      id\n    }\n    id\n  }\n  definition {\n    id\n    name\n    state\n    schemaSdl\n    schema\n    values\n    defaults\n    schemaViolations {\n      path\n      code\n    }\n  }\n  version\n  values\n  ...EditApplicationPartComponent_ChangeLog_Fragment @defer(label: \"EditApplicationPartComponent_fragment$defer$EditApplicationPartComponent_ChangeLog_Fragment\")\n}\n"
+    "text": "query EditApplicationPartComponent_GetById_Query(\n  $partComponentId: ID!\n) {\n  applicationPartComponentById(partComponentId: $partComponentId) {\n    ...EditApplicationPartComponent_fragment\n    id\n  }\n  globalVariableValues {\n    variable {\n      name\n      id\n    }\n    id\n  }\n}\n\nfragment ChangeLog_AddComponentToApplicationPartChange on AddComponentToApplicationPartChange {\n  addedComponent {\n    definition {\n      name\n      id\n    }\n    id\n  }\n}\n\nfragment ChangeLog_AddPartToApplicationChange on AddPartToApplicationChange {\n  addedPart {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_ApplicationPartComponentValuesChange on ApplicationPartComponentValuesChange {\n  part {\n    id\n  }\n  application {\n    id\n  }\n  partComponent {\n    id\n    version\n  }\n  partComponentVersion\n}\n\nfragment ChangeLog_ComponentSchemaChange on ComponentSchemaChange {\n  kind\n}\n\nfragment ChangeLog_ComponentValuesChange on ComponentValuesChange {\n  kind\n}\n\nfragment ChangeLog_CreateComponentChange on CreateComponentChange {\n  component {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_CreateVariableChange on CreateVariableChange {\n  variable {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_DeleteVariableValueChange on DeleteVariableValueChange {\n  variable {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_RemoveComponentChange on RemoveComponentChange {\n  component {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_RemoveComponentFromApplicationPartChange on RemoveComponentFromApplicationPartChange {\n  removedComponent {\n    definition {\n      name\n      id\n    }\n    id\n  }\n}\n\nfragment ChangeLog_RemovePartFromApplicationChange on RemovePartFromApplicationChange {\n  removedPart {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_RenameApplicationChange on RenameApplicationChange {\n  name\n}\n\nfragment ChangeLog_RenameApplicationPartChange on RenameApplicationPartChange {\n  name\n}\n\nfragment ChangeLog_RenameComponentChange on RenameComponentChange {\n  component {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_RenameVariableChange on RenameVariableChange {\n  variable {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_VariableValueChange on VariableValueChange {\n  variable {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_fragment on ChangeLog {\n  id\n  change {\n    kind\n    __typename\n    ...ChangeLog_RenameApplicationChange\n    ...ChangeLog_RenameApplicationPartChange\n    ...ChangeLog_AddComponentToApplicationPartChange\n    ...ChangeLog_AddPartToApplicationChange\n    ...ChangeLog_RemoveComponentFromApplicationPartChange\n    ...ChangeLog_RemovePartFromApplicationChange\n    ...ChangeLog_ApplicationPartComponentValuesChange\n    ...ChangeLog_ComponentSchemaChange\n    ...ChangeLog_ComponentValuesChange\n    ...ChangeLog_CreateComponentChange\n    ...ChangeLog_RemoveComponentChange\n    ...ChangeLog_RenameComponentChange\n    ...ChangeLog_CreateVariableChange\n    ...ChangeLog_DeleteVariableValueChange\n    ...ChangeLog_RenameVariableChange\n    ...ChangeLog_VariableValueChange\n  }\n  modifiedAt\n  modifiedBy {\n    email\n  }\n}\n\nfragment EditApplicationPartComponent_ChangeLog_Fragment on ApplicationPartComponent {\n  changeLog {\n    ...ChangeLog_fragment\n    id\n  }\n}\n\nfragment EditApplicationPartComponent_fragment on ApplicationPartComponent {\n  applicationPart {\n    name\n    application {\n      name\n      namespace\n      id\n      variableValues {\n        variable {\n          name\n          id\n        }\n        id\n      }\n    }\n    variableValues {\n      variable {\n        name\n        id\n      }\n      id\n    }\n    id\n  }\n  definition {\n    id\n    name\n    state\n    schemaSdl\n    schema\n    values\n    defaults\n    schemaViolations {\n      path\n      code\n    }\n  }\n  version\n  values\n  ...EditApplicationPartComponent_ChangeLog_Fragment @defer(label: \"EditApplicationPartComponent_fragment$defer$EditApplicationPartComponent_ChangeLog_Fragment\")\n}\n"
   }
 };
 })();

@@ -1,9 +1,11 @@
 using System;
+using Confix.Authoring.Changes;
 using Confix.Authoring.DataLoaders;
 using Confix.Authoring.GraphQL.Applications;
 using Confix.Authoring.GraphQL.Components;
 using Confix.Authoring.GraphQL.Serialization;
 using Confix.Authoring.Store;
+using Confix.Authoring.Variables.Changes;
 using GreenDonut;
 using HotChocolate.Execution.Configuration;
 using HotChocolate.Types;
@@ -79,6 +81,8 @@ namespace Confix.Authoring.GraphQL
             builder
                 .AddType<VariableType>()
                 .AddTypeExtension<VariableValueExtensions>()
+                .AddTypeExtension<VariableExtensions>()
+                .AddTypeExtension<ComponentExtensions>()
                 .AddTypeExtension<ApplicationPartComponentNode>()
                 .AddTypeExtension<ApplicationApplicationPartExtensions>()
                 .AddTypeExtension<ApplicationPartComponentExtensions>()
@@ -112,6 +116,20 @@ namespace Confix.Authoring.GraphQL
             builder.AddType<RemovePartFromApplicationChange>();
             builder.AddType<RemoveComponentFromApplicationPartChange>();
             builder.AddType<ApplicationPartComponentValuesChange>();
+            builder.AddType<CreateComponentChange>();
+
+            builder.AddInterfaceType<IComponentChange>(x => x.Name("ComponentChange"));
+            builder.AddType<CreateComponentChange>();
+            builder.AddType<RemoveComponentChange>();
+            builder.AddType<RenameComponentChange>();
+            builder.AddType<ComponentSchemaChange>();
+            builder.AddType<ComponentValuesChange>();
+
+            builder.AddInterfaceType<IVariableChange>(x => x.Name("VariableChange"));
+            builder.AddType<CreateVariableChange>();
+            builder.AddType<RenameVariableChange>();
+            builder.AddType<DeleteVariableValueChange>();
+            builder.AddType<VariableValueChange>();
 
             return builder;
         }
@@ -121,6 +139,8 @@ namespace Confix.Authoring.GraphQL
             builder
                 .AddDataLoader<IApplicationDataLoader, ApplicationByIdDataLoader>()
                 .AddDataLoader<IApplicationPartDataLoader, ApplicationPartByIdDataLoader>()
+                .AddDataLoader<IVariableDataLoader, VariableByIdDataLoader>()
+                .AddDataLoader<IComponentDataLoader, ComponentByIdDataLoader>()
                 .AddDataLoader<VariableByIdDataLoader>()
                 .AddDataLoader<ComponentByIdDataLoader>()
                 .AddDataLoader<IApplicationPartComponentDataLoader,
@@ -129,6 +149,8 @@ namespace Confix.Authoring.GraphQL
                 .AddDataLoader<ChangeLogByApplicationIdDataloader>()
                 .AddDataLoader<ChangeLogByApplicationPartIdDataloader>()
                 .AddDataLoader<ChangeLogByApplicationPartComponentIdDataloader>()
+                .AddDataLoader<ChangeLogByComponentIdDataloader>()
+                .AddDataLoader<ChangeLogByVariableIdDataloader>()
                 .AddDataLoader<EnvironmentByIdDataLoader>()
                 // add additional dataloader lookups
                 .Services

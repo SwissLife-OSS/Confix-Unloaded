@@ -17,6 +17,8 @@ namespace Confix.Authoring
 
         public string? Values { get; set; }
 
+        public int Version { get; set; }
+
         public ComponentState State { get; set; }
     }
 }

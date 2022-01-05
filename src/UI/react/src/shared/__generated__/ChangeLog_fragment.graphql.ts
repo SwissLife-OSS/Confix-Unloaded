@@ -10,7 +10,7 @@ export type ChangeLog_fragment = ReadonlyArray<{
     readonly change: {
         readonly kind: string;
         readonly __typename: string;
-        readonly " $fragmentRefs": FragmentRefs<"ChangeLog_RenameApplicationChange" | "ChangeLog_RenameApplicationPartChange" | "ChangeLog_AddComponentToApplicationPartChange" | "ChangeLog_AddPartToApplicationChange" | "ChangeLog_RemoveComponentFromApplicationPartChange" | "ChangeLog_RemovePartFromApplicationChange" | "ChangeLog_ApplicationPartComponentValuesChange">;
+        readonly " $fragmentRefs": FragmentRefs<"ChangeLog_RenameApplicationChange" | "ChangeLog_RenameApplicationPartChange" | "ChangeLog_AddComponentToApplicationPartChange" | "ChangeLog_AddPartToApplicationChange" | "ChangeLog_RemoveComponentFromApplicationPartChange" | "ChangeLog_RemovePartFromApplicationChange" | "ChangeLog_ApplicationPartComponentValuesChange" | "ChangeLog_ComponentSchemaChange" | "ChangeLog_ComponentValuesChange" | "ChangeLog_CreateComponentChange" | "ChangeLog_RemoveComponentChange" | "ChangeLog_RenameComponentChange" | "ChangeLog_CreateVariableChange" | "ChangeLog_DeleteVariableValueChange" | "ChangeLog_RenameVariableChange" | "ChangeLog_VariableValueChange">;
     };
     readonly modifiedAt: unknown;
     readonly modifiedBy: {
@@ -97,6 +97,51 @@ const node: ReaderFragment = {
           "args": null,
           "kind": "FragmentSpread",
           "name": "ChangeLog_ApplicationPartComponentValuesChange"
+        },
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "ChangeLog_ComponentSchemaChange"
+        },
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "ChangeLog_ComponentValuesChange"
+        },
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "ChangeLog_CreateComponentChange"
+        },
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "ChangeLog_RemoveComponentChange"
+        },
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "ChangeLog_RenameComponentChange"
+        },
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "ChangeLog_CreateVariableChange"
+        },
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "ChangeLog_DeleteVariableValueChange"
+        },
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "ChangeLog_RenameVariableChange"
+        },
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "ChangeLog_VariableValueChange"
         }
       ],
       "storageKey": null
@@ -130,5 +175,5 @@ const node: ReaderFragment = {
   "type": "ChangeLog",
   "abstractKey": null
 };
-(node as any).hash = 'e6dc64826b94af5ce3400cd5008ac20a';
+(node as any).hash = 'a5478522d32e0f89178944f233e70940';
 export default node;

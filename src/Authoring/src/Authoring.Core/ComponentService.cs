@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Transactions;
+using Confix.Authoring.Changes;
 using Confix.Authoring.Internal;
 using Confix.Authoring.Store;
 using GreenDonut;
@@ -16,15 +18,18 @@ namespace Confix.Authoring
         private readonly IComponentStore _componentStore;
         private readonly IDataLoader<Guid, Component> _componentById;
         private readonly ISchemaService _schemaService;
+        private readonly IChangeLogService _changeLogService;
 
         public ComponentService(
             IComponentStore componentStore,
             IDataLoader<Guid, Component> componentById,
-            ISchemaService schemaService)
+            ISchemaService schemaService,
+            IChangeLogService changeLogService)
         {
             _componentStore = componentStore;
             _componentById = componentById;
             _schemaService = schemaService;
+            _changeLogService = changeLogService;
         }
 
         public async Task<Component?> GetByIdAsync(
@@ -75,7 +80,7 @@ namespace Confix.Authoring
                 }
             }
 
-            var component = new Component
+            Component component = new()
             {
                 Id = Guid.NewGuid(),
                 Name = name,
@@ -84,7 +89,22 @@ namespace Confix.Authoring
                 State = ComponentState.Active
             };
 
-            return await _componentStore.AddAsync(component, cancellationToken);
+            CreateComponentChange log = new()
+            {
+                Component = component,
+                ComponentId = component.Id,
+                ComponentVersion = component.Version
+            };
+
+            using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            {
+                await _changeLogService.CreateAsync(log, cancellationToken);
+                await _componentStore.AddAsync(component, cancellationToken);
+
+                transaction.Complete();
+            }
+
+            return component;
         }
 
         public async Task<Component> RenameAsync(
@@ -99,7 +119,21 @@ namespace Confix.Authoring
 
             Component component = await _componentById.LoadAsync(id, cancellationToken);
             component.Name = name;
-            await _componentStore.UpdateAsync(component, cancellationToken);
+            component.Version++;
+
+            RenameComponentChange log = new()
+            {
+                Name = name, ComponentId = component.Id, ComponentVersion = component.Version
+            };
+
+            using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            {
+                await _changeLogService.CreateAsync(log, cancellationToken);
+                await _componentStore.UpdateAsync(component, cancellationToken);
+
+                transaction.Complete();
+            }
+
             return component;
         }
 
@@ -116,13 +150,24 @@ namespace Confix.Authoring
             // we ensure that the schema is valid.
             _schemaService.CreateSchema(schemaSdl);
 
-            Component component = await _componentById.LoadAsync(
-                componentId,
-                cancellationToken);
+            Component component = await _componentById.LoadAsync(componentId, cancellationToken);
 
             component.Schema = schemaSdl;
+            component.Version++;
 
-            await _componentStore.UpdateAsync(component, cancellationToken);
+            ComponentSchemaChange log = new()
+            {
+                Schema = schemaSdl,
+                ComponentId = component.Id,
+                ComponentVersion = component.Version
+            };
+
+            using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            {
+                await _changeLogService.CreateAsync(log, cancellationToken);
+                await _componentStore.UpdateAsync(component, cancellationToken);
+                transaction.Complete();
+            }
 
             return component;
         }
@@ -141,9 +186,24 @@ namespace Confix.Authoring
                 throw new InvalidOperationException("There is no schema.");
             }
 
-            component.Values = _schemaService.CreateValuesForSchema(component.Schema, values);
+            string serializedValues = _schemaService.CreateValuesForSchema(component.Schema, values);
 
-            await _componentStore.UpdateAsync(component, cancellationToken);
+            component.Values = serializedValues;
+            component.Version++;
+
+            ComponentValuesChange log = new()
+            {
+                Values = serializedValues,
+                ComponentId = component.Id,
+                ComponentVersion = component.Version
+            };
+
+            using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            {
+                await _changeLogService.CreateAsync(log, cancellationToken);
+                await _componentStore.UpdateAsync(component, cancellationToken);
+                transaction.Complete();
+            }
 
             return component;
         }
@@ -184,6 +244,5 @@ namespace Confix.Authoring
             ISchema schema = _schemaService.CreateSchema(component.Schema);
             return CreateDefaultObjectValue(schema.QueryType);
         }
-
     }
 }

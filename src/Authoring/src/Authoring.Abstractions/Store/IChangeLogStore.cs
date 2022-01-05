@@ -31,4 +31,12 @@ public interface IChangeLogStore
         Guid partComponentId,
         int version,
         CancellationToken cancellationToken);
+
+    Task<IReadOnlyList<ChangeLog>> GetByComponentIdAsync(
+        IReadOnlyList<Guid> componentIds,
+        CancellationToken cancellationToken);
+
+    Task<IReadOnlyList<ChangeLog>> GetByVariableIdAsync(
+        IReadOnlyList<Guid> variableIds,
+        CancellationToken cancellationToken);
 }

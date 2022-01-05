@@ -15,7 +15,9 @@ public class ChangeLogService : IChangeLogService
     private readonly ChangeLogByIdDataloader _byIdDataloader;
     private readonly ChangeLogByApplicationIdDataloader _changesByAppId;
     private readonly ChangeLogByApplicationPartIdDataloader _changesByPartId;
-    private readonly ChangeLogByApplicationPartComponentIdDataloader _changesByCompId;
+    private readonly ChangeLogByApplicationPartComponentIdDataloader _changesByAppCompId;
+    private readonly ChangeLogByVariableIdDataloader _changesByVariableId;
+    private readonly ChangeLogByComponentIdDataloader _changesByComponentId;
 
     public ChangeLogService(
         IChangeLogStore changeLogStore,
@@ -23,15 +25,18 @@ public class ChangeLogService : IChangeLogService
         ChangeLogByIdDataloader byIdDataloader,
         ChangeLogByApplicationIdDataloader changesByAppId,
         ChangeLogByApplicationPartIdDataloader changesByPartId,
-        ChangeLogByApplicationPartComponentIdDataloader changesByCompId)
-
+        ChangeLogByApplicationPartComponentIdDataloader changesByAppCompId,
+        ChangeLogByVariableIdDataloader changesByVariableId,
+        ChangeLogByComponentIdDataloader changesByComponentId)
     {
         _changeLogStore = changeLogStore;
         _sessionAccessor = sessionAccessor;
         _byIdDataloader = byIdDataloader;
         _changesByAppId = changesByAppId;
         _changesByPartId = changesByPartId;
-        _changesByCompId = changesByCompId;
+        _changesByAppCompId = changesByAppCompId;
+        _changesByVariableId = changesByVariableId;
+        _changesByComponentId = changesByComponentId;
     }
 
     public async Task<ChangeLog> CreateAsync(
@@ -87,7 +92,19 @@ public class ChangeLogService : IChangeLogService
     public async Task<IEnumerable<ChangeLog>> GetByApplicationPartComponentId(
         Guid componentId,
         CancellationToken cancellationToken) =>
-        (await _changesByCompId.LoadAsync(componentId, cancellationToken)).OfType<ChangeLog>();
+        (await _changesByAppCompId.LoadAsync(componentId, cancellationToken)).OfType<ChangeLog>();
+
+    public async Task<IEnumerable<ChangeLog>> GetByComponentId(
+        Guid componentId,
+        CancellationToken cancellationToken) =>
+        (await _changesByComponentId.LoadAsync(componentId, cancellationToken))
+        .OfType<ChangeLog>();
+
+    public async Task<IEnumerable<ChangeLog>> GetByVariableId(
+        Guid variableId,
+        CancellationToken cancellationToken) =>
+        (await _changesByVariableId.LoadAsync(variableId, cancellationToken))
+        .OfType<ChangeLog>();
 
     public Task<ChangeLog?> GetByApplicationPartComponentIdAndVersion(
         Guid componentId,

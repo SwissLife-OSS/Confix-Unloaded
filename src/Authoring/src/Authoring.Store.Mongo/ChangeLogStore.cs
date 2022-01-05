@@ -91,6 +91,28 @@ public class ChangeLogStore
         return await _dbContext.ChangeLogs.Find(filter).Sort(sort).ToListAsync(cancellationToken);
     }
 
+    public async Task<IReadOnlyList<ChangeLog>> GetByComponentIdAsync(
+        IReadOnlyList<Guid> componentIds,
+        CancellationToken cancellationToken)
+    {
+        FilterDefinition<ChangeLog> filter =
+            Filter.In(WellKnownChangeLogFields.ComponentId, componentIds);
+        SortDefinition<ChangeLog> sort = Sort.Descending(x => x.ModifiedAt);
+
+        return await _dbContext.ChangeLogs.Find(filter).Sort(sort).ToListAsync(cancellationToken);
+    }
+
+    public async Task<IReadOnlyList<ChangeLog>> GetByVariableIdAsync(
+        IReadOnlyList<Guid> variableIds,
+        CancellationToken cancellationToken)
+    {
+        FilterDefinition<ChangeLog> filter =
+            Filter.In(WellKnownChangeLogFields.VariableId, variableIds);
+        SortDefinition<ChangeLog> sort = Sort.Descending(x => x.ModifiedAt);
+
+        return await _dbContext.ChangeLogs.Find(filter).Sort(sort).ToListAsync(cancellationToken);
+    }
+
     public async Task<ChangeLog?> GetByApplicationPartComponentIdAndVersionAsync(
         Guid partComponentId,
         int version,

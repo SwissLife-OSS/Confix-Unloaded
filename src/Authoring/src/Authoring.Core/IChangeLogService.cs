@@ -33,4 +33,12 @@ public interface IChangeLogService
         Guid componentId,
         int version,
         CancellationToken cancellationToken);
+
+    Task<IEnumerable<ChangeLog>> GetByComponentId(
+        Guid componentId,
+        CancellationToken cancellationToken);
+
+    Task<IEnumerable<ChangeLog>> GetByVariableId(
+        Guid variableId,
+        CancellationToken cancellationToken);
 }

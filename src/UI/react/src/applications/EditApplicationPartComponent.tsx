@@ -32,6 +32,7 @@ import { ButtonBar } from "../shared/ButtonBar";
 import { EditApplicationPartComponent_ChangeLog_Fragment$key } from "./__generated__/EditApplicationPartComponent_ChangeLog_Fragment.graphql";
 import { ChangeLog } from "../shared/ChangeLog";
 import { useTabSwitcher } from "../shared/useTabSwitcher";
+import { TabRow } from "../shared/TabRow";
 
 const applicationPartComponentQuery = graphql`
   query EditApplicationPartComponent_GetById_Query($partComponentId: ID!) {
@@ -198,23 +199,6 @@ export const EditApplicationPartComponent = () => {
     </DetailView>
   );
 };
-
-const TabRow = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  .ant-tabs-content-holder {
-    display: flex;
-  }
-  .ant-tabs {
-    flex-grow: 1;
-  }
-  .ant-tabs-tabpane {
-    min-height: 100%;
-    display: flex;
-    flex-direction: column;
-  }
-`;
 
 export const EditConfiguration: React.FC<{
   partComponentId: string;
