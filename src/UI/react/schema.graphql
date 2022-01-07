@@ -271,12 +271,12 @@ type Component implements Node {
   name: String!
   version: Int!
   state: ComponentState!
-  changeLog: [ChangeLog!]!
   schemaSdl: SDL
   schema: Any
   values: Any
   defaults: Any
   schemaViolations: [SchemaViolation!]!
+  changeLog: [ChangeLog!]!
 }
 
 interface ComponentChange {
@@ -470,17 +470,17 @@ type Mutation {
 
   """Adds a component to an application part."""
   updateApplicationPartComponentValues(input: UpdateApplicationPartComponentValuesInput!): UpdateApplicationPartComponentValuesPayload!
-  createVariable(input: CreateVariableInput!): UpdateVariablePayload!
-  saveVariableValue(input: SaveVariableValueInput!): UpdateVariableValuePayload!
-  deleteVariableValue(input: DeleteVariableValueInput!): DeleteVariableValuePayload!
-  renameVariable(input: RenameVariableInput!): RenameVariablePayload!
-  createEnvironment(input: CreateEnvironmentInput!): CreateEnvironmentPayload!
-  renameEnvironment(input: RenameEnvironmentInput!): RenameEnvironmentPayload!
-  removeEnvironmentById(input: RemoveEnvironmentInput!): RemoveEnvironmentPayload!
   createComponent(input: CreateComponentInput!): CreateComponentPayload!
   renameComponent(input: RenameComponentInput!): RenameComponentPayload!
   updateComponentSchema(input: UpdateComponentSchemaInput!): UpdateComponentSchemaPayload!
   updateComponentValues(input: UpdateComponentValuesInput!): UpdateComponentValuesPayload!
+  createEnvironment(input: CreateEnvironmentInput!): CreateEnvironmentPayload!
+  renameEnvironment(input: RenameEnvironmentInput!): RenameEnvironmentPayload!
+  removeEnvironmentById(input: RemoveEnvironmentInput!): RemoveEnvironmentPayload!
+  createVariable(input: CreateVariableInput!): UpdateVariablePayload!
+  saveVariableValue(input: SaveVariableValueInput!): UpdateVariableValuePayload!
+  deleteVariableValue(input: DeleteVariableValueInput!): DeleteVariableValuePayload!
+  renameVariable(input: RenameVariableInput!): RenameVariablePayload!
 }
 
 """
@@ -547,7 +547,41 @@ type Query {
   ): Application
   applicationPartById(id: ID!): ApplicationPart
   applicationPartComponentById(partComponentId: ID!): ApplicationPartComponent
-  changeLogById(id: ID!): ChangeLog
+  components(
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+    where: ComponentFilterInput
+  ): ComponentsConnection
+  componentById(id: ID!): Component
+  searchEnvironments(
+    search: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+  ): SearchEnvironmentsConnection
+  environmentById(id: ID!): Environment
   variables: [Variable!]!
   searchVariables(
     search: String
@@ -568,42 +602,8 @@ type Query {
   ): SearchVariablesConnection
   variable(id: ID!): Variable!
   variableValues(variableId: ID!, applicationId: ID, applicationPartId: ID): [VariableValue!]!
-  searchEnvironments(
-    search: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-  ): SearchEnvironmentsConnection
-  environmentById(id: ID!): Environment
-  components(
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-    where: ComponentFilterInput
-  ): ComponentsConnection
-  componentById(id: ID!): Component
   globalVariableValues: [VariableValue!]!
+  changeLogById(id: ID!): ChangeLog
 }
 
 union RemoveApplicationPartError = ApplicationPartNotFoundError

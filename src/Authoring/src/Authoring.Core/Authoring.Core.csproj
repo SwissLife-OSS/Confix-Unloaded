@@ -11,6 +11,12 @@
 
   <ItemGroup>
     <PackageReference Include="GreenDonut" Version="$(HotChocolateVersion)" />
+    <PackageReference Include="System.Linq.Async" Version="5.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Applications\Extensions" />
+    <Folder Include="DataLoaders" />
   </ItemGroup>
 
 </Project>

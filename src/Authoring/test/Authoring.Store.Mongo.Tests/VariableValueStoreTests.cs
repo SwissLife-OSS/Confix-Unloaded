@@ -34,19 +34,17 @@ namespace Authoring.Store.Mongo.Tests
         public async Task UpsertAsync_SaveNewVariableValue_SuccessfullyInserted()
         {
             // Arrange
-            VariableValue variableValue = new VariableValue
-            {
-                Id = Guid.Parse("4674d60d-7f3e-4b54-8bfb-b484303f62b0"),
-                Key = new VariableKey
-                {
-                    VariableId = Guid.Parse("98047CEA-E467-4D7A-8EB1-73F617BDCF75"),
-                    ApplicationId = null,
-                    EnvironmentId = null,
-                    PartId = null
-                },
-                Value = "This is a insertion test.",
-                Encryption = null
-            };
+            VariableValue variableValue = new VariableValue(
+                Guid.Parse("4674d60d-7f3e-4b54-8bfb-b484303f62b0"),
+                new VariableKey(
+                    Guid.Parse("98047CEA-E467-4D7A-8EB1-73F617BDCF75"),
+                    null,
+                    null,
+                    null),
+                "This is a insertion test.",
+                null,
+                0
+            );
 
             VariableValueStore variableValueStore =
                 new VariableValueStore(_docuStoreDbContext);
@@ -62,19 +60,12 @@ namespace Authoring.Store.Mongo.Tests
         public async Task UpsertAsync_SaveNewVariableValueEmptyValues_SuccessfullyInserted()
         {
             // Arrange
-            VariableValue variableValue = new VariableValue
-            {
-                Id = Guid.Parse("4674d60d-7f3e-4b54-8bfb-b484303f62b0"),
-                Key = new VariableKey
-                {
-                    VariableId = Guid.Empty,
-                    ApplicationId = null,
-                    EnvironmentId = null,
-                    PartId = null
-                },
-                Value = string.Empty,
-                Encryption = null
-            };
+            VariableValue variableValue = new VariableValue(
+                Guid.Parse("4674d60d-7f3e-4b54-8bfb-b484303f62b0"),
+                new VariableKey(Guid.Empty, null, null, null),
+                string.Empty,
+                null,
+                0);
 
             VariableValueStore variableValueStore =
                 new VariableValueStore(_docuStoreDbContext);
@@ -90,28 +81,23 @@ namespace Authoring.Store.Mongo.Tests
         public async Task UpsertAsync_UpdateVariableByExistingKey_SuccessfullyUpdated()
         {
             // Arrange
-            VariableValue variableValue = new VariableValue
-            {
-                Id = Guid.Parse("4674d60d-7f3e-4b54-8bfb-b484303f62b0"),
-                Key = new VariableKey
-                {
-                    VariableId = Guid.Parse("98047CEA-E467-4D7A-8EB1-73F617BDCF75"),
-                    ApplicationId = null,
-                    EnvironmentId = null,
-                    PartId = null
-                },
-                Value = "This is a insertion test.",
-                Encryption = null
-            };
+            VariableValue variableValue = new VariableValue(
+                Guid.Parse("4674d60d-7f3e-4b54-8bfb-b484303f62b0"),
+                new VariableKey(
+                    Guid.Parse("98047CEA-E467-4D7A-8EB1-73F617BDCF75"),
+                    null,
+                    null,
+                    null),
+                "This is a insertion test.",
+                null,
+                0);
 
             InsertVariableValues(variableValue);
 
-            variableValue.Value = "Updated variable Value";
-            variableValue.Encryption = new VariableEncryptionInfo
+            variableValue = variableValue with
             {
-                Algorithm = "AES256",
-                Key = "xyz",
-                KeyProvider = "AzureKeyVault"
+                Value = "Updated variable Value",
+                Encryption = new VariableEncryptionInfo("AzureKeyVault", "xyz", "AES256")
             };
 
             VariableValueStore variableValueStore =
@@ -128,31 +114,30 @@ namespace Authoring.Store.Mongo.Tests
         public async Task UpsertAsync_SaveVariableWithNewKey_NewInserted()
         {
             // Arrange
-            VariableValue variableValue = new VariableValue
-            {
-                Id = Guid.Parse("4674d60d-7f3e-4b54-8bfb-b484303f62b0"),
-                Key = new VariableKey
-                {
-                    VariableId = Guid.Parse("98047CEA-E467-4D7A-8EB1-73F617BDCF75"),
-                    ApplicationId = null,
-                    EnvironmentId = null,
-                    PartId = null
-                },
-                Value = "This is a insertion test.",
-                Encryption = null
-            };
+            VariableValue variableValue = new VariableValue(
+                Guid.Parse("4674d60d-7f3e-4b54-8bfb-b484303f62b0"),
+                new VariableKey(
+                    Guid.Parse("98047CEA-E467-4D7A-8EB1-73F617BDCF75"),
+                    null,
+                    null,
+                    null),
+                "This is a insertion test.",
+                null,
+                0);
 
             InsertVariableValues(variableValue);
 
-            variableValue.Id = Guid.Parse("6b9fc641-988e-4182-a870-037aff5cfc1f");
-            variableValue.Key.EnvironmentId = Guid.Parse("04e057a5-0140-404c-9c94-92ad7702a63c");
-            variableValue.Value = "Newly inserted variable Value";
-            variableValue.Encryption = new VariableEncryptionInfo
+            variableValue = variableValue with
             {
-                Algorithm = "AES256",
-                Key = "xyz",
-                KeyProvider = "AzureKeyVault"
+                Id = Guid.Parse("6b9fc641-988e-4182-a870-037aff5cfc1f"),
+                Key = variableValue.Key with
+                {
+                    EnvironmentId = Guid.Parse("04e057a5-0140-404c-9c94-92ad7702a63c")
+                },
+                Value = "Newly inserted variable Value",
+                Encryption = new VariableEncryptionInfo("AzureKeyVault", "xyz", "AES256")
             };
+
 
             VariableValueStore variableValueStore =
                 new VariableValueStore(_docuStoreDbContext);
@@ -173,7 +158,10 @@ namespace Authoring.Store.Mongo.Tests
             VariableValue variableValue3 = CreateAllKeyFieldsSetVariable();
 
             InsertVariableValues(
-                variableValue0, variableValue1, variableValue2, variableValue3);
+                variableValue0,
+                variableValue1,
+                variableValue2,
+                variableValue3);
 
             VariableValueStore variableValueStore =
                 new VariableValueStore(_docuStoreDbContext);
@@ -195,7 +183,10 @@ namespace Authoring.Store.Mongo.Tests
             VariableValue variableValue3 = CreateAllKeyFieldsSetVariable();
 
             InsertVariableValues(
-                variableValue0, variableValue1, variableValue2, variableValue3);
+                variableValue0,
+                variableValue1,
+                variableValue2,
+                variableValue3);
 
             VariableValueStore variableValueStore =
                 new VariableValueStore(_docuStoreDbContext);
@@ -217,7 +208,10 @@ namespace Authoring.Store.Mongo.Tests
             VariableValue variableValue3 = CreateAllKeyFieldsSetVariable();
 
             InsertVariableValues(
-                variableValue0, variableValue1, variableValue2, variableValue3);
+                variableValue0,
+                variableValue1,
+                variableValue2,
+                variableValue3);
 
             VariableValueStore variableValueStore =
                 new VariableValueStore(_docuStoreDbContext);
@@ -239,7 +233,10 @@ namespace Authoring.Store.Mongo.Tests
             VariableValue variableValue3 = CreateAllKeyFieldsSetVariable();
 
             InsertVariableValues(
-                variableValue0, variableValue1, variableValue2, variableValue3);
+                variableValue0,
+                variableValue1,
+                variableValue2,
+                variableValue3);
 
             VariableValueStore variableValueStore =
                 new VariableValueStore(_docuStoreDbContext);
@@ -254,78 +251,61 @@ namespace Authoring.Store.Mongo.Tests
 
         private static VariableValue CreateAllKeyFieldsSetVariable()
         {
-            return new VariableValue
-            {
-                Id = Guid.Parse("F39140E5-B24C-48F3-AACD-9864F76F53A6"),
-                Key = new VariableKey
-                {
-                    VariableId = Guid.Parse("98047CEA-E467-4D7A-8EB1-73F617BDCF75"),
-                    ApplicationId = Guid.Parse("53055060-7173-4839-8A16-EF7845A0D1B9"),
-                    EnvironmentId = Guid.Parse("04E057A5-0140-404C-9C94-92AD7702A63C"),
-                    PartId = Guid.Parse("9442BFF1-6AA9-4416-8C89-BA58EC2A1AA4")
-                },
-                Value = "This is a insertion test value 3.",
-                Encryption = null
-            };
+            return new VariableValue(
+                Guid.Parse("F39140E5-B24C-48F3-AACD-9864F76F53A6"),
+                new VariableKey(
+                    Guid.Parse("98047CEA-E467-4D7A-8EB1-73F617BDCF75"),
+                    Guid.Parse("53055060-7173-4839-8A16-EF7845A0D1B9"),
+                    Guid.Parse("9442BFF1-6AA9-4416-8C89-BA58EC2A1AA4"),
+                    Guid.Parse("04E057A5-0140-404C-9C94-92AD7702A63C")),
+                "This is a insertion test value 3.",
+                null,
+                0);
         }
 
         private static VariableValue CreateTwoKeyFieldsSetVariable()
         {
-            return new VariableValue
-            {
-                Id = Guid.Parse("6B9FC641-988E-4182-A870-037AFF5CFC1F"),
-                Key = new VariableKey
-                {
-                    VariableId = Guid.Parse("98047CEA-E467-4D7A-8EB1-73F617BDCF75"),
-                    ApplicationId = null,
-                    EnvironmentId = Guid.Parse("04E057A5-0140-404C-9C94-92AD7702A63C"),
-                    PartId = null
-                },
-                Value = "This is a insertion test value 2.",
-                Encryption = null
-            };
+            return new VariableValue(Guid.Parse("6B9FC641-988E-4182-A870-037AFF5CFC1F"),
+                new VariableKey(
+                    Guid.Parse("98047CEA-E467-4D7A-8EB1-73F617BDCF75"),
+                    null,
+                    null,
+                    Guid.Parse("04E057A5-0140-404C-9C94-92AD7702A63C")),
+                "This is a insertion test value 2.",
+                null,
+                0);
         }
 
         private static VariableValue CreateOneKeyFieldSetVariable()
         {
-            return new VariableValue
-            {
-                Id = Guid.Parse("4674d60d-7f3e-4b54-8bfb-b484303f62b0"),
-                Key = new VariableKey
-                {
-                    VariableId = Guid.Parse("98047CEA-E467-4D7A-8EB1-73F617BDCF75"),
-                    ApplicationId = null,
-                    EnvironmentId = null,
-                    PartId = null
-                },
-                Value = "This is a insertion test value 1.",
-                Encryption = null
-            };
+            return new VariableValue(Guid.Parse("4674d60d-7f3e-4b54-8bfb-b484303f62b0"),
+                new VariableKey(
+                    Guid.Parse("98047CEA-E467-4D7A-8EB1-73F617BDCF75"),
+                    null,
+                    null,
+                    null),
+                "This is a insertion test value 1.",
+                null,
+                0);
         }
 
         private static VariableValue CreateAllKeyFieldsNullVariable()
         {
             // Arrange
-            return new VariableValue
-            {
-                Id = Guid.Parse("DDF1670C-B4FF-4926-AC39-F6A7BDD3D341"),
-                Key = new VariableKey
-                {
-                    VariableId = Guid.Empty,
-                    ApplicationId = null,
-                    EnvironmentId = null,
-                    PartId = null
-                },
-                Value = "This is a insertion test value 0.",
-                Encryption = null
-            };
+            return new VariableValue(
+                Guid.Parse("DDF1670C-B4FF-4926-AC39-F6A7BDD3D341"),
+                new VariableKey(Guid.Empty, null, null, null),
+                "This is a insertion test value 0.",
+                null,
+                0);
         }
 
         private List<VariableValue> GetVariableValueDump()
         {
             return _mongoDatabase
                 .GetCollection<VariableValue>("variable_value")
-                .Find(FilterDefinition<VariableValue>.Empty).ToList();
+                .Find(FilterDefinition<VariableValue>.Empty)
+                .ToList();
         }
 
         private void InsertVariableValues(params VariableValue[] variableValues)

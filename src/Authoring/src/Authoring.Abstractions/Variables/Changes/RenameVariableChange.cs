@@ -7,13 +7,20 @@ namespace Confix.Authoring.Variables.Changes;
 
 public class RenameVariableChange : IVariableChange
 {
+    public RenameVariableChange(Guid variableId, int variableVersion, string name)
+    {
+        VariableId = variableId;
+        VariableVersion = variableVersion;
+        Name = name;
+    }
+
     [GraphQLName("variable")]
     [UseDataLoader(typeof(IVariableDataLoader))]
-    public Guid VariableId { get; set; }
+    public Guid VariableId { get; init; }
 
-    public int VariableVersion { get; set; }
+    public int VariableVersion { get; init; }
 
-    public string Name { get; set; }
+    public string Name { get; init; }
 
     public string Kind => nameof(RenameVariableChange);
 }

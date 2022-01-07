@@ -51,4 +51,23 @@ public class VariableQueries
         GetVariableValuesRequest request = new(filter);
         return await variableService.GetValuesAsync(request, cancellationToken);
     }
+
+    public async Task<IEnumerable<VariableValue>> GetGlobalVariableValuesAsync(
+        [Service] IVariableService service,
+        CancellationToken cancellationToken)
+    {
+        return await service.GetGlobalValues(cancellationToken);
+    }
+}
+
+[Node]
+[ExtendObjectType(typeof(Variable))]
+public class VariableNode
+{
+    [NodeResolver]
+    public static Task<Variable?> GetVariableAsync(
+        Guid id,
+        IVariableDataLoader variableById,
+        CancellationToken cancellationToken) =>
+        variableById.LoadAsync(id, cancellationToken);
 }

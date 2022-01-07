@@ -8,6 +8,21 @@ namespace Confix.Authoring.Store;
 
 public record RemoveComponentFromApplicationPartChange : IApplicationPartComponentChange
 {
+    public RemoveComponentFromApplicationPartChange()
+    {
+    }
+
+    public RemoveComponentFromApplicationPartChange(Guid applicationId, int applicationVersion, Guid partId, int partVersion, Guid partComponentId, int partComponentVersion, ApplicationPartComponent removedComponent)
+    {
+        ApplicationId = applicationId;
+        ApplicationVersion = applicationVersion;
+        PartId = partId;
+        PartVersion = partVersion;
+        PartComponentId = partComponentId;
+        PartComponentVersion = partComponentVersion;
+        RemovedComponent = removedComponent;
+    }
+
     public string Kind => nameof(RemoveComponentFromApplicationPartChange);
 
     [GraphQLName("application")]

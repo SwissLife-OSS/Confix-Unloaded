@@ -51,12 +51,10 @@ namespace Confix.CryptoProvider.AzureKeyVault
                 cancellationToken);
 
             return new ValueEncryptionResult(
-                new VariableEncryptionInfo
-                {
-                    Key = _options.EncryptionKeyId,
-                    Algorithm = encryptedValue.Algorithm.ToString(),
-                    KeyProvider = KeyProviderName
-                },
+                new VariableEncryptionInfo(
+                    KeyProviderName,
+                    _options.EncryptionKeyId,
+                    encryptedValue.Algorithm.ToString()),
                 Convert.ToBase64String(encryptedValue.Ciphertext));
         }
     }

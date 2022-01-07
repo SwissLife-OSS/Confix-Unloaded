@@ -16,7 +16,7 @@ namespace Confix.Authoring.GraphQL
             ISchema schema =
                 await new ServiceCollection()
                     .AddGraphQLServer()
-                    .AddGraphQLTypes()
+                    .AddConfixSchema()
                     .BuildSchemaAsync();
 
             schema.Print().MatchSnapshot();

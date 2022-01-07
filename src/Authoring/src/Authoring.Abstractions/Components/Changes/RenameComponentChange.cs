@@ -7,6 +7,13 @@ namespace Confix.Authoring.Changes;
 
 public class RenameComponentChange : IComponentChange
 {
+    public RenameComponentChange(Guid componentId, int componentVersion, string name)
+    {
+        ComponentId = componentId;
+        ComponentVersion = componentVersion;
+        Name = name;
+    }
+
     public string Kind => nameof(RenameComponentChange);
 
     [GraphQLName("component")]

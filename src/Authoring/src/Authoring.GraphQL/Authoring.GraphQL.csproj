@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Components\Extensions" />
     <Folder Include="DataLoaders" />
   </ItemGroup>
 

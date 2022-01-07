@@ -11,4 +11,8 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="$(AspNetCoreVersion)" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Environment\DataLoaders" />
+  </ItemGroup>
+
 </Project>

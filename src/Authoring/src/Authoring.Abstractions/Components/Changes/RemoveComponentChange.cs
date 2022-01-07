@@ -6,8 +6,15 @@ using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring.Changes;
 
-public record RemoveComponentChange : IComponentChange
+public class RemoveComponentChange : IComponentChange
 {
+    public RemoveComponentChange(Guid componentId, int componentVersion, Component component)
+    {
+        ComponentId = componentId;
+        ComponentVersion = componentVersion;
+        Component = component;
+    }
+
     public string Kind => nameof(ComponentValuesChange);
 
     [GraphQLName("component")]
