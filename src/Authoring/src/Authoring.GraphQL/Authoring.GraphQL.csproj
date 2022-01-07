@@ -19,8 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Components\Extensions" />
-    <Folder Include="DataLoaders" />
+    <Folder Include="Applications\Transport" />
   </ItemGroup>
 
 </Project>

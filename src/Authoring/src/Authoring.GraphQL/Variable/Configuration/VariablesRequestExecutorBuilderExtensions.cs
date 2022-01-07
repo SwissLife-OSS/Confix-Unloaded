@@ -22,8 +22,7 @@ public static class VariablesRequestExecutorBuilderExtensions
         // types
         builder
             .AddTypeExtension<VariableQueries>()
-            .AddTypeExtension<VariableMutations>()
-            .AddType<VariableType>();
+            .AddTypeExtension<VariableMutations>();
 
         // extensions
         builder

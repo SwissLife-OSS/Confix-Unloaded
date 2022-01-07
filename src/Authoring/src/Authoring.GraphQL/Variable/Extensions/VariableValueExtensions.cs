@@ -15,56 +15,31 @@ public class VariableValueExtensions
         [Parent] VariableValue value,
         VariableByIdDataLoader variableById,
         CancellationToken cancellationToken)
-    {
-        return await variableById.LoadAsync(
-            value.Key.VariableId,
-            cancellationToken);
-    }
+        => await variableById.LoadAsync(value.Key.VariableId, cancellationToken);
 
     public async Task<Application?> GetApplicationAsync(
         [Parent] VariableValue value,
         [Service] IVariableService variableService,
         IApplicationDataLoader applicationById,
         CancellationToken cancellationToken)
-    {
-        if (value.Key.ApplicationId.HasValue)
-        {
-            return await applicationById.LoadAsync(
-                value.Key.ApplicationId.Value,
-                cancellationToken);
-        }
-
-        return null;
-    }
+        => value.Key.ApplicationId is { } applicationId
+            ? await applicationById.LoadAsync(applicationId, cancellationToken)
+            : null;
 
     public async Task<ApplicationPart?> GetApplicationPartAsync(
         [Parent] VariableValue value,
         [Service] IVariableService variableService,
         IApplicationPartDataLoader applicationPartById,
         CancellationToken cancellationToken)
-    {
-        if (value.Key.PartId.HasValue)
-        {
-            return await applicationPartById.LoadAsync(
-                value.Key.PartId.Value,
-                cancellationToken);
-        }
-
-        return null;
-    }
+        => value.Key.PartId is { } partId
+            ? await applicationPartById.LoadAsync(partId, cancellationToken)
+            : null;
 
     public async Task<Environment?> GetEnvironmentAsync(
         [Parent] VariableValue value,
         EnvironmentByIdDataLoader environmentByIdDataLoader,
         CancellationToken cancellationToken)
-    {
-        if (value.Key.EnvironmentId.HasValue)
-        {
-            return await environmentByIdDataLoader.LoadAsync(
-                value.Key.EnvironmentId.Value,
-                cancellationToken);
-        }
-
-        return null;
-    }
+        => value.Key.EnvironmentId is { } environmentId
+            ? await environmentByIdDataLoader.LoadAsync(environmentId, cancellationToken)
+            : null;
 }

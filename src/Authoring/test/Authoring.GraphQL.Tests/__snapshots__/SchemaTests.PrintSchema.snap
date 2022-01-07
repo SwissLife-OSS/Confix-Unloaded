@@ -65,7 +65,6 @@ type AddComponentToApplicationPartChange implements ApplicationPartComponentChan
 }
 
 type AddComponentsToApplicationPartPayload {
-  application: Application
   applicationPart: ApplicationPart
   errors: [AddComponentsToApplicationPartError!]
   query: Query!
@@ -281,6 +280,11 @@ type CreateVariableChange implements VariableChange & Change {
   kind: String!
 }
 
+type CreateVariablePayload {
+  variable: Variable
+  query: Query!
+}
+
 type DeleteVariableValueChange implements VariableChange & Change {
   variable: Variable
   variableVersion: Int!
@@ -290,7 +294,6 @@ type DeleteVariableValueChange implements VariableChange & Change {
 }
 
 type DeleteVariableValuePayload {
-  deletedId: UUID
   variable: Variable
   query: Query!
 }
@@ -327,7 +330,6 @@ type Mutation {
   removeApplicationPart(input: RemoveApplicationPartInput!): RemoveApplicationPartPayload!
   "Adds a component to an application part."
   removeComponentFromApplicationPart(input: RemoveComponentFromApplicationPartInput!): RemoveComponentFromApplicationPartPayload!
-  "Adds a component to an application part."
   updateApplicationPartComponentValues(input: UpdateApplicationPartComponentValuesInput!): UpdateApplicationPartComponentValuesPayload!
   createComponent(input: CreateComponentInput!): CreateComponentPayload!
   renameComponent(input: RenameComponentInput!): RenameComponentPayload!
@@ -335,9 +337,9 @@ type Mutation {
   updateComponentValues(input: UpdateComponentValuesInput!): UpdateComponentValuesPayload!
   createEnvironment(input: CreateEnvironmentInput!): CreateEnvironmentPayload!
   renameEnvironment(input: RenameEnvironmentInput!): RenameEnvironmentPayload!
-  removeEnvironmentById(input: RemoveEnvironmentInput!): RemoveEnvironmentPayload!
-  createVariable(input: CreateVariableInput!): UpdateVariablePayload!
-  saveVariableValue(input: SaveVariableValueInput!): UpdateVariableValuePayload!
+  removeEnvironmentById(input: RemoveEnvironmentByIdInput!): RemoveEnvironmentByIdPayload!
+  createVariable(input: CreateVariableInput!): CreateVariablePayload!
+  saveVariableValue(input: SaveVariableValueInput!): SaveVariableValuePayload!
   deleteVariableValue(input: DeleteVariableValueInput!): DeleteVariableValuePayload!
   renameVariable(input: RenameVariableInput!): RenameVariablePayload!
 }
@@ -406,8 +408,7 @@ type RemoveComponentFromApplicationPartPayload {
   query: Query!
 }
 
-type RemoveEnvironmentPayload {
-  removedId: UUID
+type RemoveEnvironmentByIdPayload {
   environment: Environment
   errors: [RemoveEnvironmentByIdError!]
   query: Query!
@@ -439,7 +440,6 @@ type RenameApplicationPartChange implements ApplicationPartChange & ApplicationC
 }
 
 type RenameApplicationPartPayload {
-  application: Application
   applicationPart: ApplicationPart
   errors: [RenameApplicationPartError!]
   query: Query!
@@ -459,7 +459,7 @@ type RenameComponentChange implements ComponentChange & Change {
 }
 
 type RenameComponentPayload {
-  component: Component!
+  component: Component
   query: Query!
 }
 
@@ -478,6 +478,11 @@ type RenameVariableChange implements VariableChange & Change {
 
 type RenameVariablePayload {
   variable: Variable
+  query: Query!
+}
+
+type SaveVariableValuePayload {
+  variableValue: VariableValue
   query: Query!
 }
 
@@ -529,23 +534,13 @@ type UpdateApplicationPartComponentValuesPayload {
 }
 
 type UpdateComponentSchemaPayload {
-  component: Component!
+  component: Component
   query: Query!
 }
 
 type UpdateComponentValuesPayload {
   component: Component
   errors: [UpdateComponentValuesError!]
-  query: Query!
-}
-
-type UpdateVariablePayload {
-  variable: Variable
-  query: Query!
-}
-
-type UpdateVariableValuePayload {
-  value: VariableValue
   query: Query!
 }
 
@@ -561,13 +556,13 @@ type ValueSchemaViolation implements IUserError {
 
 type Variable implements Node {
   id: ID!
-  values: [VariableValue!]!
   state: VariableState!
   name: String!
   isSecret: Boolean!
   namespace: String
   version: Int!
   changeLog: [ChangeLog!]!
+  values: [VariableValue!]!
 }
 
 type VariableEncryptionInfo {
@@ -687,7 +682,7 @@ input RemoveComponentFromApplicationPartInput {
   partComponentId: ID!
 }
 
-input RemoveEnvironmentInput {
+input RemoveEnvironmentByIdInput {
   id: ID!
 }
 
@@ -696,7 +691,6 @@ input RenameApplicationInput {
   name: String!
 }
 
-"Rename application part input data."
 input RenameApplicationPartInput {
   applicationPartId: ID!
   name: String!

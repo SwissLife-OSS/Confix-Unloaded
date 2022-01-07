@@ -18,12 +18,12 @@ const renameApplicationPartMutation = graphql`
     $input: RenameApplicationPartInput!
   ) {
     renameApplicationPart(input: $input) {
-      application {
-        id
-        ...ApplicationsList_applicationsEdge
-      }
       applicationPart {
         ...EditApplicationPart_fragment
+        application {
+          id
+          ...ApplicationsList_applicationsEdge
+        }
       }
       errors {
         ... on IUserError {
@@ -50,11 +50,14 @@ export const RenameApplicationPartDialog: React.FC<{
   const handleRename = useCallback(() => {
     pipeCommitFn(commit, [
       withSuccessMessage(
-        (x) => x.renameApplicationPart.application?.id,
+        (x) => x.renameApplicationPart.applicationPart?.application?.id,
         "Renamed ApplicationPart"
       ),
       withErrorNotifications((x) => x.renameApplicationPart?.errors),
-      withOnSuccess((x) => x.renameApplicationPart.application?.id, onClose),
+      withOnSuccess(
+        (x) => x.renameApplicationPart.applicationPart?.application?.id,
+        onClose
+      ),
     ])({
       variables: {
         input: { name: applicationName, applicationPartId: applicationPartId },

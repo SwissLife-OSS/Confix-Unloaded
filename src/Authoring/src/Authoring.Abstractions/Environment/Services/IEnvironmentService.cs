@@ -15,12 +15,12 @@ public interface IEnvironmentService
         string name,
         CancellationToken cancellationToken = default);
 
-    Task<Environment?> RenameAsync(
+    Task<Environment> RenameAsync(
         Guid environmentId,
         string name,
         CancellationToken cancellationToken = default);
 
-    Task<Environment?> DeleteById(
+    Task<Environment> DeleteById(
         Guid environmentId,
         CancellationToken cancellationToken = default);
 

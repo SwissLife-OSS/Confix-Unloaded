@@ -46,7 +46,11 @@ public record Variable
 
 public record VariableKey
 {
-    public VariableKey(Guid variableId, Guid? applicationId, Guid? partId, Guid? environmentId)
+    public VariableKey(
+        Guid variableId,
+        Guid? applicationId,
+        Guid? partId,
+        Guid? environmentId)
     {
         VariableId = variableId;
         ApplicationId = applicationId;

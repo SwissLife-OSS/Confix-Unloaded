@@ -27,8 +27,9 @@ namespace Confix.Authoring.GraphQL
                 .AddAuthorization()
                 .AddGlobalObjectIdentification()
                 .AddQueryFieldToMutationPayloads()
+                .AddMutationConventions()
+                .AddErrorInterfaceType<IUserError>()
                 .AddFiltering()
-                .TryAddTypeInterceptor<MutationErrorTypeInterceptor>()
                 .AddSorting();
 
             builder

@@ -45,17 +45,17 @@ namespace Confix.Authoring
             IReadOnlyList<string>? parts = null,
             CancellationToken cancellationToken = default);
 
-        Task RenameAsync(
+        Task<Application> RenameAsync(
             Guid applicationId,
             string name,
             CancellationToken cancellationToken = default);
 
-        Task RenamePartAsync(
+        Task<ApplicationPart> RenamePartAsync(
             Guid applicationPartId,
             string name,
             CancellationToken cancellationToken = default);
 
-        Task<Application> AddComponentsToPartAsync(
+        Task<ApplicationPart> AddComponentsToPartAsync(
             Guid applicationPartId,
             IReadOnlyList<Guid> componentIds,
             CancellationToken cancellationToken = default);

@@ -4,9 +4,9 @@ namespace Confix.Authoring;
 
 public class EnvironmentNotFoundException : Exception
 {
-    public EnvironmentNotFoundException(Guid applicationId)
+    public EnvironmentNotFoundException(Guid environmentId)
     {
-        EnvironmentId = applicationId;
+        EnvironmentId = environmentId;
     }
 
     public Guid EnvironmentId { get; }

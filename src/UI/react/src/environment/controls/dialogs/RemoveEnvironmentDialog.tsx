@@ -14,7 +14,7 @@ import { RemoveEnvironmentDialogMutation } from "./__generated__/RemoveEnvironme
 
 export const removeEnvironmentDialog = graphql`
   mutation RemoveEnvironmentDialogMutation(
-    $input: RemoveEnvironmentInput!
+    $input: RemoveEnvironmentByIdInput!
     $connectionIds: [ID!]!
   ) {
     removeEnvironmentById(input: $input) {

@@ -129,7 +129,7 @@ namespace Confix.Authoring
             return application;
         }
 
-        public async Task RenameAsync(
+        public async Task<Application> RenameAsync(
             Guid applicationId,
             string name,
             CancellationToken cancellationToken = default)
@@ -153,9 +153,11 @@ namespace Confix.Authoring
 
                 transaction.Complete();
             }
+
+            return application;
         }
 
-        public async Task RenamePartAsync(
+        public async Task<ApplicationPart> RenamePartAsync(
             Guid applicationPartId,
             string name,
             CancellationToken cancellationToken = default)
@@ -191,9 +193,11 @@ namespace Confix.Authoring
 
                 transaction.Complete();
             }
+
+            return applicationPart;
         }
 
-        public async Task<Application> AddComponentsToPartAsync(
+        public async Task<ApplicationPart> AddComponentsToPartAsync(
             Guid applicationPartId,
             IReadOnlyList<Guid> componentIds,
             CancellationToken cancellationToken = default)
@@ -251,7 +255,7 @@ namespace Confix.Authoring
                 transaction.Complete();
             }
 
-            return application;
+            return applicationPart;
         }
 
         public async Task<Application> AddPartToApplicationAsync(

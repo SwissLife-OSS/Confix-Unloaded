@@ -61,9 +61,6 @@ public static class ApplicationRequestExecutorBuilderExtensions
         // error types
 
         builder
-            .AddObjectType<ApplicationIdInvalid>()
-            .AddObjectType<ApplicationPartIdInvalid>()
-            .AddObjectType<ApplicationNameTaken>()
             .AddType<SchemaViolationType>();
 
         return builder;

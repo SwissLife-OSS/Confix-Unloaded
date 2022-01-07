@@ -8,6 +8,7 @@
       "EnvironmentId": null
     },
     "Value": "This is a insertion test.",
-    "Encryption": null
+    "Encryption": null,
+    "Version": 0
   }
 ]

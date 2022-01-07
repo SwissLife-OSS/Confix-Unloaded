@@ -42,16 +42,16 @@ public class EnvironmentService : IEnvironmentService
         return environment;
     }
 
-    public Task<Environment?> RenameAsync(
+    public async Task<Environment> RenameAsync(
         Guid environmentId,
         string name,
         CancellationToken cancellationToken = default) =>
-        _appStore.RenameAsync(environmentId, name, cancellationToken);
+        await _appStore.RenameAsync(environmentId, name, cancellationToken) ??
+        throw new EnvironmentNotFoundException(environmentId);
 
-    public Task<Environment?> DeleteById(Guid environmentId, CancellationToken cancellationToken)
-    {
-        return _appStore.RemoveByIdAsync(environmentId, cancellationToken);
-    }
+    public Task<Environment> DeleteById(Guid environmentId, CancellationToken cancellationToken) =>
+        _appStore.RemoveByIdAsync(environmentId, cancellationToken) ??
+        throw new EnvironmentNotFoundException(environmentId);
 
     public IQueryable<Environment> SearchAsync(
         string? search,

@@ -98,7 +98,7 @@ return {
       {
         "alias": null,
         "args": (v2/*: any*/),
-        "concreteType": "UpdateVariablePayload",
+        "concreteType": "CreateVariablePayload",
         "kind": "LinkedField",
         "name": "createVariable",
         "plural": false,
@@ -123,7 +123,7 @@ return {
       {
         "alias": null,
         "args": (v2/*: any*/),
-        "concreteType": "UpdateVariablePayload",
+        "concreteType": "CreateVariablePayload",
         "kind": "LinkedField",
         "name": "createVariable",
         "plural": false,

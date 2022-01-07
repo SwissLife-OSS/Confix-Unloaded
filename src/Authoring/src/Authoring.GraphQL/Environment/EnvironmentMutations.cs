@@ -1,8 +1,10 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Confix.Authoring.GraphQL.Applications;
 using HotChocolate;
 using HotChocolate.Types;
+using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring.GraphQL;
 
@@ -10,42 +12,25 @@ namespace Confix.Authoring.GraphQL;
 public class EnvironmentMutations
 {
     [Error(typeof(EnvironmentNameCollisionError))]
-    public async Task<CreateEnvironmentPayload> CreateEnvironmentAsync(
+    public async Task<Environment> CreateEnvironmentAsync(
         [Service] IEnvironmentService environmentService,
-        CreateEnvironmentInput input,
+        string name,
         CancellationToken cancellationToken)
-    {
-        Environment environment = await environmentService.CreateAsync(
-            input.Name,
-            cancellationToken);
-
-        return new CreateEnvironmentPayload(environment);
-    }
+        => await environmentService.CreateAsync(name, cancellationToken);
 
     [Error(typeof(EnvironmentNotFoundError))]
     [Error(typeof(EnvironmentNameCollisionError))]
-    public async Task<RenameEnvironmentPayload> RenameEnvironmentAsync(
+    public async Task<Environment> RenameEnvironmentAsync(
         [Service] IEnvironmentService environmentService,
-        RenameEnvironmentInput input,
+        [ID(nameof(Environment))] Guid id,
+        string name,
         CancellationToken cancellationToken)
-    {
-        var value = await environmentService.RenameAsync(
-            input.Id,
-            input.Name,
-            cancellationToken);
-
-        return new RenameEnvironmentPayload(value);
-    }
+        => await environmentService.RenameAsync( id, name, cancellationToken);
 
     [Error(typeof(EnvironmentNotFoundError))]
-    public async Task<RemoveEnvironmentPayload> RemoveEnvironmentByIdAsync(
+    public async Task<Environment> RemoveEnvironmentByIdAsync(
         [Service] IEnvironmentService environmentService,
-        RemoveEnvironmentInput input,
+        [ID(nameof(Environment))] Guid id,
         CancellationToken cancellationToken)
-    {
-        Environment? environment =
-            await environmentService.DeleteById(input.Id, cancellationToken);
-
-        return new RemoveEnvironmentPayload(input.Id, environment);
-    }
+        => await environmentService.DeleteById(id, cancellationToken);
 }

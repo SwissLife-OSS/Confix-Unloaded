@@ -12,12 +12,14 @@ export type VariableEditorDeleteVariableValueMutationVariables = {
 };
 export type VariableEditorDeleteVariableValueMutationResponse = {
     readonly deleteVariableValue: {
-        readonly variable: {
-            readonly id: string;
-            readonly values: ReadonlyArray<{
+        readonly value: {
+            readonly variable: {
                 readonly id: string;
-                readonly value: string;
-            }>;
+                readonly values: ReadonlyArray<{
+                    readonly id: string;
+                    readonly value: string;
+                }>;
+            } | null;
         } | null;
     };
 };
@@ -33,12 +35,15 @@ mutation VariableEditorDeleteVariableValueMutation(
   $input: DeleteVariableValueInput!
 ) {
   deleteVariableValue(input: $input) {
-    variable {
-      id
-      values {
+    value {
+      variable {
         id
-        value
+        values {
+          id
+          value
+        }
       }
+      id
     }
   }
 }
@@ -52,53 +57,75 @@ var v0 = [
     "name": "input"
   }
 ],
-v1 = {
+v1 = [
+  {
+    "kind": "Variable",
+    "name": "input",
+    "variableName": "input"
+  }
+],
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v2 = [
-  {
-    "alias": null,
-    "args": [
-      {
-        "kind": "Variable",
-        "name": "input",
-        "variableName": "input"
-      }
-    ],
-    "concreteType": "DeleteVariableValuePayload",
-    "kind": "LinkedField",
-    "name": "deleteVariableValue",
-    "plural": false,
+v3 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "Variable",
+  "kind": "LinkedField",
+  "name": "variable",
+  "plural": false,
+  "selections": [
+    (v2/*: any*/),
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "VariableValue",
+      "kind": "LinkedField",
+      "name": "values",
+      "plural": true,
+      "selections": [
+        (v2/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "value",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
+};
+return {
+  "fragment": {
+    "argumentDefinitions": (v0/*: any*/),
+    "kind": "Fragment",
+    "metadata": null,
+    "name": "VariableEditorDeleteVariableValueMutation",
     "selections": [
       {
         "alias": null,
-        "args": null,
-        "concreteType": "Variable",
+        "args": (v1/*: any*/),
+        "concreteType": "DeleteVariableValuePayload",
         "kind": "LinkedField",
-        "name": "variable",
+        "name": "deleteVariableValue",
         "plural": false,
         "selections": [
-          (v1/*: any*/),
           {
             "alias": null,
             "args": null,
             "concreteType": "VariableValue",
             "kind": "LinkedField",
-            "name": "values",
-            "plural": true,
+            "name": "value",
+            "plural": false,
             "selections": [
-              (v1/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "value",
-                "storageKey": null
-              }
+              (v3/*: any*/)
             ],
             "storageKey": null
           }
@@ -106,16 +133,6 @@ v2 = [
         "storageKey": null
       }
     ],
-    "storageKey": null
-  }
-];
-return {
-  "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
-    "kind": "Fragment",
-    "metadata": null,
-    "name": "VariableEditorDeleteVariableValueMutation",
-    "selections": (v2/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -124,17 +141,42 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "VariableEditorDeleteVariableValueMutation",
-    "selections": (v2/*: any*/)
+    "selections": [
+      {
+        "alias": null,
+        "args": (v1/*: any*/),
+        "concreteType": "DeleteVariableValuePayload",
+        "kind": "LinkedField",
+        "name": "deleteVariableValue",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "VariableValue",
+            "kind": "LinkedField",
+            "name": "value",
+            "plural": false,
+            "selections": [
+              (v3/*: any*/),
+              (v2/*: any*/)
+            ],
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      }
+    ]
   },
   "params": {
-    "cacheID": "5cab0f695bbefbc04d86fc6d96301382",
+    "cacheID": "62a91288ebb43ae99a3664aad0603418",
     "id": null,
     "metadata": {},
     "name": "VariableEditorDeleteVariableValueMutation",
     "operationKind": "mutation",
-    "text": "mutation VariableEditorDeleteVariableValueMutation(\n  $input: DeleteVariableValueInput!\n) {\n  deleteVariableValue(input: $input) {\n    variable {\n      id\n      values {\n        id\n        value\n      }\n    }\n  }\n}\n"
+    "text": "mutation VariableEditorDeleteVariableValueMutation(\n  $input: DeleteVariableValueInput!\n) {\n  deleteVariableValue(input: $input) {\n    value {\n      variable {\n        id\n        values {\n          id\n          value\n        }\n      }\n      id\n    }\n  }\n}\n"
   }
 };
 })();
-(node as any).hash = 'a7d071d2a983f089340d07a6af46a294';
+(node as any).hash = '711576a5c5587d42d641470381d523bd';
 export default node;

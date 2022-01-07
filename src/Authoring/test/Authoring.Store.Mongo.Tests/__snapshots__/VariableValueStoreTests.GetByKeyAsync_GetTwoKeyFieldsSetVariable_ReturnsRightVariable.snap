@@ -7,5 +7,6 @@
     "EnvironmentId": "04e057a5-0140-404c-9c94-92ad7702a63c"
   },
   "Value": "This is a insertion test value 2.",
-  "Encryption": null
+  "Encryption": null,
+  "Version": 0
 }

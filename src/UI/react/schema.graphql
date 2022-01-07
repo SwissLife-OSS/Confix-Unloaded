@@ -75,7 +75,6 @@ input AddComponentsToApplicationPartInput {
 }
 
 type AddComponentsToApplicationPartPayload {
-  application: Application
   applicationPart: ApplicationPart
   errors: [AddComponentsToApplicationPartError!]
   query: Query!
@@ -403,6 +402,11 @@ input CreateVariableInput {
   defaultValue: String
 }
 
+type CreateVariablePayload {
+  variable: Variable
+  query: Query!
+}
+
 """The `DateTime` scalar represents an ISO-8601 compliant date time type."""
 scalar DateTime
 
@@ -419,8 +423,7 @@ input DeleteVariableValueInput {
 }
 
 type DeleteVariableValuePayload {
-  deletedId: UUID
-  variable: Variable
+  value: VariableValue
   query: Query!
 }
 
@@ -467,8 +470,6 @@ type Mutation {
 
   """Adds a component to an application part."""
   removeComponentFromApplicationPart(input: RemoveComponentFromApplicationPartInput!): RemoveComponentFromApplicationPartPayload!
-
-  """Adds a component to an application part."""
   updateApplicationPartComponentValues(input: UpdateApplicationPartComponentValuesInput!): UpdateApplicationPartComponentValuesPayload!
   createComponent(input: CreateComponentInput!): CreateComponentPayload!
   renameComponent(input: RenameComponentInput!): RenameComponentPayload!
@@ -476,9 +477,9 @@ type Mutation {
   updateComponentValues(input: UpdateComponentValuesInput!): UpdateComponentValuesPayload!
   createEnvironment(input: CreateEnvironmentInput!): CreateEnvironmentPayload!
   renameEnvironment(input: RenameEnvironmentInput!): RenameEnvironmentPayload!
-  removeEnvironmentById(input: RemoveEnvironmentInput!): RemoveEnvironmentPayload!
-  createVariable(input: CreateVariableInput!): UpdateVariablePayload!
-  saveVariableValue(input: SaveVariableValueInput!): UpdateVariableValuePayload!
+  removeEnvironmentById(input: RemoveEnvironmentByIdInput!): RemoveEnvironmentByIdPayload!
+  createVariable(input: CreateVariableInput!): CreateVariablePayload!
+  saveVariableValue(input: SaveVariableValueInput!): SaveVariableValuePayload!
   deleteVariableValue(input: DeleteVariableValueInput!): DeleteVariableValuePayload!
   renameVariable(input: RenameVariableInput!): RenameVariablePayload!
 }
@@ -649,12 +650,11 @@ type RemoveComponentFromApplicationPartPayload {
 
 union RemoveEnvironmentByIdError = EnvironmentNotFoundError
 
-input RemoveEnvironmentInput {
+input RemoveEnvironmentByIdInput {
   id: ID!
 }
 
-type RemoveEnvironmentPayload {
-  removedId: UUID
+type RemoveEnvironmentByIdPayload {
   environment: Environment
   errors: [RemoveEnvironmentByIdError!]
   query: Query!
@@ -694,14 +694,12 @@ type RenameApplicationPartChange implements ApplicationPartChange & ApplicationC
 
 union RenameApplicationPartError = ApplicationIdInvalid | ApplicationPartIdInvalid | ApplicationPartNameTaken
 
-"""Rename application part input data."""
 input RenameApplicationPartInput {
   applicationPartId: ID!
   name: String!
 }
 
 type RenameApplicationPartPayload {
-  application: Application
   applicationPart: ApplicationPart
   errors: [RenameApplicationPartError!]
   query: Query!
@@ -726,7 +724,7 @@ input RenameComponentInput {
 }
 
 type RenameComponentPayload {
-  component: Component!
+  component: Component
   query: Query!
 }
 
@@ -767,6 +765,11 @@ input SaveVariableValueInput {
   applicationId: ID
   partId: ID
   environmentId: ID
+}
+
+type SaveVariableValuePayload {
+  value: VariableValue
+  query: Query!
 }
 
 type SchemaViolation {
@@ -852,7 +855,7 @@ input UpdateComponentSchemaInput {
 }
 
 type UpdateComponentSchemaPayload {
-  component: Component!
+  component: Component
   query: Query!
 }
 
@@ -866,16 +869,6 @@ input UpdateComponentValuesInput {
 type UpdateComponentValuesPayload {
   component: Component
   errors: [UpdateComponentValuesError!]
-  query: Query!
-}
-
-type UpdateVariablePayload {
-  variable: Variable
-  query: Query!
-}
-
-type UpdateVariableValuePayload {
-  value: VariableValue
   query: Query!
 }
 
@@ -893,13 +886,13 @@ type ValueSchemaViolation implements IUserError {
 
 type Variable implements Node {
   id: ID!
-  values: [VariableValue!]!
   state: VariableState!
   name: String!
   isSecret: Boolean!
   namespace: String
   version: Int!
   changeLog: [ChangeLog!]!
+  values: [VariableValue!]!
 }
 
 interface VariableChange {
