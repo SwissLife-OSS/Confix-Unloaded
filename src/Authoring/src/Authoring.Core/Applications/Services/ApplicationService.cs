@@ -89,12 +89,12 @@ namespace Confix.Authoring
             List<IChange> changeLogs = new();
             List<ApplicationPart> applicationParts = new();
 
-            changeLogs.Add(new CreateApplicationChange()
-            {
-                ApplicationId = application.Id,
-                ApplicationVersion = application.Version,
-                Application = application with { Parts = new List<ApplicationPart>() }
-            });
+            CreateApplicationChange applicationLog = new(
+                application.Id,
+                application.Version,
+                application with { Parts = new List<ApplicationPart>() });
+
+            changeLogs.Add(applicationLog);
 
             if (parts is not null)
             {
@@ -115,8 +115,7 @@ namespace Confix.Authoring
 
             application = application with
             {
-                Version = application.Version + 1,
-                Parts = applicationParts
+                Version = application.Version + 1, Parts = applicationParts
             };
 
             using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
@@ -177,8 +176,7 @@ namespace Confix.Authoring
             application = application with { Version = application.Version + 1 };
             applicationPart = applicationPart with
             {
-                Version = applicationPart.Version + 1,
-                Name = name
+                Version = applicationPart.Version + 1, Name = name
             };
 
             RenameApplicationPartChange log =
