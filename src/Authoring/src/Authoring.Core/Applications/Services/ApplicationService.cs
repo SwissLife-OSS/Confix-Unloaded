@@ -115,7 +115,8 @@ namespace Confix.Authoring
 
             application = application with
             {
-                Version = application.Version + 1, Parts = applicationParts
+                Version = application.Version + 1,
+                Parts = applicationParts
             };
 
             using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
@@ -176,7 +177,8 @@ namespace Confix.Authoring
             application = application with { Version = application.Version + 1 };
             applicationPart = applicationPart with
             {
-                Version = applicationPart.Version + 1, Name = name
+                Version = applicationPart.Version + 1,
+                Name = name
             };
 
             RenameApplicationPartChange log =

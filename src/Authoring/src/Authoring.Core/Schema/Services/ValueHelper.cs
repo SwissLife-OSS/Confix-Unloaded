@@ -14,7 +14,7 @@ namespace Confix.Authoring.Internal
             var obj = new Dictionary<string, object?>();
             var objectType = (ObjectType)type.NamedType();
 
-            foreach (var field in objectType.Fields)
+            foreach (ObjectField? field in objectType.Fields)
             {
                 if (field.IsIntrospectionField)
                 {
@@ -89,7 +89,7 @@ namespace Confix.Authoring.Internal
 
             var objectType = (ObjectType)type.NamedType();
 
-            foreach (var field in objectType.Fields)
+            foreach (ObjectField? field in objectType.Fields)
             {
                 if (field.IsIntrospectionField)
                 {

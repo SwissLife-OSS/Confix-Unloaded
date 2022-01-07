@@ -52,7 +52,7 @@ namespace Confix.Authoring.Store.Mongo.Configuration
                             Background = false
                         });
 
-                    collection.Indexes.CreateMany(new[] 
+                    collection.Indexes.CreateMany(new[]
                     {
                         variableIdIndex,
                         applicationIdIndex,

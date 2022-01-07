@@ -57,7 +57,7 @@ namespace Confix.Authoring.Store.Mongo
             await _dbContext.Components.ReplaceOneAsync(
                 x => x.Id == component.Id,
                 component,
-                new ReplaceOptions {IsUpsert = false},
+                new ReplaceOptions { IsUpsert = false },
                 cancellationToken);
 
             return component;

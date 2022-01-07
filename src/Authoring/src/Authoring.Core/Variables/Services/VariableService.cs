@@ -248,7 +248,8 @@ public class VariableService
 
             variableValue = variableValue with
             {
-                Value = encrypted.CipherValue, Encryption = encrypted.EncryptionInfo,
+                Value = encrypted.CipherValue,
+                Encryption = encrypted.EncryptionInfo,
             };
         }
         else

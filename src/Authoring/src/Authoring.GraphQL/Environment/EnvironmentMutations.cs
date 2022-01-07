@@ -25,7 +25,7 @@ public class EnvironmentMutations
         [ID(nameof(Environment))] Guid id,
         string name,
         CancellationToken cancellationToken)
-        => await environmentService.RenameAsync( id, name, cancellationToken);
+        => await environmentService.RenameAsync(id, name, cancellationToken);
 
     [Error(typeof(EnvironmentNotFoundError))]
     public async Task<Environment> RemoveEnvironmentByIdAsync(

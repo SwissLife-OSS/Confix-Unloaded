@@ -171,7 +171,8 @@ namespace Confix.Authoring
 
             component = component with
             {
-                Values = serializedValues, Version = component.Version + 1
+                Values = serializedValues,
+                Version = component.Version + 1
             };
 
             ComponentValuesChange log = new(component.Id, component.Version, serializedValues);

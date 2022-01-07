@@ -15,6 +15,6 @@ public class VariableNode
     public static Task<Variable?> GetVariableAsync(
         Guid id,
         IVariableDataLoader variableById,
-        CancellationToken cancellationToken) 
+        CancellationToken cancellationToken)
         => variableById.LoadAsync(id, cancellationToken);
 }

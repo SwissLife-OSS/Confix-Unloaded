@@ -36,7 +36,7 @@ namespace Confix.Authoring.GraphQL.Components
             Dictionary<string, TypeKind> typeKinds = CreateTypeKindLookup(document);
             List<object> types = new();
 
-            foreach (var definition in document.Definitions)
+            foreach (IDefinitionNode? definition in document.Definitions)
             {
                 if (definition is ObjectTypeDefinitionNode objectType)
                 {
@@ -50,7 +50,7 @@ namespace Confix.Authoring.GraphQL.Components
                             {"fields", fields}
                         });
 
-                    foreach (var field in objectType.Fields)
+                    foreach (FieldDefinitionNode? field in objectType.Fields)
                     {
                         fields.Add(CreateFieldDto(field, typeKinds));
                     }
@@ -133,7 +133,8 @@ namespace Confix.Authoring.GraphQL.Components
             // TODO : add validator
             return new()
             {
-                {"name", field.Name.Value}, {"type", CreateTypeDto(field.Type, typeKinds)}
+                { "name", field.Name.Value },
+                { "type", CreateTypeDto(field.Type, typeKinds) }
             };
         }
 
@@ -163,13 +164,13 @@ namespace Confix.Authoring.GraphQL.Components
         {
             Dictionary<string, TypeKind> typeKinds = new()
             {
-                {ScalarNames.String, TypeKind.Scalar},
-                {ScalarNames.Int, TypeKind.Scalar},
-                {ScalarNames.Boolean, TypeKind.Scalar},
-                {ScalarNames.Float, TypeKind.Scalar}
+                { ScalarNames.String, TypeKind.Scalar },
+                { ScalarNames.Int, TypeKind.Scalar },
+                { ScalarNames.Boolean, TypeKind.Scalar },
+                { ScalarNames.Float, TypeKind.Scalar }
             };
 
-            foreach (var definition in document.Definitions)
+            foreach (IDefinitionNode? definition in document.Definitions)
             {
                 if (definition is ObjectTypeDefinitionNode objectType)
                 {

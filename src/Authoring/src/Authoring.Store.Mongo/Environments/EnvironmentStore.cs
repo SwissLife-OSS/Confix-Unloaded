@@ -56,7 +56,7 @@ public class EnvironmentStore : IEnvironmentStore
         Environment? result = await _dbContext.Environments.FindOneAndUpdateAsync(
             Builders<Environment>.Filter.Eq(t => t.Id, environmentId),
             Builders<Environment>.Update.Set(t => t.Name, name),
-            new FindOneAndUpdateOptions<Environment>(){ReturnDocument = ReturnDocument.After},
+            new FindOneAndUpdateOptions<Environment>() { ReturnDocument = ReturnDocument.After },
             cancellationToken: cancellationToken);
 
         return result;

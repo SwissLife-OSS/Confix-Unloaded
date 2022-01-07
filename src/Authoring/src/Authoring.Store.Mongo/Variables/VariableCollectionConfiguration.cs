@@ -1,4 +1,4 @@
-﻿using MongoDB.Driver;
+using MongoDB.Driver;
 using MongoDB.Extensions.Context;
 
 namespace Confix.Authoring.Store.Mongo.Configuration
