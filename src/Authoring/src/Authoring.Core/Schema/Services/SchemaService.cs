@@ -6,57 +6,56 @@ using HotChocolate;
 using HotChocolate.Language;
 using static Confix.Authoring.Internal.ValueHelper;
 
-namespace Confix.Authoring.Internal
+namespace Confix.Authoring.Internal;
+
+public class SchemaService : ISchemaService
 {
-    public class SchemaService : ISchemaService
+    // TODO: Memory cache?
+    private readonly ConcurrentDictionary<string, ISchema> _schemas = new();
+
+    public string CreateValuesForSchema(
+        string schemaSdl,
+        IDictionary<string, object?> values)
     {
-        // TODO: Memory cache?
-        private readonly ConcurrentDictionary<string, ISchema> _schemas = new();
+        ISchema schema = CreateSchema(schemaSdl);
+        return CreateValuesForSchema(schema, values);
+    }
 
-        public string CreateValuesForSchema(
-            string schemaSdl,
-            IDictionary<string, object?> values)
+    public string CreateValuesForSchema(
+        ISchema schema,
+        IDictionary<string, object?> values)
+    {
+        List<SchemaViolation> violations = ValidateDictionary(values, schema.QueryType);
+
+        if (violations.Count > 0)
         {
-            ISchema schema = CreateSchema(schemaSdl);
-            return CreateValuesForSchema(schema, values);
+            throw new SchemaViolationException(violations);
         }
 
-        public string CreateValuesForSchema(
-            ISchema schema,
-            IDictionary<string, object?> values)
-        {
-            List<SchemaViolation> violations = ValidateDictionary(values, schema.QueryType);
+        return JsonSerializer.Serialize(values);
+    }
 
-            if (violations.Count > 0)
-            {
-                throw new SchemaViolationException(violations);
-            }
+    public ISchema CreateSchema(string schema)
+    {
+        DocumentNode schemaDoc = Utf8GraphQLParser.Parse(schema);
+        string rootTypeName = schemaDoc.Definitions
+                .OfType<ObjectTypeDefinitionNode>()
+                .FirstOrDefault()
+                ?.Name.Value ??
+            "Component";
 
-            return JsonSerializer.Serialize(values);
-        }
+        ISchema temp = _schemas.GetOrAdd(schema,
+            s =>
+                SchemaBuilder.New()
+                    .AddDocument(schemaDoc)
+                    .Use(next => next)
+                    .ModifyOptions(c =>
+                    {
+                        c.QueryTypeName = rootTypeName;
+                        c.StrictValidation = false;
+                    })
+                    .Create());
 
-        public ISchema CreateSchema(string schema)
-        {
-            DocumentNode schemaDoc = Utf8GraphQLParser.Parse(schema);
-            string rootTypeName = schemaDoc.Definitions
-                    .OfType<ObjectTypeDefinitionNode>()
-                    .FirstOrDefault()
-                    ?.Name.Value ??
-                "Component";
-
-            ISchema temp = _schemas.GetOrAdd(schema,
-                s =>
-                    SchemaBuilder.New()
-                        .AddDocument(schemaDoc)
-                        .Use(next => next)
-                        .ModifyOptions(c =>
-                        {
-                            c.QueryTypeName = rootTypeName;
-                            c.StrictValidation = false;
-                        })
-                        .Create());
-
-            return temp;
-        }
+        return temp;
     }
 }

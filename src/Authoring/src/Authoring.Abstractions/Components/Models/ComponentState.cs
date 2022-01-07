@@ -1,8 +1,7 @@
-namespace Confix.Authoring
+namespace Confix.Authoring;
+
+public enum ComponentState
 {
-    public enum ComponentState
-    {
-        Active,
-        Deprecated
-    }
+    Active,
+    Deprecated
 }

@@ -1,14 +1,13 @@
 using System;
 
-namespace Confix.Authoring
-{
-    public sealed class NameTakenException : Exception
-    {
-        public NameTakenException(string name)
-        {
-            Name = name;
-        }
+namespace Confix.Authoring;
 
-        public string Name { get; }
+public sealed class NameTakenException : Exception
+{
+    public NameTakenException(string name)
+    {
+        Name = name;
     }
+
+    public string Name { get; }
 }

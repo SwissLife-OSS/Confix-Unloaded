@@ -1,11 +1,10 @@
 using HotChocolate.Types;
 
-namespace Confix.Authoring.GraphQL
-{
-    public interface IUserError
-    {
-        string Code { get; }
+namespace Confix.Authoring.GraphQL;
 
-        string Message { get; }
-    }
+public interface IUserError
+{
+    string Code { get; }
+
+    string Message { get; }
 }

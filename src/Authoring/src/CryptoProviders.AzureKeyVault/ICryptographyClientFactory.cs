@@ -1,10 +1,9 @@
 using Azure.Security.KeyVault.Keys.Cryptography;
 
-namespace Confix.CryptoProvider.AzureKeyVault
+namespace Confix.CryptoProvider.AzureKeyVault;
+
+public interface ICryptographyClientFactory
 {
-    public interface ICryptographyClientFactory
-    {
-        CryptographyClient CreateDecryptionClient(string keyId);
-        CryptographyClient CreateEncryptionClient();
-    }
+    CryptographyClient CreateDecryptionClient(string keyId);
+    CryptographyClient CreateEncryptionClient();
 }

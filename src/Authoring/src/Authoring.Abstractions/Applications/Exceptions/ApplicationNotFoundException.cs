@@ -1,14 +1,13 @@
 using System;
 
-namespace Confix.Authoring
-{
-    public class ApplicationNotFoundException : Exception
-    {
-        public ApplicationNotFoundException(Guid applicationId)
-        {
-            ApplicationId = applicationId;
-        }
+namespace Confix.Authoring;
 
-        public Guid ApplicationId { get; }
+public class ApplicationNotFoundException : Exception
+{
+    public ApplicationNotFoundException(Guid applicationId)
+    {
+        ApplicationId = applicationId;
     }
+
+    public Guid ApplicationId { get; }
 }

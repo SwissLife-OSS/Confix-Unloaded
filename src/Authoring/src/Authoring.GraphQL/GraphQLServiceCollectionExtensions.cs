@@ -2,51 +2,50 @@ using Confix.Authoring.GraphQL.Serialization;
 using HotChocolate.Execution.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Confix.Authoring.GraphQL
+namespace Confix.Authoring.GraphQL;
+
+public static class GraphQLServiceCollectionExtensions
 {
-    public static class GraphQLServiceCollectionExtensions
+    public static IConfixServerBuilder AddGraphQLServer(this IConfixServerBuilder builder)
     {
-        public static IConfixServerBuilder AddGraphQLServer(this IConfixServerBuilder builder)
-        {
-            builder.Services.AddGraphQLServer().AddConfixSchema();
+        builder.Services.AddGraphQLServer().AddConfixSchema();
 
-            return builder;
-        }
+        return builder;
+    }
 
-        public static IRequestExecutorBuilder AddConfixSchema(this IRequestExecutorBuilder builder)
-        {
-            builder
-                // types
-                .AddCoreTypes()
-                .AddApplications()
-                .AddComponents()
-                .AddEnvironments()
-                .AddVariables()
-                .AddChangeLog()
-                // server options
-                .AddAuthorization()
-                .AddGlobalObjectIdentification()
-                .AddQueryFieldToMutationPayloads()
-                .AddMutationConventions()
-                .AddErrorInterfaceType<IUserError>()
-                .AddFiltering()
-                .AddSorting();
+    public static IRequestExecutorBuilder AddConfixSchema(this IRequestExecutorBuilder builder)
+    {
+        builder
+            // types
+            .AddCoreTypes()
+            .AddApplications()
+            .AddComponents()
+            .AddEnvironments()
+            .AddVariables()
+            .AddChangeLog()
+            // server options
+            .AddAuthorization()
+            .AddGlobalObjectIdentification()
+            .AddQueryFieldToMutationPayloads()
+            .AddMutationConventions()
+            .AddErrorInterfaceType<IUserError>()
+            .AddFiltering()
+            .AddSorting();
 
-            builder
-                .Services
-                .AddHttpResultSerializer<ForbiddenHttpResultSerializer>();
+        builder
+            .Services
+            .AddHttpResultSerializer<ForbiddenHttpResultSerializer>();
 
-            return builder;
-        }
+        return builder;
+    }
 
-        private static IRequestExecutorBuilder AddCoreTypes(this IRequestExecutorBuilder builder)
-        {
-            builder.AddQueryType();
-            builder.AddMutationType();
-            builder.AddType<SdlType>();
-            builder.AddInterfaceType<IUserError>();
+    private static IRequestExecutorBuilder AddCoreTypes(this IRequestExecutorBuilder builder)
+    {
+        builder.AddQueryType();
+        builder.AddMutationType();
+        builder.AddType<SdlType>();
+        builder.AddInterfaceType<IUserError>();
 
-            return builder;
-        }
+        return builder;
     }
 }
