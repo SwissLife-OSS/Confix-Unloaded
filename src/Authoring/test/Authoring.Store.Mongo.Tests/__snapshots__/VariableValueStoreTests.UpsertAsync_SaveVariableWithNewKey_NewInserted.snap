@@ -8,7 +8,8 @@
       "EnvironmentId": null
     },
     "Value": "This is a insertion test.",
-    "Encryption": null
+    "Encryption": null,
+    "Version": 0
   },
   {
     "Id": "6b9fc641-988e-4182-a870-037aff5cfc1f",
@@ -23,6 +24,7 @@
       "KeyProvider": "AzureKeyVault",
       "Key": "xyz",
       "Algorithm": "AES256"
-    }
+    },
+    "Version": 0
   }
 ]

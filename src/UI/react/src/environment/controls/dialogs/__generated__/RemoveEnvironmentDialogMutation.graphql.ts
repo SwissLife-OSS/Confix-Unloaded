@@ -5,11 +5,11 @@
 import { ConcreteRequest } from "relay-runtime";
 
 import { FragmentRefs } from "relay-runtime";
-export type RemoveEnvironmentInput = {
+export type RemoveEnvironmentByIdInput = {
     id: string;
 };
 export type RemoveEnvironmentDialogMutationVariables = {
-    input: RemoveEnvironmentInput;
+    input: RemoveEnvironmentByIdInput;
     connectionIds: Array<string>;
 };
 export type RemoveEnvironmentDialogMutationResponse = {
@@ -34,7 +34,7 @@ export type RemoveEnvironmentDialogMutation = {
 
 /*
 mutation RemoveEnvironmentDialogMutation(
-  $input: RemoveEnvironmentInput!
+  $input: RemoveEnvironmentByIdInput!
 ) {
   removeEnvironmentById(input: $input) {
     environment {
@@ -135,7 +135,7 @@ return {
       {
         "alias": null,
         "args": (v2/*: any*/),
-        "concreteType": "RemoveEnvironmentPayload",
+        "concreteType": "RemoveEnvironmentByIdPayload",
         "kind": "LinkedField",
         "name": "removeEnvironmentById",
         "plural": false,
@@ -177,7 +177,7 @@ return {
       {
         "alias": null,
         "args": (v2/*: any*/),
-        "concreteType": "RemoveEnvironmentPayload",
+        "concreteType": "RemoveEnvironmentByIdPayload",
         "kind": "LinkedField",
         "name": "removeEnvironmentById",
         "plural": false,
@@ -224,14 +224,14 @@ return {
     ]
   },
   "params": {
-    "cacheID": "5ef759179b0fc8ea1566826032fd8f93",
+    "cacheID": "467b59ba18f6c97a442dc795aef3e580",
     "id": null,
     "metadata": {},
     "name": "RemoveEnvironmentDialogMutation",
     "operationKind": "mutation",
-    "text": "mutation RemoveEnvironmentDialogMutation(\n  $input: RemoveEnvironmentInput!\n) {\n  removeEnvironmentById(input: $input) {\n    environment {\n      id\n      ...EnvironmentsList_EnvironmentEdge\n    }\n    errors {\n      __typename\n      ... on IUserError {\n        __isIUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment EnvironmentsList_EnvironmentEdge on Environment {\n  id\n  name\n}\n"
+    "text": "mutation RemoveEnvironmentDialogMutation(\n  $input: RemoveEnvironmentByIdInput!\n) {\n  removeEnvironmentById(input: $input) {\n    environment {\n      id\n      ...EnvironmentsList_EnvironmentEdge\n    }\n    errors {\n      __typename\n      ... on IUserError {\n        __isIUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment EnvironmentsList_EnvironmentEdge on Environment {\n  id\n  name\n}\n"
   }
 };
 })();
-(node as any).hash = 'cc8e02dd4b740139376c7a6748a500bc';
+(node as any).hash = 'b07061a0412ec56378d174371e170163';
 export default node;

@@ -8,6 +8,13 @@ namespace Confix.Authoring.Store;
 
 public record RenameApplicationChange : IApplicationChange
 {
+    public RenameApplicationChange(Guid applicationId, int applicationVersion, string name)
+    {
+        ApplicationId = applicationId;
+        ApplicationVersion = applicationVersion;
+        Name = name;
+    }
+
     public string Kind => nameof(RenameApplicationChange);
 
     [GraphQLName("application")]

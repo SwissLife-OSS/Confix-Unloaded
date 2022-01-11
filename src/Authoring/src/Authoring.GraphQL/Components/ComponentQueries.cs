@@ -8,20 +8,19 @@ using HotChocolate.Data;
 using HotChocolate.Types;
 using HotChocolate.Types.Relay;
 
-namespace Confix.Authoring.GraphQL.Components
-{
-    [ExtendObjectType(OperationTypeNames.Query)]
-    public class ComponentQueries
-    {
-        [UsePaging]
-        [UseFiltering(typeof(ComponentFilterInputType))]
-        public IQueryable<Component> GetComponents([Service] IComponentService componentService) =>
-            componentService.Query();
+namespace Confix.Authoring.GraphQL.Components;
 
-        public Task<Component?> GetComponentByIdAsync(
-            [ID(nameof(Component))] Guid id,
-            ComponentByIdDataLoader componentById,
-            CancellationToken cancellationToken) =>
-            componentById.LoadAsync(id, cancellationToken);
-    }
+[ExtendObjectType(OperationTypeNames.Query)]
+public class ComponentQueries
+{
+    [UsePaging]
+    [UseFiltering(typeof(ComponentFilterInputType))]
+    public IQueryable<Component> GetComponents([Service] IComponentService componentService) =>
+        componentService.Query();
+
+    public Task<Component?> GetComponentByIdAsync(
+        [ID(nameof(Component))] Guid id,
+        ComponentByIdDataLoader componentById,
+        CancellationToken cancellationToken) =>
+        componentById.LoadAsync(id, cancellationToken);
 }

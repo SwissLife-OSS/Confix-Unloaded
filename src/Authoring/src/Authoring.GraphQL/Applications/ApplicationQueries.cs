@@ -27,8 +27,8 @@ public class ApplicationQueries
     /// <summary>
     /// Get a specific application configuration by its ID.
     /// </summary>
+    /// <param name="applicationService"></param>
     /// <param name="id">The application ID.</param>
-    /// <param name="applicationById">The application DataLoader.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns></returns>
     public Task<Application?> GetApplicationByIdAsync(

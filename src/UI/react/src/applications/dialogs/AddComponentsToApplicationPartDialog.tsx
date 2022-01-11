@@ -20,10 +20,12 @@ export const addComponentsToApplicationPartMutation = graphql`
     $input: AddComponentsToApplicationPartInput!
   ) {
     addComponentsToApplicationPart(input: $input) {
-      application {
-        id
-        ...ApplicationsList_applicationsEdge
-        ...EditApplication_Application_Fragment
+      applicationPart {
+        application {
+          id
+          ...ApplicationsList_applicationsEdge
+          ...EditApplication_Application_Fragment
+        }
       }
       errors {
         __typename
@@ -51,12 +53,14 @@ export const AddComponentsToApplicationPartDialog: React.FC<{
     console.log(options);
     pipeCommitFn(commit, [
       withSuccessMessage(
-        (x) => x.addComponentsToApplicationPart.application?.id,
+        (x) =>
+          x.addComponentsToApplicationPart.applicationPart?.application?.id,
         `Added components to ${applicationPartName}`
       ),
       withErrorNotifications((x) => x.addComponentsToApplicationPart?.errors),
       withOnSuccess(
-        (x) => x.addComponentsToApplicationPart.application?.id,
+        (x) =>
+          x.addComponentsToApplicationPart.applicationPart?.application?.id,
         onClose
       ),
     ])({

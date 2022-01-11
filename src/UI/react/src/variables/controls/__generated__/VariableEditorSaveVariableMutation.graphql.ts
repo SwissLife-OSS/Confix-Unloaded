@@ -61,7 +61,7 @@ v1 = [
         "variableName": "input"
       }
     ],
-    "concreteType": "UpdateVariableValuePayload",
+    "concreteType": "SaveVariableValuePayload",
     "kind": "LinkedField",
     "name": "saveVariableValue",
     "plural": false,

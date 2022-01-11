@@ -17,7 +17,7 @@ export type RenameComponentDialogMutationResponse = {
         readonly component: {
             readonly id: string;
             readonly " $fragmentRefs": FragmentRefs<"ComponentsList_componentEdge">;
-        };
+        } | null;
     };
 };
 export type RenameComponentDialogMutation = {

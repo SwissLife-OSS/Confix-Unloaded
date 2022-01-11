@@ -8,6 +8,24 @@ namespace Confix.Authoring.Store;
 public record AddComponentToApplicationPartChange
     : IApplicationPartComponentChange
 {
+    public AddComponentToApplicationPartChange(
+        Guid applicationId,
+        int applicationVersion,
+        Guid partId,
+        int partVersion,
+        Guid partComponentId,
+        int partComponentVersion,
+        ApplicationPartComponent addedComponent)
+    {
+        ApplicationId = applicationId;
+        ApplicationVersion = applicationVersion;
+        PartId = partId;
+        PartVersion = partVersion;
+        PartComponentId = partComponentId;
+        PartComponentVersion = partComponentVersion;
+        AddedComponent = addedComponent;
+    }
+
     public string Kind => nameof(AddComponentToApplicationPartChange);
 
     [GraphQLName("application")]

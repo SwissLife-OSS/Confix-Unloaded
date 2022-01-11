@@ -75,7 +75,6 @@ input AddComponentsToApplicationPartInput {
 }
 
 type AddComponentsToApplicationPartPayload {
-  application: Application
   applicationPart: ApplicationPart
   errors: [AddComponentsToApplicationPartError!]
   query: Query!
@@ -271,12 +270,12 @@ type Component implements Node {
   name: String!
   version: Int!
   state: ComponentState!
-  changeLog: [ChangeLog!]!
   schemaSdl: SDL
   schema: Any
   values: Any
   defaults: Any
   schemaViolations: [SchemaViolation!]!
+  changeLog: [ChangeLog!]!
 }
 
 interface ComponentChange {
@@ -403,6 +402,11 @@ input CreateVariableInput {
   defaultValue: String
 }
 
+type CreateVariablePayload {
+  variable: Variable
+  query: Query!
+}
+
 """The `DateTime` scalar represents an ISO-8601 compliant date time type."""
 scalar DateTime
 
@@ -419,8 +423,7 @@ input DeleteVariableValueInput {
 }
 
 type DeleteVariableValuePayload {
-  deletedId: UUID
-  variable: Variable
+  value: VariableValue
   query: Query!
 }
 
@@ -467,20 +470,18 @@ type Mutation {
 
   """Adds a component to an application part."""
   removeComponentFromApplicationPart(input: RemoveComponentFromApplicationPartInput!): RemoveComponentFromApplicationPartPayload!
-
-  """Adds a component to an application part."""
   updateApplicationPartComponentValues(input: UpdateApplicationPartComponentValuesInput!): UpdateApplicationPartComponentValuesPayload!
-  createVariable(input: CreateVariableInput!): UpdateVariablePayload!
-  saveVariableValue(input: SaveVariableValueInput!): UpdateVariableValuePayload!
-  deleteVariableValue(input: DeleteVariableValueInput!): DeleteVariableValuePayload!
-  renameVariable(input: RenameVariableInput!): RenameVariablePayload!
-  createEnvironment(input: CreateEnvironmentInput!): CreateEnvironmentPayload!
-  renameEnvironment(input: RenameEnvironmentInput!): RenameEnvironmentPayload!
-  removeEnvironmentById(input: RemoveEnvironmentInput!): RemoveEnvironmentPayload!
   createComponent(input: CreateComponentInput!): CreateComponentPayload!
   renameComponent(input: RenameComponentInput!): RenameComponentPayload!
   updateComponentSchema(input: UpdateComponentSchemaInput!): UpdateComponentSchemaPayload!
   updateComponentValues(input: UpdateComponentValuesInput!): UpdateComponentValuesPayload!
+  createEnvironment(input: CreateEnvironmentInput!): CreateEnvironmentPayload!
+  renameEnvironment(input: RenameEnvironmentInput!): RenameEnvironmentPayload!
+  removeEnvironmentById(input: RemoveEnvironmentByIdInput!): RemoveEnvironmentByIdPayload!
+  createVariable(input: CreateVariableInput!): CreateVariablePayload!
+  saveVariableValue(input: SaveVariableValueInput!): SaveVariableValuePayload!
+  deleteVariableValue(input: DeleteVariableValueInput!): DeleteVariableValuePayload!
+  renameVariable(input: RenameVariableInput!): RenameVariablePayload!
 }
 
 """
@@ -547,7 +548,41 @@ type Query {
   ): Application
   applicationPartById(id: ID!): ApplicationPart
   applicationPartComponentById(partComponentId: ID!): ApplicationPartComponent
-  changeLogById(id: ID!): ChangeLog
+  components(
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+    where: ComponentFilterInput
+  ): ComponentsConnection
+  componentById(id: ID!): Component
+  searchEnvironments(
+    search: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+  ): SearchEnvironmentsConnection
+  environmentById(id: ID!): Environment
   variables: [Variable!]!
   searchVariables(
     search: String
@@ -568,42 +603,8 @@ type Query {
   ): SearchVariablesConnection
   variable(id: ID!): Variable!
   variableValues(variableId: ID!, applicationId: ID, applicationPartId: ID): [VariableValue!]!
-  searchEnvironments(
-    search: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-  ): SearchEnvironmentsConnection
-  environmentById(id: ID!): Environment
-  components(
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-    where: ComponentFilterInput
-  ): ComponentsConnection
-  componentById(id: ID!): Component
   globalVariableValues: [VariableValue!]!
+  changeLogById(id: ID!): ChangeLog
 }
 
 union RemoveApplicationPartError = ApplicationPartNotFoundError
@@ -649,12 +650,11 @@ type RemoveComponentFromApplicationPartPayload {
 
 union RemoveEnvironmentByIdError = EnvironmentNotFoundError
 
-input RemoveEnvironmentInput {
+input RemoveEnvironmentByIdInput {
   id: ID!
 }
 
-type RemoveEnvironmentPayload {
-  removedId: UUID
+type RemoveEnvironmentByIdPayload {
   environment: Environment
   errors: [RemoveEnvironmentByIdError!]
   query: Query!
@@ -694,14 +694,12 @@ type RenameApplicationPartChange implements ApplicationPartChange & ApplicationC
 
 union RenameApplicationPartError = ApplicationIdInvalid | ApplicationPartIdInvalid | ApplicationPartNameTaken
 
-"""Rename application part input data."""
 input RenameApplicationPartInput {
   applicationPartId: ID!
   name: String!
 }
 
 type RenameApplicationPartPayload {
-  application: Application
   applicationPart: ApplicationPart
   errors: [RenameApplicationPartError!]
   query: Query!
@@ -726,7 +724,7 @@ input RenameComponentInput {
 }
 
 type RenameComponentPayload {
-  component: Component!
+  component: Component
   query: Query!
 }
 
@@ -767,6 +765,11 @@ input SaveVariableValueInput {
   applicationId: ID
   partId: ID
   environmentId: ID
+}
+
+type SaveVariableValuePayload {
+  value: VariableValue
+  query: Query!
 }
 
 type SchemaViolation {
@@ -852,7 +855,7 @@ input UpdateComponentSchemaInput {
 }
 
 type UpdateComponentSchemaPayload {
-  component: Component!
+  component: Component
   query: Query!
 }
 
@@ -866,16 +869,6 @@ input UpdateComponentValuesInput {
 type UpdateComponentValuesPayload {
   component: Component
   errors: [UpdateComponentValuesError!]
-  query: Query!
-}
-
-type UpdateVariablePayload {
-  variable: Variable
-  query: Query!
-}
-
-type UpdateVariableValuePayload {
-  value: VariableValue
   query: Query!
 }
 
@@ -893,13 +886,13 @@ type ValueSchemaViolation implements IUserError {
 
 type Variable implements Node {
   id: ID!
-  values: [VariableValue!]!
   state: VariableState!
   name: String!
   isSecret: Boolean!
   namespace: String
   version: Int!
   changeLog: [ChangeLog!]!
+  values: [VariableValue!]!
 }
 
 interface VariableChange {

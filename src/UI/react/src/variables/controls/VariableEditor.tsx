@@ -132,11 +132,13 @@ const variableEditorDeleteVariableValue = graphql`
     $input: DeleteVariableValueInput!
   ) {
     deleteVariableValue(input: $input) {
-      variable {
-        id
-        values {
+      value {
+        variable {
           id
-          value
+          values {
+            id
+            value
+          }
         }
       }
     }
@@ -204,7 +206,7 @@ const useDeleteVariableValue = (
 
     pipeCommitFn(commit, [
       withSuccessMessage(
-        (x) => x.deleteVariableValue.variable?.id,
+        (x) => x.deleteVariableValue.value?.variable?.id,
         "Deleted Variable Value"
       ),
       withOnCompleted(() => refresh()),

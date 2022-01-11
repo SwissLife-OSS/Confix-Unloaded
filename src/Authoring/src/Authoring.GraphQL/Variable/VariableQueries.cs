@@ -17,25 +17,19 @@ public class VariableQueries
     public async Task<IEnumerable<Variable>> GetVariablesAsync(
         [Service] IVariableService variableService,
         CancellationToken cancellationToken)
-    {
-        return await variableService.GetAllAsync(cancellationToken);
-    }
+        => await variableService.GetAllAsync(cancellationToken);
 
     [UsePaging]
     public IQueryable<Variable> SearchVariables(
         [Service] IVariableService variableService,
         string? search)
-    {
-        return variableService.SearchVariables(search);
-    }
+        => variableService.SearchVariables(search);
 
     public async Task<Variable> GetVariableAsync(
         [Service] IVariableService variableService,
         [ID(nameof(Variable))] Guid id,
         CancellationToken cancellationToken)
-    {
-        return await variableService.GetByIdAsync(id, cancellationToken);
-    }
+        => await variableService.GetByIdAsync(id, cancellationToken);
 
     public async Task<IEnumerable<VariableValue>> GetVariableValuesAsync(
         [Service] IVariableService variableService,
@@ -46,9 +40,14 @@ public class VariableQueries
     {
         VariableValueFilter filter = new(variableId)
         {
-            ApplicationId = applicationId, PartId = applicationPartId
+            ApplicationId = applicationId,
+            PartId = applicationPartId
         };
-        GetVariableValuesRequest request = new(filter);
-        return await variableService.GetValuesAsync(request, cancellationToken);
+        return await variableService.GetValuesAsync(filter, false, cancellationToken);
     }
+
+    public async Task<IEnumerable<VariableValue>> GetGlobalVariableValuesAsync(
+        [Service] IVariableService service,
+        CancellationToken cancellationToken)
+        => await service.GetGlobalValues(cancellationToken);
 }

@@ -22,7 +22,7 @@ export type EditComponentUpdateMutationResponse = {
         readonly component: {
             readonly id: string;
             readonly " $fragmentRefs": FragmentRefs<"EditComponent_component">;
-        };
+        } | null;
     };
     readonly updateComponentValues: {
         readonly component: {

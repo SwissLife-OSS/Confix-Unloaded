@@ -9,33 +9,32 @@ using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
-namespace ConfiX
+namespace ConfiX;
+
+public class KeyVaultVariableCryptoProviderTests
 {
-    public class KeyVaultVariableCryptoProviderTests
+    [Fact(Skip = "Needs an actual KeyVault in Azure to run")]
+    public async Task EncryptAndDecrypt_WithDefaultKeyId_DecryptedValueEqualsPlainTextValue()
     {
-        [Fact(Skip = "Needs an actual KeyVault in Azure to run")]
-        public async Task EncryptAndDecrypt_WithDefaultKeyId_DecryptedValueEqualsPlainTextValue()
-        {
-            // Arrange
-            IConfixServerBuilder? builder = TestContext.GetBuilder();
-            builder.AddAzureKeyVaultCryptoProvider();
+        // Arrange
+        IConfixServerBuilder? builder = TestContext.GetBuilder();
+        builder.AddAzureKeyVaultCryptoProvider();
 
-            ServiceProvider sp = builder.Services.BuildServiceProvider();
+        ServiceProvider sp = builder.Services.BuildServiceProvider();
 
-            IVariableCryptoProvider provider = sp.GetRequiredService<IVariableCryptoProvider>();
-            string plainTextValue = "SecretMessage";
+        IVariableCryptoProvider provider = sp.GetRequiredService<IVariableCryptoProvider>();
+        string plainTextValue = "SecretMessage";
 
-            // Act
-            ValueEncryptionResult encrypted = await provider
-                .EncryptAsync(plainTextValue, CancellationToken.None);
+        // Act
+        ValueEncryptionResult encrypted = await provider
+            .EncryptAsync(plainTextValue, CancellationToken.None);
 
-            string reverse = await provider.DecryptAsync(
-                encrypted.CipherValue,
-                encrypted.EncryptionInfo,
-                CancellationToken.None);
+        string reverse = await provider.DecryptAsync(
+            encrypted.CipherValue,
+            encrypted.EncryptionInfo,
+            CancellationToken.None);
 
-            // Assert
-            plainTextValue.Should().Be(reverse);
-        }
+        // Assert
+        plainTextValue.Should().Be(reverse);
     }
 }

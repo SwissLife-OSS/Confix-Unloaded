@@ -11,22 +11,21 @@ using Confix.Authoring;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Confix.CryptoProvider.AzureKeyVault
+namespace Confix.CryptoProvider.AzureKeyVault;
+
+public static class AzureKeyVaultServiceCollectionExtensions
 {
-    public static class AzureKeyVaultServiceCollectionExtensions
+    public static IConfixServerBuilder AddAzureKeyVaultCryptoProvider(
+        this IConfixServerBuilder builder)
     {
-        public static IConfixServerBuilder AddAzureKeyVaultCryptoProvider(
-            this IConfixServerBuilder builder)
-        {
-            AzureKeyVaultOptions options = builder.Configuration
-                .GetSection("Confix:AzureKeyVault")
-                .Get<AzureKeyVaultOptions>();
+        AzureKeyVaultOptions options = builder.Configuration
+            .GetSection("Confix:AzureKeyVault")
+            .Get<AzureKeyVaultOptions>();
 
-            builder.Services.AddSingleton(options);
-            builder.Services.AddSingleton<ICryptographyClientFactory, CryptographyClientFactory>();
-            builder.Services.AddSingleton<IVariableCryptoProvider, KeyVaultVariableCryptoProvider>();
+        builder.Services.AddSingleton(options);
+        builder.Services.AddSingleton<ICryptographyClientFactory, CryptographyClientFactory>();
+        builder.Services.AddSingleton<IVariableCryptoProvider, KeyVaultVariableCryptoProvider>();
 
-            return builder;
-        }
+        return builder;
     }
 }

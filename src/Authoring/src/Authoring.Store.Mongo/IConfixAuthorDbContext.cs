@@ -1,19 +1,18 @@
 using MongoDB.Driver;
 
-namespace Confix.Authoring.Store.Mongo
+namespace Confix.Authoring.Store.Mongo;
+
+public interface IConfixAuthorDbContext
 {
-    public interface IConfixAuthorDbContext
-    {
-        IMongoCollection<Application> Applications { get; }
+    IMongoCollection<Application> Applications { get; }
 
-        IMongoCollection<ChangeLog> ChangeLogs { get; }
+    IMongoCollection<ChangeLog> ChangeLogs { get; }
 
-        IMongoCollection<Environment> Environments { get; }
+    IMongoCollection<Environment> Environments { get; }
 
-        IMongoCollection<Component> Components { get; }
+    IMongoCollection<Component> Components { get; }
 
-        IMongoCollection<Variable> Variables { get; }
+    IMongoCollection<Variable> Variables { get; }
 
-        IMongoCollection<VariableValue> VariableValues { get; }
-    }
+    IMongoCollection<VariableValue> VariableValues { get; }
 }

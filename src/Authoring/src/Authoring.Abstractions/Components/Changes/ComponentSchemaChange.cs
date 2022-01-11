@@ -5,8 +5,15 @@ using HotChocolate.Types;
 
 namespace Confix.Authoring.Changes;
 
-public record ComponentSchemaChange : IComponentChange
+public class ComponentSchemaChange : IComponentChange
 {
+    public ComponentSchemaChange(Guid componentId, int componentVersion, string schema)
+    {
+        ComponentId = componentId;
+        ComponentVersion = componentVersion;
+        Schema = schema;
+    }
+
     public string Kind => nameof(ComponentSchemaChange);
 
     [GraphQLName("component")]

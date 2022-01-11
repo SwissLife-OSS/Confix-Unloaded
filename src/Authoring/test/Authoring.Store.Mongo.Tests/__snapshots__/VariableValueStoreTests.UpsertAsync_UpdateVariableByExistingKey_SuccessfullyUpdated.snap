@@ -12,6 +12,7 @@
       "KeyProvider": "AzureKeyVault",
       "Key": "xyz",
       "Algorithm": "AES256"
-    }
+    },
+    "Version": 0
   }
 ]

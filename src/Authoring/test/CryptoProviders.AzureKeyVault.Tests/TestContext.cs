@@ -6,37 +6,36 @@ using Confix.Authoring;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ConfiX
+namespace ConfiX;
+
+public static class TestContext
 {
-    public static class TestContext
+    public static IConfiguration BuildConfig()
     {
-        public static IConfiguration BuildConfig()
-        {
-            IConfigurationRoot config = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                 .AddJsonFile("appsettings.json", optional: true)
-                 .AddUserSecrets<KeyVaultVariableCryptoProviderTests>(optional: true)
-                 .Build();
+        IConfigurationRoot config = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+             .AddJsonFile("appsettings.json", optional: true)
+             .AddUserSecrets<KeyVaultVariableCryptoProviderTests>(optional: true)
+             .Build();
 
-            return config;
+        return config;
+    }
+
+    public static IConfixServerBuilder GetBuilder()
+    {
+        return new TestConfixServerBuilder(BuildConfig());
+    }
+
+    public class TestConfixServerBuilder : IConfixServerBuilder
+    {
+        public TestConfixServerBuilder(IConfiguration configuration)
+        {
+            Configuration = configuration;
+            Services = new ServiceCollection();
         }
 
-        public static IConfixServerBuilder GetBuilder()
-        {
-            return new TestConfixServerBuilder(BuildConfig());
-        }
+        public IServiceCollection Services { get; }
 
-        public class TestConfixServerBuilder : IConfixServerBuilder
-        {
-            public TestConfixServerBuilder(IConfiguration configuration)
-            {
-                Configuration = configuration;
-                Services = new ServiceCollection();
-            }
-
-            public IServiceCollection Services { get; }
-
-            public IConfiguration Configuration { get; }
-        }
+        public IConfiguration Configuration { get; }
     }
 }

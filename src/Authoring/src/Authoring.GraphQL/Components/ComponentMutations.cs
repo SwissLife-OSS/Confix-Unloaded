@@ -1,66 +1,44 @@
+using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using HotChocolate;
 using HotChocolate.Types;
+using HotChocolate.Types.Relay;
 
-namespace Confix.Authoring.GraphQL.Components
+namespace Confix.Authoring.GraphQL.Components;
+
+[ExtendObjectType(OperationTypeNames.Mutation)]
+public class ComponentMutations
 {
-    [ExtendObjectType(OperationTypeNames.Mutation)]
-    public class ComponentMutations
-    {
-        [Error(typeof(ValueSchemaViolation))]
-        public async Task<CreateComponentPayload> CreateComponentAsync(
-            [Service] IComponentService service,
-            CreateComponentInput input,
-            CancellationToken cancellationToken)
-        {
-            Component component = await service.CreateAsync(
-                input.Name,
-                input.Schema,
-                input.Values,
-                cancellationToken);
+    [Error(typeof(ValueSchemaViolation))]
+    public async Task<Component> CreateComponentAsync(
+        [Service] IComponentService service,
+        string name,
+        [DefaultValue("type Component { text: String! }")] string schema,
+        [GraphQLType(typeof(AnyType))] Dictionary<string, object?>? values,
+        CancellationToken cancellationToken)
+        => await service.CreateAsync(name, schema, values, cancellationToken);
 
-            return new CreateComponentPayload(component);
-        }
+    public async Task<Component> RenameComponentAsync(
+        [Service] IComponentService service,
+        [ID(nameof(Component))] Guid id,
+        string name,
+        CancellationToken cancellationToken)
+        => await service.RenameAsync(id, name, cancellationToken);
 
-        public async Task<RenameComponentPayload> RenameComponentAsync(
-            [Service] IComponentService service,
-            RenameComponentInput input,
-            CancellationToken cancellationToken)
-        {
-            Component component = await service.RenameAsync(
-                input.Id,
-                input.Name,
-                cancellationToken);
+    public async Task<Component> UpdateComponentSchemaAsync(
+        [Service] IComponentService service,
+        [ID(nameof(Component))] Guid id,
+        string schema,
+        CancellationToken cancellationToken)
+        => await service.SetSchemaAsync(id, schema, cancellationToken);
 
-            return new RenameComponentPayload(component);
-        }
-
-        public async Task<UpdateComponentSchemaPayload> UpdateComponentSchemaAsync(
-            [Service] IComponentService service,
-            UpdateComponentSchemaInput input,
-            CancellationToken cancellationToken)
-        {
-            Component component = await service.SetSchemaAsync(
-                input.Id,
-                input.Schema,
-                cancellationToken);
-
-            return new UpdateComponentSchemaPayload(component);
-        }
-
-        [Error(typeof(ValueSchemaViolation))]
-        public async Task<UpdateComponentValuesPayload> UpdateComponentValuesAsync(
-            [Service] IComponentService service,
-            UpdateComponentValuesInput input,
-            CancellationToken cancellationToken)
-        {
-            Component component = await service.SetValuesAsync(
-                input.Id,
-                input.Values,
-                cancellationToken);
-
-            return new UpdateComponentValuesPayload(component);
-        }
-    }
+    [Error(typeof(ValueSchemaViolation))]
+    public async Task<Component> UpdateComponentValuesAsync(
+        [Service] IComponentService service,
+        [ID(nameof(Component))] Guid id,
+        [GraphQLType(typeof(AnyType))] Dictionary<string, object?> values,
+        CancellationToken cancellationToken)
+        => await service.SetValuesAsync(id, values, cancellationToken);
 }
