@@ -1,5 +1,6 @@
 using Confix.Authoring.GraphQL.Serialization;
 using HotChocolate.Execution.Configuration;
+using HotChocolate.Resolvers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Confix.Authoring.GraphQL;
@@ -22,6 +23,7 @@ public static class GraphQLServiceCollectionExtensions
             .AddComponents()
             .AddEnvironments()
             .AddVariables()
+            .AddPublishing()
             .AddChangeLog()
             // server options
             .AddAuthorization()

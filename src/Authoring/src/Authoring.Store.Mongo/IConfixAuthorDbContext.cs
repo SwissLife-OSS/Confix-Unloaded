@@ -1,3 +1,4 @@
+using Confix.Authoring.Publishing;
 using MongoDB.Driver;
 
 namespace Confix.Authoring.Store.Mongo;
@@ -15,4 +16,6 @@ public interface IConfixAuthorDbContext
     IMongoCollection<Variable> Variables { get; }
 
     IMongoCollection<VariableValue> VariableValues { get; }
+
+    IMongoCollection<PublishedApplicationPart> PublishedApplicationParts { get; }
 }

@@ -7,11 +7,11 @@ using System.Transactions;
 using Confix.Authoring.Store;
 using Confix.Authoring.Store.Mongo;
 using Confix.Authoring.Variables.Changes;
+using HotChocolate.Types;
 
 namespace Confix.Authoring;
 
-public class VariableService
-    : IVariableService
+public class VariableService : IVariableService
 {
     private readonly IVariableStore _variableStore;
     private readonly IVariableValueStore _variableValueStore;
@@ -63,6 +63,62 @@ public class VariableService
     public async Task<IEnumerable<Variable>> GetAllAsync(CancellationToken cancellationToken)
     {
         return await _variableStore.GetAllAsync(cancellationToken);
+    }
+
+    public async Task<IDictionary<string, VariableValue>> GetBestMatchingValuesAsync(
+        IEnumerable<string> variableNames,
+        Guid applicationId,
+        Guid applicationPartId,
+        CancellationToken cancellationToken)
+    {
+        ISet<string> distinctNames = variableNames.ToHashSet();
+
+        IReadOnlyList<Variable> variables =
+            await _variableStore.GetByNamesAsync(distinctNames, cancellationToken);
+
+        IDictionary<string, VariableValue> values = new Dictionary<string, VariableValue>();
+
+        IDictionary<Guid, Variable> ids = variables.ToDictionary(x => x.Id);
+
+        IEnumerable<VariableValue> partValues = await _variableStore
+            .GetByApplicationPartIdAsync(applicationPartId, ids.Keys, cancellationToken);
+
+        foreach (VariableValue value in partValues)
+        {
+            if (ids.TryGetValue(value.Key.VariableId, out Variable? variable))
+            {
+                values[variable.Name] = value;
+                ids.Remove(value.Key.VariableId);
+            }
+        }
+
+        IEnumerable<VariableValue> appValues =
+            await _variableStore.GetByApplicationIdAsync(applicationId,
+                ids.Keys,
+                cancellationToken);
+
+        foreach (VariableValue value in appValues)
+        {
+            if (ids.TryGetValue(value.Key.VariableId, out Variable? variable))
+            {
+                values[variable.Name] = value;
+                ids.Remove(value.Key.VariableId);
+            }
+        }
+
+        IEnumerable<VariableValue> globalValues =
+            await _variableStore.GetGlobalVariableValue(ids.Keys, cancellationToken);
+
+        foreach (VariableValue value in globalValues)
+        {
+            if (ids.TryGetValue(value.Key.VariableId, out Variable? variable))
+            {
+                values[variable.Name] = value;
+                ids.Remove(value.Key.VariableId);
+            }
+        }
+
+        return values;
     }
 
     public IQueryable<Variable> SearchVariables(string? search)
@@ -248,8 +304,7 @@ public class VariableService
 
             variableValue = variableValue with
             {
-                Value = encrypted.CipherValue,
-                Encryption = encrypted.EncryptionInfo,
+                Value = encrypted.CipherValue, Encryption = encrypted.EncryptionInfo,
             };
         }
         else

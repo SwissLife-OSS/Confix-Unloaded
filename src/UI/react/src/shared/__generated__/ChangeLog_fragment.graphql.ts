@@ -14,7 +14,7 @@ export type ChangeLog_fragment = ReadonlyArray<{
     };
     readonly modifiedAt: unknown;
     readonly modifiedBy: {
-        readonly email: string;
+        readonly email: string | null;
     };
     readonly " $refType": "ChangeLog_fragment";
 }>;

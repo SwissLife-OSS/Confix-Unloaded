@@ -48,6 +48,7 @@ import { EditApplicationPart_VariableValues_Fragment$key } from "./__generated__
 import { EditApplicationPart_ChangeLog_Fragment$key } from "./__generated__/EditApplicationPart_ChangeLog_Fragment.graphql";
 import { ChangeLog } from "../shared/ChangeLog";
 import { useTabSwitcher } from "../shared/useTabSwitcher";
+import { PublishApplicationPartDialog } from "./dialogs/PublishApplicationPartDialog";
 
 const applicationByIdQuery = graphql`
   query EditApplicationPart_GetById_Query($id: ID!) {
@@ -133,6 +134,7 @@ export const EditApplicationPart = () => {
       <Row>
         <Col xs={24}>
           <Header
+            applicationPartId={id}
             applicationName={application?.name ?? ""}
             applicationPartName={applicationPartName}
             namespace={application?.namespace ?? ""}
@@ -320,28 +322,48 @@ const CardBody = styled("div")`
 `;
 
 const Header: React.FC<{
+  applicationPartId: string;
   applicationPartName: string;
   applicationName: string;
   namespace: string;
   id: string;
-}> = ({ applicationPartName, applicationName, namespace, id }) => {
-  const [isEdit, , enable, disable] = useToggle();
+}> = ({
+  applicationPartName,
+  applicationPartId,
+  applicationName,
+  namespace,
+  id,
+}) => {
+  const [isEdit, , enableEdit, disableEdit] = useToggle();
+  const [publishVisible, , enablePublish, disablePublish] = useToggle();
   return (
-    <EditableBreadcrumbHeader
-      onEdit={enable}
-      title={applicationPartName}
-      breadcrumbs={[{ text: namespace }, { text: applicationName }]}
-    >
-      <HeaderButton type="primary" icon={<PublishIcon />}>
-        Publish
-      </HeaderButton>
-      <RenameApplicationPartDialog
-        applicationPartName={applicationName}
-        applicationPartId={id}
-        onClose={disable}
-        visible={isEdit}
+    <>
+      <EditableBreadcrumbHeader
+        onEdit={enableEdit}
+        title={applicationPartName}
+        breadcrumbs={[{ text: namespace }, { text: applicationName }]}
+      >
+        <HeaderButton
+          type="primary"
+          icon={<PublishIcon />}
+          onClick={enablePublish}
+        >
+          Publish
+        </HeaderButton>
+        <RenameApplicationPartDialog
+          applicationPartName={applicationName}
+          applicationPartId={id}
+          onClose={disableEdit}
+          visible={isEdit}
+        />
+      </EditableBreadcrumbHeader>
+      <PublishApplicationPartDialog
+        visible={publishVisible}
+        onClose={disablePublish}
+        applicationPartName={applicationPartName}
+        applicationPartId={applicationPartId}
       />
-    </EditableBreadcrumbHeader>
+    </>
   );
 };
 

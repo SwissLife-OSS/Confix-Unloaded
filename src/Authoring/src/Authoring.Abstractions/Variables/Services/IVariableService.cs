@@ -69,6 +69,12 @@ public interface IVariableService
         Guid id,
         string name,
         CancellationToken cancellationToken);
+
+    Task<IDictionary<string, VariableValue>> GetBestMatchingValuesAsync(
+        IEnumerable<string> variableNames,
+        Guid applicationId,
+        Guid applicationPartId,
+        CancellationToken cancellationToken);
 }
 
 public interface IVariableCryptoProvider
@@ -84,11 +90,6 @@ public interface IVariableCryptoProvider
 }
 
 public record ValueEncryptionResult(VariableEncryptionInfo EncryptionInfo, string CipherValue);
-
-public record GetVariableValuesRequest(VariableValueFilter Filter)
-{
-    public bool Decrypt { get; init; }
-}
 
 public record VariableValueFilter(Guid Id)
 {

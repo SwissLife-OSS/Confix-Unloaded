@@ -20,83 +20,136 @@ public class VariableStore : IVariableStore
     }
 
     public async Task<IEnumerable<Variable>> GetAllAsync(CancellationToken cancellationToken)
-    {
-        return await _dbContext.Variables.AsQueryable()
+        => await _dbContext.Variables
+            .AsQueryable()
             .ToListAsync(cancellationToken);
-    }
 
     public async Task<Variable> GetByIdAsync(
         Guid id,
         CancellationToken cancellationToken)
-    {
-        return await _dbContext.Variables.AsQueryable()
+        => await _dbContext.Variables
+            .AsQueryable()
             .Where(x => x.Id == id)
             .FirstOrDefaultAsync(cancellationToken);
+
+    public async Task<IReadOnlyList<Variable>> GetByNamesAsync(
+        IEnumerable<string> names,
+        CancellationToken cancellationToken)
+    {
+        FilterDefinition<Variable> filter = Builders<Variable>.Filter.In(x => x.Name, names);
+
+        return await _dbContext.Variables.Find(filter).ToListAsync(cancellationToken);
     }
 
     public async Task<IEnumerable<VariableValue>> GetByApplicationPartIdAsync(
         Guid partId,
         CancellationToken cancellationToken)
-    {
-        FilterDefinition<VariableValue> filter =
-            Filter.Eq(x => x.Key.PartId, partId);
-        return await _dbContext.VariableValues.Find(filter).ToListAsync(cancellationToken);
-    }
+        => await GetByApplicationPartIdAsyncInternal(partId, null, cancellationToken);
 
     public async Task<IEnumerable<VariableValue>> GetByApplicationIdAsync(
         Guid applicationId,
+        CancellationToken cancellationToken)
+        => await GetByApplicationIdAsyncInternal(applicationId, null, cancellationToken);
+
+    public async Task<IEnumerable<VariableValue>> GetGlobalVariableValue(
+        CancellationToken cancellationToken)
+        => await GetGlobalVariableValueInternal(null, cancellationToken);
+
+    public async Task<IEnumerable<VariableValue>> GetByApplicationPartIdAsync(
+        Guid partId,
+        IEnumerable<Guid> variableIds,
+        CancellationToken cancellationToken)
+        => await GetByApplicationPartIdAsyncInternal(partId, variableIds, cancellationToken);
+
+    public async Task<IEnumerable<VariableValue>> GetByApplicationIdAsync(
+        Guid applicationId,
+        IEnumerable<Guid> variableIds,
+        CancellationToken cancellationToken)
+        => await GetByApplicationIdAsyncInternal(applicationId, variableIds, cancellationToken);
+
+    public async Task<IEnumerable<VariableValue>> GetGlobalVariableValue(
+        IEnumerable<Guid>? variableIds,
+        CancellationToken cancellationToken)
+        => await GetGlobalVariableValueInternal(variableIds, cancellationToken);
+
+    public async Task<IEnumerable<Variable>> GetManyAsync(
+        IEnumerable<Guid> ids,
+        CancellationToken cancellationToken)
+        => await _dbContext.Variables
+            .AsQueryable()
+            .Where(x => ids.Contains(x.Id))
+            .ToListAsync(cancellationToken);
+
+    public async Task<Variable> CreateAsync(
+        Variable variable,
+        CancellationToken cancellationToken)
+    {
+        await _dbContext.Variables.InsertOneAsync(variable, options: null, cancellationToken);
+
+        return variable;
+    }
+
+    public async Task<Variable> UpdateAsync(
+        Variable variable,
+        CancellationToken cancellationToken)
+    {
+        ReplaceOptions options = new() { IsUpsert = false };
+
+        await _dbContext.Variables
+            .ReplaceOneAsync(x => x.Id == variable.Id, variable, options, cancellationToken);
+
+        return variable;
+    }
+
+    public IQueryable<Variable> Query() => _dbContext.Variables.AsQueryable();
+
+    private async Task<IEnumerable<VariableValue>> GetByApplicationPartIdAsyncInternal(
+        Guid partId,
+        IEnumerable<Guid>? variableIds,
+        CancellationToken cancellationToken)
+    {
+        FilterDefinition<VariableValue> filter = Filter.Eq(x => x.Key.PartId, partId);
+
+        if (variableIds is not null)
+        {
+            filter &= Filter.In(x => x.Key.VariableId, variableIds);
+        }
+
+        return await _dbContext.VariableValues.Find(filter).ToListAsync(cancellationToken);
+    }
+
+    private async Task<IEnumerable<VariableValue>> GetByApplicationIdAsyncInternal(
+        Guid applicationId,
+        IEnumerable<Guid>? variableIds,
         CancellationToken cancellationToken)
     {
         FilterDefinition<VariableValue> filter =
             Filter.And(
                 Filter.Eq(x => x.Key.ApplicationId, applicationId),
                 Filter.Type(x => x.Key.PartId, BsonType.Null));
+
+        if (variableIds is not null)
+        {
+            filter &= Filter.In(x => x.Key.VariableId, variableIds);
+        }
+
         return await _dbContext.VariableValues.Find(filter).ToListAsync(cancellationToken);
     }
 
-    public async Task<IEnumerable<VariableValue>> GetGlobalVariableValue(
+    private async Task<IEnumerable<VariableValue>> GetGlobalVariableValueInternal(
+        IEnumerable<Guid>? variableIds,
         CancellationToken cancellationToken)
     {
         FilterDefinition<VariableValue> filter =
             Filter.And(
                 Filter.Type(x => x.Key.ApplicationId, BsonType.Null),
                 Filter.Type(x => x.Key.PartId, BsonType.Null));
+
+        if (variableIds is not null)
+        {
+            filter &= Filter.In(x => x.Key.VariableId, variableIds);
+        }
+
         return await _dbContext.VariableValues.Find(filter).ToListAsync(cancellationToken);
     }
-
-    public async Task<IEnumerable<Variable>> GetManyAsync(
-        IEnumerable<Guid> ids,
-        CancellationToken cancellationToken)
-    {
-        return await _dbContext.Variables.AsQueryable()
-            .Where(x => ids.Contains(x.Id))
-            .ToListAsync(cancellationToken);
-    }
-
-    public async Task<Variable> CreateAsync(
-        Variable Variable,
-        CancellationToken cancellationToken)
-    {
-        await _dbContext.Variables.InsertOneAsync(
-            Variable,
-            options: null,
-            cancellationToken);
-
-        return Variable;
-    }
-
-    public async Task<Variable> UpdateAsync(
-        Variable Variable,
-        CancellationToken cancellationToken)
-    {
-        await _dbContext.Variables.ReplaceOneAsync(
-            x => x.Id == Variable.Id,
-            Variable,
-            new ReplaceOptions { IsUpsert = false },
-            cancellationToken);
-
-        return Variable;
-    }
-
-    public IQueryable<Variable> Query() => _dbContext.Variables.AsQueryable();
 }

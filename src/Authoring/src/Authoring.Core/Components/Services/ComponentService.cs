@@ -204,7 +204,7 @@ public sealed class ComponentService : IComponentService
 
         ISchema schema = _schemaService.CreateSchema(component.Schema);
 
-        return ValidateDictionary(values, schema.QueryType);
+        return ValidateDictionary(schema,values, schema.QueryType);
     }
 
     public async Task<Dictionary<string, object?>?> GetDefaultValuesAsync(
@@ -221,6 +221,6 @@ public sealed class ComponentService : IComponentService
         }
 
         ISchema schema = _schemaService.CreateSchema(component.Schema);
-        return CreateDefaultObjectValue(schema.QueryType);
+        return CreateDefaultObjectValue(schema,schema.QueryType);
     }
 }

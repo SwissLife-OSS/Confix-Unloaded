@@ -1,3 +1,4 @@
+using Confix.Authoring.Publishing.Stores;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Extensions.Context;
@@ -27,6 +28,7 @@ public static class MongoStoreServiceCollectionExtensions
         services.AddSingleton<IComponentStore, ComponentStore>();
         services.AddSingleton<IVariableStore, VariableStore>();
         services.AddSingleton<IVariableValueStore, VariableValueStore>();
+        services.AddSingleton<IPublishingStore, PublishingStore>();
 
         return services;
     }
