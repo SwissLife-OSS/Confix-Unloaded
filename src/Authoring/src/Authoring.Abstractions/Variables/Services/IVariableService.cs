@@ -23,6 +23,11 @@ public interface IVariableService
         CancellationToken cancellationToken);
 
     Task<IEnumerable<Variable>> GetAllAsync(CancellationToken cancellationToken);
+
+    Task<IEnumerable<Variable>> GetByNamesAsync(
+        IEnumerable<string> names,
+        CancellationToken cancellationToken);
+
     IQueryable<Variable> SearchVariables(string? search);
 
     Task<IEnumerable<Variable>> GetManyAsync(
@@ -74,6 +79,7 @@ public interface IVariableService
         IEnumerable<string> variableNames,
         Guid applicationId,
         Guid applicationPartId,
+        Guid environmentId,
         CancellationToken cancellationToken);
 }
 

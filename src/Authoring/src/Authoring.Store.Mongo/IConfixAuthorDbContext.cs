@@ -18,4 +18,6 @@ public interface IConfixAuthorDbContext
     IMongoCollection<VariableValue> VariableValues { get; }
 
     IMongoCollection<PublishedApplicationPart> PublishedApplicationParts { get; }
+
+    IMongoCollection<ClaimedVersion> ClaimedVersions { get; }
 }

@@ -14,6 +14,10 @@ public interface IVariableStore
 
     Task<Variable> GetByIdAsync(Guid id, CancellationToken cancellationToken);
 
+    Task<IEnumerable<Variable>> GetAllAsync(
+        IEnumerable<string> names,
+        CancellationToken cancellationToken);
+
     Task<IReadOnlyList<Variable>> GetByNamesAsync(
         IEnumerable<string> names,
         CancellationToken cancellationToken);

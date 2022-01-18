@@ -18,4 +18,11 @@ public interface IPublishingService
     Task<PublishedApplicationPart?> GetPublishedById(
         Guid id,
         CancellationToken cancellationToken);
+
+    Task<ClaimedVersion?> ClaimVersionAsync(
+        string gitVersion,
+        string applicationName,
+        string applicationPartName,
+        string environmentName,
+        CancellationToken cancellationToken);
 }

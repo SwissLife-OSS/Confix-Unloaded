@@ -27,6 +27,7 @@ public class ConfixAuthorDbContext : MongoDbContext, IConfixAuthorDbContext
             .ConfigureCollection(new ChangeLogCollectionConfiguration())
             .ConfigureCollection(new VariableCollectionConfiguration())
             .ConfigureCollection(new PublishedApplicationPartCollectionConfiguration())
+            .ConfigureCollection(new ClaimedVersionCollectionConfiguration())
             .ConfigureCollection(new VariableValueCollectionConfiguration())
             .ConfigureCollection(new ComponentCollectionConfiguration());
     }
@@ -51,4 +52,7 @@ public class ConfixAuthorDbContext : MongoDbContext, IConfixAuthorDbContext
 
     public IMongoCollection<PublishedApplicationPart> PublishedApplicationParts
         => CreateCollection<PublishedApplicationPart>().AsTransactionCollection();
+
+    public IMongoCollection<ClaimedVersion> ClaimedVersions
+        => CreateCollection<ClaimedVersion>().AsTransactionCollection();
 }

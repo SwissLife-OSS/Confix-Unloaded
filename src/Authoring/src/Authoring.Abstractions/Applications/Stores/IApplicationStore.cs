@@ -12,6 +12,10 @@ namespace Confix.Authoring.Store;
 /// </summary>
 public interface IApplicationStore
 {
+    Task<Application?> FindByApplicationNameAsync(
+        string applicationName,
+        CancellationToken cancellationToken = default);
+
     /// <summary>
     /// Gets the application by its <paramref name="id"/>.
     /// </summary>

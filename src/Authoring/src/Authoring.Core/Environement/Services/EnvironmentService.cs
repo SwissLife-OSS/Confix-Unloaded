@@ -10,14 +10,14 @@ namespace Confix.Authoring;
 
 public class EnvironmentService : IEnvironmentService
 {
-    private readonly IEnvironmentStore _appStore;
+    private readonly IEnvironmentStore _store;
     private readonly IDataLoader<Guid, Environment?> _environmentByIdDataLoader;
 
     public EnvironmentService(
-        IEnvironmentStore appStore,
+        IEnvironmentStore store,
         IDataLoader<Guid, Environment?> environmentByIdDataLoader)
     {
-        _appStore = appStore;
+        _store = store;
         _environmentByIdDataLoader = environmentByIdDataLoader;
     }
 
@@ -26,10 +26,15 @@ public class EnvironmentService : IEnvironmentService
         CancellationToken cancellationToken = default) =>
         _environmentByIdDataLoader.LoadAsync(environmentId, cancellationToken);
 
+    public Task<Environment?> GetByNameAsync(
+        string name,
+        CancellationToken cancellationToken = default)
+        => _store.GetByNameAsync(name, cancellationToken);
+
     public Task<IReadOnlyCollection<Environment>> GetManyByIdAsync(
         IEnumerable<Guid> environmentIds,
         CancellationToken cancellationToken = default) =>
-        _appStore.GetManyByIdAsync(environmentIds, cancellationToken);
+        _store.GetManyByIdAsync(environmentIds, cancellationToken);
 
     public async Task<Environment> CreateAsync(
         string name,
@@ -37,7 +42,7 @@ public class EnvironmentService : IEnvironmentService
     {
         Environment environment = new(Guid.NewGuid(), name);
 
-        await _appStore.AddAsync(environment, cancellationToken);
+        await _store.AddAsync(environment, cancellationToken);
 
         return environment;
     }
@@ -46,17 +51,17 @@ public class EnvironmentService : IEnvironmentService
         Guid environmentId,
         string name,
         CancellationToken cancellationToken = default) =>
-        await _appStore.RenameAsync(environmentId, name, cancellationToken) ??
+        await _store.RenameAsync(environmentId, name, cancellationToken) ??
         throw new EnvironmentNotFoundException(environmentId);
 
     public Task<Environment> DeleteById(Guid environmentId, CancellationToken cancellationToken) =>
-        _appStore.RemoveByIdAsync(environmentId, cancellationToken) ??
+        _store.RemoveByIdAsync(environmentId, cancellationToken) ??
         throw new EnvironmentNotFoundException(environmentId);
 
     public IQueryable<Environment> SearchAsync(
         string? search,
         CancellationToken cancellationToken = default)
     {
-        return _appStore.SearchAsync(search, cancellationToken);
+        return _store.SearchAsync(search, cancellationToken);
     }
 }

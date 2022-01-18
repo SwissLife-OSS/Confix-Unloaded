@@ -65,10 +65,18 @@ public class VariableService : IVariableService
         return await _variableStore.GetAllAsync(cancellationToken);
     }
 
+    public async Task<IEnumerable<Variable>> GetByNamesAsync(
+        IEnumerable<string> names,
+        CancellationToken cancellationToken)
+    {
+        return await _variableStore.GetByNamesAsync(names, cancellationToken);
+    }
+
     public async Task<IDictionary<string, VariableValue>> GetBestMatchingValuesAsync(
         IEnumerable<string> variableNames,
         Guid applicationId,
         Guid applicationPartId,
+        Guid environmentId,
         CancellationToken cancellationToken)
     {
         ISet<string> distinctNames = variableNames.ToHashSet();
@@ -85,7 +93,8 @@ public class VariableService : IVariableService
 
         foreach (VariableValue value in partValues)
         {
-            if (ids.TryGetValue(value.Key.VariableId, out Variable? variable))
+            if (ids.TryGetValue(value.Key.VariableId, out Variable? variable) &&
+                value.Key.EnvironmentId == environmentId)
             {
                 values[variable.Name] = value;
                 ids.Remove(value.Key.VariableId);
@@ -99,7 +108,8 @@ public class VariableService : IVariableService
 
         foreach (VariableValue value in appValues)
         {
-            if (ids.TryGetValue(value.Key.VariableId, out Variable? variable))
+            if (ids.TryGetValue(value.Key.VariableId, out Variable? variable) &&
+                value.Key.EnvironmentId == environmentId)
             {
                 values[variable.Name] = value;
                 ids.Remove(value.Key.VariableId);
@@ -111,7 +121,8 @@ public class VariableService : IVariableService
 
         foreach (VariableValue value in globalValues)
         {
-            if (ids.TryGetValue(value.Key.VariableId, out Variable? variable))
+            if (ids.TryGetValue(value.Key.VariableId, out Variable? variable) &&
+                value.Key.EnvironmentId == environmentId)
             {
                 values[variable.Name] = value;
                 ids.Remove(value.Key.VariableId);
@@ -304,7 +315,8 @@ public class VariableService : IVariableService
 
             variableValue = variableValue with
             {
-                Value = encrypted.CipherValue, Encryption = encrypted.EncryptionInfo,
+                Value = encrypted.CipherValue,
+                Encryption = encrypted.EncryptionInfo,
             };
         }
         else

@@ -61,6 +61,11 @@ public class ApplicationService : IApplicationService
         _applicationPartByIdDataloaderDataLoader
             .LoadAsync(componentPartId, cancellationToken);
 
+    public Task<Application?> FindByApplicationNameAsync(
+        string applicationName,
+        CancellationToken cancellationToken = default)
+        => _appStore.FindByApplicationNameAsync(applicationName, cancellationToken);
+
     public Task<IReadOnlyCollection<Application>> GetManyByIdAsync(
         IEnumerable<Guid> applicationIds,
         CancellationToken cancellationToken = default) =>

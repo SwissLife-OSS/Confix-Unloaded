@@ -36,7 +36,7 @@ public class ComponentNode
 
         DocumentNode document = Utf8GraphQLParser.Parse(component.Schema!);
 
-        Dictionary<string, TypeKind> typeKinds = CreateTypeKindLookup(document);
+        IDictionary<string, TypeKind> typeKinds = CreateTypeKindLookup(document);
         List<object> types = new();
 
         foreach (IDefinitionNode? definition in document.Definitions)
@@ -91,7 +91,7 @@ public class ComponentNode
 
     [GraphQLType(typeof(AnyType))]
     [BindMember(nameof(Component.Values))]
-    public async Task<Dictionary<string, object?>?> GetValues(
+    public async Task<IDictionary<string, object?>?> GetValues(
         [Parent] Component component,
         [Service] IComponentService componentService,
         CancellationToken cancellationToken)
@@ -115,7 +115,7 @@ public class ComponentNode
     }
 
     [GraphQLType(typeof(AnyType))]
-    public async Task<Dictionary<string, object?>?> GetDefaults(
+    public async Task<IDictionary<string, object?>?> GetDefaults(
         [Parent] Component component,
         [Service] IComponentService componentService,
         CancellationToken cancellationToken) =>
@@ -131,7 +131,7 @@ public class ComponentNode
             return Array.Empty<SchemaViolation>();
         }
 
-        Dictionary<string, object?>? values =
+        IDictionary<string, object?>? values =
             await GetValues(component, componentService, cancellationToken);
 
         if (values is null)
@@ -145,20 +145,20 @@ public class ComponentNode
             cancellationToken);
     }
 
-    private Dictionary<string, object?> CreateFieldDto(
+    private IDictionary<string, object?> CreateFieldDto(
         FieldDefinitionNode field,
-        Dictionary<string, TypeKind> typeKinds)
+        IDictionary<string, TypeKind> typeKinds)
     {
         // TODO : add validator
-        return new()
+        return new Dictionary<string, object?>()
         {
             { "name", field.Name.Value }, { "type", CreateTypeDto(field.Type, typeKinds) }
         };
     }
 
-    private Dictionary<string, object?> CreateTypeDto(
+    private IDictionary<string, object?> CreateTypeDto(
         ITypeNode type,
-        Dictionary<string, TypeKind> typeKinds)
+        IDictionary<string, TypeKind> typeKinds)
     {
         return type switch
         {
@@ -178,9 +178,9 @@ public class ComponentNode
         };
     }
 
-    private Dictionary<string, TypeKind> CreateTypeKindLookup(DocumentNode document)
+    private IDictionary<string, TypeKind> CreateTypeKindLookup(DocumentNode document)
     {
-        Dictionary<string, TypeKind> typeKinds = new()
+        IDictionary<string, TypeKind> typeKinds = new Dictionary<string, TypeKind>()
         {
             { ScalarNames.String, TypeKind.Scalar },
             { ScalarNames.Int, TypeKind.Scalar },

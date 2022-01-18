@@ -10,3 +10,12 @@ public class PublishingException : Exception
 
     public string Code => "PublishingError";
 }
+
+public class ClaimVersionFailedException : Exception
+{
+    public ClaimVersionFailedException(string? message) : base(message)
+    {
+    }
+
+    public string Code => "ClaimVersionError";
+}

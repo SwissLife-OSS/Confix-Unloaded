@@ -11,6 +11,10 @@ public interface IEnvironmentService
         Guid id,
         CancellationToken cancellationToken = default);
 
+    Task<Environment?> GetByNameAsync(
+        string name,
+        CancellationToken cancellationToken = default);
+
     Task<Environment> CreateAsync(
         string name,
         CancellationToken cancellationToken = default);

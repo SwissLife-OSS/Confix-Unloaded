@@ -80,7 +80,7 @@ public static class ValueHelper
         IDictionary<string, object?> value,
         IType type)
     {
-        var schemaViolations = new List<SchemaViolation>();
+        List<SchemaViolation> schemaViolations = new();
         ValidateDictionary(schema, value, type, Path.Root, schemaViolations);
         return schemaViolations;
     }

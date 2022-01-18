@@ -28,6 +28,16 @@ public class EnvironmentStore : IEnvironmentStore
             .SingleAsync(cancellationToken);
     }
 
+    public async Task<Environment?> GetByNameAsync(
+        string name,
+        CancellationToken cancellationToken)
+    {
+        return await _dbContext.Environments
+            .AsQueryable()
+            .Where(x => x.Name == name)
+            .FirstOrDefaultAsync(cancellationToken);
+    }
+
     public async Task<IReadOnlyCollection<Environment>> GetManyByIdAsync(
         IEnumerable<Guid> ids,
         CancellationToken cancellationToken)

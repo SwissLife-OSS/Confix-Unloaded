@@ -24,6 +24,15 @@ public class VariableStore : IVariableStore
             .AsQueryable()
             .ToListAsync(cancellationToken);
 
+    public async Task<IEnumerable<Variable>> GetAllAsync(
+        IEnumerable<string> names,
+        CancellationToken cancellationToken)
+    {
+        FilterDefinition<Variable> filter = Builders<Variable>.Filter.In(x => x.Name, names);
+
+        return await _dbContext.Variables.Find(filter).ToListAsync(cancellationToken);
+    }
+
     public async Task<Variable> GetByIdAsync(
         Guid id,
         CancellationToken cancellationToken)
