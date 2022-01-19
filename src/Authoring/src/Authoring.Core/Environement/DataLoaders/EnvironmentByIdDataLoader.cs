@@ -25,9 +25,7 @@ public class EnvironmentByIdDataLoader : BatchDataLoader<Guid, Environment?>
         CancellationToken cancellationToken)
     {
         IEnumerable<Environment> applications =
-            await _applicationStore.GetManyByIdAsync(
-                keys,
-                cancellationToken);
+            await _applicationStore.GetManyByIdAsync(keys, cancellationToken);
 
         return applications.ToDictionary(x => x.Id)!;
     }

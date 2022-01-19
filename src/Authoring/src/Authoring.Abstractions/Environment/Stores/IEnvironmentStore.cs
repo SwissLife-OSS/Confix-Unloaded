@@ -24,6 +24,10 @@ public interface IEnvironmentStore
         Environment environment,
         CancellationToken cancellationToken);
 
+    Task<Environment> UpdateAsync(
+        Environment environment,
+        CancellationToken cancellationToken);
+
     Task<Environment?> RenameAsync(
         Guid environmentId,
         string name,

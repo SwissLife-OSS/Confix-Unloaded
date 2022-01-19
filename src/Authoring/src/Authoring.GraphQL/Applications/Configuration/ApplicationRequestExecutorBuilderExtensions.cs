@@ -46,6 +46,7 @@ public static class ApplicationRequestExecutorBuilderExtensions
             .AddType<RenameApplicationPartChange>()
             .AddType<AddComponentToApplicationPartChange>()
             .AddType<AddPartToApplicationChange>()
+            .AddType<PublishedApplicationPartChange>()
             .AddType<RemovePartFromApplicationChange>()
             .AddType<RemoveComponentFromApplicationPartChange>()
             .AddType<ApplicationPartComponentValuesChange>();

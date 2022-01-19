@@ -8,18 +8,18 @@ public record ClaimedVersion
     public ClaimedVersion(
         Guid id,
         string gitVersion,
-        string applicationName,
-        string applicationPartName,
-        string environmentName,
+        Guid applicationId,
+        Guid applicationPartId,
+        Guid environmentId,
         Guid publishingId,
         string configuration,
         DateTime claimedAt)
     {
         Id = id;
         GitVersion = gitVersion;
-        ApplicationName = applicationName;
-        ApplicationPartName = applicationPartName;
-        EnvironmentName = environmentName;
+        ApplicationId = applicationId;
+        ApplicationPartId = applicationPartId;
+        EnvironmentId = environmentId;
         PublishingId = publishingId;
         Configuration = configuration;
         ClaimedAt = claimedAt;
@@ -30,13 +30,12 @@ public record ClaimedVersion
 
     public string GitVersion { get; init; }
 
-    public string ApplicationName { get; init; }
+    public Guid ApplicationId { get; init; }
 
-    public string ApplicationPartName { get; init; }
+    public Guid ApplicationPartId { get; init; }
 
-    public string EnvironmentName { get; init; }
+    public Guid EnvironmentId { get; init; }
 
-    [ID(nameof(PublishedApplicationPart))]
     public Guid PublishingId { get; init; }
 
     public string Configuration { get; init; }

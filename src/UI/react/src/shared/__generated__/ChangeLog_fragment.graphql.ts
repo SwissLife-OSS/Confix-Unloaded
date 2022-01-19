@@ -10,9 +10,9 @@ export type ChangeLog_fragment = ReadonlyArray<{
     readonly change: {
         readonly kind: string;
         readonly __typename: string;
-        readonly " $fragmentRefs": FragmentRefs<"ChangeLog_RenameApplicationChange" | "ChangeLog_RenameApplicationPartChange" | "ChangeLog_AddComponentToApplicationPartChange" | "ChangeLog_AddPartToApplicationChange" | "ChangeLog_RemoveComponentFromApplicationPartChange" | "ChangeLog_RemovePartFromApplicationChange" | "ChangeLog_ApplicationPartComponentValuesChange" | "ChangeLog_ComponentSchemaChange" | "ChangeLog_ComponentValuesChange" | "ChangeLog_CreateComponentChange" | "ChangeLog_RemoveComponentChange" | "ChangeLog_RenameComponentChange" | "ChangeLog_CreateVariableChange" | "ChangeLog_DeleteVariableValueChange" | "ChangeLog_RenameVariableChange" | "ChangeLog_VariableValueChange">;
+        readonly " $fragmentRefs": FragmentRefs<"ChangeLog_RenameApplicationChange" | "ChangeLog_RenameApplicationPartChange" | "ChangeLog_AddComponentToApplicationPartChange" | "ChangeLog_AddPartToApplicationChange" | "ChangeLog_RemoveComponentFromApplicationPartChange" | "ChangeLog_RemovePartFromApplicationChange" | "ChangeLog_ApplicationPartComponentValuesChange" | "ChangeLog_ComponentSchemaChange" | "ChangeLog_ComponentValuesChange" | "ChangeLog_CreateComponentChange" | "ChangeLog_RemoveComponentChange" | "ChangeLog_RenameComponentChange" | "ChangeLog_CreateVariableChange" | "ChangeLog_DeleteVariableValueChange" | "ChangeLog_RenameVariableChange" | "ChangeLog_VariableValueChange" | "ChangeLog_PublishedApplicationPartChange">;
     };
-    readonly modifiedAt: unknown;
+    readonly modifiedAt: Date;
     readonly modifiedBy: {
         readonly email: string | null;
     };
@@ -142,6 +142,11 @@ const node: ReaderFragment = {
           "args": null,
           "kind": "FragmentSpread",
           "name": "ChangeLog_VariableValueChange"
+        },
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "ChangeLog_PublishedApplicationPartChange"
         }
       ],
       "storageKey": null
@@ -175,5 +180,5 @@ const node: ReaderFragment = {
   "type": "ChangeLog",
   "abstractKey": null
 };
-(node as any).hash = 'a5478522d32e0f89178944f233e70940';
+(node as any).hash = '2ed28345f3883f7ce3e3d24416457c40';
 export default node;

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,6 +27,11 @@ public interface IEnvironmentService
 
     Task<Environment> DeleteById(
         Guid environmentId,
+        CancellationToken cancellationToken = default);
+
+    Task<Environment> SetParent(
+        Guid environmentId,
+        Guid parentId,
         CancellationToken cancellationToken = default);
 
     IQueryable<Environment> SearchAsync(

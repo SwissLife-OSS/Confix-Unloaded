@@ -21,11 +21,12 @@ public class PublishedApplicationPartByIdDataloader
         _publishingStore = publishingStore;
     }
 
-    protected override async Task<IReadOnlyDictionary<Guid, PublishedApplicationPart>> LoadBatchAsync(IReadOnlyList<Guid> keys, CancellationToken cancellationToken)
+    protected override async Task<IReadOnlyDictionary<Guid, PublishedApplicationPart>>
+        LoadBatchAsync(IReadOnlyList<Guid> keys, CancellationToken cancellationToken)
     {
         IReadOnlyList<PublishedApplicationPart> results =
-            await _publishingStore.GetByApplicationIdsAsync(keys, cancellationToken);
+            await _publishingStore.GetPublishedApplicationPartByIdsAsync(keys, cancellationToken);
 
-        return results.ToDictionary(x => x.Part.Id);
+        return results.ToDictionary(x => x.Id);
     }
 }

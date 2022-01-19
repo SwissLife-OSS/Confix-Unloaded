@@ -90,4 +90,8 @@ public interface IApplicationService
         Guid partComponentId,
         IDictionary<string, object?> values,
         CancellationToken cancellationToken = default);
+
+    Task<Application> PublishApplicationPartAsync(
+        Guid applicationPartId,
+        CancellationToken cancellationToken = default);
 }

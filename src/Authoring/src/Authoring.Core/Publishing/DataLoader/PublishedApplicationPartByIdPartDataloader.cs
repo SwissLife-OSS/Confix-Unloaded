@@ -28,6 +28,6 @@ public class PublishedApplicationPartByIdPartDataloader
         IReadOnlyList<PublishedApplicationPart> results =
             await _publishingStore.GetByApplicationPartIdsAsync(keys, cancellationToken);
 
-        return results.ToLookup(x => x.Part.Id);
+        return results.OrderByDescending(x => x.PublishedAt).ToLookup(x => x.Part.Id);
     }
 }

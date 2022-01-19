@@ -20,7 +20,7 @@ export type EditApplicationPart_fragment = {
         };
         readonly " $fragmentRefs": FragmentRefs<"EditApplicationPartComponent_component">;
     }>;
-    readonly " $fragmentRefs": FragmentRefs<"EditApplicationPart_VariableValues_Fragment" | "EditApplicationPart_ChangeLog_Fragment">;
+    readonly " $fragmentRefs": FragmentRefs<"EditApplicationPart_VariableValues_Fragment" | "EditApplicationPart_ChangeLog_Fragment" | "EditApplicationPart_DeployedEnvironment_Fragment">;
     readonly " $refType": "EditApplicationPart_fragment";
 };
 export type EditApplicationPart_fragment$data = EditApplicationPart_fragment;
@@ -131,11 +131,21 @@ return {
           "name": "EditApplicationPart_ChangeLog_Fragment"
         }
       ]
+    },
+    {
+      "kind": "Defer",
+      "selections": [
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "EditApplicationPart_DeployedEnvironment_Fragment"
+        }
+      ]
     }
   ],
   "type": "ApplicationPart",
   "abstractKey": null
 };
 })();
-(node as any).hash = '28b4550393d1a8b057fc14fd5f2f129d';
+(node as any).hash = 'aa9a04adda386381a0cb80200505c726';
 export default node;

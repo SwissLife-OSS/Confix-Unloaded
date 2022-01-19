@@ -10,7 +10,7 @@ export const ApplicationPartComponentSectionHeader: React.FC<{
   const [isEdit, , enable, disable] = useToggle();
   return (
     <>
-      <SectionHeader title="Components" onAdd={enable}>
+      <SectionHeader title="Overview" onAdd={enable}>
         {children}
       </SectionHeader>
       <AddComponentsToApplicationPartDialog

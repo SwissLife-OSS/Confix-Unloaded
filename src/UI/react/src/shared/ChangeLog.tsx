@@ -20,6 +20,7 @@ import {
   ChangeLog_fragment,
   ChangeLog_fragment$key,
 } from "./__generated__/ChangeLog_fragment.graphql";
+import { ChangeLog_PublishedApplicationPartChange$key } from "./__generated__/ChangeLog_PublishedApplicationPartChange.graphql";
 import { ChangeLog_RemoveComponentChange$key } from "./__generated__/ChangeLog_RemoveComponentChange.graphql";
 import { ChangeLog_RemoveComponentFromApplicationPartChange$key } from "./__generated__/ChangeLog_RemoveComponentFromApplicationPartChange.graphql";
 import { ChangeLog_RemovePartFromApplicationChange$key } from "./__generated__/ChangeLog_RemovePartFromApplicationChange.graphql";
@@ -53,6 +54,7 @@ const changeLogFragment = graphql`
       ...ChangeLog_DeleteVariableValueChange
       ...ChangeLog_RenameVariableChange
       ...ChangeLog_VariableValueChange
+      ...ChangeLog_PublishedApplicationPartChange
     }
     modifiedAt
     modifiedBy {
@@ -153,6 +155,11 @@ const columns = [
         }
         case "VariableValueChange": {
           return <ChangeLogVariableValueChange data={value.change} />;
+        }
+        case "PublishedApplicationPartChange": {
+          return (
+            <ChangeLogPublishedApplicationPartChange data={value.change} />
+          );
         }
       }
       return <>{value.change.__typename}</>;
@@ -601,4 +608,29 @@ const ChangeLogRenameVariableChange: React.FC<{
     data
   );
   return <>Variable renamed to {variable?.name}</>;
+};
+
+const changeLogPublishedApplicationPartChange = graphql`
+  fragment ChangeLog_PublishedApplicationPartChange on PublishedApplicationPartChange {
+    partVersion
+    part {
+      name
+    }
+  }
+`;
+
+const ChangeLogPublishedApplicationPartChange: React.FC<{
+  data: ChangeLog_PublishedApplicationPartChange$key;
+}> = ({ data }) => {
+  const { partVersion, part } =
+    useFragment<ChangeLog_PublishedApplicationPartChange$key>(
+      changeLogPublishedApplicationPartChange,
+      data
+    );
+  return (
+    <>
+      Application part {part?.name ?? "DELETED"} published in Version{" "}
+      {partVersion}
+    </>
+  );
 };

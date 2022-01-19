@@ -17,8 +17,13 @@ public interface IPublishingStore
         IEnumerable<Guid> partIds,
         CancellationToken cancellationToken);
 
-    Task<IReadOnlyList<PublishedApplicationPart>> GetByApplicationIdsAsync(
+    Task<IReadOnlyList<PublishedApplicationPart>> GetPublishedApplicationPartByIdsAsync(
         IEnumerable<Guid> partIds,
+        CancellationToken cancellationToken);
+
+    Task<IReadOnlyList<ClaimedVersion>> GetClaimedVersionAsync(
+        Guid partId,
+        Guid environmentId,
         CancellationToken cancellationToken);
 
     Task<PublishedApplicationPart?> GetMostRecentByApplicationPartIdAsync(
@@ -33,9 +38,13 @@ public interface IPublishingStore
         ClaimedVersion claimedVersion,
         CancellationToken cancellationToken);
 
+    Task<IEnumerable<Guid>> GetDeployedEnvironmentsByPartIdAsync(
+        Guid partId,
+        CancellationToken cancellationToken);
+
     Task<ClaimedVersion?> GetClaimedVersionByGitVersionAsync(
         string gitVersion,
-        string applicationName,
-        string applicationPartName,
+        Guid applicationId,
+        Guid applicationPartId,
         CancellationToken cancellationToken);
 }

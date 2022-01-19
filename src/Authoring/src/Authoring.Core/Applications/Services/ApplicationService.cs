@@ -499,4 +499,42 @@ public class ApplicationService : IApplicationService
 
         return applicationPartComponent;
     }
+
+    public async Task<Application> PublishApplicationPartAsync(
+        Guid applicationPartId,
+        CancellationToken cancellationToken = default)
+    {
+        Application? application =
+            await _appStore.GetByPartIdAsync(applicationPartId, cancellationToken);
+        ApplicationPart? applicationPart =
+            application?.Parts.FirstOrDefault(x => x.Id == applicationPartId);
+
+        if (application is null || applicationPart is null)
+        {
+            throw new ApplicationPartNotFoundException(applicationPartId);
+        }
+
+        var updatedApplicationPart = applicationPart with { Version = applicationPart.Version + 1 };
+        application = application with
+        {
+            Version = application.Version + 1,
+            Parts = application.Parts.Replace(applicationPart, () => updatedApplicationPart)
+        };
+
+        PublishedApplicationPartChange log = new(
+            application.Id,
+            application.Version,
+            updatedApplicationPart.Id,
+            updatedApplicationPart.Version);
+
+        using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+        {
+            await _changeLogService.CreateAsync(log, cancellationToken);
+            await _appStore.ReplaceAsync(application, cancellationToken);
+
+            transaction.Complete();
+        }
+
+        return application;
+    }
 }

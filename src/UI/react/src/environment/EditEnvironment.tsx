@@ -1,5 +1,5 @@
 import { useFragment, useLazyLoadQuery } from "react-relay";
-import { Col, Row } from "antd";
+import { Button, Col, Row } from "antd";
 import { DetailView } from "../shared/DetailView";
 import { graphql } from "babel-plugin-relay/macro";
 import { EditEnvironmentQuery } from "./__generated__/EditEnvironmentQuery.graphql";
@@ -10,8 +10,10 @@ import React from "react";
 import { EditEnvironment_Environment$key } from "./__generated__/EditEnvironment_Environment.graphql";
 import { css } from "@emotion/react";
 import { useParams } from "react-router";
+import { FieldInputGroup } from "../shared/FormField";
+import { SetParentEnvironmentDialog } from "./controls/dialogs/SetParentEnvironmentDialog";
 
-const EnvironmentByIdQuery = graphql`
+const environmentByIdQuery = graphql`
   query EditEnvironmentQuery($id: ID!) {
     environmentById(id: $id) {
       id
@@ -19,18 +21,21 @@ const EnvironmentByIdQuery = graphql`
     }
   }
 `;
-
 const editEnvironmentFragment = graphql`
   fragment EditEnvironment_Environment on Environment {
     id
     name
+    parent {
+      id
+      name
+    }
   }
 `;
 
 export const EditEnvironment = () => {
   const { environmentId = "" } = useParams();
   const Environment = useLazyLoadQuery<EditEnvironmentQuery>(
-    EnvironmentByIdQuery,
+    environmentByIdQuery,
     {
       id: environmentId,
     }
@@ -48,11 +53,10 @@ const EditEnvironmentForm: React.FC<{
   id: string;
   data: NonNullable<EditEnvironmentQuery["response"]["environmentById"]>;
 }> = ({ data, id }) => {
-  const Environment = useFragment<EditEnvironment_Environment$key>(
+  const env = useFragment<EditEnvironment_Environment$key>(
     editEnvironmentFragment,
     data
   );
-
   return (
     <DetailView
       style={{ padding: 1 }}
@@ -64,11 +68,43 @@ const EditEnvironmentForm: React.FC<{
     >
       <Row>
         <Col xs={24}>
-          <Header name={Environment.name} id={Environment.id} />
+          <Header name={env.name} id={env.id} />
         </Col>
       </Row>
-      <Row>What should we put here?</Row>
+      <Row>
+        <Col xs={24}>
+          <ParentEnvironement data={data} />
+        </Col>
+      </Row>
     </DetailView>
+  );
+};
+
+const ParentEnvironement: React.FC<{
+  data: EditEnvironment_Environment$key;
+}> = ({ data }) => {
+  const environment = useFragment<EditEnvironment_Environment$key>(
+    editEnvironmentFragment,
+    data
+  );
+  const [visible, , enable, disable] = useToggle();
+
+  return (
+    <>
+      <FieldInputGroup
+        name={"Parent"}
+        label={"Parent"}
+        value={environment?.parent?.name ?? "-"}
+        disabled
+      />
+      <Button onClick={enable}>Change</Button>
+      <SetParentEnvironmentDialog
+        visible={visible}
+        onClose={disable}
+        name={environment.name}
+        id={environment.id}
+      />
+    </>
   );
 };
 

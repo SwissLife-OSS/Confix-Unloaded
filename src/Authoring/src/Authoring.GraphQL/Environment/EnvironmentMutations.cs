@@ -33,4 +33,13 @@ public class EnvironmentMutations
         [ID(nameof(Environment))] Guid id,
         CancellationToken cancellationToken)
         => await environmentService.DeleteById(id, cancellationToken);
+
+    [Error(typeof(EnvironmentNotFoundError))]
+    [Error(typeof(EnvironmentCycleDetectedException))]
+    public async Task<Environment> SetParentOfEnvironment(
+        [Service] IEnvironmentService environmentService,
+        [ID(nameof(Environment))] Guid environmentId,
+        [ID(nameof(Environment))] Guid parentId,
+        CancellationToken cancellationToken)
+        => await environmentService.SetParent(environmentId, parentId, cancellationToken);
 }

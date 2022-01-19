@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Confix.Authoring.DataLoaders;
+using Confix.Authoring.Publishing;
 using Confix.Authoring.Store;
 using GreenDonut;
 
@@ -54,8 +56,10 @@ public class EnvironmentService : IEnvironmentService
         await _store.RenameAsync(environmentId, name, cancellationToken) ??
         throw new EnvironmentNotFoundException(environmentId);
 
-    public Task<Environment> DeleteById(Guid environmentId, CancellationToken cancellationToken) =>
-        _store.RemoveByIdAsync(environmentId, cancellationToken) ??
+    public async Task<Environment> DeleteById(
+        Guid environmentId,
+        CancellationToken cancellationToken) =>
+        await _store.RemoveByIdAsync(environmentId, cancellationToken) ??
         throw new EnvironmentNotFoundException(environmentId);
 
     public IQueryable<Environment> SearchAsync(
@@ -63,5 +67,69 @@ public class EnvironmentService : IEnvironmentService
         CancellationToken cancellationToken = default)
     {
         return _store.SearchAsync(search, cancellationToken);
+    }
+
+    public async Task<Environment> SetParent(
+        Guid environmentId,
+        Guid parentId,
+        CancellationToken cancellationToken = default)
+    {
+        if (parentId == environmentId)
+        {
+            throw ThrowHelper.EnvironmentCycleDetected(Array.Empty<string>());
+        }
+
+        Task<Environment?> environementFetch =
+            _store.GetByIdAsync(environmentId, cancellationToken);
+        Task<Environment?> parentFetch =
+            _store.GetByIdAsync(parentId, cancellationToken);
+
+        Environment? environement = await environementFetch;
+        Environment? parent = await parentFetch;
+
+        if (environement is null)
+        {
+            throw ThrowHelper.EnvironmentWasNotFound(environmentId);
+        }
+
+        if (parent is null)
+        {
+            throw ThrowHelper.EnvironmentWasNotFound(parentId);
+        }
+
+        await EnsureNoCycleAsync(environement, parent, cancellationToken);
+
+        environement = environement with { ParentId = parent.Id };
+
+        return await _store.UpdateAsync(environement, cancellationToken);
+    }
+
+    private async Task EnsureNoCycleAsync(
+        Environment environment,
+        Environment parent,
+        CancellationToken cancellationToken)
+    {
+        HashSet<Guid> visited = new() { environment.Id, parent.Id };
+        List<string> path = new() { environment.Name, parent.Name };
+        Environment? next = parent;
+
+        while (next is { ParentId: { } nextParent } &&
+               !cancellationToken.IsCancellationRequested)
+        {
+            next = await _environmentByIdDataLoader
+                .LoadAsync(nextParent, cancellationToken);
+
+            if (next is null)
+            {
+                return;
+            }
+
+            path.Add(next.Name);
+
+            if (!visited.Add(next.Id))
+            {
+                throw ThrowHelper.EnvironmentCycleDetected(path);
+            }
+        }
     }
 }

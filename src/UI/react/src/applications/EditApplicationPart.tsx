@@ -49,6 +49,11 @@ import { EditApplicationPart_ChangeLog_Fragment$key } from "./__generated__/Edit
 import { ChangeLog } from "../shared/ChangeLog";
 import { useTabSwitcher } from "../shared/useTabSwitcher";
 import { PublishApplicationPartDialog } from "./dialogs/PublishApplicationPartDialog";
+import {
+  EditApplicationPart_DeployedEnvironment_Fragment,
+  EditApplicationPart_DeployedEnvironment_Fragment$key,
+} from "./__generated__/EditApplicationPart_DeployedEnvironment_Fragment.graphql";
+import { DeployedEnvironmentsOverview } from "./components/DeployedEnvironmentsOverview";
 
 const applicationByIdQuery = graphql`
   query EditApplicationPart_GetById_Query($id: ID!) {
@@ -78,6 +83,17 @@ const applicationPartfragment = graphql`
     }
     ...EditApplicationPart_VariableValues_Fragment @defer
     ...EditApplicationPart_ChangeLog_Fragment @defer
+    ...EditApplicationPart_DeployedEnvironment_Fragment @defer
+  }
+`;
+
+const applicationDeployedEnvironmentPart = graphql`
+  fragment EditApplicationPart_DeployedEnvironment_Fragment on ApplicationPart {
+    deployments {
+      nodes {
+        ...DeployedEnvironmentsOverviewFragment
+      }
+    }
   }
 `;
 
@@ -144,14 +160,15 @@ export const EditApplicationPart = () => {
       </Row>
       <Row>
         <Col xs={24}>
-          <ApplicationPartComponentSectionHeader
-            applicationPartId={id}
-            applicationPartName={applicationPartName}
-          />
-        </Col>
-        <Col xs={24}>
           <Tabs defaultActiveKey={tab} key={tab} onChange={navigateToTab}>
-            <Tabs.TabPane tab="Components" key="edit">
+            <Tabs.TabPane tab="Overview" key="edit">
+              <Title>
+                <h3>Deployments</h3>
+              </Title>
+              <DeployedEnvironments data={applicationPartById} />
+              <Title>
+                <h3>Components</h3>
+              </Title>
               <Components
                 applicationId={applicationId}
                 components={components}
@@ -232,6 +249,21 @@ const Variables: React.FC<{
       </Row>
     </>
   );
+};
+
+const DeployedEnvironments: React.FC<{
+  data: EditApplicationPart_DeployedEnvironment_Fragment$key;
+}> = ({ data }) => {
+  const { deployments } = useFragment(applicationDeployedEnvironmentPart, data);
+  if (!deployments?.nodes || deployments.nodes.length === 0) {
+    return <Empty description="This part was never deployed"></Empty>;
+  } else {
+    return (
+      <Row>
+        <DeployedEnvironmentsOverview data={deployments?.nodes} />
+      </Row>
+    );
+  }
 };
 
 const Components: React.FC<{
@@ -377,3 +409,8 @@ const ApplicationPartChangeLog: React.FC<{
 
   return <ChangeLog data={changeLog} />;
 };
+
+const Title = styled("div")`
+  flex: 1;
+  padding: 15px 0px;
+`;

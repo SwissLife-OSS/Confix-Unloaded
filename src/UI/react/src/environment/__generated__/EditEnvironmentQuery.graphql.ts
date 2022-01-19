@@ -34,6 +34,10 @@ query EditEnvironmentQuery(
 fragment EditEnvironment_Environment on Environment {
   id
   name
+  parent {
+    id
+    name
+  }
 }
 */
 
@@ -57,6 +61,13 @@ v2 = {
   "args": null,
   "kind": "ScalarField",
   "name": "id",
+  "storageKey": null
+},
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
   "storageKey": null
 };
 return {
@@ -102,11 +113,18 @@ return {
         "plural": false,
         "selections": [
           (v2/*: any*/),
+          (v3/*: any*/),
           {
             "alias": null,
             "args": null,
-            "kind": "ScalarField",
-            "name": "name",
+            "concreteType": "Environment",
+            "kind": "LinkedField",
+            "name": "parent",
+            "plural": false,
+            "selections": [
+              (v2/*: any*/),
+              (v3/*: any*/)
+            ],
             "storageKey": null
           }
         ],
@@ -115,12 +133,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "cf93a65e36bf4a3f4347f52a7c2696c0",
+    "cacheID": "0423a419f545768e873201cf6acd2c22",
     "id": null,
     "metadata": {},
     "name": "EditEnvironmentQuery",
     "operationKind": "query",
-    "text": "query EditEnvironmentQuery(\n  $id: ID!\n) {\n  environmentById(id: $id) {\n    id\n    ...EditEnvironment_Environment\n  }\n}\n\nfragment EditEnvironment_Environment on Environment {\n  id\n  name\n}\n"
+    "text": "query EditEnvironmentQuery(\n  $id: ID!\n) {\n  environmentById(id: $id) {\n    id\n    ...EditEnvironment_Environment\n  }\n}\n\nfragment EditEnvironment_Environment on Environment {\n  id\n  name\n  parent {\n    id\n    name\n  }\n}\n"
   }
 };
 })();

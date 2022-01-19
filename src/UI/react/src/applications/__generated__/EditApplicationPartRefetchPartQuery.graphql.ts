@@ -91,6 +91,14 @@ fragment ChangeLog_DeleteVariableValueChange on DeleteVariableValueChange {
   }
 }
 
+fragment ChangeLog_PublishedApplicationPartChange on PublishedApplicationPartChange {
+  partVersion
+  part {
+    name
+    id
+  }
+}
+
 fragment ChangeLog_RemoveComponentChange on RemoveComponentChange {
   component {
     name
@@ -165,10 +173,45 @@ fragment ChangeLog_fragment on ChangeLog {
     ...ChangeLog_DeleteVariableValueChange
     ...ChangeLog_RenameVariableChange
     ...ChangeLog_VariableValueChange
+    ...ChangeLog_PublishedApplicationPartChange
   }
   modifiedAt
   modifiedBy {
     email
+  }
+}
+
+fragment DeployedEnvironmentsOverviewFragment on DeployedEnvironment {
+  environment {
+    id
+    name
+    parent {
+      id
+      name
+    }
+  }
+  claimedVersions {
+    nodes {
+      gitVersion
+      application {
+        name
+        id
+      }
+      applicationPart {
+        name
+        id
+      }
+      publishedApplicationPart {
+        id
+        version
+        publishedAt
+      }
+      environment {
+        name
+        id
+      }
+      id
+    }
   }
 }
 
@@ -185,6 +228,14 @@ fragment EditApplicationPart_ChangeLog_Fragment on ApplicationPart {
   changeLog {
     ...ChangeLog_fragment
     id
+  }
+}
+
+fragment EditApplicationPart_DeployedEnvironment_Fragment on ApplicationPart {
+  deployments {
+    nodes {
+      ...DeployedEnvironmentsOverviewFragment
+    }
   }
 }
 
@@ -212,6 +263,7 @@ fragment EditApplicationPart_fragment on ApplicationPart {
   }
   ...EditApplicationPart_VariableValues_Fragment @defer(label: "EditApplicationPart_fragment$defer$EditApplicationPart_VariableValues_Fragment")
   ...EditApplicationPart_ChangeLog_Fragment @defer(label: "EditApplicationPart_fragment$defer$EditApplicationPart_ChangeLog_Fragment")
+  ...EditApplicationPart_DeployedEnvironment_Fragment @defer(label: "EditApplicationPart_fragment$defer$EditApplicationPart_DeployedEnvironment_Fragment")
 }
 
 fragment VariableValueList_values on VariableValue {
@@ -291,7 +343,14 @@ v8 = [
 v9 = [
   (v3/*: any*/)
 ],
-v10 = [
+v10 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "version",
+  "storageKey": null
+},
+v11 = [
   {
     "alias": null,
     "args": null,
@@ -303,7 +362,7 @@ v10 = [
     "storageKey": null
   }
 ],
-v11 = [
+v12 = [
   {
     "alias": null,
     "args": null,
@@ -602,13 +661,7 @@ return {
                                 "plural": false,
                                 "selections": [
                                   (v3/*: any*/),
-                                  {
-                                    "alias": null,
-                                    "args": null,
-                                    "kind": "ScalarField",
-                                    "name": "version",
-                                    "storageKey": null
-                                  }
+                                  (v10/*: any*/)
                                 ],
                                 "storageKey": null
                               },
@@ -625,44 +678,68 @@ return {
                           },
                           {
                             "kind": "InlineFragment",
-                            "selections": (v10/*: any*/),
+                            "selections": (v11/*: any*/),
                             "type": "CreateComponentChange",
                             "abstractKey": null
                           },
                           {
                             "kind": "InlineFragment",
-                            "selections": (v10/*: any*/),
+                            "selections": (v11/*: any*/),
                             "type": "RemoveComponentChange",
                             "abstractKey": null
                           },
                           {
                             "kind": "InlineFragment",
-                            "selections": (v10/*: any*/),
+                            "selections": (v11/*: any*/),
                             "type": "RenameComponentChange",
                             "abstractKey": null
                           },
                           {
                             "kind": "InlineFragment",
-                            "selections": (v11/*: any*/),
+                            "selections": (v12/*: any*/),
                             "type": "CreateVariableChange",
                             "abstractKey": null
                           },
                           {
                             "kind": "InlineFragment",
-                            "selections": (v11/*: any*/),
+                            "selections": (v12/*: any*/),
                             "type": "DeleteVariableValueChange",
                             "abstractKey": null
                           },
                           {
                             "kind": "InlineFragment",
-                            "selections": (v11/*: any*/),
+                            "selections": (v12/*: any*/),
                             "type": "RenameVariableChange",
                             "abstractKey": null
                           },
                           {
                             "kind": "InlineFragment",
-                            "selections": (v11/*: any*/),
+                            "selections": (v12/*: any*/),
                             "type": "VariableValueChange",
+                            "abstractKey": null
+                          },
+                          {
+                            "kind": "InlineFragment",
+                            "selections": [
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "partVersion",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "concreteType": "ApplicationPart",
+                                "kind": "LinkedField",
+                                "name": "part",
+                                "plural": false,
+                                "selections": (v7/*: any*/),
+                                "storageKey": null
+                              }
+                            ],
+                            "type": "PublishedApplicationPartChange",
                             "abstractKey": null
                           }
                         ],
@@ -697,6 +774,138 @@ return {
                     "storageKey": null
                   }
                 ]
+              },
+              {
+                "if": null,
+                "kind": "Defer",
+                "label": "EditApplicationPart_fragment$defer$EditApplicationPart_DeployedEnvironment_Fragment",
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "DeploymentsConnection",
+                    "kind": "LinkedField",
+                    "name": "deployments",
+                    "plural": false,
+                    "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "DeployedEnvironment",
+                        "kind": "LinkedField",
+                        "name": "nodes",
+                        "plural": true,
+                        "selections": [
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "Environment",
+                            "kind": "LinkedField",
+                            "name": "environment",
+                            "plural": false,
+                            "selections": [
+                              (v3/*: any*/),
+                              (v4/*: any*/),
+                              {
+                                "alias": null,
+                                "args": null,
+                                "concreteType": "Environment",
+                                "kind": "LinkedField",
+                                "name": "parent",
+                                "plural": false,
+                                "selections": (v5/*: any*/),
+                                "storageKey": null
+                              }
+                            ],
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "ClaimedVersionsConnection",
+                            "kind": "LinkedField",
+                            "name": "claimedVersions",
+                            "plural": false,
+                            "selections": [
+                              {
+                                "alias": null,
+                                "args": null,
+                                "concreteType": "ClaimedVersion",
+                                "kind": "LinkedField",
+                                "name": "nodes",
+                                "plural": true,
+                                "selections": [
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "gitVersion",
+                                    "storageKey": null
+                                  },
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "concreteType": "Application",
+                                    "kind": "LinkedField",
+                                    "name": "application",
+                                    "plural": false,
+                                    "selections": (v7/*: any*/),
+                                    "storageKey": null
+                                  },
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "concreteType": "ApplicationPart",
+                                    "kind": "LinkedField",
+                                    "name": "applicationPart",
+                                    "plural": false,
+                                    "selections": (v7/*: any*/),
+                                    "storageKey": null
+                                  },
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "concreteType": "PublishedApplicationPart",
+                                    "kind": "LinkedField",
+                                    "name": "publishedApplicationPart",
+                                    "plural": false,
+                                    "selections": [
+                                      (v3/*: any*/),
+                                      (v10/*: any*/),
+                                      {
+                                        "alias": null,
+                                        "args": null,
+                                        "kind": "ScalarField",
+                                        "name": "publishedAt",
+                                        "storageKey": null
+                                      }
+                                    ],
+                                    "storageKey": null
+                                  },
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "concreteType": "Environment",
+                                    "kind": "LinkedField",
+                                    "name": "environment",
+                                    "plural": false,
+                                    "selections": (v7/*: any*/),
+                                    "storageKey": null
+                                  },
+                                  (v3/*: any*/)
+                                ],
+                                "storageKey": null
+                              }
+                            ],
+                            "storageKey": null
+                          }
+                        ],
+                        "storageKey": null
+                      }
+                    ],
+                    "storageKey": null
+                  }
+                ]
               }
             ],
             "type": "ApplicationPart",
@@ -708,14 +917,14 @@ return {
     ]
   },
   "params": {
-    "cacheID": "5cfe3384531437f8bae5c4b2f71251dc",
+    "cacheID": "5f7f3fe065a84088365d0a18f263e76c",
     "id": null,
     "metadata": {},
     "name": "EditApplicationPartRefetchPartQuery",
     "operationKind": "query",
-    "text": "query EditApplicationPartRefetchPartQuery(\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...EditApplicationPart_fragment\n    id\n  }\n}\n\nfragment ChangeLog_AddComponentToApplicationPartChange on AddComponentToApplicationPartChange {\n  addedComponent {\n    definition {\n      name\n      id\n    }\n    id\n  }\n}\n\nfragment ChangeLog_AddPartToApplicationChange on AddPartToApplicationChange {\n  addedPart {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_ApplicationPartComponentValuesChange on ApplicationPartComponentValuesChange {\n  part {\n    id\n  }\n  application {\n    id\n  }\n  partComponent {\n    id\n    version\n  }\n  partComponentVersion\n}\n\nfragment ChangeLog_ComponentSchemaChange on ComponentSchemaChange {\n  kind\n}\n\nfragment ChangeLog_ComponentValuesChange on ComponentValuesChange {\n  kind\n}\n\nfragment ChangeLog_CreateComponentChange on CreateComponentChange {\n  component {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_CreateVariableChange on CreateVariableChange {\n  variable {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_DeleteVariableValueChange on DeleteVariableValueChange {\n  variable {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_RemoveComponentChange on RemoveComponentChange {\n  component {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_RemoveComponentFromApplicationPartChange on RemoveComponentFromApplicationPartChange {\n  removedComponent {\n    definition {\n      name\n      id\n    }\n    id\n  }\n}\n\nfragment ChangeLog_RemovePartFromApplicationChange on RemovePartFromApplicationChange {\n  removedPart {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_RenameApplicationChange on RenameApplicationChange {\n  name\n}\n\nfragment ChangeLog_RenameApplicationPartChange on RenameApplicationPartChange {\n  name\n}\n\nfragment ChangeLog_RenameComponentChange on RenameComponentChange {\n  component {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_RenameVariableChange on RenameVariableChange {\n  variable {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_VariableValueChange on VariableValueChange {\n  variable {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_fragment on ChangeLog {\n  id\n  change {\n    kind\n    __typename\n    ...ChangeLog_RenameApplicationChange\n    ...ChangeLog_RenameApplicationPartChange\n    ...ChangeLog_AddComponentToApplicationPartChange\n    ...ChangeLog_AddPartToApplicationChange\n    ...ChangeLog_RemoveComponentFromApplicationPartChange\n    ...ChangeLog_RemovePartFromApplicationChange\n    ...ChangeLog_ApplicationPartComponentValuesChange\n    ...ChangeLog_ComponentSchemaChange\n    ...ChangeLog_ComponentValuesChange\n    ...ChangeLog_CreateComponentChange\n    ...ChangeLog_RemoveComponentChange\n    ...ChangeLog_RenameComponentChange\n    ...ChangeLog_CreateVariableChange\n    ...ChangeLog_DeleteVariableValueChange\n    ...ChangeLog_RenameVariableChange\n    ...ChangeLog_VariableValueChange\n  }\n  modifiedAt\n  modifiedBy {\n    email\n  }\n}\n\nfragment EditApplicationPartComponent_component on ApplicationPartComponent {\n  id\n  definition {\n    id\n    name\n    state\n  }\n}\n\nfragment EditApplicationPart_ChangeLog_Fragment on ApplicationPart {\n  changeLog {\n    ...ChangeLog_fragment\n    id\n  }\n}\n\nfragment EditApplicationPart_VariableValues_Fragment on ApplicationPart {\n  variableValues {\n    ...VariableValueList_values\n    id\n  }\n}\n\nfragment EditApplicationPart_fragment on ApplicationPart {\n  id\n  name\n  application {\n    id\n    namespace\n    name\n  }\n  components {\n    id\n    definition {\n      id\n    }\n    ...EditApplicationPartComponent_component\n  }\n  ...EditApplicationPart_VariableValues_Fragment @defer(label: \"EditApplicationPart_fragment$defer$EditApplicationPart_VariableValues_Fragment\")\n  ...EditApplicationPart_ChangeLog_Fragment @defer(label: \"EditApplicationPart_fragment$defer$EditApplicationPart_ChangeLog_Fragment\")\n}\n\nfragment VariableValueList_values on VariableValue {\n  id\n  environment {\n    id\n    name\n  }\n  variable {\n    id\n    name\n  }\n  value\n}\n"
+    "text": "query EditApplicationPartRefetchPartQuery(\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...EditApplicationPart_fragment\n    id\n  }\n}\n\nfragment ChangeLog_AddComponentToApplicationPartChange on AddComponentToApplicationPartChange {\n  addedComponent {\n    definition {\n      name\n      id\n    }\n    id\n  }\n}\n\nfragment ChangeLog_AddPartToApplicationChange on AddPartToApplicationChange {\n  addedPart {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_ApplicationPartComponentValuesChange on ApplicationPartComponentValuesChange {\n  part {\n    id\n  }\n  application {\n    id\n  }\n  partComponent {\n    id\n    version\n  }\n  partComponentVersion\n}\n\nfragment ChangeLog_ComponentSchemaChange on ComponentSchemaChange {\n  kind\n}\n\nfragment ChangeLog_ComponentValuesChange on ComponentValuesChange {\n  kind\n}\n\nfragment ChangeLog_CreateComponentChange on CreateComponentChange {\n  component {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_CreateVariableChange on CreateVariableChange {\n  variable {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_DeleteVariableValueChange on DeleteVariableValueChange {\n  variable {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_PublishedApplicationPartChange on PublishedApplicationPartChange {\n  partVersion\n  part {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_RemoveComponentChange on RemoveComponentChange {\n  component {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_RemoveComponentFromApplicationPartChange on RemoveComponentFromApplicationPartChange {\n  removedComponent {\n    definition {\n      name\n      id\n    }\n    id\n  }\n}\n\nfragment ChangeLog_RemovePartFromApplicationChange on RemovePartFromApplicationChange {\n  removedPart {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_RenameApplicationChange on RenameApplicationChange {\n  name\n}\n\nfragment ChangeLog_RenameApplicationPartChange on RenameApplicationPartChange {\n  name\n}\n\nfragment ChangeLog_RenameComponentChange on RenameComponentChange {\n  component {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_RenameVariableChange on RenameVariableChange {\n  variable {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_VariableValueChange on VariableValueChange {\n  variable {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_fragment on ChangeLog {\n  id\n  change {\n    kind\n    __typename\n    ...ChangeLog_RenameApplicationChange\n    ...ChangeLog_RenameApplicationPartChange\n    ...ChangeLog_AddComponentToApplicationPartChange\n    ...ChangeLog_AddPartToApplicationChange\n    ...ChangeLog_RemoveComponentFromApplicationPartChange\n    ...ChangeLog_RemovePartFromApplicationChange\n    ...ChangeLog_ApplicationPartComponentValuesChange\n    ...ChangeLog_ComponentSchemaChange\n    ...ChangeLog_ComponentValuesChange\n    ...ChangeLog_CreateComponentChange\n    ...ChangeLog_RemoveComponentChange\n    ...ChangeLog_RenameComponentChange\n    ...ChangeLog_CreateVariableChange\n    ...ChangeLog_DeleteVariableValueChange\n    ...ChangeLog_RenameVariableChange\n    ...ChangeLog_VariableValueChange\n    ...ChangeLog_PublishedApplicationPartChange\n  }\n  modifiedAt\n  modifiedBy {\n    email\n  }\n}\n\nfragment DeployedEnvironmentsOverviewFragment on DeployedEnvironment {\n  environment {\n    id\n    name\n    parent {\n      id\n      name\n    }\n  }\n  claimedVersions {\n    nodes {\n      gitVersion\n      application {\n        name\n        id\n      }\n      applicationPart {\n        name\n        id\n      }\n      publishedApplicationPart {\n        id\n        version\n        publishedAt\n      }\n      environment {\n        name\n        id\n      }\n      id\n    }\n  }\n}\n\nfragment EditApplicationPartComponent_component on ApplicationPartComponent {\n  id\n  definition {\n    id\n    name\n    state\n  }\n}\n\nfragment EditApplicationPart_ChangeLog_Fragment on ApplicationPart {\n  changeLog {\n    ...ChangeLog_fragment\n    id\n  }\n}\n\nfragment EditApplicationPart_DeployedEnvironment_Fragment on ApplicationPart {\n  deployments {\n    nodes {\n      ...DeployedEnvironmentsOverviewFragment\n    }\n  }\n}\n\nfragment EditApplicationPart_VariableValues_Fragment on ApplicationPart {\n  variableValues {\n    ...VariableValueList_values\n    id\n  }\n}\n\nfragment EditApplicationPart_fragment on ApplicationPart {\n  id\n  name\n  application {\n    id\n    namespace\n    name\n  }\n  components {\n    id\n    definition {\n      id\n    }\n    ...EditApplicationPartComponent_component\n  }\n  ...EditApplicationPart_VariableValues_Fragment @defer(label: \"EditApplicationPart_fragment$defer$EditApplicationPart_VariableValues_Fragment\")\n  ...EditApplicationPart_ChangeLog_Fragment @defer(label: \"EditApplicationPart_fragment$defer$EditApplicationPart_ChangeLog_Fragment\")\n  ...EditApplicationPart_DeployedEnvironment_Fragment @defer(label: \"EditApplicationPart_fragment$defer$EditApplicationPart_DeployedEnvironment_Fragment\")\n}\n\nfragment VariableValueList_values on VariableValue {\n  id\n  environment {\n    id\n    name\n  }\n  variable {\n    id\n    name\n  }\n  value\n}\n"
   }
 };
 })();
-(node as any).hash = '28b4550393d1a8b057fc14fd5f2f129d';
+(node as any).hash = 'aa9a04adda386381a0cb80200505c726';
 export default node;

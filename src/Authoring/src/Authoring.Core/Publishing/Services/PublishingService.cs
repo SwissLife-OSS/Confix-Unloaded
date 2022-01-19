@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Security.Claims;
-using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Transactions;
+using Confix.Authoring.Extensions;
 using Confix.Authoring.Publishing.Stores;
 using Confix.Authoring.Store;
 using GreenDonut;
@@ -56,6 +57,7 @@ public class PublishingService : IPublishingService
     {
         Application? application =
             await _applicationService.GetByPartIdAsync(partId, cancellationToken);
+
         ApplicationPart? applicationPart = application?.Parts.FirstOrDefault(x => x.Id == partId);
 
         if (application is null || applicationPart is null)
@@ -68,17 +70,25 @@ public class PublishingService : IPublishingService
 
         UserInfo userInfo = _sessionAccessor.GetUserInfo();
 
-        PublishedApplicationPart published =
-            new(Guid.NewGuid(),
-                applicationPart.Version,
-                applicationPart,
-                configuration,
-                DateTime.UtcNow,
-                userInfo);
+        using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+        {
+            application = await _applicationService
+                .PublishApplicationPartAsync(applicationPart.Id, cancellationToken);
+            applicationPart = application.Parts.Single(x => x.Id == applicationPart.Id);
 
-        await _publishingStore.CreateAsync(published, cancellationToken);
+            PublishedApplicationPart published =
+                new(Guid.NewGuid(),
+                    applicationPart.Version,
+                    applicationPart,
+                    configuration,
+                    DateTime.UtcNow,
+                    userInfo);
 
-        return published;
+            await _publishingStore.CreateAsync(published, cancellationToken);
+            scope.Complete();
+
+            return published;
+        }
     }
 
     public async Task<IReadOnlyList<PublishedApplicationPart>> GetPublishedByPartId(
@@ -86,6 +96,21 @@ public class PublishingService : IPublishingService
         CancellationToken cancellationToken)
         => await _publishedApplicationPartById.LoadAsync(partId, cancellationToken)
             ?? Array.Empty<PublishedApplicationPart>();
+
+    public async Task<IReadOnlyList<Environment>> GetDeployedEnvironmentByPartIdAsync(
+        Guid partId,
+        CancellationToken cancellationToken)
+    {
+        IEnumerable<Guid> environmentIds = await _publishingStore
+            .GetDeployedEnvironmentsByPartIdAsync(partId, cancellationToken);
+
+        return await environmentIds
+            .Select(x => _environmentService.GetByIdAsync(x, cancellationToken))
+            .ToAsyncEnumerable()
+            .SelectAwait(async x => await x)
+            .OfType<Environment>()
+            .ToListAsync(cancellationToken);
+    }
 
     public async Task<PublishedApplicationPart?> GetPublishedById(
         Guid id,
@@ -104,28 +129,33 @@ public class PublishingService : IPublishingService
 
         if (env is null)
         {
-            // TODO Exception
-            return null;
+            throw ThrowHelper.ClaimFailedBecauseEnvWasNotFound(
+                applicationName,
+                applicationPartName,
+                environmentName);
         }
 
         Application? app = await _applicationService
             .FindByApplicationNameAsync(applicationName, cancellationToken);
 
-        ApplicationPart? part = app?.Parts.FirstOrDefault(x => x.Name == applicationPartName);
-
-        if (app is null || part is null)
+        if (app is null)
         {
-            // TODO Exception
-            return null;
+            throw ThrowHelper.ClaimFailedBecauseApplicationWasNotFound(
+                applicationName,
+                applicationPartName);
         }
 
+        ApplicationPart? part = app.Parts.FirstOrDefault(x => x.Name == applicationPartName);
+
+        if (part is null)
+        {
+            throw ThrowHelper.ClaimFailedBecauseApplicationPartWasNotFound(
+                applicationName,
+                applicationPartName);
+        }
 
         ClaimedVersion? claimedVersion = await _publishingStore
-            .GetClaimedVersionByGitVersionAsync(
-                gitVersion,
-                applicationName,
-                applicationPartName,
-                cancellationToken);
+            .GetClaimedVersionByGitVersionAsync(gitVersion, app.Id, part.Id, cancellationToken);
 
         PublishedApplicationPart? publishedApplicationPart = null;
         if (claimedVersion?.PublishingId is { } publishingId)
@@ -141,8 +171,10 @@ public class PublishingService : IPublishingService
 
         if (publishedApplicationPart is null)
         {
-            // TODO Exception
-            return null;
+            throw ThrowHelper.ClaimFailedBecauseNoPublishedConfigurationWasFound(
+                applicationName,
+                applicationPartName,
+                environmentName);
         }
 
         string variableReplaced = await ReplaceVariableValuesAsync(
@@ -156,9 +188,9 @@ public class PublishingService : IPublishingService
         ClaimedVersion version = new ClaimedVersion(
             Guid.NewGuid(),
             gitVersion,
-            applicationName,
-            applicationPartName,
-            environmentName,
+            app.Id,
+            part.Id,
+            env.Id,
             publishedApplicationPart.Id,
             variableReplaced,
             DateTime.UtcNow);
@@ -219,7 +251,9 @@ public class PublishingService : IPublishingService
             if (!resolvesValues.TryGetValue(variable.VariableName, out VariableValue? value))
             {
                 throw ThrowHelper
-                    .ClaimFailedBecauseVariableValueWasNotPresent(part, environment.Name, variable.VariableName);
+                    .ClaimFailedBecauseVariableValueWasNotPresent(part,
+                        environment.Name,
+                        variable.VariableName);
             }
 
             variable.SetValue(JsonValue.Create(value.Value)!);
@@ -285,6 +319,12 @@ public class PublishingService : IPublishingService
         return new ComponentLookup(components, part);
     }
 
+    public Task<IReadOnlyList<ClaimedVersion>> GetClaimedVersionAsync(
+        Guid partId,
+        Guid environmentId,
+        CancellationToken cancellationToken)
+        => _publishingStore.GetClaimedVersionAsync(partId, environmentId, cancellationToken);
+
     private class ComponentLookup
     {
         private readonly IDictionary<Guid, Component> _components;
@@ -301,61 +341,4 @@ public class PublishingService : IPublishingService
                 ? component
                 : throw ThrowHelper.PublishingFailedBecauseComponentWasNotFound(_part, componentId);
     }
-}
-
-public static class JsonNodeSerializer
-{
-    public static IDictionary<string, object?> DeserializeToDictionary(JsonObject node)
-    {
-        Dictionary<string, object?> dictionary = new();
-        foreach (var elm in node)
-        {
-            dictionary[elm.Key] = DeserializeToDictionary(elm.Value);
-        }
-
-        return dictionary;
-    }
-
-    public static object?[] DeserializeToDictionary(JsonArray node)
-    {
-        var results = new object?[node.Count];
-        for (var i = 0; i < node.Count; i++)
-        {
-            results[i] = DeserializeToDictionary(node[i]);
-        }
-
-        return results;
-    }
-
-
-    public static object? DeserializeToDictionary(JsonValue value)
-    {
-        JsonElement element = value.GetValue<JsonElement>();
-
-        switch (element.ValueKind)
-        {
-            case JsonValueKind.String:
-                return element.GetString();
-
-            case JsonValueKind.Number:
-                return element.GetDouble();
-
-            case JsonValueKind.True:
-                return true;
-
-            case JsonValueKind.False:
-                return false;
-        }
-
-        return null;
-    }
-
-    public static object? DeserializeToDictionary(JsonNode? node) =>
-        node switch
-        {
-            JsonObject a => DeserializeToDictionary(a),
-            JsonArray a => DeserializeToDictionary(a),
-            JsonValue a => DeserializeToDictionary(a),
-            _ => null,
-        };
 }

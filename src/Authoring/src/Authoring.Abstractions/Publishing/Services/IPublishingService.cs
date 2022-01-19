@@ -15,6 +15,15 @@ public interface IPublishingService
         Guid partId,
         CancellationToken cancellationToken);
 
+    Task<IReadOnlyList<ClaimedVersion>> GetClaimedVersionAsync(
+        Guid partId,
+        Guid environmentId,
+        CancellationToken cancellationToken);
+
+    Task<IReadOnlyList<Environment>> GetDeployedEnvironmentByPartIdAsync(
+        Guid partId,
+        CancellationToken cancellationToken);
+
     Task<PublishedApplicationPart?> GetPublishedById(
         Guid id,
         CancellationToken cancellationToken);
