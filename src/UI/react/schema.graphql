@@ -697,6 +697,7 @@ type PublishedApplicationPart implements Node {
   configuration: String!
   publishedAt: DateTime!
   publishedBy: UserInfo!
+  claimsVersions: [ClaimedVersion!]!
 }
 
 type PublishedApplicationPartChange implements ApplicationPartChange & ApplicationChange & Change {

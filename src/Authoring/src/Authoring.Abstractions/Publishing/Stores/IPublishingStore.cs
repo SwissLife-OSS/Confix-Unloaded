@@ -26,6 +26,10 @@ public interface IPublishingStore
         Guid environmentId,
         CancellationToken cancellationToken);
 
+    Task<IReadOnlyList<ClaimedVersion>> GetClaimedVersionByPublishingIdAsync(
+        Guid publishingId,
+        CancellationToken cancellationToken);
+
     Task<PublishedApplicationPart?> GetMostRecentByApplicationPartIdAsync(
         Guid partId,
         CancellationToken cancellationToken);

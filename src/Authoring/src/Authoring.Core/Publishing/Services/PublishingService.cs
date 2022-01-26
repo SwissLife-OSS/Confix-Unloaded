@@ -104,13 +104,14 @@ public class PublishingService : IPublishingService
         IEnumerable<Guid> environmentIds = await _publishingStore
             .GetDeployedEnvironmentsByPartIdAsync(partId, cancellationToken);
 
-        return await environmentIds
-            .Select(x => _environmentService.GetByIdAsync(x, cancellationToken))
-            .ToAsyncEnumerable()
-            .SelectAwait(async x => await x)
-            .OfType<Environment>()
-            .ToListAsync(cancellationToken);
+        return await _environmentService.GetByIdsAsync(environmentIds, cancellationToken);
     }
+
+    public async Task<IReadOnlyList<ClaimedVersion>> GetClaimedVersionByPublishedPartIdAsync(
+        Guid publishedApplicationId,
+        CancellationToken cancellationToken)
+        => await _publishingStore
+            .GetClaimedVersionByPublishingIdAsync(publishedApplicationId, cancellationToken);
 
     public async Task<PublishedApplicationPart?> GetPublishedById(
         Guid id,

@@ -23,6 +23,16 @@ public class EnvironmentService : IEnvironmentService
         _environmentByIdDataLoader = environmentByIdDataLoader;
     }
 
+    public async Task<IReadOnlyList<Environment>> GetByIdsAsync(
+        IEnumerable<Guid> ids,
+        CancellationToken cancellationToken = default)
+    {
+        IReadOnlyList<Environment?> envs =
+            await _environmentByIdDataLoader.LoadAsync(ids.ToArray(), cancellationToken);
+
+        return envs.OfType<Environment>().ToArray();
+    }
+
     public Task<Environment?> GetByIdAsync(
         Guid environmentId,
         CancellationToken cancellationToken = default) =>

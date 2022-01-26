@@ -31,3 +31,4 @@ public class DeployedEnvironment
         => await service
             .GetClaimedVersionAsync(_applicationPartId, _environmentId, cancellationToken);
 }
+

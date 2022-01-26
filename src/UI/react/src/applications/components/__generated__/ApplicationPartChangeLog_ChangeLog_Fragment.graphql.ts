@@ -5,16 +5,16 @@
 import { ReaderFragment } from "relay-runtime";
 
 import { FragmentRefs } from "relay-runtime";
-export type EditApplicationPart_ChangeLog_Fragment = {
+export type ApplicationPartChangeLog_ChangeLog_Fragment = {
     readonly changeLog: ReadonlyArray<{
         readonly " $fragmentRefs": FragmentRefs<"ChangeLog_fragment">;
     }>;
-    readonly " $refType": "EditApplicationPart_ChangeLog_Fragment";
+    readonly " $refType": "ApplicationPartChangeLog_ChangeLog_Fragment";
 };
-export type EditApplicationPart_ChangeLog_Fragment$data = EditApplicationPart_ChangeLog_Fragment;
-export type EditApplicationPart_ChangeLog_Fragment$key = {
-    readonly " $data"?: EditApplicationPart_ChangeLog_Fragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"EditApplicationPart_ChangeLog_Fragment">;
+export type ApplicationPartChangeLog_ChangeLog_Fragment$data = ApplicationPartChangeLog_ChangeLog_Fragment;
+export type ApplicationPartChangeLog_ChangeLog_Fragment$key = {
+    readonly " $data"?: ApplicationPartChangeLog_ChangeLog_Fragment$data | undefined;
+    readonly " $fragmentRefs": FragmentRefs<"ApplicationPartChangeLog_ChangeLog_Fragment">;
 };
 
 
@@ -23,7 +23,7 @@ const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "EditApplicationPart_ChangeLog_Fragment",
+  "name": "ApplicationPartChangeLog_ChangeLog_Fragment",
   "selections": [
     {
       "alias": null,
@@ -45,5 +45,5 @@ const node: ReaderFragment = {
   "type": "ApplicationPart",
   "abstractKey": null
 };
-(node as any).hash = '813036fe24c5529c94fa8aa6ae147f97';
+(node as any).hash = 'a182f2cf2a041a527ef43a2dd2266b7a';
 export default node;

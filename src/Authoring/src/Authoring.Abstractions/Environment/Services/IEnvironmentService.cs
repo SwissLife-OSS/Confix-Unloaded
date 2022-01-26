@@ -12,6 +12,10 @@ public interface IEnvironmentService
         Guid id,
         CancellationToken cancellationToken = default);
 
+    Task<IReadOnlyList<Environment>> GetByIdsAsync(
+        IEnumerable<Guid> ids,
+        CancellationToken cancellationToken = default);
+
     Task<Environment?> GetByNameAsync(
         string name,
         CancellationToken cancellationToken = default);

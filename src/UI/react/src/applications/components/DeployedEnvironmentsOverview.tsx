@@ -40,7 +40,6 @@ const deployedEnvironmentsOverview = graphql`
     }
   }
 `;
-
 export const DeployedEnvironmentsOverview: React.FC<{
   data: DeployedEnvironmentsOverviewFragment$key;
 }> = ({ data }) => {

@@ -39,7 +39,8 @@ public class PublishingStore : IPublishingStore
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<IReadOnlyList<PublishedApplicationPart>> GetPublishedApplicationPartByIdsAsync(
+    public async Task<IReadOnlyList<PublishedApplicationPart>>
+        GetPublishedApplicationPartByIdsAsync(
         IEnumerable<Guid> partIds,
         CancellationToken cancellationToken)
     {
@@ -47,6 +48,22 @@ public class PublishingStore : IPublishingStore
 
         return await _dbContext.PublishedApplicationParts
             .Find(filter)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<IReadOnlyList<ClaimedVersion>> GetClaimedVersionByPublishingIdAsync(
+        Guid publishingId,
+        CancellationToken cancellationToken)
+    {
+        FilterDefinition<ClaimedVersion> filter =
+            Claimed.Filter.Eq(x => x.PublishingId, publishingId);
+
+        SortDefinition<ClaimedVersion> sort =
+            Claimed.Sort.Descending(x => x.ClaimedAt);
+
+        return await _dbContext.ClaimedVersions
+            .Find(filter)
+            .Sort(sort)
             .ToListAsync(cancellationToken);
     }
 

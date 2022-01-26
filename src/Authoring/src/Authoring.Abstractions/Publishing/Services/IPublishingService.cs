@@ -24,6 +24,10 @@ public interface IPublishingService
         Guid partId,
         CancellationToken cancellationToken);
 
+    Task<IReadOnlyList<ClaimedVersion>> GetClaimedVersionByPublishedPartIdAsync(
+        Guid publishedApplicationId,
+        CancellationToken cancellationToken);
+
     Task<PublishedApplicationPart?> GetPublishedById(
         Guid id,
         CancellationToken cancellationToken);
