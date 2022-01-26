@@ -23,6 +23,11 @@ public interface IVariableService
         CancellationToken cancellationToken);
 
     Task<IEnumerable<Variable>> GetAllAsync(CancellationToken cancellationToken);
+
+    Task<IEnumerable<Variable>> GetByNamesAsync(
+        IEnumerable<string> names,
+        CancellationToken cancellationToken);
+
     IQueryable<Variable> SearchVariables(string? search);
 
     Task<IEnumerable<Variable>> GetManyAsync(
@@ -69,6 +74,13 @@ public interface IVariableService
         Guid id,
         string name,
         CancellationToken cancellationToken);
+
+    Task<IDictionary<string, VariableValue>> GetBestMatchingValuesAsync(
+        IEnumerable<string> variableNames,
+        Guid applicationId,
+        Guid applicationPartId,
+        Guid environmentId,
+        CancellationToken cancellationToken);
 }
 
 public interface IVariableCryptoProvider
@@ -84,11 +96,6 @@ public interface IVariableCryptoProvider
 }
 
 public record ValueEncryptionResult(VariableEncryptionInfo EncryptionInfo, string CipherValue);
-
-public record GetVariableValuesRequest(VariableValueFilter Filter)
-{
-    public bool Decrypt { get; init; }
-}
 
 public record VariableValueFilter(Guid Id)
 {

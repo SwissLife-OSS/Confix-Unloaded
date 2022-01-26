@@ -25,6 +25,10 @@ public interface IApplicationService
         Guid partComponentId,
         CancellationToken cancellationToken = default);
 
+    Task<Application?> FindByApplicationNameAsync(
+        string applicationName,
+        CancellationToken cancellationToken = default);
+
     Task<IReadOnlyCollection<Application>> GetManyByIdAsync(
         IEnumerable<Guid> ids,
         CancellationToken cancellationToken = default);
@@ -85,5 +89,9 @@ public interface IApplicationService
     Task<ApplicationPartComponent> SetApplicationPartComponentValues(
         Guid partComponentId,
         IDictionary<string, object?> values,
+        CancellationToken cancellationToken = default);
+
+    Task<Application> PublishApplicationPartAsync(
+        Guid applicationPartId,
         CancellationToken cancellationToken = default);
 }

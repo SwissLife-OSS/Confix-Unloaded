@@ -3,6 +3,7 @@ using Confix.Authoring.DataLoaders;
 using GreenDonut;
 using HotChocolate.Execution.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Confix.Authoring.GraphQL.Relay;
 
 namespace Confix.Authoring.GraphQL;
 
@@ -17,14 +18,15 @@ public static class EnvironmentsRequestExecutorBuilderExtensions
             .AddScoped<IDataLoader<Guid, Environment?>>(
                 sp => sp.GetRequiredService<EnvironmentByIdDataLoader>());
 
-        // TODO: Node
+        builder.AddTypeExtension<EnvironmentNode>();
 
         // types
         builder
             .AddTypeExtension<EnvironmentQueries>()
             .AddTypeExtension<EnvironmentMutations>();
 
-        // TODO: Change Log
+        // extensions
+        builder.AddTypeExtension<EnvironmentExtensions>();
 
         return builder;
     }

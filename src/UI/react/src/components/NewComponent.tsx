@@ -41,7 +41,7 @@ export const NewComponent: React.FC = () => {
   const [commit, isInFlight] =
     useMutation<NewComponentMutation>(newComponentMutation);
   const connectionId = useConnectionId("Query_components");
-  const goToEdit = useGoTo((id: string) => `${id}/edit`);
+  const goToEdit = useGoTo((id: string) => `../${id}/edit`);
   const form = useCommitForm(
     commit,
     {

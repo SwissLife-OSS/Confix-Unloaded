@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Transactions;
@@ -61,7 +63,7 @@ public sealed class ComponentService : IComponentService
     public async Task<Component> CreateAsync(
         string name,
         string? schemaSdl,
-        Dictionary<string, object?>? values,
+        IDictionary<string, object?>? values,
         CancellationToken cancellationToken)
     {
         if (string.IsNullOrEmpty(name))
@@ -156,7 +158,7 @@ public sealed class ComponentService : IComponentService
 
     public async Task<Component> SetValuesAsync(
         Guid id,
-        Dictionary<string, object?> values,
+        IDictionary<string, object?> values,
         CancellationToken cancellationToken)
     {
         Component component = await _componentById.LoadAsync(id, cancellationToken);
@@ -169,11 +171,7 @@ public sealed class ComponentService : IComponentService
         string serializedValues =
             _schemaService.CreateValuesForSchema(component.Schema, values);
 
-        component = component with
-        {
-            Values = serializedValues,
-            Version = component.Version + 1
-        };
+        component = component with { Values = serializedValues, Version = component.Version + 1 };
 
         ComponentValuesChange log = new(component.Id, component.Version, serializedValues);
 
@@ -189,7 +187,7 @@ public sealed class ComponentService : IComponentService
 
     public async Task<IReadOnlyList<SchemaViolation>> GetSchemaViolationsAsync(
         Guid id,
-        Dictionary<string, object?> values,
+        string values,
         CancellationToken cancellationToken)
     {
         Component component = await _componentById.LoadAsync(
@@ -204,10 +202,35 @@ public sealed class ComponentService : IComponentService
 
         ISchema schema = _schemaService.CreateSchema(component.Schema);
 
-        return ValidateDictionary(values, schema.QueryType);
+        Dictionary<string, object?> dictionary =
+            DeserializeDictionary(
+                JsonSerializer.Deserialize<JsonElement>(values),
+                schema.QueryType);
+
+        return ValidateDictionary(schema, dictionary, schema.QueryType);
     }
 
-    public async Task<Dictionary<string, object?>?> GetDefaultValuesAsync(
+    public async Task<IReadOnlyList<SchemaViolation>> GetSchemaViolationsAsync(
+        Guid id,
+        IDictionary<string, object?> values,
+        CancellationToken cancellationToken)
+    {
+        Component component = await _componentById.LoadAsync(
+            id,
+            cancellationToken);
+
+        if (component.Schema is null)
+        {
+            // TODO proper exception
+            throw new InvalidOperationException("There is no schema.");
+        }
+
+        ISchema schema = _schemaService.CreateSchema(component.Schema);
+
+        return ValidateDictionary(schema, values, schema.QueryType);
+    }
+
+    public async Task<IDictionary<string, object?>?> GetDefaultValuesAsync(
         Guid id,
         CancellationToken cancellationToken)
     {
@@ -221,6 +244,6 @@ public sealed class ComponentService : IComponentService
         }
 
         ISchema schema = _schemaService.CreateSchema(component.Schema);
-        return CreateDefaultObjectValue(schema.QueryType);
+        return CreateDefaultObjectValue(schema, schema.QueryType);
     }
 }

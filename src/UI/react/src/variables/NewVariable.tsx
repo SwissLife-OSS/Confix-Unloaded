@@ -32,7 +32,7 @@ export const NewVariable: React.FC = () => {
     useMutation<NewVariableMutation>(newVariableMutation);
 
   const connectionId = useConnectionId("Query_searchVariables");
-  const goToEdit = useGoTo((id: string) => `${id}/edit`);
+  const goToEdit = useGoTo((id: string) => `../${id}/edit`);
   const form = useCommitForm(
     commit,
     {

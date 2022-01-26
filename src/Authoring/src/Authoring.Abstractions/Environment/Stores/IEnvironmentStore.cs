@@ -12,11 +12,19 @@ public interface IEnvironmentStore
         Guid id,
         CancellationToken cancellationToken);
 
+    Task<Environment?> GetByNameAsync(
+        string name,
+        CancellationToken cancellationToken);
+
     Task<IReadOnlyCollection<Environment>> GetManyByIdAsync(
         IEnumerable<Guid> ids,
         CancellationToken cancellationToken);
 
     Task AddAsync(
+        Environment environment,
+        CancellationToken cancellationToken);
+
+    Task<Environment> UpdateAsync(
         Environment environment,
         CancellationToken cancellationToken);
 

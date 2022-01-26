@@ -1,3 +1,4 @@
+using Confix.Authoring.Publishing;
 using Confix.Authoring.Store.Mongo.Configuration;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Serializers;
@@ -25,6 +26,8 @@ public class ConfixAuthorDbContext : MongoDbContext, IConfixAuthorDbContext
             .ConfigureCollection(new EnvironmentCollectionConfiguration())
             .ConfigureCollection(new ChangeLogCollectionConfiguration())
             .ConfigureCollection(new VariableCollectionConfiguration())
+            .ConfigureCollection(new PublishedApplicationPartCollectionConfiguration())
+            .ConfigureCollection(new ClaimedVersionCollectionConfiguration())
             .ConfigureCollection(new VariableValueCollectionConfiguration())
             .ConfigureCollection(new ComponentCollectionConfiguration());
     }
@@ -46,4 +49,10 @@ public class ConfixAuthorDbContext : MongoDbContext, IConfixAuthorDbContext
 
     public IMongoCollection<VariableValue> VariableValues
         => CreateCollection<VariableValue>().AsTransactionCollection();
+
+    public IMongoCollection<PublishedApplicationPart> PublishedApplicationParts
+        => CreateCollection<PublishedApplicationPart>().AsTransactionCollection();
+
+    public IMongoCollection<ClaimedVersion> ClaimedVersions
+        => CreateCollection<ClaimedVersion>().AsTransactionCollection();
 }

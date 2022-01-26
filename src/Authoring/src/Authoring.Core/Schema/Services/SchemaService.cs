@@ -25,7 +25,7 @@ public class SchemaService : ISchemaService
         ISchema schema,
         IDictionary<string, object?> values)
     {
-        List<SchemaViolation> violations = ValidateDictionary(values, schema.QueryType);
+        List<SchemaViolation> violations = ValidateDictionary(schema, values, schema.QueryType);
 
         if (violations.Count > 0)
         {

@@ -136,11 +136,6 @@ const EditVariableForm: React.FC<{
       `}
     >
       <Row>
-        <Col xs={24}>
-          <Header namespace={namespace} name={name} id={id} />
-        </Col>
-      </Row>
-      <Row>
         <Descriptions>
           <Descriptions.Item label="Name">{name}</Descriptions.Item>
           <Descriptions.Item label="Namespace">{namespace}</Descriptions.Item>

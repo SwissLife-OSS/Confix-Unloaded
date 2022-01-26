@@ -1,0 +1,274 @@
+/* tslint:disable */
+/* eslint-disable */
+// @ts-nocheck
+
+import { ConcreteRequest } from "relay-runtime";
+
+import { FragmentRefs } from "relay-runtime";
+export type SetParentOfEnvironmentInput = {
+    environmentId: string;
+    parentId: string;
+};
+export type SetParentEnvironmentDialogMutationVariables = {
+    input: SetParentOfEnvironmentInput;
+};
+export type SetParentEnvironmentDialogMutationResponse = {
+    readonly setParentOfEnvironment: {
+        readonly environment: {
+            readonly id: string;
+            readonly " $fragmentRefs": FragmentRefs<"EditEnvironment_Environment">;
+        } | null;
+        readonly errors: ReadonlyArray<{
+            readonly path?: ReadonlyArray<string> | undefined;
+            readonly code?: string | undefined;
+            readonly message?: string | undefined;
+            readonly environmentId?: unknown | undefined;
+        }> | null;
+    };
+};
+export type SetParentEnvironmentDialogMutation = {
+    readonly response: SetParentEnvironmentDialogMutationResponse;
+    readonly variables: SetParentEnvironmentDialogMutationVariables;
+};
+
+
+
+/*
+mutation SetParentEnvironmentDialogMutation(
+  $input: SetParentOfEnvironmentInput!
+) {
+  setParentOfEnvironment(input: $input) {
+    environment {
+      id
+      ...EditEnvironment_Environment
+    }
+    errors {
+      __typename
+      ... on EnvironmentCycleDetectedError {
+        path
+        code
+        message
+      }
+      ... on EnvironmentNotFoundError {
+        environmentId
+        code
+        message
+      }
+    }
+  }
+}
+
+fragment EditEnvironment_Environment on Environment {
+  id
+  name
+  parent {
+    id
+    name
+  }
+}
+*/
+
+const node: ConcreteRequest = (function(){
+var v0 = [
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "input"
+  }
+],
+v1 = [
+  {
+    "kind": "Variable",
+    "name": "input",
+    "variableName": "input"
+  }
+],
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "code",
+  "storageKey": null
+},
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "message",
+  "storageKey": null
+},
+v5 = {
+  "kind": "InlineFragment",
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "path",
+      "storageKey": null
+    },
+    (v3/*: any*/),
+    (v4/*: any*/)
+  ],
+  "type": "EnvironmentCycleDetectedError",
+  "abstractKey": null
+},
+v6 = {
+  "kind": "InlineFragment",
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "environmentId",
+      "storageKey": null
+    },
+    (v3/*: any*/),
+    (v4/*: any*/)
+  ],
+  "type": "EnvironmentNotFoundError",
+  "abstractKey": null
+},
+v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+};
+return {
+  "fragment": {
+    "argumentDefinitions": (v0/*: any*/),
+    "kind": "Fragment",
+    "metadata": null,
+    "name": "SetParentEnvironmentDialogMutation",
+    "selections": [
+      {
+        "alias": null,
+        "args": (v1/*: any*/),
+        "concreteType": "SetParentOfEnvironmentPayload",
+        "kind": "LinkedField",
+        "name": "setParentOfEnvironment",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Environment",
+            "kind": "LinkedField",
+            "name": "environment",
+            "plural": false,
+            "selections": [
+              (v2/*: any*/),
+              {
+                "args": null,
+                "kind": "FragmentSpread",
+                "name": "EditEnvironment_Environment"
+              }
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": null,
+            "kind": "LinkedField",
+            "name": "errors",
+            "plural": true,
+            "selections": [
+              (v5/*: any*/),
+              (v6/*: any*/)
+            ],
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      }
+    ],
+    "type": "Mutation",
+    "abstractKey": null
+  },
+  "kind": "Request",
+  "operation": {
+    "argumentDefinitions": (v0/*: any*/),
+    "kind": "Operation",
+    "name": "SetParentEnvironmentDialogMutation",
+    "selections": [
+      {
+        "alias": null,
+        "args": (v1/*: any*/),
+        "concreteType": "SetParentOfEnvironmentPayload",
+        "kind": "LinkedField",
+        "name": "setParentOfEnvironment",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Environment",
+            "kind": "LinkedField",
+            "name": "environment",
+            "plural": false,
+            "selections": [
+              (v2/*: any*/),
+              (v7/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Environment",
+                "kind": "LinkedField",
+                "name": "parent",
+                "plural": false,
+                "selections": [
+                  (v2/*: any*/),
+                  (v7/*: any*/)
+                ],
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": null,
+            "kind": "LinkedField",
+            "name": "errors",
+            "plural": true,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "__typename",
+                "storageKey": null
+              },
+              (v5/*: any*/),
+              (v6/*: any*/)
+            ],
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      }
+    ]
+  },
+  "params": {
+    "cacheID": "b3776787ef69bfe1ae3d330332d59777",
+    "id": null,
+    "metadata": {},
+    "name": "SetParentEnvironmentDialogMutation",
+    "operationKind": "mutation",
+    "text": "mutation SetParentEnvironmentDialogMutation(\n  $input: SetParentOfEnvironmentInput!\n) {\n  setParentOfEnvironment(input: $input) {\n    environment {\n      id\n      ...EditEnvironment_Environment\n    }\n    errors {\n      __typename\n      ... on EnvironmentCycleDetectedError {\n        path\n        code\n        message\n      }\n      ... on EnvironmentNotFoundError {\n        environmentId\n        code\n        message\n      }\n    }\n  }\n}\n\nfragment EditEnvironment_Environment on Environment {\n  id\n  name\n  parent {\n    id\n    name\n  }\n}\n"
+  }
+};
+})();
+(node as any).hash = 'a8721a008fb26c79773c7e633d67d03e';
+export default node;

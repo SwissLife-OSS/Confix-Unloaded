@@ -3,7 +3,7 @@ using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring;
 
-public class Environment
+public record Environment
 {
     public Environment(Guid id, string? name = null!)
     {
@@ -17,4 +17,6 @@ public class Environment
     public Guid Id { get; init; }
 
     public string Name { get; init; }
+
+    public Guid? ParentId { get; init; }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Transactions;
+using Confix.Authoring.Extensions;
 using Confix.Authoring.Internal;
 using Confix.Authoring.Store;
 using GreenDonut;
@@ -60,6 +61,11 @@ public class ApplicationService : IApplicationService
         _applicationPartByIdDataloaderDataLoader
             .LoadAsync(componentPartId, cancellationToken);
 
+    public Task<Application?> FindByApplicationNameAsync(
+        string applicationName,
+        CancellationToken cancellationToken = default)
+        => _appStore.FindByApplicationNameAsync(applicationName, cancellationToken);
+
     public Task<IReadOnlyCollection<Application>> GetManyByIdAsync(
         IEnumerable<Guid> applicationIds,
         CancellationToken cancellationToken = default) =>
@@ -115,8 +121,7 @@ public class ApplicationService : IApplicationService
 
         application = application with
         {
-            Version = application.Version + 1,
-            Parts = applicationParts
+            Version = application.Version + 1, Parts = applicationParts
         };
 
         using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
@@ -174,11 +179,11 @@ public class ApplicationService : IApplicationService
             throw new EntityIdInvalidException(nameof(ApplicationPart), applicationPartId);
         }
 
-        application = application with { Version = application.Version + 1 };
-        applicationPart = applicationPart with
+        application = application with
         {
-            Version = applicationPart.Version + 1,
-            Name = name
+            Version = application.Version + 1,
+            Parts = application.Parts.Replace(applicationPart,
+                () => applicationPart with { Version = applicationPart.Version + 1, Name = name })
         };
 
         RenameApplicationPartChange log =
@@ -226,10 +231,7 @@ public class ApplicationService : IApplicationService
             if (applicationPart.Components.All(t => t.ComponentId != component.Id))
             {
                 applicationVersion++;
-                applicationPart = applicationPart with
-                {
-                    Version = applicationPart.Version + 1
-                };
+                applicationPart = applicationPart with { Version = applicationPart.Version + 1 };
 
                 ApplicationPartComponent applicationPartComponent =
                     new(Guid.NewGuid(), component.Id, component.Values);
@@ -281,7 +283,6 @@ public class ApplicationService : IApplicationService
         ApplicationPart newApplicationPart = new(Guid.NewGuid(), partName);
 
         application.Parts.Add(newApplicationPart);
-
         application = application with { Version = application.Version + 1 };
 
         AddPartToApplicationChange log = new(
@@ -317,7 +318,12 @@ public class ApplicationService : IApplicationService
             throw new ApplicationPartNotFoundException(applicationPartId);
         }
 
-        application = application with { Version = application.Version + 1 };
+        var version = application.Version + 1;
+        application = application with
+        {
+            Version = version,
+            Parts = application.Parts.Where(x => x.Id != applicationPart.Id).ToArray()
+        };
         applicationPart = applicationPart with { Version = application.Version + 1 };
 
         RemovePartFromApplicationChange log = new(
@@ -367,10 +373,21 @@ public class ApplicationService : IApplicationService
             return applicationPart;
         }
 
-        applicationPart.Components.Remove(applicationPartComponent);
-
-        application = application with { Version = application.Version + 1 };
-        applicationPart = applicationPart with { Version = application.Version + 1 };
+        var version = application.Version + 1;
+        application = application with
+        {
+            Version = version,
+            Parts = application.Parts.Replace(applicationPart,
+                () =>
+                    applicationPart with
+                    {
+                        Version = version,
+                        Components = applicationPart.Components.Where(
+                                x => x.Id != applicationPartComponent.Id
+                            )
+                            .ToArray()
+                    })
+        };
         applicationPartComponent = applicationPartComponent with
         {
             Version = application.Version + 1
@@ -442,12 +459,25 @@ public class ApplicationService : IApplicationService
             throw new InvalidOperationException("There is no schema.");
         }
 
-        application = application with { Version = application.Version + 1 };
-        applicationPart = applicationPart with { Version = application.Version + 1 };
-        applicationPartComponent = applicationPartComponent with
+        var version = application.Version + 1;
+        application = application with
         {
-            Version = application.Version + 1,
-            Values = _schemaService.CreateValuesForSchema(component.Schema, values)
+            Version = version,
+            Parts = application.Parts.Replace(applicationPart,
+                () =>
+                    applicationPart with
+                    {
+                        Version = version,
+                        Components = applicationPart.Components.Replace(
+                            applicationPartComponent,
+                            () => applicationPartComponent with
+                            {
+                                Version = version,
+                                Values = _schemaService.CreateValuesForSchema(component.Schema,
+                                    values)
+                            }
+                        )
+                    })
         };
 
         ApplicationPartComponentValuesChange log = new(
@@ -468,5 +498,43 @@ public class ApplicationService : IApplicationService
         }
 
         return applicationPartComponent;
+    }
+
+    public async Task<Application> PublishApplicationPartAsync(
+        Guid applicationPartId,
+        CancellationToken cancellationToken = default)
+    {
+        Application? application =
+            await _appStore.GetByPartIdAsync(applicationPartId, cancellationToken);
+        ApplicationPart? applicationPart =
+            application?.Parts.FirstOrDefault(x => x.Id == applicationPartId);
+
+        if (application is null || applicationPart is null)
+        {
+            throw new ApplicationPartNotFoundException(applicationPartId);
+        }
+
+        var updatedApplicationPart = applicationPart with { Version = applicationPart.Version + 1 };
+        application = application with
+        {
+            Version = application.Version + 1,
+            Parts = application.Parts.Replace(applicationPart, () => updatedApplicationPart)
+        };
+
+        PublishedApplicationPartChange log = new(
+            application.Id,
+            application.Version,
+            updatedApplicationPart.Id,
+            updatedApplicationPart.Version);
+
+        using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+        {
+            await _changeLogService.CreateAsync(log, cancellationToken);
+            await _appStore.ReplaceAsync(application, cancellationToken);
+
+            transaction.Complete();
+        }
+
+        return application;
     }
 }

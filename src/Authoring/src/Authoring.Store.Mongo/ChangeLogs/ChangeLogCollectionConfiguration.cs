@@ -27,6 +27,7 @@ internal class ChangeLogCollectionConfiguration : IMongoCollectionConfiguration<
             .AddBsonClassMap<RemoveComponentFromApplicationPartChange>(cm => cm.AutoMap())
             .AddBsonClassMap<ApplicationPartComponentValuesChange>(cm => cm.AutoMap())
             .AddBsonClassMap<CreateComponentChange>(cm => cm.AutoMap())
+            .AddBsonClassMap<PublishedApplicationPartChange>(cm => cm.AutoMap())
             .AddBsonClassMap<RemoveComponentChange>(cm => cm.AutoMap())
             .AddBsonClassMap<RenameComponentChange>(cm => cm.AutoMap())
             .AddBsonClassMap<ComponentSchemaChange>(cm => cm.AutoMap())

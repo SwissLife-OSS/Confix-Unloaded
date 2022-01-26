@@ -43,7 +43,7 @@ export const NewApplication: React.FC = () => {
   const [commit, isInFlight] = useMutation<NewApplicationMutation>(
     newApplicationMutation
   );
-  const goToEdit = useGoTo((id?: string) => `${id}/edit`);
+  const goToEdit = useGoTo((id?: string) => `../${id}/edit`);
   const connectionId = useConnectionId(Connections.applications.name);
   const form = useCommitForm(
     commit,

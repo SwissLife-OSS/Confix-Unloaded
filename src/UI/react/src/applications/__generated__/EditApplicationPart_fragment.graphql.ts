@@ -18,9 +18,9 @@ export type EditApplicationPart_fragment = {
         readonly definition: {
             readonly id: string;
         };
-        readonly " $fragmentRefs": FragmentRefs<"EditApplicationPartComponent_component">;
+        readonly " $fragmentRefs": FragmentRefs<"ApplicationPartComponents_component">;
     }>;
-    readonly " $fragmentRefs": FragmentRefs<"EditApplicationPart_VariableValues_Fragment" | "EditApplicationPart_ChangeLog_Fragment">;
+    readonly " $fragmentRefs": FragmentRefs<"EditApplicationPart_VariableValues_Fragment" | "ApplicationPartChangeLog_ChangeLog_Fragment" | "EditApplicationPart_DeployedEnvironment_Fragment" | "PublishedApplicationPartsFragment">;
     readonly " $refType": "EditApplicationPart_fragment";
 };
 export type EditApplicationPart_fragment$data = EditApplicationPart_fragment;
@@ -107,7 +107,7 @@ return {
         {
           "args": null,
           "kind": "FragmentSpread",
-          "name": "EditApplicationPartComponent_component"
+          "name": "ApplicationPartComponents_component"
         }
       ],
       "storageKey": null
@@ -128,14 +128,29 @@ return {
         {
           "args": null,
           "kind": "FragmentSpread",
-          "name": "EditApplicationPart_ChangeLog_Fragment"
+          "name": "ApplicationPartChangeLog_ChangeLog_Fragment"
         }
       ]
+    },
+    {
+      "kind": "Defer",
+      "selections": [
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "EditApplicationPart_DeployedEnvironment_Fragment"
+        }
+      ]
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "PublishedApplicationPartsFragment"
     }
   ],
   "type": "ApplicationPart",
   "abstractKey": null
 };
 })();
-(node as any).hash = '28b4550393d1a8b057fc14fd5f2f129d';
+(node as any).hash = 'c8f759aa76978deb8c028ee4e3bc12e7';
 export default node;

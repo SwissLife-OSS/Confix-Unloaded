@@ -3,10 +3,8 @@ import {
   EnumTypeDefinitionNode,
   FieldDefinitionNode,
   Kind,
-  NamedTypeNode,
   ObjectTypeDefinitionNode,
   parse,
-  TypeDefinitionNode,
   TypeNode,
   UnionTypeDefinitionNode,
 } from "graphql";
@@ -52,29 +50,38 @@ const typeMappings: Record<string, JSONSchema6> = {
 
 export const translateType = (
   type: TypeNode,
-  field: FieldDefinitionNode
+  field: FieldDefinitionNode,
+  isNonNull: boolean = false
 ): any => {
   if (type.kind === Kind.LIST_TYPE) {
+    var oneOf: JSONSchema6[] = [
+      {
+        type: "array",
+        items: translateType(type.type, field, false),
+      },
+    ];
+    if (!isNonNull) {
+      oneOf = [{ type: "null" }, ...oneOf];
+    }
     return {
-      allOf: [
-        {
-          type: "array",
-          items: translateType(type.type, field),
-        },
-      ],
+      oneOf,
       description: field.description?.value,
     };
   } else if (type.kind === Kind.NON_NULL_TYPE) {
-    return translateType(type.type, field);
+    return translateType(type.type, field, true);
   } else if (type.kind === Kind.NAMED_TYPE) {
     var definition = !!typeMappings[type.name.value]
       ? typeMappings[type.name.value]
       : {
           $ref: `#/definitions/${type.name.value}`,
         };
+    var oneOf = [definition];
+    if (!isNonNull) {
+      oneOf = [{ type: "null" }, ...oneOf];
+    }
 
     return {
-      allOf: [definition],
+      oneOf,
       description: field.description?.value,
     };
   }
@@ -87,7 +94,9 @@ export const sdlToJsonSchema = (
   try {
     if (doc) {
       var root = parse(doc);
-      return buildJsonSchema(root, variables);
+      var schema = buildJsonSchema(root, variables);
+      console.log(schema);
+      return schema;
     }
   } catch (e) {}
 };

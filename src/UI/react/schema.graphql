@@ -164,6 +164,51 @@ type ApplicationPart implements Node {
   application: Application
   variableValues: [VariableValue!]!
   changeLog: [ChangeLog!]!
+  publishedVersions(
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+  ): PublishedVersionsConnection
+  deployments(
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+  ): DeploymentsConnection
+  publishApplicationPartById(
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+  ): PublishApplicationPartByIdConnection
 }
 
 interface ApplicationPartChange {
@@ -265,17 +310,69 @@ type ChangeLog {
   modifiedAt: DateTime!
 }
 
+type ClaimedVersion {
+  id: ID!
+  gitVersion: String!
+  configuration: String!
+  claimedAt: DateTime!
+  application: Application
+  applicationPart: ApplicationPart
+  environment: Environment
+  publishedApplicationPart: PublishedApplicationPart
+}
+
+"""A connection to a list of items."""
+type ClaimedVersionsConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [ClaimedVersionsEdge!]
+
+  """A flattened list of the nodes."""
+  nodes: [ClaimedVersion!]
+}
+
+"""An edge in a connection."""
+type ClaimedVersionsEdge {
+  """A cursor for use in pagination."""
+  cursor: String!
+
+  """The item at the end of the edge."""
+  node: ClaimedVersion!
+}
+
+union ClaimVersionError = ClaimVersionFailedError
+
+type ClaimVersionFailedError implements IUserError {
+  message: String!
+  code: String!
+}
+
+input ClaimVersionInput {
+  gitVersion: String!
+  applicationName: String!
+  applicationPartName: String!
+  environmentName: String!
+}
+
+type ClaimVersionPayload {
+  claimedVersion: ClaimedVersion
+  errors: [ClaimVersionError!]
+  query: Query!
+}
+
 type Component implements Node {
   id: ID!
   name: String!
   version: Int!
   state: ComponentState!
+  changeLog: [ChangeLog!]!
   schemaSdl: SDL
   schema: Any
   values: Any
   defaults: Any
   schemaViolations: [SchemaViolation!]!
-  changeLog: [ChangeLog!]!
 }
 
 interface ComponentChange {
@@ -427,9 +524,56 @@ type DeleteVariableValuePayload {
   query: Query!
 }
 
-type Environment {
+type DeployedEnvironment {
+  environment: Environment
+  claimedVersions(
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+  ): ClaimedVersionsConnection
+}
+
+"""A connection to a list of items."""
+type DeploymentsConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [DeploymentsEdge!]
+
+  """A flattened list of the nodes."""
+  nodes: [DeployedEnvironment!]
+}
+
+"""An edge in a connection."""
+type DeploymentsEdge {
+  """A cursor for use in pagination."""
+  cursor: String!
+
+  """The item at the end of the edge."""
+  node: DeployedEnvironment!
+}
+
+type Environment implements Node {
   id: ID!
   name: String!
+  parent: Environment
+}
+
+type EnvironmentCycleDetectedError implements IUserError {
+  message: String!
+  path: [String!]!
+  code: String!
 }
 
 type EnvironmentNameCollisionError implements IUserError {
@@ -478,10 +622,13 @@ type Mutation {
   createEnvironment(input: CreateEnvironmentInput!): CreateEnvironmentPayload!
   renameEnvironment(input: RenameEnvironmentInput!): RenameEnvironmentPayload!
   removeEnvironmentById(input: RemoveEnvironmentByIdInput!): RemoveEnvironmentByIdPayload!
+  setParentOfEnvironment(input: SetParentOfEnvironmentInput!): SetParentOfEnvironmentPayload!
   createVariable(input: CreateVariableInput!): CreateVariablePayload!
   saveVariableValue(input: SaveVariableValueInput!): SaveVariableValuePayload!
   deleteVariableValue(input: DeleteVariableValueInput!): DeleteVariableValuePayload!
   renameVariable(input: RenameVariableInput!): RenameVariablePayload!
+  publishApplicationPartById(input: PublishApplicationPartByIdInput!): PublishApplicationPartByIdPayload!
+  claimVersion(input: ClaimVersionInput!): ClaimVersionPayload!
 }
 
 """
@@ -508,6 +655,83 @@ type PageInfo {
 
   """When paginating forwards, the cursor to continue."""
   endCursor: String
+}
+
+"""A connection to a list of items."""
+type PublishApplicationPartByIdConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [PublishApplicationPartByIdEdge!]
+
+  """A flattened list of the nodes."""
+  nodes: [PublishedApplicationPart!]
+}
+
+"""An edge in a connection."""
+type PublishApplicationPartByIdEdge {
+  """A cursor for use in pagination."""
+  cursor: String!
+
+  """The item at the end of the edge."""
+  node: PublishedApplicationPart!
+}
+
+union PublishApplicationPartByIdError = PublishingError
+
+input PublishApplicationPartByIdInput {
+  applicationPartId: ID!
+}
+
+type PublishApplicationPartByIdPayload {
+  publishedApplicationPart: PublishedApplicationPart
+  errors: [PublishApplicationPartByIdError!]
+  query: Query!
+}
+
+type PublishedApplicationPart implements Node {
+  id: ID!
+  version: Int!
+  part: ApplicationPart!
+  configuration: String!
+  publishedAt: DateTime!
+  publishedBy: UserInfo!
+  claimsVersions: [ClaimedVersion!]!
+}
+
+type PublishedApplicationPartChange implements ApplicationPartChange & ApplicationChange & Change {
+  kind: String!
+  application: Application
+  applicationVersion: Int!
+  part: ApplicationPart
+  partVersion: Int!
+}
+
+"""A connection to a list of items."""
+type PublishedVersionsConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [PublishedVersionsEdge!]
+
+  """A flattened list of the nodes."""
+  nodes: [PublishedApplicationPart!]
+}
+
+"""An edge in a connection."""
+type PublishedVersionsEdge {
+  """A cursor for use in pagination."""
+  cursor: String!
+
+  """The item at the end of the edge."""
+  node: PublishedApplicationPart!
+}
+
+type PublishingError implements IUserError {
+  message: String!
+  code: String!
 }
 
 type Query {
@@ -821,6 +1045,19 @@ type SearchVariablesEdge {
   node: Variable!
 }
 
+union SetParentOfEnvironmentError = EnvironmentNotFoundError | EnvironmentCycleDetectedError
+
+input SetParentOfEnvironmentInput {
+  environmentId: ID!
+  parentId: ID!
+}
+
+type SetParentOfEnvironmentPayload {
+  environment: Environment
+  errors: [SetParentOfEnvironmentError!]
+  query: Query!
+}
+
 input StringOperationFilterInput {
   and: [StringOperationFilterInput!]
   or: [StringOperationFilterInput!]
@@ -873,7 +1110,7 @@ type UpdateComponentValuesPayload {
 }
 
 type UserInfo {
-  email: String!
+  email: String
 }
 
 scalar UUID

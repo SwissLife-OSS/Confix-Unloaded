@@ -18,6 +18,16 @@ public class ApplicationStore : IApplicationStore
         _dbContext = dbContext;
     }
 
+    public async Task<Application?> FindByApplicationNameAsync(
+        string applicationName,
+        CancellationToken cancellationToken = default)
+    {
+        // TODO Unique index on application name
+        FilterDefinition<Application> filter = Filter.Eq(x => x.Name, applicationName);
+
+        return await _dbContext.Applications.Find(filter).FirstOrDefaultAsync(cancellationToken);
+    }
+
     public async Task<Application?> GetByIdAsync(
         Guid id,
         CancellationToken cancellationToken)

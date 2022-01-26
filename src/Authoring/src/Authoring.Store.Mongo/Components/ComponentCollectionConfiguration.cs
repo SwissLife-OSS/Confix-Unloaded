@@ -1,3 +1,5 @@
+using System;
+using System.Text.Json;
 using MongoDB.Driver;
 using MongoDB.Extensions.Context;
 

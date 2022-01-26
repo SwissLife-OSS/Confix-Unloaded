@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using MongoDB.Driver;
@@ -26,6 +25,16 @@ public class EnvironmentStore : IEnvironmentStore
             .AsQueryable()
             .Where(x => x.Id == id)
             .SingleAsync(cancellationToken);
+    }
+
+    public async Task<Environment?> GetByNameAsync(
+        string name,
+        CancellationToken cancellationToken)
+    {
+        return await _dbContext.Environments
+            .AsQueryable()
+            .Where(x => x.Name == name)
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
     public async Task<IReadOnlyCollection<Environment>> GetManyByIdAsync(
@@ -79,4 +88,21 @@ public class EnvironmentStore : IEnvironmentStore
         search is null
             ? _dbContext.Environments.AsQueryable()
             : _dbContext.Environments.AsQueryable().Where(x => x.Name.Contains(search));
+
+    public async Task<Environment> UpdateAsync(
+        Environment environment,
+        CancellationToken cancellationToken)
+    {
+        FilterDefinition<Environment>? filter =
+            Builders<Environment>.Filter.Eq(x => x.Id, environment.Id);
+
+        FindOneAndReplaceOptions<Environment> options = new()
+        {
+            ReturnDocument = ReturnDocument.After,
+            IsUpsert = false
+        };
+
+        return await _dbContext.Environments
+            .FindOneAndReplaceAsync(filter, environment, options, cancellationToken);
+    }
 }

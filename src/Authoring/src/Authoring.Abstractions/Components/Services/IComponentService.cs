@@ -26,7 +26,7 @@ public interface IComponentService
     Task<Component> CreateAsync(
         string name,
         string? schemaSdl,
-        Dictionary<string, object?>? values,
+        IDictionary<string, object?>? values,
         CancellationToken cancellationToken);
 
     Task<Component> RenameAsync(
@@ -41,15 +41,20 @@ public interface IComponentService
 
     Task<Component> SetValuesAsync(
         Guid id,
-        Dictionary<string, object?> values,
+        IDictionary<string, object?> values,
         CancellationToken cancellationToken);
 
     Task<IReadOnlyList<SchemaViolation>> GetSchemaViolationsAsync(
         Guid id,
-        Dictionary<string, object?> values,
+        IDictionary<string, object?> values,
         CancellationToken cancellationToken);
 
-    Task<Dictionary<string, object?>?> GetDefaultValuesAsync(
+    Task<IReadOnlyList<SchemaViolation>> GetSchemaViolationsAsync(
+        Guid id,
+        string values,
+        CancellationToken cancellationToken);
+
+    Task<IDictionary<string, object?>?> GetDefaultValuesAsync(
         Guid id,
         CancellationToken cancellationToken);
 }

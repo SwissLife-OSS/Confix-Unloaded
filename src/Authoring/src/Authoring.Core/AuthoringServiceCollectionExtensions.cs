@@ -1,4 +1,5 @@
 using Confix.Authoring.Internal;
+using Confix.Authoring.Publishing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -17,6 +18,7 @@ public static class AuthoringServiceCollectionExtensions
         services.AddScoped<IComponentService, ComponentService>();
         services.AddScoped<IVariableService, VariableService>();
         services.AddScoped<ISchemaService, SchemaService>();
+        services.AddScoped<IPublishingService, PublishingService>();
         services.AddSingleton<IVariableCryptoProvider, DoNotUseVariableCrypoProvider>();
 
         return services;

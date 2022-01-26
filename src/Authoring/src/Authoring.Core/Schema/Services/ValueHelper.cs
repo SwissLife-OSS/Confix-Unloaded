@@ -9,7 +9,7 @@ namespace Confix.Authoring.Internal;
 
 public static class ValueHelper
 {
-    public static Dictionary<string, object?> CreateDefaultObjectValue(IType type)
+    public static Dictionary<string, object?> CreateDefaultObjectValue(ISchema schema, IType type)
     {
         var obj = new Dictionary<string, object?>();
         var objectType = (ObjectType)type.NamedType();
@@ -21,31 +21,39 @@ public static class ValueHelper
                 continue;
             }
 
-            obj[field.Name] = CreateDefaultValue(field.Type);
+            obj[field.Name] = CreateDefaultValue(schema, field.Type);
         }
 
         return obj;
     }
 
-    private static object? CreateDefaultValue(IType type)
+    private static object? CreateDefaultValue(ISchema schema, IType type)
     {
         if (type.IsNonNullType())
         {
             if (type.IsListType())
             {
-                return CreateDefaultListValue(type);
+                return CreateDefaultListValue(schema, type);
             }
 
             if (type.IsObjectType())
             {
-                return CreateDefaultObjectValue(type);
+                return CreateDefaultObjectValue(schema, type);
             }
 
-            if (!type.IsEnumType() && type.NamedType() is EnumType enumType)
+            if (type.IsEnumType() && type.NamedType() is EnumType enumType)
             {
                 return enumType.Values.First().Name.ToString();
             }
 
+            if (type.IsAbstractType())
+            {
+                return CreateDefaultObjectValue(
+                    schema,
+                    schema.GetPossibleTypes(type.NamedType())[0]);
+            }
+
+            // TODO: Repalce
             switch (type.NamedType().Name)
             {
                 case "String":
@@ -64,24 +72,33 @@ public static class ValueHelper
         return null;
     }
 
-    private static List<object?> CreateDefaultListValue(IType type) =>
-        new() { CreateDefaultValue(type.ElementType()) };
+    private static List<object?> CreateDefaultListValue(ISchema schema, IType type) =>
+        new() { CreateDefaultValue(schema, type.ElementType()) };
 
     public static List<SchemaViolation> ValidateDictionary(
+        ISchema schema,
         IDictionary<string, object?> value,
         IType type)
     {
-        var schemaViolations = new List<SchemaViolation>();
-        ValidateDictionary(value, type, Path.Root, schemaViolations);
+        List<SchemaViolation> schemaViolations = new();
+        ValidateDictionary(schema, value, type, Path.Root, schemaViolations);
         return schemaViolations;
     }
 
     private static void ValidateDictionary(
+        ISchema schema,
         IDictionary<string, object?> value,
         IType type,
         Path path,
         List<SchemaViolation> schemaViolations)
     {
+        if (type.IsAbstractType())
+        {
+            ValidateAbstractType(schema, value, type, path, schemaViolations);
+            return;
+        }
+
+
         if (!type.IsObjectType())
         {
             schemaViolations.Add(new SchemaViolation(path.ToList(), "NOT_AN_OBJECT"));
@@ -98,7 +115,7 @@ public static class ValueHelper
 
             if (value.TryGetValue(field.Name, out var fieldValue))
             {
-                Validate(fieldValue, field.Type, path.Append(field.Name), schemaViolations);
+                Validate(schema, fieldValue, field.Type, path.Append(field.Name), schemaViolations);
             }
             else if (field.Type.IsNonNullType())
             {
@@ -119,7 +136,30 @@ public static class ValueHelper
         }
     }
 
+    private static void ValidateAbstractType(
+        ISchema schema,
+        IDictionary<string, object?> value,
+        IType type,
+        Path path,
+        List<SchemaViolation> schemaViolations)
+    {
+        IReadOnlyList<ObjectType> possibleTypes = schema.GetPossibleTypes(type.NamedType());
+        List<SchemaViolation> nestedViolations = new();
+        foreach (var possibleType in possibleTypes)
+        {
+            nestedViolations.Clear();
+            ValidateDictionary(schema, value, possibleType, path, nestedViolations);
+            if (nestedViolations.Count == 0)
+            {
+                return;
+            }
+        }
+
+        schemaViolations.Add(new SchemaViolation(path.ToList(), "NO_MATCHING_TYPE_FOUND"));
+    }
+
     private static void Validate(
+        ISchema schema,
         object? value,
         IType type,
         Path path,
@@ -128,18 +168,29 @@ public static class ValueHelper
         switch (value)
         {
             case Dictionary<string, object?> dict:
-                ValidateDictionary(dict, type, path, schemaViolations);
+                ValidateDictionary(schema, dict, type, path, schemaViolations);
                 break;
 
             case List<object?> list:
-                ValidateList(list, type, path, schemaViolations);
+                ValidateList(schema, list, type, path, schemaViolations);
                 break;
 
-            case string:
-                if (!type.IsScalarType() || type.NamedType() is not StringType)
+            case string when type.IsScalarType():
+                if (type.NamedType() is not StringType)
                 {
                     schemaViolations.Add(new SchemaViolation(path.ToList(), "INVALID_TYPE"));
                 }
+
+                break;
+            case string when type.NamedType() is EnumType enumType && value is string strValue:
+                if (!enumType.TryGetValue(strValue, out _))
+                {
+                    schemaViolations.Add(new SchemaViolation(path.ToList(), "INVALID_TYPE"));
+                }
+
+                break;
+            case string:
+                schemaViolations.Add(new SchemaViolation(path.ToList(), "INVALID_TYPE"));
                 break;
 
             case int:
@@ -147,6 +198,7 @@ public static class ValueHelper
                 {
                     schemaViolations.Add(new SchemaViolation(path.ToList(), "INVALID_TYPE"));
                 }
+
                 break;
 
             case bool:
@@ -154,6 +206,7 @@ public static class ValueHelper
                 {
                     schemaViolations.Add(new SchemaViolation(path.ToList(), "INVALID_TYPE"));
                 }
+
                 break;
 
             case double:
@@ -161,6 +214,15 @@ public static class ValueHelper
                 {
                     schemaViolations.Add(new SchemaViolation(path.ToList(), "INVALID_TYPE"));
                 }
+
+                break;
+
+            case null:
+                if (!type.IsNullableType())
+                {
+                    schemaViolations.Add(new SchemaViolation(path.ToList(), "INVALID_TYPE"));
+                }
+
                 break;
 
             default:
@@ -170,6 +232,7 @@ public static class ValueHelper
     }
 
     private static void ValidateList(
+        ISchema schema,
         List<object?> value,
         IType type,
         Path path,
@@ -180,6 +243,7 @@ public static class ValueHelper
         foreach (var element in value)
         {
             Validate(
+                schema,
                 element,
                 elementType,
                 path.Append(i++),
