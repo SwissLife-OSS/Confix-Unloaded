@@ -1,0 +1,12 @@
+﻿{
+  "Id": "ddf1670c-b4ff-4926-ac39-f6a7bdd3d341",
+  "Key": {
+    "VariableId": "00000000-0000-0000-0000-000000000000",
+    "ApplicationId": null,
+    "PartId": null,
+    "EnvironmentId": null
+  },
+  "Value": "This is a insertion test value 0.",
+  "Encryption": null,
+  "Version": 0
+}
