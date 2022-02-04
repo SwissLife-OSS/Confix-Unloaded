@@ -10,9 +10,15 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Vault.Abstractions\Vault.Abstractions.csproj" />
     <ProjectReference Include="..\Vault.Core\Vault.Core.csproj" />
+    <ProjectReference Include="..\Vault.Store.Mongo\Vault.Store.Mongo.csproj" />
   </ItemGroup>
 
 </Project>

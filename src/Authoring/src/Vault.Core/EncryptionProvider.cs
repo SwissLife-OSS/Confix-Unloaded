@@ -11,14 +11,14 @@ public class EncryptionProvider : IEncryptionProvider
         return aes.IV;
     }
 
-    public byte[] Decrypt(byte[] plainText, byte[] iv, byte[] key)
+    public byte[] Encrypt(byte[] plainText, byte[] iv, byte[] key)
     {
         using var aes = Aes.Create();
         aes.Key = key;
         return aes.EncryptCfb(plainText, iv, PaddingMode.PKCS7);
     }
 
-    public byte[] Encrypt(byte[] cipherText, byte[] iv, byte[] key)
+    public byte[] Decrypt(byte[] cipherText, byte[] iv, byte[] key)
     {
         using var aes = Aes.Create();
         aes.Key = key;

@@ -92,7 +92,7 @@ public class PublishingStore : IPublishingStore
             .SingleOrDefaultAsync(cancellationToken);
     }
 
-    public async Task<ClaimedVersion?> GetOrCreateClaimedVersionAsync(
+    public async Task<ClaimedVersion> GetOrCreateClaimedVersionAsync(
         ClaimedVersion version,
         CancellationToken cancellationToken)
     {
@@ -110,7 +110,7 @@ public class PublishingStore : IPublishingStore
                 .SetOnInsert(x => x.EnvironmentId, version.EnvironmentId)
                 .SetOnInsert(x => x.GitVersion, version.GitVersion)
                 .SetOnInsert(x => x.PublishingId, version.PublishingId)
-                .SetOnInsert(x => x.Configuration, version.Configuration)
+                .SetOnInsert(x => x.ApiKey, version.ApiKey)
                 .SetOnInsert(x => x.ClaimedAt, version.ClaimedAt)
                 .SetOnInsert(x => x.Id, version.Id);
 

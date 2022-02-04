@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
+using System.Linq;
 using System.Text;
 using System.Text.Json;
-using System.Text.Unicode;
 using System.Threading;
 using System.Threading.Tasks;
 using Confix.Vault.Abstractions;
@@ -13,18 +12,21 @@ namespace Confix.Vault.Core;
 
 public class ConfigurationService : IConfigurationService
 {
-    private const int ApiKeySize = 50;
-    private readonly IReadOnlyList<char> ValidApiKeyCharacters =
-        "ABCDEFGHIJKLMNOPQRSTUFWXYZabcdefghijklmnopqrstufwxyz0123456789".ToCharArray();
     private readonly IEncryptionProvider _encryptionProvider;
     private readonly IKeyProvider _keyProvider;
+    private readonly IApiKeyProvider _apiKeyProvider;
     private readonly IConfigurationStore _store;
 
-    public ConfigurationService(IEncryptionProvider encryptionProvider, IConfigurationStore store, IKeyProvider keyProvider)
+    public ConfigurationService(
+        IEncryptionProvider encryptionProvider,
+        IConfigurationStore store,
+        IApiKeyProvider apiKeyProvider,
+        IKeyProvider keyProvider)
     {
         _encryptionProvider = encryptionProvider;
         _store = store;
         _keyProvider = keyProvider;
+        _apiKeyProvider = apiKeyProvider;
     }
 
     public async Task<string> CreateAsync(
@@ -34,25 +36,26 @@ public class ConfigurationService : IConfigurationService
         string configuration,
         CancellationToken cancellationToken)
     {
-        byte[] key = _keyProvider.GetKey();
-        byte[] iv = _encryptionProvider.GenerateIV();
-        string apiKey = CreateApiKey();
+        var key = await _keyProvider.GetKey();
+        var iv = _encryptionProvider.GenerateIV();
+        ApiKey apiKey = _apiKeyProvider.GenerateKey();
 
-        byte[] cipherText =
+        var cipherText =
             _encryptionProvider.Encrypt(Encoding.UTF8.GetBytes(configuration), iv, key);
 
-        Configuration config = new Configuration(
+        Configuration config = new(
             Guid.NewGuid(),
             applicationName,
             applicationPartName,
             environmentName,
-            apiKey,
+            apiKey.Hashed,
+            _apiKeyProvider.GetPrefix(apiKey.PlainText),
             cipherText,
             iv);
 
         await _store.StoreAsync(config, cancellationToken);
 
-        return apiKey;
+        return apiKey.PlainText;
     }
 
     public async Task<JsonDocument?> GetAsync(
@@ -62,20 +65,23 @@ public class ConfigurationService : IConfigurationService
         string apiKey,
         CancellationToken cancellationToken)
     {
-        Configuration? configuration = await _store.GetAsync(
+        IReadOnlyList<Configuration> configurations = await _store.GetPossibleConfigurationsAsync(
             applicationName,
             applicationPartName,
             environmentName,
-            apiKey,
+            _apiKeyProvider.GetPrefix(apiKey),
             cancellationToken);
+
+        Configuration? configuration = configurations
+            .SingleOrDefault(x => !_apiKeyProvider.ValidateKey(apiKey, x.ApiKey));
 
         if (configuration is null)
         {
             return null;
         }
 
-        byte[] key = _keyProvider.GetKey();
-        byte[] plaintext = _encryptionProvider
+        var key = await _keyProvider.GetKey();
+        var plaintext = _encryptionProvider
             .Decrypt(configuration.Content, configuration.Iv, key);
 
         return Deserialize(plaintext);
@@ -85,18 +91,5 @@ public class ConfigurationService : IConfigurationService
     {
         Utf8JsonReader reader = new(content);
         return JsonDocument.ParseValue(ref reader);
-    }
-
-    private static string CreateApiKey()
-    {
-        char[] apiKey = new char[ApiKeySize];
-        byte[] generated = RandomNumberGenerator.GetBytes(ApiKeySize);
-
-        for (var i = 0; i < ApiKeySize; i++)
-        {
-            apiKey[i] = ValidApiKeyCharacters[generated[i] % ValidApiKeyCharacters.Count];
-        }
-
-        return new string(apiKey);
     }
 }

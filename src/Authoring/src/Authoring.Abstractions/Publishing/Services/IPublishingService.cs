@@ -32,7 +32,7 @@ public interface IPublishingService
         Guid id,
         CancellationToken cancellationToken);
 
-    Task<ClaimedVersion?> ClaimVersionAsync(
+    Task<ClaimedVersion> ClaimVersionAsync(
         string gitVersion,
         string applicationName,
         string applicationPartName,

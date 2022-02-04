@@ -10,6 +10,7 @@ using System.Transactions;
 using Confix.Authoring.Extensions;
 using Confix.Authoring.Publishing.Stores;
 using Confix.Authoring.Store;
+using Confix.Vault.Client;
 using GreenDonut;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
@@ -28,6 +29,7 @@ public class PublishingService : IPublishingService
     private readonly IPublishingStore _publishingStore;
     private readonly IVariableService _variableService;
     private readonly IComponentService _componentService;
+    private readonly IVaultClient _vaultClient;
 
     public PublishingService(
         IDataLoader<Guid, PublishedApplicationPart?> publishedById,
@@ -38,6 +40,7 @@ public class PublishingService : IPublishingService
         IUserSessionAccessor sessionAccessor,
         IPublishingStore publishingStore,
         IVariableService variableService,
+        IVaultClient vaultClient,
         IComponentService componentService)
     {
         _publishedById = publishedById;
@@ -49,6 +52,7 @@ public class PublishingService : IPublishingService
         _publishingStore = publishingStore;
         _variableService = variableService;
         _componentService = componentService;
+        _vaultClient = vaultClient;
     }
 
     public async Task<PublishedApplicationPart> PublishPartByIdAsync(
@@ -118,7 +122,7 @@ public class PublishingService : IPublishingService
         CancellationToken cancellationToken)
         => await _publishedById.LoadAsync(id, cancellationToken);
 
-    public async Task<ClaimedVersion?> ClaimVersionAsync(
+    public async Task<ClaimedVersion> ClaimVersionAsync(
         string gitVersion,
         string applicationName,
         string applicationPartName,
@@ -178,25 +182,41 @@ public class PublishingService : IPublishingService
                 environmentName);
         }
 
-        string variableReplaced = await ReplaceVariableValuesAsync(
-            app,
-            part,
-            env,
-            publishedApplicationPart.Configuration,
-            cancellationToken
-        );
+        ClaimedVersion? version = await _publishingStore
+            .GetClaimedVersionByGitVersionAsync(gitVersion, app.Id, part.Id, cancellationToken);
 
-        ClaimedVersion version = new ClaimedVersion(
-            Guid.NewGuid(),
-            gitVersion,
-            app.Id,
-            part.Id,
-            env.Id,
-            publishedApplicationPart.Id,
-            variableReplaced,
-            DateTime.UtcNow);
+        if (version is null)
+        {
+            string variableReplaced = await ReplaceVariableValuesAsync(
+                app,
+                part,
+                env,
+                publishedApplicationPart.Configuration,
+                cancellationToken
+            );
 
-        return await _publishingStore.GetOrCreateClaimedVersionAsync(version, cancellationToken);
+            var apiKey = await _vaultClient.CreateAsync(
+                app.Name!,
+                part.Name!,
+                environmentName,
+                variableReplaced,
+                cancellationToken);
+
+            version = new ClaimedVersion(
+                Guid.NewGuid(),
+                gitVersion,
+                app.Id,
+                part.Id,
+                env.Id,
+                publishedApplicationPart.Id,
+                apiKey,
+                DateTime.UtcNow);
+
+            return await _publishingStore
+                .GetOrCreateClaimedVersionAsync(version, cancellationToken);
+        }
+
+        return version;
     }
 
     private async Task<string> BuildConfigurationForPartAsync(

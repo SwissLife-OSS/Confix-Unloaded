@@ -38,7 +38,7 @@ public interface IPublishingStore
         Guid publishedPartId,
         CancellationToken cancellationToken);
 
-    Task<ClaimedVersion?> GetOrCreateClaimedVersionAsync(
+    Task<ClaimedVersion> GetOrCreateClaimedVersionAsync(
         ClaimedVersion claimedVersion,
         CancellationToken cancellationToken);
 

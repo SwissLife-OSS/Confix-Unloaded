@@ -1,3 +1,3 @@
-namespace Vault.Host.Models;
+namespace Vault.Host.Configuration.Transport;
 
 public record PutConfigurationResponse(string ApiKey);

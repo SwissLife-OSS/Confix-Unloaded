@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Confix.Vault.Abstractions;
@@ -10,10 +11,10 @@ public interface IConfigurationStore
         Configuration configuration,
         CancellationToken cancellationToken);
 
-    Task<Configuration?> GetAsync(
+    Task<IReadOnlyList<Configuration>> GetPossibleConfigurationsAsync(
         string applicationName,
         string applicationPartName,
         string environmentName,
-        string apiKey,
+        string keyPrefix,
         CancellationToken cancellationToken);
 }

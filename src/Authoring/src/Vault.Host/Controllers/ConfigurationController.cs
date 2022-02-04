@@ -2,17 +2,17 @@ using System.Text.Json;
 using Confix.Vault.Abstractions;
 using Confix.Vault.Core;
 using Microsoft.AspNetCore.Mvc;
-using Vault.Host.Models;
+using Vault.Host.Configuration.Transport;
 
 namespace Vault.Host.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class PublishController : ControllerBase
+public class ConfigurationController : ControllerBase
 {
     private readonly IConfigurationService _service;
 
-    public PublishController(IConfigurationService service)
+    public ConfigurationController(IConfigurationService service)
     {
         _service = service;
     }

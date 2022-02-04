@@ -10,6 +10,7 @@ public class Configuration
         string applicationPartName,
         string environmentName,
         string apiKey,
+        string keyPrefix,
         byte[] content,
         byte[] iv)
     {
@@ -19,6 +20,7 @@ public class Configuration
         EnvironmentName = environmentName;
         ApiKey = apiKey;
         Content = content;
+        KeyPrefix = keyPrefix;
         Iv = iv;
     }
 
@@ -31,6 +33,8 @@ public class Configuration
     public string EnvironmentName { get; init; }
 
     public string ApiKey { get; init; }
+
+    public string KeyPrefix { get; init; }
 
     public byte[] Content { get; init; }
 

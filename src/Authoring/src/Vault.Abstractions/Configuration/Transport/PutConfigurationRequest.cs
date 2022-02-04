@@ -1,7 +1,6 @@
-namespace Vault.Host.Models;
+namespace Vault.Host.Configuration.Transport;
 
 public record PutConfigurationRequest(
-    Guid Id,
     string ApplicationName,
     string ApplicationPartName,
     string EnvironmentName,

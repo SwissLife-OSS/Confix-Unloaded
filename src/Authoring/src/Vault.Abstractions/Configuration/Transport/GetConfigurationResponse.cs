@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace Vault.Host.Models;
+namespace Vault.Host.Configuration.Transport;
 
 public record GetConfigurationResponse(JsonDocument? Configuration, string? Error)
 {

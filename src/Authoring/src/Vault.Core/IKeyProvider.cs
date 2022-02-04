@@ -1,6 +1,8 @@
+using System.Threading.Tasks;
+
 namespace Confix.Vault.Core;
 
 public interface IKeyProvider
 {
-    byte[] GetKey();
+    ValueTask<byte[]> GetKey();
 }

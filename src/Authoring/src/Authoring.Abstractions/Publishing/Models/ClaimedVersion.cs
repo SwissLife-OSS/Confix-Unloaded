@@ -12,7 +12,7 @@ public record ClaimedVersion
         Guid applicationPartId,
         Guid environmentId,
         Guid publishingId,
-        string configuration,
+        string apiKey,
         DateTime claimedAt)
     {
         Id = id;
@@ -21,7 +21,7 @@ public record ClaimedVersion
         ApplicationPartId = applicationPartId;
         EnvironmentId = environmentId;
         PublishingId = publishingId;
-        Configuration = configuration;
+        ApiKey = apiKey;
         ClaimedAt = claimedAt;
     }
 
@@ -38,7 +38,8 @@ public record ClaimedVersion
 
     public Guid PublishingId { get; init; }
 
-    public string Configuration { get; init; }
+    // TODO: encrypt
+    public string ApiKey { get; init; }
 
     public DateTime ClaimedAt { get; init; }
 }
