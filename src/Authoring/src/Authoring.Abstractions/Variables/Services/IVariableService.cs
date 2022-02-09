@@ -1,15 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using HotChocolate;
-using HotChocolate.Configuration;
-using HotChocolate.Types;
-using HotChocolate.Types.Descriptors;
-using HotChocolate.Types.Descriptors.Definitions;
-using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring;
 
@@ -80,18 +74,6 @@ public interface IVariableService
         Guid applicationId,
         Guid applicationPartId,
         Guid environmentId,
-        CancellationToken cancellationToken);
-}
-
-public interface IVariableCryptoProvider
-{
-    Task<ValueEncryptionResult> EncryptAsync(
-        string value,
-        CancellationToken cancellationToken);
-
-    Task<string> DecryptAsync(
-        string encryptedValue,
-        VariableEncryptionInfo encryptionInfo,
         CancellationToken cancellationToken);
 }
 

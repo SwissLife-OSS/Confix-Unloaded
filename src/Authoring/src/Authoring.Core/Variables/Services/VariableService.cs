@@ -7,7 +7,7 @@ using System.Transactions;
 using Confix.Authoring.Store;
 using Confix.Authoring.Store.Mongo;
 using Confix.Authoring.Variables.Changes;
-using HotChocolate.Types;
+using Confix.CryptoProviders;
 
 namespace Confix.Authoring;
 
@@ -16,18 +16,21 @@ public class VariableService : IVariableService
     private readonly IVariableStore _variableStore;
     private readonly IVariableValueStore _variableValueStore;
     private readonly IChangeLogService _changeLogService;
-    private readonly IVariableCryptoProvider _cryptoProvider;
+    private readonly IEncryptor _encryptor;
+    private readonly IDecryptor _decryptor;
 
     public VariableService(
         IVariableStore variableStore,
         IVariableValueStore variableValueStore,
         IChangeLogService changeLogService,
-        IVariableCryptoProvider cryptoProvider)
+        IEncryptor encryptor,
+        IDecryptor decryptor)
     {
         _variableStore = variableStore;
         _variableValueStore = variableValueStore;
         _changeLogService = changeLogService;
-        _cryptoProvider = cryptoProvider;
+        _encryptor = encryptor;
+        _decryptor = decryptor;
     }
 
     public async Task<Variable> CreateAsync(
@@ -222,10 +225,7 @@ public class VariableService : IVariableService
                 .ToAsyncEnumerable()
                 .SelectAwait(async value => value with
                 {
-                    Value = await _cryptoProvider.DecryptAsync(
-                        value.Value,
-                        value.Encryption!,
-                        cancellationToken)
+                    Value = await _decryptor.DecryptAsync(value.EncryptedValue!, cancellationToken)
                 })
                 .ToArrayAsync(cancellationToken);
         }
@@ -310,13 +310,16 @@ public class VariableService : IVariableService
 
         if (variable.IsSecret)
         {
-            ValueEncryptionResult encrypted =
-                await _cryptoProvider.EncryptAsync(value, cancellationToken);
+            EncryptedValue encrypted =
+                await _encryptor.EncryptAsync(
+                    "variable",
+                    value,
+                    environmentId ?? Guid.Empty,
+                    cancellationToken);
 
             variableValue = variableValue with
             {
-                Value = encrypted.CipherValue,
-                Encryption = encrypted.EncryptionInfo,
+                EncryptedValue = encrypted
             };
         }
         else
@@ -324,8 +327,12 @@ public class VariableService : IVariableService
             variableValue = variableValue with { Value = value };
         }
 
-        VariableValueChange log =
-            new(variable.Id, variable.Version, variableValue.Key, variableValue.Value);
+        VariableValueChange log = new(
+            variable.Id,
+            variable.Version,
+            variableValue.Key,
+            variableValue.Value,
+            variableValue.EncryptedValue);
 
         using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
         {

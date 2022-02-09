@@ -1,4 +1,5 @@
 using System;
+using Confix.CryptoProviders;
 
 namespace Confix.Vault.Abstractions;
 
@@ -9,19 +10,17 @@ public class Configuration
         string applicationName,
         string applicationPartName,
         string environmentName,
-        string apiKey,
+        string token,
         string keyPrefix,
-        byte[] content,
-        byte[] iv)
+        EncryptedValue encryptedConfiguration)
     {
         Id = id;
         ApplicationName = applicationName;
         ApplicationPartName = applicationPartName;
         EnvironmentName = environmentName;
-        ApiKey = apiKey;
-        Content = content;
+        Token = token;
         KeyPrefix = keyPrefix;
-        Iv = iv;
+        EncryptedConfiguration = encryptedConfiguration;
     }
 
     public Guid Id { get; init; }
@@ -32,11 +31,9 @@ public class Configuration
 
     public string EnvironmentName { get; init; }
 
-    public string ApiKey { get; init; }
+    public string Token { get; init; }
 
     public string KeyPrefix { get; init; }
 
-    public byte[] Content { get; init; }
-
-    public byte[] Iv { get; init; }
+    public EncryptedValue EncryptedConfiguration { get; init; }
 }

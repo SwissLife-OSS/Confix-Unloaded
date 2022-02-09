@@ -55,11 +55,6 @@ const editVariableFragment = graphql`
       }
       id
       value
-      encryption {
-        keyProvider
-        key
-        algorithm
-      }
     }
     changeLog {
       ...ChangeLog_fragment

@@ -1,11 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace Confix.Authoring;
 
@@ -20,6 +15,9 @@ public class Program
         Host.CreateDefaultBuilder(args)
             .ConfigureWebHostDefaults(webBuilder =>
             {
+                webBuilder.ConfigureAppConfiguration(x => x
+                    .AddJsonFile("appsettings.json")
+                    .AddJsonFile("appsettings.user.json", true));
                 webBuilder.UseStartup<Startup>();
             });
 }

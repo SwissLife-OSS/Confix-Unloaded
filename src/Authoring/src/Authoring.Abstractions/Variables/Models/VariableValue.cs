@@ -1,4 +1,6 @@
 using System;
+using Confix.CryptoProviders;
+using HotChocolate;
 using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring;
@@ -8,14 +10,14 @@ public record VariableValue
     public VariableValue(
         Guid id,
         VariableKey key,
-        string value,
-        VariableEncryptionInfo? encryption,
+        string? value,
+        EncryptedValue? encryptionValue,
         int version)
     {
         Id = id;
         Key = key;
         Value = value;
-        Encryption = encryption;
+        EncryptedValue = encryptionValue;
         Version = version;
     }
 
@@ -24,9 +26,10 @@ public record VariableValue
 
     public VariableKey Key { get; init; }
 
-    public string Value { get; init; }
+    public string? Value { get; init; }
 
-    public VariableEncryptionInfo? Encryption { get; init; }
+    [GraphQLIgnore]
+    public EncryptedValue? EncryptedValue { get; init; }
 
     public int Version { get; init; }
 }

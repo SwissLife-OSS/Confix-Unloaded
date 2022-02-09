@@ -1,5 +1,3 @@
-using System;
-using System.Text.Json;
 using MongoDB.Driver;
 using MongoDB.Extensions.Context;
 
@@ -27,9 +25,7 @@ internal class ComponentCollectionConfiguration :
                        Builders<Component>.IndexKeys.Ascending(project => project.Name),
                        new CreateIndexOptions
                        {
-                           Collation = new Collation(
-                               "en",
-                               strength: CollationStrength.Secondary),
+                           Collation = new Collation("en", strength: CollationStrength.Secondary),
                            Unique = true
                        }));
             });

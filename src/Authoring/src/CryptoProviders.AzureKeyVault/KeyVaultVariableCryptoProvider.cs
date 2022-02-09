@@ -1,60 +1,48 @@
 using System;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Azure.Security.KeyVault.Keys.Cryptography;
-using Confix.Authoring;
 
-namespace Confix.CryptoProvider.AzureKeyVault;
+namespace Confix.CryptoProviders.AzureKeyVault;
 
-public class KeyVaultVariableCryptoProvider : IVariableCryptoProvider
+public class KeyVaultCryptoProvider
+    : IEncryptor
+    , IDecryptor
 {
-    private readonly ICryptographyClientFactory _clientFactory;
-    private readonly AzureKeyVaultOptions _options;
-    private const string KeyProviderName = "AZURE_KEYVAULT";
+    private readonly IKeyProvider _keyProvider;
 
-    public KeyVaultVariableCryptoProvider(
-        ICryptographyClientFactory clientFactory,
-        AzureKeyVaultOptions options)
+    public KeyVaultCryptoProvider(IKeyProvider keyProvider)
     {
-        _clientFactory = clientFactory;
-        _options = options;
+        _keyProvider = keyProvider;
     }
 
     public async Task<string> DecryptAsync(
-        string cipherValue,
-        VariableEncryptionInfo encryptionInfo,
+        EncryptedValue encryptedValue,
         CancellationToken cancellationToken)
     {
-        EncryptionAlgorithm algorithm = new EncryptionAlgorithm(encryptionInfo.Algorithm);
-
-        CryptographyClient cryptoClient = _clientFactory
-            .CreateDecryptionClient(encryptionInfo.Key);
-
-        DecryptResult result = await cryptoClient.DecryptAsync(
-            algorithm,
-            Convert.FromBase64String(cipherValue),
-            cancellationToken);
-
-        return Encoding.UTF8.GetString(result.Plaintext);
+        var key = await _keyProvider.GetKeyAsync(encryptedValue.Topic, cancellationToken);
+        using var aes = Aes.Create();
+        aes.Key = key;
+        var iv = Convert.FromBase64String(encryptedValue.Iv);
+        var cypher = Convert.FromBase64String(encryptedValue.Value);
+        var plainText = aes.DecryptCfb(cypher, iv, PaddingMode.PKCS7);
+        return Encoding.UTF8.GetString(plainText);
     }
 
-    public async Task<ValueEncryptionResult> EncryptAsync(
+    public async Task<EncryptedValue> EncryptAsync(
+        string topic,
         string value,
         CancellationToken cancellationToken)
     {
-        CryptographyClient cryptoClient = _clientFactory.CreateEncryptionClient();
-
-        EncryptResult encryptedValue = await cryptoClient.EncryptAsync(
-            new EncryptionAlgorithm(_options.Algorithm),
-            Encoding.UTF8.GetBytes(value),
-            cancellationToken);
-
-        return new ValueEncryptionResult(
-            new VariableEncryptionInfo(
-                KeyProviderName,
-                _options.EncryptionKeyId,
-                encryptedValue.Algorithm.ToString()),
-            Convert.ToBase64String(encryptedValue.Ciphertext));
+        var key = await _keyProvider.GetKeyAsync(topic, cancellationToken);
+        using var aes = Aes.Create();
+        aes.GenerateIV();
+        aes.Key = key;
+        var plainText = Encoding.UTF8.GetBytes(value);
+        var cypher = aes.EncryptCfb(plainText, aes.IV, PaddingMode.PKCS7);
+        var cypherText = Convert.ToBase64String(cypher);
+        var iv = Convert.ToBase64String(aes.IV);
+        return new EncryptedValue(cypherText, iv, topic);
     }
 }

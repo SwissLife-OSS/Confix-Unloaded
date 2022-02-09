@@ -1,36 +1,25 @@
 using System;
 using Azure.Identity;
+using Azure.Security.KeyVault.Keys;
 using Azure.Security.KeyVault.Keys.Cryptography;
+using Microsoft.Extensions.Options;
 
-namespace Confix.CryptoProvider.AzureKeyVault;
+namespace Confix.CryptoProviders.AzureKeyVault;
 
 public class CryptographyClientFactory : ICryptographyClientFactory
 {
-    private readonly AzureKeyVaultOptions _options;
+    private readonly IOptionsMonitor<AzureKeyVaultOptions> _options;
 
-    public CryptographyClientFactory(AzureKeyVaultOptions options)
+    public CryptographyClientFactory(IOptionsMonitor<AzureKeyVaultOptions> options)
     {
         _options = options;
     }
 
-    private DefaultAzureCredential Credentials => new DefaultAzureCredential();
+    private DefaultAzureCredential Credentials => new();
 
-    private Uri BuildUri(string keyId)
-    {
-        return new Uri($"{_options.Url.Trim('/')}/keys/{keyId}");
-    }
+    public CryptographyClient CreateCryptoClient(string keyId)
+        => new(new Uri($"{_options.CurrentValue.Url.Trim('/')}/keys/{keyId}"), Credentials);
 
-    public CryptographyClient CreateEncryptionClient()
-    {
-        return new CryptographyClient(
-            BuildUri(_options.EncryptionKeyId),
-            Credentials);
-    }
-
-    public CryptographyClient CreateDecryptionClient(string keyId)
-    {
-        return new CryptographyClient(
-            BuildUri(keyId),
-            Credentials);
-    }
+    public KeyClient CreateKeyClient(string keyId)
+        => new(new Uri(_options.CurrentValue.Url), Credentials);
 }

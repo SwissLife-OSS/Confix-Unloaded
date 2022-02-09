@@ -50,14 +50,14 @@ public class VaultClient : IVaultClient
         PutConfigurationResponse repsonse =
             await RequestAsync<PutConfigurationResponse>(request, cancellationToken);
 
-        return repsonse.ApiKey;
+        return repsonse.Token;
     }
 
     public async Task<JsonDocument?> GetAsync(
         string applicationName,
         string applicationPartName,
         string environmentName,
-        string apiKey,
+        string token,
         CancellationToken cancellationToken)
     {
         UriBuilder uriBuilder = new(_options.CurrentValue.RequestUri)
@@ -67,7 +67,7 @@ public class VaultClient : IVaultClient
                .AddParameter("applicationName", applicationName)
                .AddParameter("applicationPartName", applicationPartName)
                .AddParameter("environmentName", environmentName)
-               .AddParameter("apiKey", apiKey)
+               .AddParameter("token", token)
                .ToQueryString()
                .Value
         };

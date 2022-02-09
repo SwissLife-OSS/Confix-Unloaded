@@ -1,20 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Security.Claims;
 using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Transactions;
-using Confix.Authoring.Extensions;
 using Confix.Authoring.Publishing.Stores;
 using Confix.Authoring.Store;
+using Confix.CryptoProviders;
 using Confix.Vault.Client;
 using GreenDonut;
-using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
-using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Confix.Authoring.Publishing;
 
@@ -30,6 +25,7 @@ public class PublishingService : IPublishingService
     private readonly IVariableService _variableService;
     private readonly IComponentService _componentService;
     private readonly IVaultClient _vaultClient;
+    private readonly IEncryptor _encryptor;
 
     public PublishingService(
         IDataLoader<Guid, PublishedApplicationPart?> publishedById,
@@ -39,6 +35,7 @@ public class PublishingService : IPublishingService
         IComponentDataLoader componentDataLoader,
         IUserSessionAccessor sessionAccessor,
         IPublishingStore publishingStore,
+        IEncryptor encryptor,
         IVariableService variableService,
         IVaultClient vaultClient,
         IComponentService componentService)
@@ -53,6 +50,7 @@ public class PublishingService : IPublishingService
         _variableService = variableService;
         _componentService = componentService;
         _vaultClient = vaultClient;
+        _encryptor = encryptor;
     }
 
     public async Task<PublishedApplicationPart> PublishPartByIdAsync(
@@ -195,12 +193,14 @@ public class PublishingService : IPublishingService
                 cancellationToken
             );
 
-            var apiKey = await _vaultClient.CreateAsync(
+            var token = await _vaultClient.CreateAsync(
                 app.Name!,
                 part.Name!,
                 environmentName,
                 variableReplaced,
                 cancellationToken);
+
+
 
             version = new ClaimedVersion(
                 Guid.NewGuid(),
@@ -209,7 +209,7 @@ public class PublishingService : IPublishingService
                 part.Id,
                 env.Id,
                 publishedApplicationPart.Id,
-                apiKey,
+                await _encryptor.EncryptAsync("token", token, env.Id, cancellationToken),
                 DateTime.UtcNow);
 
             return await _publishingStore
@@ -345,6 +345,21 @@ public class PublishingService : IPublishingService
         Guid environmentId,
         CancellationToken cancellationToken)
         => _publishingStore.GetClaimedVersionAsync(partId, environmentId, cancellationToken);
+
+    public override bool Equals(object? obj)
+    {
+        return base.Equals(obj);
+    }
+
+    public override int GetHashCode()
+    {
+        return base.GetHashCode();
+    }
+
+    public override string? ToString()
+    {
+        return base.ToString();
+    }
 
     private class ComponentLookup
     {

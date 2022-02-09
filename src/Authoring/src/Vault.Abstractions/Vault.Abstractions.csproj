@@ -10,4 +10,8 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="$(AspNetCoreVersion)" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CryptoProviders.Abstractions\CryptoProviders.Abstractions.csproj" />
+  </ItemGroup>
+
 </Project>

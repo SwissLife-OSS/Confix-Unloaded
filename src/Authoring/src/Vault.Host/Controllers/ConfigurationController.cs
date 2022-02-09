@@ -22,14 +22,14 @@ public class ConfigurationController : ControllerBase
         [FromBody] PutConfigurationRequest request,
         CancellationToken cancellationToken)
     {
-        string apiKey = await _service.CreateAsync(
+        string token = await _service.CreateAsync(
             request.ApplicationName,
             request.ApplicationPartName,
             request.EnvironmentName,
             request.Configuration,
             cancellationToken);
 
-        return new PutConfigurationResponse(apiKey);
+        return new PutConfigurationResponse(token);
     }
 
     [HttpGet]
@@ -37,7 +37,7 @@ public class ConfigurationController : ControllerBase
         [FromQuery] string applicationName,
         [FromQuery] string applicationPartName,
         [FromQuery] string environmentName,
-        [FromQuery] string apiKey,
+        [FromQuery] string token,
         CancellationToken cancellationToken)
     {
         if (string.IsNullOrEmpty(applicationName))
@@ -58,16 +58,16 @@ public class ConfigurationController : ControllerBase
                 .FromError(nameof(environmentName) + " must be provided");
         }
 
-        if (string.IsNullOrEmpty(apiKey))
+        if (string.IsNullOrEmpty(token))
         {
-            return GetConfigurationResponse.FromError(nameof(apiKey) + " must be provided");
+            return GetConfigurationResponse.FromError(nameof(token) + " must be provided");
         }
 
         JsonDocument? configuration = await _service.GetAsync(
             applicationName,
             applicationPartName,
             environmentName,
-            apiKey,
+            token,
             cancellationToken);
 
         if (configuration is null)

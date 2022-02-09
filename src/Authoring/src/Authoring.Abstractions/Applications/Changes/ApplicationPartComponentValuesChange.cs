@@ -12,7 +12,14 @@ public record ApplicationPartComponentValuesChange : IApplicationPartComponentCh
     {
     }
 
-    public ApplicationPartComponentValuesChange(Guid applicationId, Guid partId, Guid partComponentId, string values, int applicationVersion, int partVersion, int partComponentVersion)
+    public ApplicationPartComponentValuesChange(
+        Guid applicationId,
+        Guid partId,
+        Guid partComponentId,
+        string values,
+        int applicationVersion,
+        int partVersion,
+        int partComponentVersion)
     {
         ApplicationId = applicationId;
         PartId = partId;
@@ -43,5 +50,5 @@ public record ApplicationPartComponentValuesChange : IApplicationPartComponentCh
 
     public int PartComponentVersion { get; init; }
 
-    public string Values { get; init; }
+    public string? Values { get; init; }
 }

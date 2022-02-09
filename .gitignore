@@ -340,3 +340,6 @@ tools/**
 !tools/packages.config
 
 .DS_Store
+
+
+appsettings.user.json

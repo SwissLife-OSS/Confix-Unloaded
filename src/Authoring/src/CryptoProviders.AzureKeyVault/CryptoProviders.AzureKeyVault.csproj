@@ -10,10 +10,11 @@
     <PackageReference Include="Azure.Security.KeyVault.Keys" Version="4.1.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="$(AspNetCoreVersion)" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="$(AspNetCoreVersion)" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Authoring.Abstractions\Authoring.Abstractions.csproj" />
+    <ProjectReference Include="..\CryptoProviders.Abstractions\CryptoProviders.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

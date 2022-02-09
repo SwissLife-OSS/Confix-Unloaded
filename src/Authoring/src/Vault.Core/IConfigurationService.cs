@@ -17,6 +17,6 @@ public interface IConfigurationService
         string applicationName,
         string applicationPartName,
         string environmentName,
-        string apiKey,
+        string token,
         CancellationToken cancellationToken);
 }
