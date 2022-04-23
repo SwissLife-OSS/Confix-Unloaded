@@ -181,7 +181,7 @@ public class PublishingService : IPublishingService
         }
 
         ClaimedVersion? version = await _publishingStore
-            .GetClaimedVersionByGitVersionAsync(gitVersion, app.Id, part.Id, cancellationToken);
+            .GetClaimedVersionAsync(part.Id, env.Id, gitVersion, cancellationToken);
 
         if (version is null)
         {
@@ -199,8 +199,6 @@ public class PublishingService : IPublishingService
                 environmentName,
                 variableReplaced,
                 cancellationToken);
-
-
 
             version = new ClaimedVersion(
                 Guid.NewGuid(),

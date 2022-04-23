@@ -51,4 +51,10 @@ public interface IPublishingStore
         Guid applicationId,
         Guid applicationPartId,
         CancellationToken cancellationToken);
+
+    Task<ClaimedVersion?> GetClaimedVersionAsync(
+        Guid partId,
+        Guid environmentId,
+        string gitVersion,
+        CancellationToken cancellationToken);
 }

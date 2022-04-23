@@ -116,8 +116,7 @@ public class PublishingStore : IPublishingStore
 
         FindOneAndUpdateOptions<ClaimedVersion> options = new()
         {
-            IsUpsert = true,
-            ReturnDocument = ReturnDocument.After
+            IsUpsert = true, ReturnDocument = ReturnDocument.After
         };
 
         return await _dbContext.ClaimedVersions
@@ -133,6 +132,26 @@ public class PublishingStore : IPublishingStore
         FilterDefinition<ClaimedVersion> filter =
             Claimed.Filter.Eq(x => x.ApplicationId, applicationId) &
             Claimed.Filter.Eq(x => x.ApplicationPartId, applicationPartId) &
+            Claimed.Filter.Eq(x => x.GitVersion, gitVersion);
+
+        SortDefinition<ClaimedVersion> sort =
+            Claimed.Sort.Descending(x => x.ClaimedAt);
+
+        return await _dbContext.ClaimedVersions
+            .Find(filter)
+            .Sort(sort)
+            .FirstOrDefaultAsync(cancellationToken);
+    }
+
+    public async Task<ClaimedVersion?> GetClaimedVersionAsync(
+        Guid partId,
+        Guid environmentId,
+        string gitVersion,
+        CancellationToken cancellationToken)
+    {
+        FilterDefinition<ClaimedVersion> filter =
+            Claimed.Filter.Eq(x => x.ApplicationPartId, partId) &
+            Claimed.Filter.Eq(x => x.EnvironmentId, environmentId) &
             Claimed.Filter.Eq(x => x.GitVersion, gitVersion);
 
         SortDefinition<ClaimedVersion> sort =
