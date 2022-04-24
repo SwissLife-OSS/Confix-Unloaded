@@ -5,7 +5,6 @@ import { Checkbox, Input, InputProps, Row, Select } from "antd";
 import React, { useCallback } from "react";
 import { Colors } from "./colors";
 import { SchemaEditor, useSchemaEditorRef } from "./editor/SchemaEditor";
-import { ExtractProps } from "./ExtractProps";
 import { UseFormik } from "./UseFormik";
 import { useHandler } from "./useHandler";
 
@@ -127,7 +126,7 @@ export function FormEditor<TValues>(props: {
   const handleChange = useHandler(
     SchemaEditor,
     "onChange",
-    (value: string | undefined) => {
+    (value) => {
       form.setFieldValue(String(field), value);
     },
     [form, field]

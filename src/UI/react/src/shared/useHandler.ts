@@ -1,13 +1,55 @@
 import { DependencyList, useCallback } from "react";
-import { ExtractProps } from "./ExtractProps";
+
+type ExtractProps<T extends React.FC<any>> = Parameters<T>["0"];
+type ExtractClassProps<T extends React.Component<any, any>> =
+  T extends React.Component<infer X> ? X : never;
+
+type ExtractHandlers<T> = {
+  [K in keyof T]-?: T[K] extends Function | undefined ? K : never;
+}[keyof T];
+
+type AnyFunctionalComponent =
+  | React.FunctionComponent<any>
+  | React.VoidFunctionComponent<any>;
+
+type ComponentOrList =
+  | keyof JSX.IntrinsicElements
+  | AnyFunctionalComponent
+  | React.Component;
+
+type HandlerProperty<T extends ComponentOrList> =
+  T extends keyof JSX.IntrinsicElements
+    ? ExtractHandlers<JSX.IntrinsicElements[T]>
+    : T extends AnyFunctionalComponent
+    ? ExtractHandlers<ExtractProps<T>>
+    : T extends React.Component
+    ? ExtractHandlers<ExtractClassProps<T>>
+    : never;
+
+type Handler<
+  T extends ComponentOrList,
+  TProp extends HandlerProperty<T>
+> = T extends keyof JSX.IntrinsicElements
+  ? TProp extends keyof JSX.IntrinsicElements[T]
+    ? JSX.IntrinsicElements[T][TProp]
+    : never
+  : T extends AnyFunctionalComponent
+  ? TProp extends keyof ExtractProps<T>
+    ? ExtractProps<T>[TProp]
+    : never
+  : T extends React.Component
+  ? TProp extends keyof ExtractClassProps<T>
+    ? ExtractClassProps<T>[TProp]
+    : never
+  : never;
 
 export const useHandler = <
-  T extends React.FC<any>,
-  TProp extends keyof ExtractProps<T>,
-  THandler extends T[TProp] & ((...args: any[]) => any)
+  T extends ComponentOrList,
+  TProp extends HandlerProperty<T>,
+  THandler extends Handler<T, TProp> = Handler<T, TProp>
 >(
   component: T,
   handler: TProp,
   callback: THandler,
   deps: DependencyList
-) => useCallback(callback, deps);
+) => useCallback(callback as any, deps);
