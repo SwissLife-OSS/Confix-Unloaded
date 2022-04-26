@@ -52,4 +52,4 @@ export const useHandler = <
   handler: TProp,
   callback: THandler,
   deps: DependencyList
-) => useCallback(callback as any, deps);
+): THandler => useCallback(callback as any, deps);

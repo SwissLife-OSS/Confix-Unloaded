@@ -2,7 +2,7 @@ import { ClassNames, css, SerializedStyles } from "@emotion/react";
 import styled from "@emotion/styled";
 import Editor from "@monaco-editor/react";
 import { Checkbox, Input, InputProps, Row, Select } from "antd";
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { Colors } from "./colors";
 import { SchemaEditor, useSchemaEditorRef } from "./editor/SchemaEditor";
 import { UseFormik } from "./UseFormik";
