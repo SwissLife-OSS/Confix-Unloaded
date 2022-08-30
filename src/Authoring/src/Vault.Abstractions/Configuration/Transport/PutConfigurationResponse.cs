@@ -1,3 +1,3 @@
 namespace Vault.Host.Configuration.Transport;
 
-public record PutConfigurationResponse(string Token);
+public record PutConfigurationResponse(string Token, string RefreshToken);

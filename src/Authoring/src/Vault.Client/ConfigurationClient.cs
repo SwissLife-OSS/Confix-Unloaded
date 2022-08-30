@@ -4,6 +4,7 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Confix.Vault.Abstractions;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Extensions.Options;
 using Vault.Host.Configuration.Transport;
@@ -25,17 +26,14 @@ public class VaultClient : IVaultClient
         _options = options;
     }
 
-    public async Task<string> CreateAsync(
+    public async Task<TokenPair> CreateAsync(
         string applicationName,
         string applicationPartName,
         string environmentName,
         string configuration,
         CancellationToken cancellationToken)
     {
-        UriBuilder uriBuilder = new(_options.CurrentValue.RequestUri)
-        {
-            Path = "Configuration",
-        };
+        UriBuilder uriBuilder = new(_options.CurrentValue.RequestUri) {Path = "Configuration",};
 
         PutConfigurationRequest payload =
             new(applicationName, applicationPartName, environmentName, configuration);
@@ -50,7 +48,30 @@ public class VaultClient : IVaultClient
         PutConfigurationResponse repsonse =
             await RequestAsync<PutConfigurationResponse>(request, cancellationToken);
 
-        return repsonse.Token;
+        return new(repsonse.Token, repsonse.RefreshToken);
+    }
+
+    public async Task RefreshAsync(
+        string applicationName,
+        string applicationPartName,
+        string environmentName,
+        string configuration,
+        string refreshToken,
+        CancellationToken cancellationToken)
+    {
+        UriBuilder uriBuilder = new(_options.CurrentValue.RequestUri) {Path = "Configuration",};
+
+        RefreshConfigurationRequest payload =
+            new(applicationName, applicationPartName, environmentName, configuration, refreshToken);
+
+        HttpRequestMessage request = new()
+        {
+            Method = HttpMethod.Patch,
+            RequestUri = uriBuilder.Uri,
+            Content = JsonContent.Create(payload)
+        };
+
+        await RequestAsync<RefreshConfigurationResponse>(request, cancellationToken);
     }
 
     public async Task<JsonDocument?> GetAsync(
@@ -64,19 +85,15 @@ public class VaultClient : IVaultClient
         {
             Path = "Configuration",
             Query = new QueryBuilder()
-               .AddParameter("applicationName", applicationName)
-               .AddParameter("applicationPartName", applicationPartName)
-               .AddParameter("environmentName", environmentName)
-               .AddParameter("token", token)
-               .ToQueryString()
-               .Value
+                .AddParameter("applicationName", applicationName)
+                .AddParameter("applicationPartName", applicationPartName)
+                .AddParameter("environmentName", environmentName)
+                .AddParameter("token", token)
+                .ToQueryString()
+                .Value
         };
 
-        HttpRequestMessage request = new()
-        {
-            Method = HttpMethod.Get,
-            RequestUri = uriBuilder.Uri,
-        };
+        HttpRequestMessage request = new() {Method = HttpMethod.Get, RequestUri = uriBuilder.Uri,};
 
         GetConfigurationResponse repsonse =
             await RequestAsync<GetConfigurationResponse>(request, cancellationToken);

@@ -181,7 +181,7 @@ public class PublishingService : IPublishingService
         }
 
         ClaimedVersion? version = await _publishingStore
-            .GetClaimedVersionByGitVersionAsync(gitVersion, app.Id, part.Id, cancellationToken);
+            .GetClaimedVersionAsync(part.Id, env.Id, gitVersion, cancellationToken);
 
         if (version is null)
         {
@@ -200,8 +200,6 @@ public class PublishingService : IPublishingService
                 variableReplaced,
                 cancellationToken);
 
-
-
             version = new ClaimedVersion(
                 Guid.NewGuid(),
                 gitVersion,
@@ -209,7 +207,14 @@ public class PublishingService : IPublishingService
                 part.Id,
                 env.Id,
                 publishedApplicationPart.Id,
-                await _encryptor.EncryptAsync("token", token, env.Id, cancellationToken),
+                await _encryptor.EncryptAsync("token",
+                    token.AccessToken,
+                    env.Id,
+                    cancellationToken),
+                await _encryptor.EncryptAsync("refreshToken",
+                    token.RefreshToken,
+                    env.Id,
+                    cancellationToken),
                 DateTime.UtcNow);
 
             return await _publishingStore

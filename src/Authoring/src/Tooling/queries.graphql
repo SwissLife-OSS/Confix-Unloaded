@@ -1,0 +1,25 @@
+mutation ClaimApplicationPart($input: ClaimVersionInput!) {
+  claimVersion(input: $input){
+    errors {
+      ...Error
+    }
+    claimedVersion {
+      ...ClaimedVersion
+    }
+  }
+}
+
+fragment ClaimedVersion on ClaimedVersion {
+  id
+  gitVersion
+  claimedAt
+  publishedApplicationPart {
+    version
+  }
+  token
+}
+
+fragment  Error on IUserError {
+  message
+  code
+}

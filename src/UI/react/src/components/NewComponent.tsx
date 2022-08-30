@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Col, Row } from "antd";
 import { useMutation } from "react-relay";
 import { DetailView } from "../shared/DetailView";
-import { FormActions, FormField } from "../shared/FormField";
+import { FormActions, FormEditor, FormField } from "../shared/FormField";
 import { graphql } from "babel-plugin-relay/macro";
 import { NewComponentMutation } from "./__generated__/NewComponentMutation.graphql";
 import {
@@ -37,16 +37,23 @@ const newComponentMutation = graphql`
     }
   }
 `;
+const defaultSchema = `
+  type Configuration {
+    value: String
+  }
+`;
+
 export const NewComponent: React.FC = () => {
   const [commit, isInFlight] =
     useMutation<NewComponentMutation>(newComponentMutation);
   const connectionId = useConnectionId("Query_components");
   const goToEdit = useGoTo((id: string) => `../${id}/edit`);
+  console.log(defaultSchema);
   const form = useCommitForm(
     commit,
     {
       name: "",
-      schema: "",
+      schema: defaultSchema,
     },
     (input) => ({ input, connectionIds: [connectionId] }),
     {
@@ -71,7 +78,7 @@ export const NewComponent: React.FC = () => {
         <Col xs={24}>
           <form onSubmitCapture={form.handleSubmit}>
             <FormField form={form} field="name" label="Name" />
-            <FormField form={form} field="schema" label="Schema" />
+            <FormEditor form={form} field="schema" label="Schema" />
             <FormActions>
               <Button type="primary" htmlType="submit" loading={isInFlight}>
                 Submit

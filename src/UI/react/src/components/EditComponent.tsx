@@ -7,7 +7,7 @@ import { pipeCommitFn, withSuccessMessage } from "../shared/pipeCommitFn";
 import { EditableBreadcrumbHeader } from "../shared/EditablePageHeader";
 import { useToggle } from "../shared/useToggle";
 import { RenameComponentDialog } from "./controls/dialogs/RenameComponentDialog";
-import { ComponentEditor } from "../applications/components/ComponentEditor";
+import { SchemaComponentEditor } from "../applications/components/SchemaComponentEditor";
 import {
   EditComponentUpdateMutation,
   EditComponentUpdateMutationResponse,
@@ -154,7 +154,7 @@ const EditComponentForm: React.FC<{
 
   return (
     <>
-      <ComponentEditor
+      <SchemaComponentEditor
         key={component.id}
         onValuesChanged={setValues}
         onSchemaChange={setSchema}
