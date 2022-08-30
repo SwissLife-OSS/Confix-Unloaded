@@ -38,6 +38,7 @@ public class PublishingService : IPublishingService
         IEncryptor encryptor,
         IVariableService variableService,
         IVaultClient vaultClient,
+        IVaultClient vaultClient,
         IComponentService componentService)
     {
         _publishedById = publishedById;
