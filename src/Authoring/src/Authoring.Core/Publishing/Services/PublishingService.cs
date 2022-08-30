@@ -207,7 +207,14 @@ public class PublishingService : IPublishingService
                 part.Id,
                 env.Id,
                 publishedApplicationPart.Id,
-                await _encryptor.EncryptAsync("token", token, env.Id, cancellationToken),
+                await _encryptor.EncryptAsync("token",
+                    token.AccessToken,
+                    env.Id,
+                    cancellationToken),
+                await _encryptor.EncryptAsync("refreshToken",
+                    token.RefreshToken,
+                    env.Id,
+                    cancellationToken),
                 DateTime.UtcNow);
 
             return await _publishingStore

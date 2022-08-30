@@ -123,14 +123,9 @@ export function FormEditor<TValues>(props: {
 }): React.ReactElement {
   const { form, field, label } = props;
   const editor = useSchemaEditorRef();
-  const handleChange = useHandler(
-    SchemaEditor,
-    "onChange",
-    (value) => {
-      form.setFieldValue(String(field), value);
-    },
-    [form, field]
-  );
+  const handleChange = useHandler<typeof SchemaEditor, "onChange">((value) => {
+    form.setFieldValue(String(field), value);
+  });
   return (
     <Field
       css={css`

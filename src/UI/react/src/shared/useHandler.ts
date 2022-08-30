@@ -1,4 +1,5 @@
-import { DependencyList, useCallback } from "react";
+import React from "react";
+import { DependencyList, useCallback, useRef, useRef } from "react";
 
 type ExtractProps<T extends React.FC<any>> = Parameters<T>["0"];
 type ExtractClassProps<T extends React.Component<any, any>> =
@@ -48,8 +49,10 @@ export const useHandler = <
   TProp extends HandlerProperty<T>,
   THandler extends Handler<T, TProp> = Handler<T, TProp>
 >(
-  component: T,
-  handler: TProp,
-  callback: THandler,
-  deps: DependencyList
-): THandler => useCallback(callback as any, deps);
+  callback: THandler
+): THandler => {
+  const ref = useRef<THandler>(callback);
+  ref.current = callback;
+  return useCallback((...args: any[]) => ref.current(...args), []) as THandler;
+};
+

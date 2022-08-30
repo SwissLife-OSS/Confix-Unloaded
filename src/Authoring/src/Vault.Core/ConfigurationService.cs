@@ -30,14 +30,15 @@ public class ConfigurationService : IConfigurationService
         _decryptor = decryptor;
     }
 
-    public async Task<string> CreateAsync(
+    public async Task<TokenPair> CreateAsync(
         string applicationName,
         string applicationPartName,
         string environmentName,
         string configuration,
         CancellationToken cancellationToken)
     {
-        Token token = _tokenProvider.GenerateToken();
+        Token accessToken = _tokenProvider.GenerateToken();
+        Token refreshToken = _tokenProvider.GenerateToken();
 
         EncryptedValue encryptedValue = await _encryptor
             .EncryptAsync($"configuration-{environmentName}", configuration, cancellationToken);
@@ -47,13 +48,44 @@ public class ConfigurationService : IConfigurationService
             applicationName,
             applicationPartName,
             environmentName,
-            token.Hashed,
-            _tokenProvider.GetPrefix(token.PlainText),
+            accessToken.Hashed,
+            _tokenProvider.GetPrefix(accessToken.PlainText),
+            refreshToken.Hashed,
+            _tokenProvider.GetPrefix(accessToken.PlainText),
             encryptedValue);
 
         await _store.StoreAsync(config, cancellationToken);
 
-        return token.PlainText;
+        return new(accessToken.PlainText, refreshToken.PlainText);
+    }
+
+    public async Task RefreshConfigurationAsync(
+        string applicationName,
+        string applicationPartName,
+        string environmentName,
+        string configuration,
+        string refreshToken,
+        CancellationToken cancellationToken)
+    {
+        EncryptedValue encryptedValue = await _encryptor
+            .EncryptAsync($"configuration-{environmentName}", configuration, cancellationToken);
+
+        IReadOnlyList<Configuration> configurations = await _store.GetByRefreshTokenAsync(
+            applicationName,
+            applicationPartName,
+            environmentName,
+            _tokenProvider.GetPrefix(refreshToken),
+            cancellationToken);
+
+        Configuration? config = configurations
+            .SingleOrDefault(x => !_tokenProvider.ValidateToken(refreshToken, x.RefreshToken));
+
+        if (config is null)
+        {
+            throw new ConfigurationNotFoundException();
+        }
+
+        await _store.UpdateConfigurationAsync(config.Id, encryptedValue, cancellationToken);
     }
 
     public async Task<JsonDocument?> GetAsync(
@@ -71,7 +103,7 @@ public class ConfigurationService : IConfigurationService
             cancellationToken);
 
         Configuration? configuration = configurations
-            .SingleOrDefault(x => !_tokenProvider.ValidateToken(token, x.Token));
+            .SingleOrDefault(x => !_tokenProvider.ValidateToken(token, x.AccessToken));
 
         if (configuration is null)
         {

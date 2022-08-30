@@ -6,7 +6,7 @@ namespace Confix.Vault.Core;
 
 public interface IConfigurationService
 {
-    Task<string> CreateAsync(
+    Task<TokenPair> CreateAsync(
         string applicationName,
         string applicationPartName,
         string environmentName,
@@ -18,5 +18,13 @@ public interface IConfigurationService
         string applicationPartName,
         string environmentName,
         string token,
+        CancellationToken cancellationToken);
+
+    Task RefreshConfigurationAsync(
+        string applicationName,
+        string applicationPartName,
+        string environmentName,
+        string configuration,
+        string refreshToken,
         CancellationToken cancellationToken);
 }

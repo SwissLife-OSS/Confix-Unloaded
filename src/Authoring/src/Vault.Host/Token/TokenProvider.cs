@@ -7,7 +7,7 @@ namespace Confix.Vault.Host;
 
 public class TokenProvider : ITokenProivder
 {
-    private const int _tokenLength = 60;
+    private const int _tokenLength = 120;
     private const int PrefixLength = 10;
     private static readonly IReadOnlyList<char> _validTokenCharacters =
         "ABCDEFGHIJKLMNOPQRSTUFWXYZabcdefghijklmnopqrstufwxyz0123456789".ToCharArray();

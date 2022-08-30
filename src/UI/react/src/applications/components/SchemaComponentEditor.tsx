@@ -17,6 +17,7 @@ import {
   ComponentValueEditor,
   useComponentValueEditorRef,
 } from "../../shared/editor/ComponentEditor";
+import { useHandler } from "../../shared/useHandler";
 
 export const SchemaComponentEditor: React.FC<{
   onValuesChanged?: (values?: Record<string, any>) => void;
@@ -44,32 +45,32 @@ export const SchemaComponentEditor: React.FC<{
     },
     [valueEditor, variables]
   );
-  const handleSchemaChange = useCallback(
+
+  const handleSchemaChange = useHandler<typeof SchemaEditor, "onChange">(
     (value: string | undefined) => {
       onSchemaChange(value);
       updateSchema(value);
-    },
-    [onSchemaChange, updateSchema]
+    }
   );
 
   useDelay(() => {
     updateSchema(schemaEditor.getValue());
   }, 1000);
 
-  const handleComponentValueChange = useCallback(
-    (value: string | undefined) => {
-      try {
-        if (!value) {
-          onValuesChanged(undefined);
-        } else {
-          onValuesChanged(JSON.parse(value));
-        }
-      } catch (e) {
+  const handleComponentValueChange = useHandler<
+    typeof ComponentValueEditor,
+    "onChange"
+  >((value: string | undefined) => {
+    try {
+      if (!value) {
         onValuesChanged(undefined);
+      } else {
+        onValuesChanged(JSON.parse(value));
       }
-    },
-    [onValuesChanged]
-  );
+    } catch (e) {
+      onValuesChanged(undefined);
+    }
+  });
 
   return (
     <Wrapper>
