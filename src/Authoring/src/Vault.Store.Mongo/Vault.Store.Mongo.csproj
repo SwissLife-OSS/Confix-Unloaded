@@ -6,8 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MongoDB.Extensions.Context" Version="0.3.0" />
-    <PackageReference Include="MongoDB.Extensions.Transactions" Version="0.10.0" />
+    <PackageReference Include="MongoDB.Extensions.Context" />
+    <PackageReference Include="MongoDB.Extensions.Transactions" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Vault.Abstractions\Vault.Abstractions.csproj" />

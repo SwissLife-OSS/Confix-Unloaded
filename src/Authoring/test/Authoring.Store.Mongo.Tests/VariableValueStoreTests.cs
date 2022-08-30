@@ -13,7 +13,7 @@ namespace Authoring.Store.Mongo.Tests;
 
 public class VariableValueStoreTests : IClassFixture<MongoResource>
 {
-    private readonly IMongoDatabase _mongoDatabase;
+    /*private readonly IMongoDatabase _mongoDatabase;
     private readonly IConfixAuthorDbContext _docuStoreDbContext;
 
     public VariableValueStoreTests(MongoResource mongoResource)
@@ -97,7 +97,7 @@ public class VariableValueStoreTests : IClassFixture<MongoResource>
         variableValue = variableValue with
         {
             Value = "Updated variable Value",
-            Encryption = new VariableEncryptionInfo("AzureKeyVault", "xyz", "AES256")
+            EncryptedValue = new VariableEncryptionInfo("AzureKeyVault", "xyz", "AES256")
         };
 
         VariableValueStore variableValueStore =
@@ -313,5 +313,5 @@ public class VariableValueStoreTests : IClassFixture<MongoResource>
         _mongoDatabase
             .GetCollection<VariableValue>("variable_value")
             .InsertMany(variableValues);
-    }
+    }*/
 }

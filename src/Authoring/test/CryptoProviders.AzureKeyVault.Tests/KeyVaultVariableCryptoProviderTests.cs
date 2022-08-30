@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Confix.Authoring;
-using Confix.CryptoProviders.AzureKeyVault;
+using Confix.CryptoProviders;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
@@ -16,7 +13,7 @@ public class KeyVaultVariableCryptoProviderTests
     [Fact(Skip = "Needs an actual KeyVault in Azure to run")]
     public async Task EncryptAndDecrypt_WithDefaultKeyId_DecryptedValueEqualsPlainTextValue()
     {
-        // Arrange
+        /*// Arrange
         IConfixServerBuilder? builder = TestContext.GetBuilder();
         builder.AddAzureKeyvaultCrypto();
 
@@ -35,6 +32,6 @@ public class KeyVaultVariableCryptoProviderTests
             CancellationToken.None);
 
         // Assert
-        plainTextValue.Should().Be(reverse);
+        plainTextValue.Should().Be(reverse);*/
     }
 }
