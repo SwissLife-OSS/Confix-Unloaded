@@ -1,8 +1,8 @@
 using Confix.Authoring.GraphQL;
 using Confix.Authoring.Store.Mongo;
+using Confix.CryptoProviders.AzureKeyVault;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -23,6 +23,8 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services
+            .AddKeyVaultSecrets(Configuration)
+            .AddMongoSecrets(Configuration)
             .AddConfixAuthoringServer(Configuration)
             .AddMongoStore()
             .AddGraphQLServer();

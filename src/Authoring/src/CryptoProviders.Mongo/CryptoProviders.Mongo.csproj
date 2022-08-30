@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>Confix.CryptoProvider.Mongo</AssemblyName>
+    <RootNamespace>Confix.CryptoProvider.Mongo</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MongoDB.Extensions.Context" Version="0.3.0" />
+    <PackageReference Include="MongoDB.Extensions.Transactions" Version="0.10.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CryptoProviders.Abstractions\CryptoProviders.Abstractions.csproj" />
+    <ProjectReference Include="..\Authoring.Abstractions\Authoring.Abstractions.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -17,7 +17,7 @@ import {
   EditApplicationPartComponent_fragment$key,
 } from "./__generated__/EditApplicationPartComponent_fragment.graphql";
 import { SectionHeader } from "../shared/SectionHeader";
-import { ComponentEditor } from "./components/ComponentEditor";
+import { SchemaComponentEditor } from "./components/SchemaComponentEditor";
 import { css } from "@emotion/react";
 import { EditApplicationPartComponent_UpdateComponentValues_Mutation } from "./__generated__/EditApplicationPartComponent_UpdateComponentValues_Mutation.graphql";
 import {
@@ -254,7 +254,7 @@ export const EditConfiguration: React.FC<{
 
   return (
     <>
-      <ComponentEditor
+      <SchemaComponentEditor
         key={definition.id}
         onValuesChanged={setComponentValues}
         values={values ?? ""}

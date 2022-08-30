@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>Confix.CryptoProvider.Abstractions</AssemblyName>
+    <RootNamespace>Confix.CryptoProvider.Abstractions</RootNamespace>
+  </PropertyGroup>
+
+</Project>

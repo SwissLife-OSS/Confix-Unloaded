@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Confix.CryptoProviders;
 using Confix.Vault.Abstractions;
 using Confix.Vault.Store;
 
@@ -12,84 +13,106 @@ namespace Confix.Vault.Core;
 
 public class ConfigurationService : IConfigurationService
 {
-    private readonly IEncryptionProvider _encryptionProvider;
-    private readonly IKeyProvider _keyProvider;
-    private readonly IApiKeyProvider _apiKeyProvider;
+    private readonly ITokenProivder _tokenProvider;
+    private readonly IEncryptor _encryptor;
+    private readonly IDecryptor _decryptor;
     private readonly IConfigurationStore _store;
 
     public ConfigurationService(
-        IEncryptionProvider encryptionProvider,
+        IEncryptor encryptor,
+        IDecryptor decryptor,
         IConfigurationStore store,
-        IApiKeyProvider apiKeyProvider,
-        IKeyProvider keyProvider)
+        ITokenProivder tokenProvider)
     {
-        _encryptionProvider = encryptionProvider;
         _store = store;
-        _keyProvider = keyProvider;
-        _apiKeyProvider = apiKeyProvider;
+        _tokenProvider = tokenProvider;
+        _encryptor = encryptor;
+        _decryptor = decryptor;
     }
 
-    public async Task<string> CreateAsync(
+    public async Task<TokenPair> CreateAsync(
         string applicationName,
         string applicationPartName,
         string environmentName,
         string configuration,
         CancellationToken cancellationToken)
     {
-        var key = await _keyProvider.GetKey();
-        var iv = _encryptionProvider.GenerateIV();
-        ApiKey apiKey = _apiKeyProvider.GenerateKey();
+        Token accessToken = _tokenProvider.GenerateToken();
+        Token refreshToken = _tokenProvider.GenerateToken();
 
-        var cipherText =
-            _encryptionProvider.Encrypt(Encoding.UTF8.GetBytes(configuration), iv, key);
+        EncryptedValue encryptedValue = await _encryptor
+            .EncryptAsync($"configuration-{environmentName}", configuration, cancellationToken);
 
         Configuration config = new(
             Guid.NewGuid(),
             applicationName,
             applicationPartName,
             environmentName,
-            apiKey.Hashed,
-            _apiKeyProvider.GetPrefix(apiKey.PlainText),
-            cipherText,
-            iv);
+            accessToken.Hashed,
+            _tokenProvider.GetPrefix(accessToken.PlainText),
+            refreshToken.Hashed,
+            _tokenProvider.GetPrefix(accessToken.PlainText),
+            encryptedValue);
 
         await _store.StoreAsync(config, cancellationToken);
 
-        return apiKey.PlainText;
+        return new(accessToken.PlainText, refreshToken.PlainText);
+    }
+
+    public async Task RefreshConfigurationAsync(
+        string applicationName,
+        string applicationPartName,
+        string environmentName,
+        string configuration,
+        string refreshToken,
+        CancellationToken cancellationToken)
+    {
+        EncryptedValue encryptedValue = await _encryptor
+            .EncryptAsync($"configuration-{environmentName}", configuration, cancellationToken);
+
+        IReadOnlyList<Configuration> configurations = await _store.GetByRefreshTokenAsync(
+            applicationName,
+            applicationPartName,
+            environmentName,
+            _tokenProvider.GetPrefix(refreshToken),
+            cancellationToken);
+
+        Configuration? config = configurations
+            .SingleOrDefault(x => !_tokenProvider.ValidateToken(refreshToken, x.RefreshToken));
+
+        if (config is null)
+        {
+            throw new ConfigurationNotFoundException();
+        }
+
+        await _store.UpdateConfigurationAsync(config.Id, encryptedValue, cancellationToken);
     }
 
     public async Task<JsonDocument?> GetAsync(
         string applicationName,
         string applicationPartName,
         string environmentName,
-        string apiKey,
+        string token,
         CancellationToken cancellationToken)
     {
         IReadOnlyList<Configuration> configurations = await _store.GetPossibleConfigurationsAsync(
             applicationName,
             applicationPartName,
             environmentName,
-            _apiKeyProvider.GetPrefix(apiKey),
+            _tokenProvider.GetPrefix(token),
             cancellationToken);
 
         Configuration? configuration = configurations
-            .SingleOrDefault(x => !_apiKeyProvider.ValidateKey(apiKey, x.ApiKey));
+            .SingleOrDefault(x => !_tokenProvider.ValidateToken(token, x.AccessToken));
 
         if (configuration is null)
         {
             return null;
         }
 
-        var key = await _keyProvider.GetKey();
-        var plaintext = _encryptionProvider
-            .Decrypt(configuration.Content, configuration.Iv, key);
+        string? plaintext =
+            await _decryptor.DecryptAsync(configuration.EncryptedConfiguration, cancellationToken);
 
-        return Deserialize(plaintext);
-    }
-
-    private static JsonDocument? Deserialize(byte[] content)
-    {
-        Utf8JsonReader reader = new(content);
-        return JsonDocument.ParseValue(ref reader);
+        return JsonDocument.Parse(plaintext);
     }
 }

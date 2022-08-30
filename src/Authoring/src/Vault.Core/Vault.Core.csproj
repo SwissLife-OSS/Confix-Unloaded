@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Vault.Abstractions\Vault.Abstractions.csproj" />
+    <ProjectReference Include="..\CryptoProviders.AzureKeyVault\CryptoProviders.AzureKeyVault.csproj" />
   </ItemGroup>
 
 </Project>

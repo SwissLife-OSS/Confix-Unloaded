@@ -1,9 +1,12 @@
-import { css } from "@emotion/react";
+import { ClassNames, css, SerializedStyles } from "@emotion/react";
 import styled from "@emotion/styled";
+import Editor from "@monaco-editor/react";
 import { Checkbox, Input, InputProps, Row, Select } from "antd";
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { Colors } from "./colors";
+import { SchemaEditor, useSchemaEditorRef } from "./editor/SchemaEditor";
 import { UseFormik } from "./UseFormik";
+import { useHandler } from "./useHandler";
 
 export const FormActions = styled(Row)`
   padding: 0px 0px 5px 0px;
@@ -27,12 +30,16 @@ export const Field: React.FC<{
   name?: string;
   label: string;
   isError?: boolean;
-}> = ({ name, label, isError = false, children }) => (
+  className?: string;
+}> = ({ className, name, label, isError = false, children }) => (
   <Row
-    css={css`
-      padding: 0px 0px 5px 0px;
-      flex: 1;
-    `}
+    css={[
+      css`
+        padding: 0px 0px 5px 0px;
+        flex: 1;
+      `,
+    ]}
+    className={className}
   >
     <Label htmlFor={name ?? label} title={label} isError={isError}>
       {label}
@@ -105,6 +112,43 @@ export function FormField<TValues>(props: {
         }
         onChange={form.handleChange}
       />
+    </Field>
+  );
+}
+
+export function FormEditor<TValues>(props: {
+  form: UseFormik<TValues>;
+  field: keyof UseFormik<TValues>["values"];
+  label: string;
+}): React.ReactElement {
+  const { form, field, label } = props;
+  const editor = useSchemaEditorRef();
+  const handleChange = useHandler<typeof SchemaEditor, "onChange">((value) => {
+    form.setFieldValue(String(field), value);
+  });
+  return (
+    <Field
+      css={css`
+        height: 300px;
+        display: flex;
+        flex-direction: column;
+      `}
+      name={String(field)}
+      label={label}
+      isError={(form.touched[field] && Boolean(form.errors[field])) || false}
+    >
+      <div
+        css={css`
+          flex-grow: 1;
+          display: flex;
+        `}
+      >
+        <SchemaEditor
+          schema={String(form.values[field])}
+          configuration={editor}
+          onChange={handleChange}
+        />
+      </div>
     </Field>
   );
 }

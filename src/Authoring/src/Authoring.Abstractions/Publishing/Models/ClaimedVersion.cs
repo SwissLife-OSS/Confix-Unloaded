@@ -1,4 +1,6 @@
 using System;
+using Confix.CryptoProviders;
+using HotChocolate;
 using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring.Publishing;
@@ -12,7 +14,8 @@ public record ClaimedVersion
         Guid applicationPartId,
         Guid environmentId,
         Guid publishingId,
-        string apiKey,
+        EncryptedValue token,
+        EncryptedValue refreshToken,
         DateTime claimedAt)
     {
         Id = id;
@@ -21,8 +24,9 @@ public record ClaimedVersion
         ApplicationPartId = applicationPartId;
         EnvironmentId = environmentId;
         PublishingId = publishingId;
-        ApiKey = apiKey;
+        Token = token;
         ClaimedAt = claimedAt;
+        RefreshToken = refreshToken;
     }
 
     [ID]
@@ -38,8 +42,11 @@ public record ClaimedVersion
 
     public Guid PublishingId { get; init; }
 
-    // TODO: encrypt
-    public string ApiKey { get; init; }
+    [GraphQLIgnore]
+    public EncryptedValue Token { get; init; }
+
+    [GraphQLIgnore]
+    public EncryptedValue RefreshToken { get; init; }
 
     public DateTime ClaimedAt { get; init; }
 }

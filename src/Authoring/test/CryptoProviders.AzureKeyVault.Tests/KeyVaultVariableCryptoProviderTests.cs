@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Confix.Authoring;
-using Confix.CryptoProvider.AzureKeyVault;
+using Confix.CryptoProviders.AzureKeyVault;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
@@ -18,11 +18,11 @@ public class KeyVaultVariableCryptoProviderTests
     {
         // Arrange
         IConfixServerBuilder? builder = TestContext.GetBuilder();
-        builder.AddAzureKeyVaultCryptoProvider();
+        builder.AddAzureKeyvaultCrypto();
 
         ServiceProvider sp = builder.Services.BuildServiceProvider();
 
-        IVariableCryptoProvider provider = sp.GetRequiredService<IVariableCryptoProvider>();
+        IEncryptor provider = sp.GetRequiredService<IEncryptor>();
         string plainTextValue = "SecretMessage";
 
         // Act

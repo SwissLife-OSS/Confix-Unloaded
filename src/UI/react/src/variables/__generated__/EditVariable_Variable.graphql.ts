@@ -21,11 +21,6 @@ export type EditVariable_Variable = {
         } | null;
         readonly id: string;
         readonly value: string;
-        readonly encryption: {
-            readonly keyProvider: string;
-            readonly key: string;
-            readonly algorithm: string;
-        } | null;
     }>;
     readonly changeLog: ReadonlyArray<{
         readonly " $fragmentRefs": FragmentRefs<"ChangeLog_fragment">;
@@ -121,38 +116,6 @@ return {
           "kind": "ScalarField",
           "name": "value",
           "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "VariableEncryptionInfo",
-          "kind": "LinkedField",
-          "name": "encryption",
-          "plural": false,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "keyProvider",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "key",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "algorithm",
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
         }
       ],
       "storageKey": null
@@ -178,5 +141,5 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = '84ddf2f768d2a7f284d5eadfb6b518fa';
+(node as any).hash = '27ad8bf47cc0233d5a6b69c9c0b6c11f';
 export default node;

@@ -20,7 +20,6 @@ public static class AuthoringServiceCollectionExtensions
         services.AddScoped<IVariableService, VariableService>();
         services.AddScoped<ISchemaService, SchemaService>();
         services.AddScoped<IPublishingService, PublishingService>();
-        services.AddSingleton<IVariableCryptoProvider, DoNotUseVariableCrypoProvider>();
         services.AddVaultClient(configuration);
 
         return services;

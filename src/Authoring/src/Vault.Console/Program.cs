@@ -29,8 +29,8 @@ Console.Write("Application Part Name: ");
 string applicationPartName = ReadLine(cancellationToken);
 Console.Write("Environment Name: ");
 string environmentName = ReadLine(cancellationToken);
-Console.Write("Api Key:");
-string apiKey = ReadLine(cancellationToken);
+Console.Write("Token: ");
+string token = ReadLine(cancellationToken);
 
 Console.WriteLine("Fetching...");
 using JsonDocument? response =
@@ -38,7 +38,7 @@ using JsonDocument? response =
         applicationName,
         applicationPartName,
         environmentName,
-        apiKey,
+        token,
         cancellationToken);
 
 Console.WriteLine("Response...");

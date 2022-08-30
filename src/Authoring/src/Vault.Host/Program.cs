@@ -1,13 +1,17 @@
+using Confix.Authoring.Store.Mongo;
+using Confix.CryptoProviders.AzureKeyVault;
 using Confix.Vault.Core;
 using Confix.Vault.Host;
 using Confix.Vault.Store.Mongo;
 using Microsoft.AspNetCore.Identity;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
-
+builder.Configuration.AddJsonFile("appsettings.json");
+builder.Configuration.AddJsonFile("appsettings.user.json", true);
 builder.Services.AddMongoStore(builder.Configuration);
-builder.Services.AddSingleton<IKeyProvider, DoNotUseKeyProvider>();
-builder.Services.AddSingleton<IApiKeyProvider, ApiKeyKeyProvider>();
+builder.Services.AddKeyVaultSecrets(builder.Configuration);
+builder.Services.AddMongoSecrets(builder.Configuration);
+builder.Services.AddSingleton<ITokenProivder, TokenProvider>();
 builder.Services.AddSingleton<IPasswordHasher<object>, PasswordHasher<object>>();
 builder.Services.AddVaultCore();
 builder.Services.AddControllers();

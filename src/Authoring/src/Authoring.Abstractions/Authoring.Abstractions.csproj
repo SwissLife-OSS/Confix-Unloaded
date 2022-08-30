@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-      <AssemblyName>Confix.Authoring.Abstractions</AssemblyName>
-      <RootNamespace>Confix.Authoring</RootNamespace>
+    <AssemblyName>Confix.Authoring.Abstractions</AssemblyName>
+    <RootNamespace>Confix.Authoring</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,6 +14,10 @@
   <ItemGroup>
     <Folder Include="Environment\DataLoaders" />
     <Folder Include="Publishing\Extensions" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CryptoProviders.Abstractions\CryptoProviders.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

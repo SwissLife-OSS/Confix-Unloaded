@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Confix.Authoring.Publishing;
@@ -8,7 +9,6 @@ using HotChocolate;
 using HotChocolate.Types;
 
 namespace Confix.Authoring.GraphQL;
-
 [ExtendObjectType(typeof(ApplicationPart))]
 public class ApplicationPartExtensions
 {

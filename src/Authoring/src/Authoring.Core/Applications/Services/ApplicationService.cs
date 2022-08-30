@@ -514,7 +514,8 @@ public class ApplicationService : IApplicationService
             throw new ApplicationPartNotFoundException(applicationPartId);
         }
 
-        var updatedApplicationPart = applicationPart with { Version = applicationPart.Version + 1 };
+        ApplicationPart updatedApplicationPart =
+            applicationPart with { Version = applicationPart.Version + 1 };
         application = application with
         {
             Version = application.Version + 1,
