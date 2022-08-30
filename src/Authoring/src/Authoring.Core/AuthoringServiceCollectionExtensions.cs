@@ -1,5 +1,6 @@
 using Confix.Authoring.Internal;
 using Confix.Authoring.Publishing;
+using Confix.Vault.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -20,6 +21,7 @@ public static class AuthoringServiceCollectionExtensions
         services.AddScoped<ISchemaService, SchemaService>();
         services.AddScoped<IPublishingService, PublishingService>();
         services.AddSingleton<IVariableCryptoProvider, DoNotUseVariableCrypoProvider>();
+        services.AddVaultClient(configuration);
 
         return services;
     }
