@@ -1,5 +1,3 @@
-using System;
-using GreenDonut;
 using HotChocolate;
 using HotChocolate.Types;
 
