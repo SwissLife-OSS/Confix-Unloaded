@@ -4,10 +4,13 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Transactions;
+using Confix.Authentication.Authorization;
 using Confix.Authoring.Extensions;
 using Confix.Authoring.Internal;
 using Confix.Authoring.Store;
+using Confix.Common.Exceptions;
 using GreenDonut;
+using static Confix.Authentication.Authorization.Permissions;
 
 namespace Confix.Authoring;
 
@@ -21,6 +24,8 @@ public class ApplicationService : IApplicationService
     private readonly IApplicationPartComponentDataLoader
         _applicationPartByIdDataloaderDataLoader;
     private readonly IApplicationPartDataLoader _applicationPartByIdDataLoader;
+    private readonly ISessionAccessor _sessionAccessor;
+    private readonly IAuthorizationService _authorizationService;
 
     public ApplicationService(
         IApplicationStore appStore,
@@ -29,7 +34,9 @@ public class ApplicationService : IApplicationService
         IApplicationPartComponentDataLoader applicationPartComponentByIdDataloader,
         IComponentStore compStore,
         IDataLoader<Guid, Component> componentById,
-        ISchemaService schemaService)
+        ISchemaService schemaService,
+        ISessionAccessor sessionAccessor,
+        IAuthorizationService authorizationService)
     {
         _appStore = appStore;
         _changeLogService = changeLogService;
@@ -37,59 +44,77 @@ public class ApplicationService : IApplicationService
         _applicationPartByIdDataloaderDataLoader = applicationPartComponentByIdDataloader;
         _compStore = compStore;
         _schemaService = schemaService;
+        _sessionAccessor = sessionAccessor;
+        _authorizationService = authorizationService;
         _componentById = componentById;
     }
 
-    public Task<Application?> GetByIdAsync(
+    public async Task<Application?> GetByIdAsync(
         Guid applicationId,
-        CancellationToken cancellationToken = default) =>
-        _appStore.GetByIdAsync(applicationId, cancellationToken);
+        CancellationToken cancellationToken = default)
+        => await _authorizationService.AuthorizeAsync(
+            await _appStore.GetByIdAsync(applicationId, cancellationToken),
+            cancellationToken);
 
-    public Task<Application?> GetByPartIdAsync(
+    public async Task<Application?> GetByPartIdAsync(
+        Guid partId,
+        CancellationToken cancellationToken = default)
+        => await _authorizationService.AuthorizeAsync(
+            await _appStore.GetByPartIdAsync(partId, cancellationToken),
+            cancellationToken);
+
+    public async Task<ApplicationPart?> GetApplicationPartByIdAsync(
         Guid partId,
         CancellationToken cancellationToken = default) =>
-        _appStore.GetByPartIdAsync(partId, cancellationToken);
+        await _authorizationService.AuthorizeAsync(
+            await _applicationPartByIdDataLoader.LoadAsync(partId, cancellationToken),
+            cancellationToken);
 
-    public Task<ApplicationPart?> GetApplicationPartByIdAsync(
-        Guid partId,
-        CancellationToken cancellationToken = default) =>
-        _applicationPartByIdDataLoader.LoadAsync(partId, cancellationToken);
-
-    public Task<ApplicationPartComponent?> GetApplicationPartComponentByIdAsync(
+    public async Task<ApplicationPartComponent?> GetApplicationPartComponentByIdAsync(
         Guid componentPartId,
         CancellationToken cancellationToken = default) =>
-        _applicationPartByIdDataloaderDataLoader
-            .LoadAsync(componentPartId, cancellationToken);
+        await _authorizationService.AuthorizeAsync(
+            await _applicationPartByIdDataloaderDataLoader.LoadAsync(componentPartId,
+                cancellationToken),
+            cancellationToken);
 
-    public Task<Application?> FindByApplicationNameAsync(
+    public async Task<Application?> FindByApplicationNameAsync(
         string applicationName,
         CancellationToken cancellationToken = default)
-        => _appStore.FindByApplicationNameAsync(applicationName, cancellationToken);
+        => await _authorizationService.AuthorizeAsync(
+            await _appStore.FindByApplicationNameAsync(applicationName, cancellationToken),
+            cancellationToken);
 
-    public Task<IReadOnlyCollection<Application>> GetManyByIdAsync(
-        IEnumerable<Guid> applicationIds,
-        CancellationToken cancellationToken = default) =>
-        _appStore.GetManyByIdAsync(applicationIds, cancellationToken);
-
-    public Task<ApplicationPart?> GetPartByIdAsync(
+    public async Task<ApplicationPart?> GetPartByIdAsync(
         Guid id,
         CancellationToken cancellationToken = default) =>
-        _appStore.GetPartByIdAsync(id, cancellationToken);
+        await _authorizationService.AuthorizeAsync(
+            await _appStore.GetPartByIdAsync(id, cancellationToken),
+            cancellationToken);
 
-    public Task<IReadOnlyCollection<ApplicationPart>> GetManyPartsByIdAsync(
-        IEnumerable<Guid> ids,
-        CancellationToken cancellationToken = default) =>
-        _appStore.GetManyPartsByIdAsync(ids, cancellationToken);
+    public async Task<IQueryable<Application>> Query(CancellationToken cancellationToken)
+    {
+        var session = await _sessionAccessor.GetSession(cancellationToken);
+        if (session is null)
+        {
+            return Array.Empty<Application>().AsQueryable();
+        }
 
-    public IQueryable<Application> Query() =>
-        _appStore.Query();
+        return _appStore.Query().Where(x => x.Namespace.Contains(x.Namespace));
+    }
 
     public async Task<Application> CreateAsync(
         string name,
-        string? @namespace,
+        string @namespace,
         IReadOnlyList<string>? parts = null,
         CancellationToken cancellationToken = default)
     {
+        if (!await _sessionAccessor
+                .HasPermission(@namespace, ManageApplications, cancellationToken))
+        {
+            throw new UnauthorizedOperationException();
+        }
+
         Application application = new(Guid.NewGuid(), name, @namespace);
 
         List<IChange> changeLogs = new();
@@ -145,7 +170,13 @@ public class ApplicationService : IApplicationService
 
         if (application is null)
         {
-            throw new EntityIdInvalidException(nameof(ApplicationPart), applicationId);
+            throw new EntityIdInvalidException(nameof(Application), applicationId);
+        }
+
+        if (!await _sessionAccessor
+                .HasPermission(application.Namespace, ManageApplications, cancellationToken))
+        {
+            throw new EntityIdInvalidException(nameof(Application), applicationId);
         }
 
         application = application with { Name = name, Version = application.Version + 1 };
@@ -175,6 +206,12 @@ public class ApplicationService : IApplicationService
             application?.Parts.FirstOrDefault(p => p.Id == applicationPartId);
 
         if (application is null || applicationPart is null)
+        {
+            throw new EntityIdInvalidException(nameof(ApplicationPart), applicationPartId);
+        }
+
+        if (!await _sessionAccessor
+                .HasPermission(application.Namespace, ManageApplications, cancellationToken))
         {
             throw new EntityIdInvalidException(nameof(ApplicationPart), applicationPartId);
         }
@@ -216,6 +253,12 @@ public class ApplicationService : IApplicationService
             application?.Parts.FirstOrDefault(p => p.Id == applicationPartId);
 
         if (application is null || applicationPart is null)
+        {
+            throw new EntityIdInvalidException(nameof(ApplicationPart), applicationPartId);
+        }
+
+        if (!await _sessionAccessor
+                .HasPermission(application.Namespace, ManageApplications, cancellationToken))
         {
             throw new EntityIdInvalidException(nameof(ApplicationPart), applicationPartId);
         }
@@ -275,6 +318,12 @@ public class ApplicationService : IApplicationService
             throw new ApplicationNotFoundException(applicationId);
         }
 
+        if (!await _sessionAccessor
+                .HasPermission(application.Namespace, ManageApplications, cancellationToken))
+        {
+            throw new ApplicationNotFoundException(applicationId);
+        }
+
         if (application.Parts.Any(x => x.Name == partName))
         {
             throw new NameTakenException(partName);
@@ -318,6 +367,12 @@ public class ApplicationService : IApplicationService
             throw new ApplicationPartNotFoundException(applicationPartId);
         }
 
+        if (!await _sessionAccessor
+                .HasPermission(application.Namespace, ManageApplications, cancellationToken))
+        {
+            throw new ApplicationPartNotFoundException(applicationPartId);
+        }
+
         var version = application.Version + 1;
         application = application with
         {
@@ -352,6 +407,12 @@ public class ApplicationService : IApplicationService
             await _appStore.GetByComponentPartIdAsync(partComponentId, cancellationToken);
 
         if (application is null)
+        {
+            throw new ApplicationPartComponentNotFoundException(partComponentId);
+        }
+
+        if (!await _sessionAccessor
+                .HasPermission(application.Namespace, ManageApplications, cancellationToken))
         {
             throw new ApplicationPartComponentNotFoundException(partComponentId);
         }
@@ -422,6 +483,12 @@ public class ApplicationService : IApplicationService
             await _appStore.GetByComponentPartIdAsync(partComponentId, cancellationToken);
 
         if (application is null)
+        {
+            throw new ApplicationPartComponentNotFoundException(partComponentId);
+        }
+
+        if (!await _sessionAccessor
+                .HasPermission(application.Namespace, WriteConfiguration, cancellationToken))
         {
             throw new ApplicationPartComponentNotFoundException(partComponentId);
         }
@@ -510,6 +577,12 @@ public class ApplicationService : IApplicationService
             application?.Parts.FirstOrDefault(x => x.Id == applicationPartId);
 
         if (application is null || applicationPart is null)
+        {
+            throw new ApplicationPartNotFoundException(applicationPartId);
+        }
+
+        if (!await _sessionAccessor
+                .HasPermission(application.Namespace, PublishApplicationParts, cancellationToken))
         {
             throw new ApplicationPartNotFoundException(applicationPartId);
         }

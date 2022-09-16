@@ -10,6 +10,7 @@
     <PackageReference Include="MongoDB.Extensions.Transactions" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Authentication\Authentication.csproj" />
     <ProjectReference Include="..\Authoring.Abstractions\Authoring.Abstractions.csproj" />
   </ItemGroup>
   <ItemGroup>

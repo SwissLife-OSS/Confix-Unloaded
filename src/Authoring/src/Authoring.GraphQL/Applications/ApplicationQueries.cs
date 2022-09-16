@@ -22,7 +22,7 @@ public class ApplicationQueries
     [UseFiltering(typeof(ApplicationFilterInputType))]
     public IQueryable<Application> GetApplications(
         [Service] IApplicationService applicationService) =>
-        applicationService.Query();
+        applicationService.Query(TODO);
 
     /// <summary>
     /// Get a specific application configuration by its ID.

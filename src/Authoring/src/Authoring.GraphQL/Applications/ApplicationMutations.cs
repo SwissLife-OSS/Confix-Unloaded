@@ -19,7 +19,7 @@ public class ApplicationMutations
     public async Task<Application> CreateApplicationAsync(
         [Service] IApplicationService applicationService,
         string name,
-        string? @namespace,
+        string @namespace,
         IReadOnlyList<string>? parts = null,
         CancellationToken cancellationToken = default)
         => await applicationService.CreateAsync(name, @namespace, parts, cancellationToken);

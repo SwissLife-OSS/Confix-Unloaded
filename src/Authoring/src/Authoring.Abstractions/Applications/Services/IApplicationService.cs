@@ -41,11 +41,11 @@ public interface IApplicationService
         IEnumerable<Guid> ids,
         CancellationToken cancellationToken = default);
 
-    IQueryable<Application> Query();
+    Task<IQueryable<Application>> Query(CancellationToken cancellationToken);
 
     Task<Application> CreateAsync(
         string name,
-        string? @namespace,
+        string @namespace,
         IReadOnlyList<string>? parts = null,
         CancellationToken cancellationToken = default);
 

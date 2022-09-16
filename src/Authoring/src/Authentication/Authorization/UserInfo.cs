@@ -1,4 +1,4 @@
-namespace Confix.Authoring.Store;
+namespace Confix.Authentication.Authorization;
 
 public record UserInfo
 {

@@ -1,3 +1,4 @@
+using Confix.Authentication.Authorization;
 using Confix.Authoring.Publishing;
 using Confix.Authoring.Store.Mongo.Configuration;
 using MongoDB.Bson;
@@ -29,7 +30,9 @@ public class ConfixAuthorDbContext : MongoDbContext, IConfixAuthorDbContext
             .ConfigureCollection(new PublishedApplicationPartCollectionConfiguration())
             .ConfigureCollection(new ClaimedVersionCollectionConfiguration())
             .ConfigureCollection(new VariableValueCollectionConfiguration())
-            .ConfigureCollection(new ComponentCollectionConfiguration());
+            .ConfigureCollection(new ComponentCollectionConfiguration())
+            .ConfigureCollection(new GroupCollectionConfiguration())
+            .ConfigureCollection(new RoCo());
     }
 
     public IMongoCollection<Application> Applications
@@ -55,4 +58,10 @@ public class ConfixAuthorDbContext : MongoDbContext, IConfixAuthorDbContext
 
     public IMongoCollection<ClaimedVersion> ClaimedVersions
         => CreateCollection<ClaimedVersion>().AsTransactionCollection();
+
+    public IMongoCollection<Role> Roles
+        => CreateCollection<Role>().AsTransactionCollection();
+
+    public IMongoCollection<Group> Groups
+        => CreateCollection<Group>().AsTransactionCollection();
 }

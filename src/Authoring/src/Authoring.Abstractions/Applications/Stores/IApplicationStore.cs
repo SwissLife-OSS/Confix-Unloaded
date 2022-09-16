@@ -143,4 +143,12 @@ public interface IApplicationStore
     Task<Application?> GetByComponentPartIdAsync(
         Guid componentPartId,
         CancellationToken cancellationToken);
+
+    Task<IReadOnlyList<Application>> GetApplicationsByComponentIdAsync(
+        IEnumerable<Guid> componentIds,
+        CancellationToken cancellationToken);
+
+    Task<IReadOnlyList<Application>> GetApplicationsByPartIdsAsync(
+        IEnumerable<Guid> partIds,
+        CancellationToken cancellationToken);
 }

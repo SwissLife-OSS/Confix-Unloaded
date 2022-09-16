@@ -6,6 +6,8 @@ using System.Transactions;
 using Azure.Security.KeyVault.Keys;
 using Azure.Security.KeyVault.Keys.Cryptography;
 using Microsoft.Extensions.Options;
+using static System.Transactions.TransactionScopeAsyncFlowOption;
+using static System.Transactions.TransactionScopeOption;
 
 namespace Confix.CryptoProviders.AzureKeyVault;
 
@@ -91,9 +93,7 @@ internal class KeyVaultKeyProvider : IKeyProvider
         string topic,
         CancellationToken cancellationToken)
     {
-        using (var scope = new TransactionScope(
-            TransactionScopeOption.RequiresNew,
-            TransactionScopeAsyncFlowOption.Enabled))
+        using (var scope = new TransactionScope(RequiresNew, Enabled))
         {
             await EnsureKeyAsync(topic, cancellationToken);
 

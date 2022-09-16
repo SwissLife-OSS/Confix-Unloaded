@@ -15,8 +15,8 @@ public class ComponentByIdDataLoader : BatchDataLoader<Guid, Component?>, ICompo
 
     public ComponentByIdDataLoader(
         IComponentStore componentStore,
-        IBatchScheduler batchScheduler)
-        : base(batchScheduler)
+        IBatchScheduler batchScheduler,
+        DataLoaderOptions? options = null) : base(batchScheduler, options)
     {
         _componentStore = componentStore;
     }
@@ -25,7 +25,7 @@ public class ComponentByIdDataLoader : BatchDataLoader<Guid, Component?>, ICompo
         IReadOnlyList<Guid> keys,
         CancellationToken cancellationToken)
     {
-        IEnumerable<Component> components =
+        IReadOnlyCollection<Component> components =
             await _componentStore.GetManyByIdAsync(
                 keys,
                 cancellationToken);

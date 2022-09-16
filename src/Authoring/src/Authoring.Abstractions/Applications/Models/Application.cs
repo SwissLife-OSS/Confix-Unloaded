@@ -7,15 +7,7 @@ namespace Confix.Authoring.Store;
 
 public record Application
 {
-    public Application(Guid id, string? name, string? ns, int version)
-    {
-        Id = id;
-        Name = name;
-        Namespace = ns;
-        Version = version;
-    }
-
-    public Application(Guid id, string? name, string? @namespace)
+    public Application(Guid id, string? name, string @namespace)
     {
         Id = id;
         Name = name;
@@ -28,7 +20,7 @@ public record Application
     [Required]
     public string? Name { get; init; }
 
-    public string? Namespace { get; init; }
+    public string Namespace { get; init; }
 
     public int Version { get; init; }
 

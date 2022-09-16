@@ -15,8 +15,8 @@ public class ApplicationPartComponentByIdDataloader
 
     public ApplicationPartComponentByIdDataloader(
         IApplicationStore applicationStore,
-        IBatchScheduler batchScheduler)
-        : base(batchScheduler)
+        IBatchScheduler batchScheduler,
+        DataLoaderOptions? options = null) : base(batchScheduler, options)
     {
         _applicationStore = applicationStore;
     }

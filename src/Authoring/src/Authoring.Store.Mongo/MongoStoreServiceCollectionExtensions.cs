@@ -1,4 +1,6 @@
+using Confix.Authentication.Authorization;
 using Confix.Authoring.Publishing.Stores;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Extensions.Context;
@@ -29,6 +31,8 @@ public static class MongoStoreServiceCollectionExtensions
         services.AddSingleton<IVariableStore, VariableStore>();
         services.AddSingleton<IVariableValueStore, VariableValueStore>();
         services.AddSingleton<IPublishingStore, PublishingStore>();
+        services.AddSingleton<IRoleStore, RoleStore>();
+        services.AddSingleton<IGroupStore, GroupStore>();
 
         return services;
     }
