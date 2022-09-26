@@ -25,7 +25,7 @@ public class VariableQueries
         string? search)
         => variableService.SearchVariables(search);
 
-    public async Task<Variable> GetVariableAsync(
+    public async Task<Variable?> GetVariableAsync(
         [Service] IVariableService variableService,
         [ID(nameof(Variable))] Guid id,
         CancellationToken cancellationToken)

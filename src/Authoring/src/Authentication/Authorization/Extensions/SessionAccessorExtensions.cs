@@ -12,4 +12,13 @@ public static class SessionAccessorExtensions
 
         return session?.HasPermission(@namespace, permissions) is true;
     }
+
+    public static async Task<bool> IsAuthenticated(
+        this ISessionAccessor accessor,
+        CancellationToken cancellationToken)
+    {
+        var session = await accessor.GetSession(cancellationToken);
+
+        return session is not null;
+    }
 }

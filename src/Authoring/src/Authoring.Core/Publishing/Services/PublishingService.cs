@@ -1,12 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json.Nodes;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Transactions;
+using Confix.Authentication.Authorization;
 using Confix.Authoring.Publishing.Stores;
 using Confix.Authoring.Store;
+using Confix.Common.Exceptions;
 using Confix.CryptoProviders;
 using Confix.Vault.Client;
 using GreenDonut;
@@ -20,8 +17,9 @@ public class PublishingService : IPublishingService
     private readonly IApplicationService _applicationService;
     private readonly IEnvironmentService _environmentService;
     private readonly IComponentDataLoader _componentDataLoader;
-    private readonly IUserSessionAccessor _sessionAccessor;
+    private readonly ISessionAccessor _sessionAccessor;
     private readonly IPublishingStore _publishingStore;
+    private readonly IAuthorizationService _authorizationService;
     private readonly IVariableService _variableService;
     private readonly IComponentService _componentService;
     private readonly IVaultClient _vaultClient;
@@ -33,12 +31,13 @@ public class PublishingService : IPublishingService
         IApplicationService applicationService,
         IEnvironmentService environmentService,
         IComponentDataLoader componentDataLoader,
-        IUserSessionAccessor sessionAccessor,
+        ISessionAccessor sessionAccessor,
         IPublishingStore publishingStore,
         IEncryptor encryptor,
         IVariableService variableService,
         IVaultClient vaultClient,
-        IComponentService componentService)
+        IComponentService componentService,
+        IAuthorizationService authorizationService)
     {
         _publishedById = publishedById;
         _publishedApplicationPartById = publishedApplicationPartById;
@@ -49,6 +48,7 @@ public class PublishingService : IPublishingService
         _publishingStore = publishingStore;
         _variableService = variableService;
         _componentService = componentService;
+        _authorizationService = authorizationService;
         _vaultClient = vaultClient;
         _encryptor = encryptor;
     }
@@ -57,25 +57,36 @@ public class PublishingService : IPublishingService
         Guid partId,
         CancellationToken cancellationToken)
     {
-        Application? application =
-            await _applicationService.GetByPartIdAsync(partId, cancellationToken);
+        var session = await _sessionAccessor.GetSession(cancellationToken);
+        if (session is null)
+        {
+            throw new UnauthorizedOperationException();
+        }
 
-        ApplicationPart? applicationPart = application?.Parts.FirstOrDefault(x => x.Id == partId);
+        var application = await _applicationService.GetByPartIdAsync(partId, cancellationToken);
+
+        var applicationPart = application?.Parts.FirstOrDefault(x => x.Id == partId);
 
         if (application is null || applicationPart is null)
         {
             throw ThrowHelper.PublishingFailedBecauseApplicationPartWasNotFound(partId);
         }
 
-        string configuration =
+        if (!session.HasPermission(application.Namespace, Permissions.PublishApplicationParts))
+        {
+            throw new UnauthorizedOperationException();
+        }
+
+        var configuration =
             await BuildConfigurationForPartAsync(application, applicationPart, cancellationToken);
 
-        UserInfo userInfo = _sessionAccessor.GetUserInfo();
+        var userInfo = session.UserInfo;
 
         using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
         {
             application = await _applicationService
                 .PublishApplicationPartAsync(applicationPart.Id, cancellationToken);
+
             applicationPart = application.Parts.Single(x => x.Id == applicationPart.Id);
 
             PublishedApplicationPart published =
@@ -96,14 +107,26 @@ public class PublishingService : IPublishingService
     public async Task<IReadOnlyList<PublishedApplicationPart>> GetPublishedByPartId(
         Guid partId,
         CancellationToken cancellationToken)
-        => await _publishedApplicationPartById.LoadAsync(partId, cancellationToken)
+    {
+        if (!await _authorizationService.IsAuthorized<ApplicationPart>(partId, cancellationToken))
+        {
+            return Array.Empty<PublishedApplicationPart>();
+        }
+
+        return await _publishedApplicationPartById.LoadAsync(partId, cancellationToken)
             ?? Array.Empty<PublishedApplicationPart>();
+    }
 
     public async Task<IReadOnlyList<Environment>> GetDeployedEnvironmentByPartIdAsync(
         Guid partId,
         CancellationToken cancellationToken)
     {
-        IEnumerable<Guid> environmentIds = await _publishingStore
+        if (!await _authorizationService.IsAuthorized<ApplicationPart>(partId, cancellationToken))
+        {
+            return Array.Empty<Environment>();
+        }
+
+        var environmentIds = await _publishingStore
             .GetDeployedEnvironmentsByPartIdAsync(partId, cancellationToken);
 
         return await _environmentService.GetByIdsAsync(environmentIds, cancellationToken);
@@ -112,13 +135,43 @@ public class PublishingService : IPublishingService
     public async Task<IReadOnlyList<ClaimedVersion>> GetClaimedVersionByPublishedPartIdAsync(
         Guid publishedApplicationId,
         CancellationToken cancellationToken)
-        => await _publishingStore
+    {
+        if (!await _authorizationService
+                .IsAuthorized<PublishedApplicationPart>(publishedApplicationId, cancellationToken))
+        {
+            return Array.Empty<ClaimedVersion>();
+        }
+
+        return await _publishingStore
             .GetClaimedVersionByPublishingIdAsync(publishedApplicationId, cancellationToken);
+    }
 
     public async Task<PublishedApplicationPart?> GetPublishedById(
         Guid id,
         CancellationToken cancellationToken)
-        => await _publishedById.LoadAsync(id, cancellationToken);
+    {
+        var part = await _publishedById.LoadAsync(id, cancellationToken);
+        if (!await _authorizationService.IsAuthorized(part, cancellationToken))
+        {
+            return null;
+        }
+
+        return part;
+    }
+
+    public async Task<IReadOnlyList<ClaimedVersion>> GetClaimedVersionAsync(
+        Guid partId,
+        Guid environmentId,
+        CancellationToken cancellationToken)
+    {
+        if (!await _authorizationService.IsAuthorized<ApplicationPart>(partId, cancellationToken))
+        {
+            return Array.Empty<ClaimedVersion>();
+        }
+
+        return await _publishingStore
+            .GetClaimedVersionAsync(partId, environmentId, cancellationToken);
+    }
 
     public async Task<ClaimedVersion> ClaimVersionAsync(
         string gitVersion,
@@ -127,8 +180,13 @@ public class PublishingService : IPublishingService
         string environmentName,
         CancellationToken cancellationToken)
     {
-        Environment? env =
-            await _environmentService.GetByNameAsync(environmentName, cancellationToken);
+        var session = await _sessionAccessor.GetSession(cancellationToken);
+        var env = await _environmentService.GetByNameAsync(environmentName, cancellationToken);
+
+        if (session is null)
+        {
+            throw new UnauthorizedOperationException();
+        }
 
         if (env is null)
         {
@@ -138,7 +196,7 @@ public class PublishingService : IPublishingService
                 environmentName);
         }
 
-        Application? app = await _applicationService
+        var app = await _applicationService
             .FindByApplicationNameAsync(applicationName, cancellationToken);
 
         if (app is null)
@@ -148,7 +206,12 @@ public class PublishingService : IPublishingService
                 applicationPartName);
         }
 
-        ApplicationPart? part = app.Parts.FirstOrDefault(x => x.Name == applicationPartName);
+        if (session.HasPermission(app.Namespace, Permissions.PublishApplicationParts))
+        {
+            throw new OperationCanceledException();
+        }
+
+        var part = app.Parts.FirstOrDefault(x => x.Name == applicationPartName);
 
         if (part is null)
         {
@@ -157,7 +220,7 @@ public class PublishingService : IPublishingService
                 applicationPartName);
         }
 
-        ClaimedVersion? claimedVersion = await _publishingStore
+        var claimedVersion = await _publishingStore
             .GetClaimedVersionByGitVersionAsync(gitVersion, app.Id, part.Id, cancellationToken);
 
         PublishedApplicationPart? publishedApplicationPart = null;
@@ -180,7 +243,7 @@ public class PublishingService : IPublishingService
                 environmentName);
         }
 
-        ClaimedVersion? version = await _publishingStore
+        var version = await _publishingStore
             .GetClaimedVersionAsync(part.Id, env.Id, gitVersion, cancellationToken);
 
         if (version is null)
@@ -313,7 +376,7 @@ public class PublishingService : IPublishingService
         JsonVariableVisitor.Default.Visit(jsonObject, context);
 
         var variableNames = context.Variables.Select(x => x.VariableName).ToArray();
-        IEnumerable<Variable> variables =
+        IEnumerable<Variable?> variables =
             await _variableService.GetByNamesAsync(variableNames, cancellationToken);
 
         Dictionary<string, Variable> variableLookup =
@@ -343,27 +406,6 @@ public class PublishingService : IPublishingService
         IReadOnlyList<Component?> components = await _componentDataLoader
             .LoadAsync(componentIds, cancellationToken);
         return new ComponentLookup(components, part);
-    }
-
-    public Task<IReadOnlyList<ClaimedVersion>> GetClaimedVersionAsync(
-        Guid partId,
-        Guid environmentId,
-        CancellationToken cancellationToken)
-        => _publishingStore.GetClaimedVersionAsync(partId, environmentId, cancellationToken);
-
-    public override bool Equals(object? obj)
-    {
-        return base.Equals(obj);
-    }
-
-    public override int GetHashCode()
-    {
-        return base.GetHashCode();
-    }
-
-    public override string? ToString()
-    {
-        return base.ToString();
     }
 
     private class ComponentLookup

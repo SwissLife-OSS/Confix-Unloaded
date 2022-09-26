@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Confix.Authoring.Publishing.Stores;
 using GreenDonut;
 
@@ -25,8 +20,7 @@ public class PublishedApplicationPartByIdPartDataloader
         IReadOnlyList<Guid> keys,
         CancellationToken cancellationToken)
     {
-        IReadOnlyList<PublishedApplicationPart> results =
-            await _publishingStore.GetByApplicationPartIdsAsync(keys, cancellationToken);
+        var results = await _publishingStore.GetByApplicationPartIdsAsync(keys, cancellationToken);
 
         return results.OrderByDescending(x => x.PublishedAt).ToLookup(x => x.Part.Id);
     }

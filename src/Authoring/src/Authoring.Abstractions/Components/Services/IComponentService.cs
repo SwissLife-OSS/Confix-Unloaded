@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using HotChocolate;
 
 namespace Confix.Authoring;
@@ -17,15 +12,12 @@ public interface IComponentService
         Guid id,
         CancellationToken cancellationToken = default);
 
-    Task<IReadOnlyCollection<Component>> GetManyByIdAsync(
-        IEnumerable<Guid> ids,
-        CancellationToken cancellationToken);
-
-    IQueryable<Component> Query();
+    Task<IQueryable<Component>> Query(CancellationToken cancellationToken);
 
     Task<Component> CreateAsync(
         string name,
         string? schemaSdl,
+        string @namespace,
         IDictionary<string, object?>? values,
         CancellationToken cancellationToken);
 

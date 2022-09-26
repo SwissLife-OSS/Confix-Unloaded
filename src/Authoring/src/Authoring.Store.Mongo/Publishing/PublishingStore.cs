@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using Confix.Authoring.Publishing;
 using Confix.Authoring.Publishing.Stores;
 using MongoDB.Driver;
@@ -32,7 +28,7 @@ public class PublishingStore : IPublishingStore
         IEnumerable<Guid> partIds,
         CancellationToken cancellationToken)
     {
-        FilterDefinition<PublishedApplicationPart> filter = Filter.In(x => x.Part.Id, partIds);
+        var filter = Filter.In(x => x.Part.Id, partIds);
 
         return await _dbContext.PublishedApplicationParts
             .Find(filter)
@@ -44,7 +40,7 @@ public class PublishingStore : IPublishingStore
         IEnumerable<Guid> partIds,
         CancellationToken cancellationToken)
     {
-        FilterDefinition<PublishedApplicationPart> filter = Filter.In(x => x.Id, partIds);
+        var filter = Filter.In(x => x.Id, partIds);
 
         return await _dbContext.PublishedApplicationParts
             .Find(filter)
@@ -55,11 +51,9 @@ public class PublishingStore : IPublishingStore
         Guid publishingId,
         CancellationToken cancellationToken)
     {
-        FilterDefinition<ClaimedVersion> filter =
-            Claimed.Filter.Eq(x => x.PublishingId, publishingId);
+        var filter = Claimed.Filter.Eq(x => x.PublishingId, publishingId);
 
-        SortDefinition<ClaimedVersion> sort =
-            Claimed.Sort.Descending(x => x.ClaimedAt);
+        var sort = Claimed.Sort.Descending(x => x.ClaimedAt);
 
         return await _dbContext.ClaimedVersions
             .Find(filter)
@@ -71,9 +65,9 @@ public class PublishingStore : IPublishingStore
         Guid partId,
         CancellationToken cancellationToken)
     {
-        FilterDefinition<PublishedApplicationPart> filter = Filter.Eq(x => x.Part.Id, partId);
+        var filter = Filter.Eq(x => x.Part.Id, partId);
 
-        SortDefinition<PublishedApplicationPart> sort = Sort.Descending(x => x.PublishedAt);
+        var sort = Sort.Descending(x => x.PublishedAt);
 
         return await _dbContext.PublishedApplicationParts
             .Find(filter)
@@ -85,7 +79,7 @@ public class PublishingStore : IPublishingStore
         Guid publishedPartId,
         CancellationToken cancellationToken)
     {
-        FilterDefinition<PublishedApplicationPart> filter = Filter.Eq(x => x.Id, publishedPartId);
+        var filter = Filter.Eq(x => x.Id, publishedPartId);
 
         return await _dbContext.PublishedApplicationParts
             .Find(filter)
@@ -96,23 +90,22 @@ public class PublishingStore : IPublishingStore
         ClaimedVersion version,
         CancellationToken cancellationToken)
     {
-        FilterDefinition<ClaimedVersion> filter =
+        var filter =
             Claimed.Filter.Eq(x => x.ApplicationId, version.ApplicationId) &
             Claimed.Filter.Eq(x => x.ApplicationPartId, version.ApplicationPartId) &
             Claimed.Filter.Eq(x => x.EnvironmentId, version.EnvironmentId) &
             Claimed.Filter.Eq(x => x.GitVersion, version.GitVersion) &
             Claimed.Filter.Eq(x => x.PublishingId, version.PublishingId);
 
-        UpdateDefinition<ClaimedVersion> update =
-            Claimed.Update
-                .SetOnInsert(x => x.ApplicationId, version.ApplicationId)
-                .SetOnInsert(x => x.ApplicationPartId, version.ApplicationPartId)
-                .SetOnInsert(x => x.EnvironmentId, version.EnvironmentId)
-                .SetOnInsert(x => x.GitVersion, version.GitVersion)
-                .SetOnInsert(x => x.PublishingId, version.PublishingId)
-                .SetOnInsert(x => x.Token, version.Token)
-                .SetOnInsert(x => x.ClaimedAt, version.ClaimedAt)
-                .SetOnInsert(x => x.Id, version.Id);
+        var update = Claimed.Update
+            .SetOnInsert(x => x.ApplicationId, version.ApplicationId)
+            .SetOnInsert(x => x.ApplicationPartId, version.ApplicationPartId)
+            .SetOnInsert(x => x.EnvironmentId, version.EnvironmentId)
+            .SetOnInsert(x => x.GitVersion, version.GitVersion)
+            .SetOnInsert(x => x.PublishingId, version.PublishingId)
+            .SetOnInsert(x => x.Token, version.Token)
+            .SetOnInsert(x => x.ClaimedAt, version.ClaimedAt)
+            .SetOnInsert(x => x.Id, version.Id);
 
         FindOneAndUpdateOptions<ClaimedVersion> options = new()
         {
@@ -129,13 +122,12 @@ public class PublishingStore : IPublishingStore
         Guid applicationPartId,
         CancellationToken cancellationToken)
     {
-        FilterDefinition<ClaimedVersion> filter =
+        var filter =
             Claimed.Filter.Eq(x => x.ApplicationId, applicationId) &
             Claimed.Filter.Eq(x => x.ApplicationPartId, applicationPartId) &
             Claimed.Filter.Eq(x => x.GitVersion, gitVersion);
 
-        SortDefinition<ClaimedVersion> sort =
-            Claimed.Sort.Descending(x => x.ClaimedAt);
+        var sort = Claimed.Sort.Descending(x => x.ClaimedAt);
 
         return await _dbContext.ClaimedVersions
             .Find(filter)
@@ -149,13 +141,12 @@ public class PublishingStore : IPublishingStore
         string gitVersion,
         CancellationToken cancellationToken)
     {
-        FilterDefinition<ClaimedVersion> filter =
+        var filter =
             Claimed.Filter.Eq(x => x.ApplicationPartId, partId) &
             Claimed.Filter.Eq(x => x.EnvironmentId, environmentId) &
             Claimed.Filter.Eq(x => x.GitVersion, gitVersion);
 
-        SortDefinition<ClaimedVersion> sort =
-            Claimed.Sort.Descending(x => x.ClaimedAt);
+        var sort = Claimed.Sort.Descending(x => x.ClaimedAt);
 
         return await _dbContext.ClaimedVersions
             .Find(filter)
@@ -167,13 +158,12 @@ public class PublishingStore : IPublishingStore
         Guid partId,
         CancellationToken cancellationToken)
     {
-        FilterDefinition<ClaimedVersion> filter =
-            Claimed.Filter.Eq(x => x.ApplicationPartId, partId);
+        var filter = Claimed.Filter.Eq(x => x.ApplicationPartId, partId);
 
-        IAsyncCursor<Guid> distinctIds = await _dbContext.ClaimedVersions
+        var asyncCursor = await _dbContext.ClaimedVersions
             .DistinctAsync(x => x.EnvironmentId, filter, default, cancellationToken);
 
-        return await distinctIds.ToListAsync(cancellationToken);
+        return await asyncCursor.ToListAsync(cancellationToken);
     }
 
     public async Task<IReadOnlyList<ClaimedVersion>> GetClaimedVersionAsync(
@@ -181,12 +171,11 @@ public class PublishingStore : IPublishingStore
         Guid environmentId,
         CancellationToken cancellationToken)
     {
-        FilterDefinition<ClaimedVersion> filter =
+        var filter =
             Claimed.Filter.Eq(x => x.ApplicationPartId, partId) &
             Claimed.Filter.Eq(x => x.EnvironmentId, environmentId);
 
-        SortDefinition<ClaimedVersion> sort =
-            Claimed.Sort.Descending(x => x.ClaimedAt);
+        var sort = Claimed.Sort.Descending(x => x.ClaimedAt);
 
         return await _dbContext.ClaimedVersions
             .Find(filter)

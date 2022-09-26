@@ -18,7 +18,7 @@ public class VariableExtensions
 
     public async Task<IEnumerable<VariableValue>> GetValuesAsync(
         [Service] IVariableService service,
-        [Parent] Variable variable,
+        [Parent] Variable? variable,
         CancellationToken cancellationToken)
         => await service.GetValuesAsync(
             variable,

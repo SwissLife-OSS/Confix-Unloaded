@@ -1,3 +1,4 @@
+using GreenDonut;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Confix.Authentication.Authorization;
@@ -21,5 +22,14 @@ public class AuthorizationService : IAuthorizationService
         }
 
         return handler.IsAuthorizedAsync(resource, cancellationToken);
+    }
+
+    public async ValueTask<bool> IsAuthorized<T>(
+        Guid resourceId,
+        CancellationToken cancellationToken)
+    {
+        var loader = _serviceProvider.GetRequiredService<IDataLoader<Guid, T>>();
+        var resource = await loader.LoadAsync(resourceId, cancellationToken);
+        return await IsAuthorized(resource, cancellationToken);
     }
 }

@@ -47,7 +47,7 @@ public class ConfixAuthorDbContext : MongoDbContext, IConfixAuthorDbContext
     public IMongoCollection<Component> Components
         => CreateCollection<Component>().AsTransactionCollection();
 
-    public IMongoCollection<Variable> Variables
+    public IMongoCollection<Variable?> Variables
         => CreateCollection<Variable>().AsTransactionCollection();
 
     public IMongoCollection<VariableValue> VariableValues

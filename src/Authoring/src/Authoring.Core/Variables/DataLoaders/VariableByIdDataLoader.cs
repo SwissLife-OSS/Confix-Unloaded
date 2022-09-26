@@ -19,7 +19,7 @@ public class VariableByIdDataLoader : BatchDataLoader<Guid, Variable?>, IVariabl
         IReadOnlyList<Guid> keys,
         CancellationToken cancellationToken)
     {
-        IEnumerable<Variable> variables =
+        IEnumerable<Variable?> variables =
             await _variableStore.GetManyAsync(
                 keys,
                 cancellationToken);

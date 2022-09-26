@@ -11,7 +11,7 @@ namespace Confix.Authoring.GraphQL;
 [ExtendObjectType(OperationTypeNames.Mutation)]
 public class VariableMutations
 {
-    public async Task<Variable> CreateVariableAsync(
+    public async Task<Variable?> CreateVariableAsync(
         [Service] IVariableService variableService,
         string name,
         bool isSecret,
@@ -46,7 +46,7 @@ public class VariableMutations
         CancellationToken cancellationToken)
         => await variableService.DeleteValueAsync(id, cancellationToken);
 
-    public async Task<Variable> RenameVariableAsync(
+    public async Task<Variable?> RenameVariableAsync(
         [Service] IVariableService variableService,
         [ID(nameof(Variable))] Guid id,
         string name,

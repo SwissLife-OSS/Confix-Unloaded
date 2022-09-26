@@ -4,9 +4,11 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Transactions;
+using Confix.Authentication.Authorization;
 using Confix.Authoring.Store;
 using Confix.Authoring.Store.Mongo;
 using Confix.Authoring.Variables.Changes;
+using Confix.Common.Exceptions;
 using Confix.CryptoProviders;
 
 namespace Confix.Authoring;
@@ -16,6 +18,8 @@ public class VariableService : IVariableService
     private readonly IVariableStore _variableStore;
     private readonly IVariableValueStore _variableValueStore;
     private readonly IChangeLogService _changeLogService;
+    private readonly ISessionAccessor _sessionAccessor;
+    private readonly IAuthorizationService _authorizationService;
     private readonly IEncryptor _encryptor;
     private readonly IDecryptor _decryptor;
 
@@ -33,14 +37,20 @@ public class VariableService : IVariableService
         _decryptor = decryptor;
     }
 
-    public async Task<Variable> CreateAsync(
+    public async Task<Variable?> CreateAsync(
         string name,
         string @namespace,
         bool isSecret,
         string? defaultValue,
         CancellationToken cancellationToken)
     {
-        Variable variable = new(Guid.NewGuid(), VariableState.Active, name, isSecret, @namespace);
+        var session = await _sessionAccessor.GetSession(cancellationToken);
+        if (session is null || !session.HasPermission(@namespace, Permissions.WriteVariables))
+        {
+            throw new UnauthorizedOperationException();
+        }
+
+        Variable? variable = new(Guid.NewGuid(), VariableState.Active, name, isSecret, @namespace);
 
         await _variableStore.CreateAsync(variable, cancellationToken);
 
@@ -65,16 +75,25 @@ public class VariableService : IVariableService
 
     public async Task<IEnumerable<Variable>> GetAllAsync(CancellationToken cancellationToken)
     {
-        return await _variableStore.GetAllAsync(cancellationToken);
+        var session = await _sessionAccessor.GetSession(cancellationToken);
+        if (session is null)
+        {
+            return Array.Empty<Variable>();
+        }
+
+        return await _variableStore
+            .GetAllByNamespacesAsync(session.Namespaces, cancellationToken);
     }
 
-    public async Task<IEnumerable<Variable>> GetByNamesAsync(
+    // TODO move this out of the service into some kind of provider
+    public async Task<IEnumerable<Variable?>> GetByNamesAsync(
         IEnumerable<string> names,
         CancellationToken cancellationToken)
     {
         return await _variableStore.GetByNamesAsync(names, cancellationToken);
     }
 
+    // TODO move this out of the service into some kind of provider
     public async Task<IDictionary<string, VariableValue>> GetBestMatchingValuesAsync(
         IEnumerable<string> variableNames,
         Guid applicationId,
@@ -84,7 +103,7 @@ public class VariableService : IVariableService
     {
         ISet<string> distinctNames = variableNames.ToHashSet();
 
-        IReadOnlyList<Variable> variables =
+        IReadOnlyList<Variable?> variables =
             await _variableStore.GetByNamesAsync(distinctNames, cancellationToken);
 
         IDictionary<string, VariableValue> values = new Dictionary<string, VariableValue>();
@@ -135,28 +154,35 @@ public class VariableService : IVariableService
         return values;
     }
 
-    public IQueryable<Variable> SearchVariables(string? search)
-    {
-        return search is null
-            ? _variableStore.Query()
-            : _variableStore.Query()
-                .Where(x =>
-                    x.Name.Contains(search) ||
-                    (x.Namespace != null && x.Namespace.Contains(search)));
-    }
-
-    public async Task<IEnumerable<Variable>> GetManyAsync(
-        IEnumerable<Guid> ids,
+    public async Task<IQueryable<Variable?>> SearchVariables(
+        string? search,
         CancellationToken cancellationToken)
     {
-        return await _variableStore.GetManyAsync(ids, cancellationToken);
+        var session = await _sessionAccessor.GetSession(cancellationToken);
+        if (session is null)
+        {
+            return Array.Empty<Variable>().AsQueryable();
+        }
+
+        var queryable = _variableStore
+            .Query()
+            .Where(x => session.Namespaces.Contains(x.Namespace));
+
+        if (search is not null)
+        {
+            queryable = queryable
+                .Where(x => x.Name.Contains(search) || (x.Namespace.Contains(search)));
+        }
+
+        return queryable;
     }
 
-    public async Task<Variable> GetByIdAsync(
+    public async Task<Variable?> GetByIdAsync(
         Guid id,
         CancellationToken cancellationToken)
     {
-        return await _variableStore.GetByIdAsync(id, cancellationToken);
+        var variable = await _variableStore.GetByIdAsync(id, cancellationToken);
+        return await _authorizationService.AuthorizeAsync(variable, cancellationToken);
     }
 
     public async Task<VariableValue> SaveValueAsync(
@@ -168,7 +194,19 @@ public class VariableService : IVariableService
         Guid? environmentId = null,
         CancellationToken cancellationToken = default)
     {
-        Variable variable = await GetByIdAsync(variableId, cancellationToken);
+        var session = await _sessionAccessor.GetSession(cancellationToken);
+        if (session is null)
+        {
+            throw new UnauthorizedOperationException();
+        }
+
+        var variable = await GetByIdAsync(variableId, cancellationToken);
+
+        if (variable is null ||
+            !session.HasPermission(variable.Namespace, Permissions.WriteVariables))
+        {
+            throw new UnauthorizedOperationException();
+        }
 
         return await SaveVariableValueAsync(variable,
             value,
@@ -184,8 +222,12 @@ public class VariableService : IVariableService
         bool decrypt,
         CancellationToken cancellationToken)
     {
-        Variable variable =
-            await _variableStore.GetByIdAsync(filter.Id, cancellationToken);
+        var variable = await _variableStore.GetByIdAsync(filter.Id, cancellationToken);
+
+        if (!await _authorizationService.IsAuthorized(variable, cancellationToken))
+        {
+            return Array.Empty<VariableValue>();
+        }
 
         return await GetValuesAsync(variable, filter, decrypt, cancellationToken);
     }
@@ -194,6 +236,13 @@ public class VariableService : IVariableService
         Guid applicationPartId,
         CancellationToken cancellationToken)
     {
+        var variable = await _variableStore.GetByIdAsync(filter.Id, cancellationToken);
+
+        if (!await _authorizationService.IsAuthorized(variable, cancellationToken))
+        {
+            return Array.Empty<VariableValue>();
+        }
+
         return await _variableStore.GetByApplicationPartIdAsync(applicationPartId,
             cancellationToken);
     }
@@ -210,14 +259,12 @@ public class VariableService : IVariableService
         await _variableStore.GetGlobalVariableValue(cancellationToken);
 
     public async Task<IEnumerable<VariableValue>> GetValuesAsync(
-        Variable variable,
+        Variable? variable,
         VariableValueFilter filter,
         bool decrypt,
         CancellationToken cancellationToken)
     {
-        IEnumerable<VariableValue> values = await _variableValueStore.GetByFilterAsync(
-            filter,
-            cancellationToken);
+        var values = await _variableValueStore.GetByFilterAsync( filter, cancellationToken);
 
         if (variable.IsSecret && decrypt)
         {
@@ -225,7 +272,8 @@ public class VariableService : IVariableService
                 .ToAsyncEnumerable()
                 .SelectAwait(async value => value with
                 {
-                    Value = await _decryptor.DecryptAsync(value.EncryptedValue!, cancellationToken)
+                    Value = await _decryptor.DecryptAsync(value.EncryptedValue!,
+                        cancellationToken)
                 })
                 .ToArrayAsync(cancellationToken);
         }
@@ -236,7 +284,7 @@ public class VariableService : IVariableService
     public async Task<VariableValue> DeleteValueAsync(Guid id, CancellationToken cancellationToken)
     {
         VariableValue value = await _variableValueStore.GetByIdAsync(id, cancellationToken);
-        Variable variable = await _variableStore.GetByIdAsync(
+        Variable? variable = await _variableStore.GetByIdAsync(
             value.Key.VariableId,
             cancellationToken);
 
@@ -258,12 +306,12 @@ public class VariableService : IVariableService
         return value;
     }
 
-    public async Task<Variable> RenameAsync(
+    public async Task<Variable?> RenameAsync(
         Guid id,
         string name,
         CancellationToken cancellationToken)
     {
-        Variable variable = await _variableStore.GetByIdAsync(id, cancellationToken);
+        Variable? variable = await _variableStore.GetByIdAsync(id, cancellationToken);
 
         variable = variable with { Name = name, Version = variable.Version + 1 };
 
@@ -281,7 +329,7 @@ public class VariableService : IVariableService
     }
 
     private async Task<VariableValue> SaveVariableValueAsync(
-        Variable variable,
+        Variable? variable,
         string value,
         Guid? valueId = null,
         Guid? applicationId = null,
@@ -317,10 +365,7 @@ public class VariableService : IVariableService
                     environmentId ?? Guid.Empty,
                     cancellationToken);
 
-            variableValue = variableValue with
-            {
-                EncryptedValue = encrypted
-            };
+            variableValue = variableValue with { EncryptedValue = encrypted };
         }
         else
         {

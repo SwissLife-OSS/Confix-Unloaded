@@ -42,9 +42,9 @@ public class ChangeLogAuthorizationRule : AuthorizationRule<ChangeLog>
                     await _variableDataLoader.LoadAsync(id, cancellationToken),
                     cancellationToken),
 
-            IApplicationChange { ApplicationId: var id } => await _authorization.IsAuthorized(
-                await _applicationById.LoadAsync(id, cancellationToken),
-                cancellationToken),
+            IApplicationChange { ApplicationId: var id } => await _authorization
+                .IsAuthorized(await _applicationById.LoadAsync(id, cancellationToken),
+                    cancellationToken),
 
             _ => false
         };

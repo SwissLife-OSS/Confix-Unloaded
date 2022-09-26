@@ -3,55 +3,82 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Confix.Authentication.Authorization;
 using Confix.Authoring.DataLoaders;
 using Confix.Authoring.Publishing;
 using Confix.Authoring.Store;
+using Confix.Common;
+using Confix.Common.Exceptions;
 using GreenDonut;
+using IdentityModel.Internal;
+using static Confix.Authentication.Authorization.Permissions;
+using static Confix.Authentication.Authorization.WellKnownNamespaces;
 
 namespace Confix.Authoring;
 
 public class EnvironmentService : IEnvironmentService
 {
     private readonly IEnvironmentStore _store;
+    private readonly ISessionAccessor _sessionAccessor;
+    private readonly IAuthorizationService _authorizationService;
     private readonly IDataLoader<Guid, Environment?> _environmentByIdDataLoader;
 
     public EnvironmentService(
         IEnvironmentStore store,
-        IDataLoader<Guid, Environment?> environmentByIdDataLoader)
+        IDataLoader<Guid, Environment?> environmentByIdDataLoader,
+        ISessionAccessor sessionAccessor,
+        IAuthorizationService authorizationService)
     {
         _store = store;
         _environmentByIdDataLoader = environmentByIdDataLoader;
+        _sessionAccessor = sessionAccessor;
+        _authorizationService = authorizationService;
     }
 
     public async Task<IReadOnlyList<Environment>> GetByIdsAsync(
         IEnumerable<Guid> ids,
         CancellationToken cancellationToken = default)
     {
-        IReadOnlyList<Environment?> envs =
-            await _environmentByIdDataLoader.LoadAsync(ids.ToArray(), cancellationToken);
+        if (!await _sessionAccessor.IsAuthenticated(cancellationToken))
+        {
+            return Array.Empty<Environment>();
+        }
+
+        var envs = await _environmentByIdDataLoader.LoadAsync(ids.ToArray(), cancellationToken);
 
         return envs.OfType<Environment>().ToArray();
     }
 
-    public Task<Environment?> GetByIdAsync(
+    public async Task<Environment?> GetByIdAsync(
         Guid environmentId,
-        CancellationToken cancellationToken = default) =>
-        _environmentByIdDataLoader.LoadAsync(environmentId, cancellationToken);
+        CancellationToken cancellationToken = default)
+    {
+        return await _authorizationService.AuthorizeAsync(
+            await _environmentByIdDataLoader.LoadAsync(environmentId, cancellationToken),
+            cancellationToken);
+    }
 
-    public Task<Environment?> GetByNameAsync(
+    public async Task<Environment?> GetByNameAsync(
         string name,
         CancellationToken cancellationToken = default)
-        => _store.GetByNameAsync(name, cancellationToken);
-
-    public Task<IReadOnlyCollection<Environment>> GetManyByIdAsync(
-        IEnumerable<Guid> environmentIds,
-        CancellationToken cancellationToken = default) =>
-        _store.GetManyByIdAsync(environmentIds, cancellationToken);
+    {
+        return await _authorizationService.AuthorizeAsync(
+            await _store.GetByNameAsync(name, cancellationToken),
+            cancellationToken);
+    }
 
     public async Task<Environment> CreateAsync(
         string name,
         CancellationToken cancellationToken = default)
     {
+        var session = await _sessionAccessor.GetSession(cancellationToken);
+
+        if (session is not null &&
+            session.HasPermission(Global, ManageEnvironments))
+        {
+            throw new UnauthorizedOperationException();
+        }
+
         Environment environment = new(Guid.NewGuid(), name);
 
         await _store.AddAsync(environment, cancellationToken);
@@ -62,15 +89,35 @@ public class EnvironmentService : IEnvironmentService
     public async Task<Environment> RenameAsync(
         Guid environmentId,
         string name,
-        CancellationToken cancellationToken = default) =>
-        await _store.RenameAsync(environmentId, name, cancellationToken) ??
-        throw new EnvironmentNotFoundException(environmentId);
+        CancellationToken cancellationToken = default)
+    {
+        var session = await _sessionAccessor.GetSession(cancellationToken);
+
+        if (session is not null &&
+            session.HasPermission(Global, ManageEnvironments))
+        {
+            throw new UnauthorizedOperationException();
+        }
+
+        return await _store.RenameAsync(environmentId, name, cancellationToken) ??
+            throw new EnvironmentNotFoundException(environmentId);
+    }
 
     public async Task<Environment> DeleteById(
         Guid environmentId,
-        CancellationToken cancellationToken) =>
-        await _store.RemoveByIdAsync(environmentId, cancellationToken) ??
-        throw new EnvironmentNotFoundException(environmentId);
+        CancellationToken cancellationToken)
+    {
+        var session = await _sessionAccessor.GetSession(cancellationToken);
+
+        if (session is not null &&
+            session.HasPermission(Global, ManageEnvironments))
+        {
+            throw new UnauthorizedOperationException();
+        }
+
+        return await _store.RemoveByIdAsync(environmentId, cancellationToken) ??
+            throw new EnvironmentNotFoundException(environmentId);
+    }
 
     public IQueryable<Environment> SearchAsync(
         string? search,
@@ -89,15 +136,11 @@ public class EnvironmentService : IEnvironmentService
             throw ThrowHelper.EnvironmentCycleDetected(Array.Empty<string>());
         }
 
-        Task<Environment?> environementFetch =
-            _store.GetByIdAsync(environmentId, cancellationToken);
-        Task<Environment?> parentFetch =
-            _store.GetByIdAsync(parentId, cancellationToken);
+        var (environment, parent) = await TaskHelper.WhenAll(
+            _store.GetByIdAsync(environmentId, cancellationToken),
+            _store.GetByIdAsync(parentId, cancellationToken));
 
-        Environment? environement = await environementFetch;
-        Environment? parent = await parentFetch;
-
-        if (environement is null)
+        if (environment is null)
         {
             throw ThrowHelper.EnvironmentWasNotFound(environmentId);
         }
@@ -107,11 +150,11 @@ public class EnvironmentService : IEnvironmentService
             throw ThrowHelper.EnvironmentWasNotFound(parentId);
         }
 
-        await EnsureNoCycleAsync(environement, parent, cancellationToken);
+        await EnsureNoCycleAsync(environment, parent, cancellationToken);
 
-        environement = environement with { ParentId = parent.Id };
+        environment = environment with { ParentId = parent.Id };
 
-        return await _store.UpdateAsync(environement, cancellationToken);
+        return await _store.UpdateAsync(environment, cancellationToken);
     }
 
     private async Task EnsureNoCycleAsync(

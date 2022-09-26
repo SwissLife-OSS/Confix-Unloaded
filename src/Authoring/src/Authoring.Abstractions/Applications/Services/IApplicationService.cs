@@ -29,16 +29,8 @@ public interface IApplicationService
         string applicationName,
         CancellationToken cancellationToken = default);
 
-    Task<IReadOnlyCollection<Application>> GetManyByIdAsync(
-        IEnumerable<Guid> ids,
-        CancellationToken cancellationToken = default);
-
     Task<ApplicationPart?> GetPartByIdAsync(
         Guid id,
-        CancellationToken cancellationToken = default);
-
-    Task<IReadOnlyCollection<ApplicationPart>> GetManyPartsByIdAsync(
-        IEnumerable<Guid> ids,
         CancellationToken cancellationToken = default);
 
     Task<IQueryable<Application>> Query(CancellationToken cancellationToken);
