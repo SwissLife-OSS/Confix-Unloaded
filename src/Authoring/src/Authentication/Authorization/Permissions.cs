@@ -3,15 +3,19 @@ namespace Confix.Authentication.Authorization;
 [Flags]
 public enum Permissions
 {
-    ReadConfiguration = 1,
-    WriteConfiguration = 2,
-    ManageApplications = 4,
-    PublishApplicationParts = 8,
-    ManageIdentity = 16,
-    WriteComponents = 32,
-    ReadComponents = 64,
-    ManageEnvironments = 128,
-    ReadVariables = 256,
-    WriteVariables = 512,
-    ReadVariableSecrets = 1024
+    Read = 1,
+    Write = 2,
+    Manage = 4,
+    Publish = 8,
+    Decrypt = 16,
+}
+
+public enum Scope
+{
+    Configuration,
+    Application,
+    Variable,
+    Identity,
+    Component,
+    Environment,
 }

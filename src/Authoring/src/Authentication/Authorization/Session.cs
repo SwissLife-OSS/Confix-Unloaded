@@ -38,9 +38,9 @@ public class Session : ISession
         }
     }
 
-    public bool HasPermission(string @namespace, Permissions permission)
+    public bool HasPermission(string @namespace, Scope scope, Permissions permission)
     {
-        var grant = new Grant(@namespace, permission);
+        var grant = new Grant(@namespace, scope, permission);
 
         return _cache.GetOrAdd(grant, _ => HasPermissionCheck());
 
@@ -62,7 +62,15 @@ public class Session : ISession
                             continue;
                         }
 
-                        return role.Permissions.HasFlag(permission);
+                        foreach (var rolePermission in role.Permissions)
+                        {
+                            if (rolePermission.Scope != scope)
+                            {
+                                continue;
+                            }
+
+                            return rolePermission.Permissions.HasFlag(permission);
+                        }
                     }
                 }
             }
@@ -80,5 +88,5 @@ public class Session : ISession
         }
     }
 
-    private readonly record struct Grant(string @namespace, Permissions permission);
+    private readonly record struct Grant(string @namespace, Scope scope, Permissions permission);
 }

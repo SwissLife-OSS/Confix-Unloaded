@@ -9,7 +9,10 @@ public abstract class AuthorizationRule<T> : IAuthorizationRule<T>
         _accessor = accessor;
     }
 
-    public async ValueTask<bool> IsAuthorizedAsync(T? resource, CancellationToken cancellationToken)
+    public async ValueTask<bool> IsAuthorizedAsync(
+        T? resource,
+        Permissions permissions,
+        CancellationToken cancellationToken)
     {
         if (resource is null)
         {
@@ -22,11 +25,12 @@ public abstract class AuthorizationRule<T> : IAuthorizationRule<T>
             return default;
         }
 
-        return await IsAuthorizedAsync(resource, session, cancellationToken);
+        return await IsAuthorizedAsync(resource, session, permissions, cancellationToken);
     }
 
     protected abstract ValueTask<bool> IsAuthorizedAsync(
         T resource,
         ISession session,
+        Permissions permissions,
         CancellationToken cancellationToken);
 }

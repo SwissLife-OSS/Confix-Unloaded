@@ -1,6 +1,5 @@
 using Confix.Authentication.Authorization;
 using Confix.Authoring.Store;
-using GreenDonut;
 
 namespace Confix.Authoring.Publishing.Authorization;
 
@@ -18,9 +17,10 @@ public class PublishedApplicationPartAuthorizationRule : AuthorizationRule<Publi
     protected override ValueTask<bool> IsAuthorizedAsync(
         PublishedApplicationPart resource,
         ISession session,
+        Permissions permissions,
         CancellationToken cancellationToken)
     {
         return _authorizationService
-            .IsAuthorized<ApplicationPart>(resource.Part.Id, cancellationToken);
+            .IsAuthorized<ApplicationPart>(resource.Part.Id, permissions, cancellationToken);
     }
 }

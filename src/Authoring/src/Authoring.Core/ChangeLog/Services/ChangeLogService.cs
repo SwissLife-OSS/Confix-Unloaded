@@ -95,10 +95,8 @@ public class ChangeLogService : IChangeLogService
         Guid applicationId,
         CancellationToken cancellationToken)
     {
-        if (!await _authorizationService.IsAuthorized(
-                await _applicationById.LoadAsync(applicationId, cancellationToken),
-                cancellationToken
-            ))
+        var application = await _applicationById.LoadAsync(applicationId, cancellationToken);
+        if (!await _authorizationService.IsAuthorized( Read, cancellationToken ))
         {
             return Array.Empty<ChangeLog>();
         }

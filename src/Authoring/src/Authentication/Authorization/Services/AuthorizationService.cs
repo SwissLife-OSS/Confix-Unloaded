@@ -12,7 +12,10 @@ public class AuthorizationService : IAuthorizationService
         _serviceProvider = serviceProvider;
     }
 
-    public ValueTask<bool> IsAuthorized<T>(T resource, CancellationToken cancellationToken)
+    public ValueTask<bool> IsAuthorized<T>(
+        T resource,
+        Permissions permissions,
+        CancellationToken cancellationToken)
     {
         var handler = _serviceProvider.GetService<IAuthorizationRule<T>>();
 
@@ -21,15 +24,16 @@ public class AuthorizationService : IAuthorizationService
             return new ValueTask<bool>(false);
         }
 
-        return handler.IsAuthorizedAsync(resource, cancellationToken);
+        return handler.IsAuthorizedAsync(resource, permissions, cancellationToken);
     }
 
     public async ValueTask<bool> IsAuthorized<T>(
         Guid resourceId,
+        Permissions permissions,
         CancellationToken cancellationToken)
     {
         var loader = _serviceProvider.GetRequiredService<IDataLoader<Guid, T>>();
         var resource = await loader.LoadAsync(resourceId, cancellationToken);
-        return await IsAuthorized(resource, cancellationToken);
+        return await IsAuthorized(resource, permissions, cancellationToken);
     }
 }

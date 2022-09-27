@@ -28,6 +28,7 @@ public class ChangeLogAuthorizationRule : AuthorizationRule<ChangeLog>
     protected override async ValueTask<bool> IsAuthorizedAsync(
         ChangeLog resource,
         ISession session,
+        Permissions permissions,
         CancellationToken cancellationToken)
     {
         return resource.Change switch
@@ -35,15 +36,19 @@ public class ChangeLogAuthorizationRule : AuthorizationRule<ChangeLog>
             IComponentChange { ComponentId: var id } =>
                 await _authorization.IsAuthorized(
                     await _componentById.LoadAsync(id, cancellationToken),
+                    permissions,
                     cancellationToken),
 
             IVariableChange { VariableId: var id } =>
                 await _authorization.IsAuthorized(
                     await _variableDataLoader.LoadAsync(id, cancellationToken),
+                    permissions,
                     cancellationToken),
 
             IApplicationChange { ApplicationId: var id } => await _authorization
-                .IsAuthorized(await _applicationById.LoadAsync(id, cancellationToken),
+                .IsAuthorized(
+                    await _applicationById.LoadAsync(id, cancellationToken),
+                    permissions,
                     cancellationToken),
 
             _ => false

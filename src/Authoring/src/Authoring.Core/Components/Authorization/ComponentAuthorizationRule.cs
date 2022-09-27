@@ -11,9 +11,10 @@ public class ComponentAuthorizationRule : AuthorizationRule<Component>
     protected override ValueTask<bool> IsAuthorizedAsync(
         Component resource,
         ISession session,
+        Permissions permissions,
         CancellationToken cancellationToken)
     {
         return new ValueTask<bool>(
-            session.HasPermission(resource.Namespace, Permissions.ReadComponents));
+            session.HasPermission(resource.Namespace, Scope.Component, permissions));
     }
 }

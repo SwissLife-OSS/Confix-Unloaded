@@ -10,5 +10,5 @@ public interface ISession
 
     UserInfo UserInfo { get; }
 
-    bool HasPermission(string @namespace, Permissions permission);
+    bool HasPermission(string @namespace, Scope scope, Permissions permission)
 }

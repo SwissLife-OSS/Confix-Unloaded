@@ -20,10 +20,11 @@ public class ApplicationPartAuthorizationRule : AuthorizationRule<ApplicationPar
     protected override async ValueTask<bool> IsAuthorizedAsync(
         ApplicationPart resource,
         ISession session,
+        Permissions permissions,
         CancellationToken cancellationToken)
     {
-        return await _applicationRule.IsAuthorizedAsync(
-            await _applicationByPartId.LoadAsync(resource.Id, cancellationToken),
-            cancellationToken);
+        var application = await _applicationByPartId.LoadAsync(resource.Id, cancellationToken);
+        return await _applicationRule
+            .IsAuthorizedAsync(application, permissions, cancellationToken);
     }
 }
