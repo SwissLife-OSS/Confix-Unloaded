@@ -7,13 +7,16 @@ using Confix.Common.Exceptions;
 using Confix.CryptoProviders;
 using Confix.Vault.Client;
 using GreenDonut;
+using static Confix.Authentication.Authorization.Permissions;
 
 namespace Confix.Authoring.Publishing;
 
 public class PublishingService : IPublishingService
 {
     private readonly IDataLoader<Guid, PublishedApplicationPart?> _publishedById;
-    private readonly IPublishedApplicationPartByPartIdDataloader _publishedApplicationPartById;
+    private readonly IPublishedApplicationPartsByPartIdDataloader
+        _publishedApplicationPartsByPartId;
+    private readonly IPublishedApplicationPartByIdDataloader _publishedApplicationPartById;
     private readonly IApplicationService _applicationService;
     private readonly IEnvironmentService _environmentService;
     private readonly IComponentDataLoader _componentDataLoader;
@@ -24,10 +27,11 @@ public class PublishingService : IPublishingService
     private readonly IComponentService _componentService;
     private readonly IVaultClient _vaultClient;
     private readonly IEncryptor _encryptor;
+    private readonly IApplicationByPartIdDataLoader _applicationByPartId;
 
     public PublishingService(
         IDataLoader<Guid, PublishedApplicationPart?> publishedById,
-        IPublishedApplicationPartByPartIdDataloader publishedApplicationPartById,
+        IPublishedApplicationPartsByPartIdDataloader publishedApplicationPartsByPartId,
         IApplicationService applicationService,
         IEnvironmentService environmentService,
         IComponentDataLoader componentDataLoader,
@@ -37,10 +41,12 @@ public class PublishingService : IPublishingService
         IVariableService variableService,
         IVaultClient vaultClient,
         IComponentService componentService,
-        IAuthorizationService authorizationService)
+        IAuthorizationService authorizationService,
+        IApplicationByPartIdDataLoader applicationByPartId,
+        IPublishedApplicationPartByIdDataloader publishedApplicationPartById)
     {
         _publishedById = publishedById;
-        _publishedApplicationPartById = publishedApplicationPartById;
+        _publishedApplicationPartsByPartId = publishedApplicationPartsByPartId;
         _applicationService = applicationService;
         _environmentService = environmentService;
         _componentDataLoader = componentDataLoader;
@@ -49,6 +55,8 @@ public class PublishingService : IPublishingService
         _variableService = variableService;
         _componentService = componentService;
         _authorizationService = authorizationService;
+        _applicationByPartId = applicationByPartId;
+        _publishedApplicationPartById = publishedApplicationPartById;
         _vaultClient = vaultClient;
         _encryptor = encryptor;
     }
@@ -57,11 +65,7 @@ public class PublishingService : IPublishingService
         Guid partId,
         CancellationToken cancellationToken)
     {
-        var session = await _sessionAccessor.GetSession(cancellationToken);
-        if (session is null)
-        {
-            throw new UnauthorizedOperationException();
-        }
+        var session = await _authorizationService.EnsureAuthenticated(cancellationToken);
 
         var application = await _applicationService.GetByPartIdAsync(partId, cancellationToken);
 
@@ -72,7 +76,9 @@ public class PublishingService : IPublishingService
             throw ThrowHelper.PublishingFailedBecauseApplicationPartWasNotFound(partId);
         }
 
-        if (!session.HasPermission(application.Namespace, Permissions.PublishApplicationParts))
+        if (!await _authorizationService
+                .RuleFor<ApplicationPart>()
+                .IsAuthorizedAsync(applicationPart, Read, cancellationToken))
         {
             throw new UnauthorizedOperationException();
         }
@@ -108,12 +114,15 @@ public class PublishingService : IPublishingService
         Guid partId,
         CancellationToken cancellationToken)
     {
-        if (!await _authorizationService.IsAuthorized<ApplicationPart>(partId, cancellationToken))
+        var part = _applicationByPartId.LoadAsync(partId, cancellationToken);
+        if (!await _authorizationService
+                .RuleFor<PublishedApplicationPart>()
+                .IsAuthorizedFromAsync(part, Read, cancellationToken))
         {
             return Array.Empty<PublishedApplicationPart>();
         }
 
-        return await _publishedApplicationPartById.LoadAsync(partId, cancellationToken)
+        return await _publishedApplicationPartsByPartId.LoadAsync(partId, cancellationToken)
             ?? Array.Empty<PublishedApplicationPart>();
     }
 
@@ -121,7 +130,11 @@ public class PublishingService : IPublishingService
         Guid partId,
         CancellationToken cancellationToken)
     {
-        if (!await _authorizationService.IsAuthorized<ApplicationPart>(partId, cancellationToken))
+        var part = _applicationByPartId.LoadAsync(partId, cancellationToken);
+
+        if (!await _authorizationService
+                .RuleFor<Environment>()
+                .IsAuthorizedFromAsync(part, Read, cancellationToken))
         {
             return Array.Empty<Environment>();
         }
@@ -136,8 +149,12 @@ public class PublishingService : IPublishingService
         Guid publishedApplicationId,
         CancellationToken cancellationToken)
     {
+        var part = await _publishedApplicationPartById
+            .LoadAsync(publishedApplicationId, cancellationToken);
+
         if (!await _authorizationService
-                .IsAuthorized<PublishedApplicationPart>(publishedApplicationId, cancellationToken))
+                .RuleFor<PublishedApplicationPart>()
+                .IsAuthorizedAsync(part, Read, cancellationToken))
         {
             return Array.Empty<ClaimedVersion>();
         }
@@ -151,12 +168,10 @@ public class PublishingService : IPublishingService
         CancellationToken cancellationToken)
     {
         var part = await _publishedById.LoadAsync(id, cancellationToken);
-        if (!await _authorizationService.IsAuthorized(part, cancellationToken))
-        {
-            return null;
-        }
 
-        return part;
+        return await _authorizationService
+            .RuleFor<PublishedApplicationPart>()
+            .AuthorizeOrNullAsync(part, Read, cancellationToken);
     }
 
     public async Task<IReadOnlyList<ClaimedVersion>> GetClaimedVersionAsync(
@@ -164,7 +179,11 @@ public class PublishingService : IPublishingService
         Guid environmentId,
         CancellationToken cancellationToken)
     {
-        if (!await _authorizationService.IsAuthorized<ApplicationPart>(partId, cancellationToken))
+        var part = _applicationByPartId.LoadAsync(partId, cancellationToken);
+
+        if (!await _authorizationService
+                .RuleFor<PublishedApplicationPart>()
+                .IsAuthorizedFromAsync(part, Read, cancellationToken))
         {
             return Array.Empty<ClaimedVersion>();
         }
@@ -206,7 +225,9 @@ public class PublishingService : IPublishingService
                 applicationPartName);
         }
 
-        if (session.HasPermission(app.Namespace, Permissions.PublishApplicationParts))
+        if (!await _authorizationService
+                .RuleFor<Application>()
+                .IsAuthorizedAsync(app, Claim, cancellationToken))
         {
             throw new OperationCanceledException();
         }

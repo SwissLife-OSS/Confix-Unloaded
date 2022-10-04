@@ -38,7 +38,7 @@ public interface IEnvironmentService
         Guid parentId,
         CancellationToken cancellationToken = default);
 
-    IQueryable<Environment> SearchAsync(
+    Task<IQueryable<Environment>> SearchAsync(
         string? search,
         CancellationToken cancellationToken = default);
 }

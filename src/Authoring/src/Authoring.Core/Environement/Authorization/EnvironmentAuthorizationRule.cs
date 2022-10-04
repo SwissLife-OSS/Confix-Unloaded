@@ -17,4 +17,14 @@ public class EnvironmentAuthorizationRule : AuthorizationRule<Environment>
         return new ValueTask<bool>(
             session.HasPermission(WellKnownNamespaces.Global, Scope.Environment, permissions));
     }
+
+    protected override ValueTask<bool> IsAuthorizedFromAsync<TOther>(
+        TOther resource,
+        ISession session,
+        Permissions permissions,
+        CancellationToken cancellationToken)
+    {
+        return new ValueTask<bool>(
+            session.HasPermission(WellKnownNamespaces.Global, Scope.Environment, permissions));
+    }
 }

@@ -47,7 +47,7 @@ public interface IVariableService
         CancellationToken cancellationToken);
 
     Task<IEnumerable<VariableValue>> GetValuesAsync(
-        Variable? variable,
+        Variable variable,
         VariableValueFilter filter,
         bool decrypt,
         CancellationToken cancellationToken);

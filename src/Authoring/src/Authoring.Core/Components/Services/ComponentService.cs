@@ -7,6 +7,7 @@ using Confix.Authoring.Store;
 using Confix.Common.Exceptions;
 using GreenDonut;
 using HotChocolate;
+using static Confix.Authentication.Authorization.Permissions;
 using static Confix.Authoring.Internal.ValueHelper;
 
 namespace Confix.Authoring;
@@ -39,10 +40,14 @@ public sealed class ComponentService : IComponentService
     // TODO add read component permission
     public async Task<Component?> GetByIdAsync(
         Guid id,
-        CancellationToken cancellationToken = default) =>
-        await _authorizationService.AuthorizeAsync(
-            await _componentById.LoadAsync(id, cancellationToken),
-            cancellationToken);
+        CancellationToken cancellationToken = default)
+    {
+        var component = await _componentById.LoadAsync(id, cancellationToken);
+
+        return await _authorizationService
+            .RuleFor<Component>()
+            .AuthorizeOrNullAsync(component, Read, cancellationToken);
+    }
 
     public async Task<ISchema?> GetSchemaByIdAsync(
         Guid id,
@@ -51,7 +56,9 @@ public sealed class ComponentService : IComponentService
         var component = await GetByIdAsync(id, cancellationToken);
 
         if (component?.Schema is null ||
-            !await _authorizationService.IsAuthorized(component, cancellationToken))
+            !await _authorizationService
+                .RuleFor<Component>()
+                .IsAuthorizedAsync(component, Read, cancellationToken))
         {
             return null;
         }
@@ -77,12 +84,6 @@ public sealed class ComponentService : IComponentService
         IDictionary<string, object?>? values,
         CancellationToken cancellationToken)
     {
-        var session = await _accessor.GetSession(cancellationToken);
-        if (session is null || session.HasPermission(@namespace, Permissions.WriteComponents))
-        {
-            throw new UnauthorizedOperationException();
-        }
-
         if (string.IsNullOrEmpty(name))
         {
             throw new ArgumentException("Value cannot be null or empty.", nameof(name));
@@ -99,12 +100,20 @@ public sealed class ComponentService : IComponentService
             }
         }
 
-        Component component = new(Guid.NewGuid(),
+        Component component = new(
+            Guid.NewGuid(),
             name,
             schemaSdl,
             serializedValues,
             ComponentState.Active,
             @namespace);
+
+        if (!await _authorizationService
+                .RuleFor<Component>()
+                .IsAuthorizedAsync(component, Write, cancellationToken))
+        {
+            throw new UnauthorizedOperationException();
+        }
 
         CreateComponentChange log = new(component.Id, component.Version, component);
 
@@ -124,27 +133,23 @@ public sealed class ComponentService : IComponentService
         string name,
         CancellationToken cancellationToken)
     {
-        var session = await _accessor.GetSession(cancellationToken);
-        if (session is null)
+        var component = await _componentById.LoadAsync(id, cancellationToken);
+
+        if (!await _authorizationService
+                .RuleFor<Component>()
+                .IsAuthorizedAsync(component, Write, cancellationToken))
         {
             throw new UnauthorizedOperationException();
         }
-
-        if (string.IsNullOrEmpty(name))
-        {
-            throw new ArgumentException("Value cannot be null or empty.", nameof(name));
-        }
-
-        var component = await _componentById.LoadAsync(id, cancellationToken);
 
         if (component is null)
         {
             throw new ComponentNotFoundException(id);
         }
 
-        if (!session.HasPermission(component.Namespace, Permissions.WriteComponents))
+        if (string.IsNullOrEmpty(name))
         {
-            throw new UnauthorizedOperationException();
+            throw new ArgumentException("Value cannot be null or empty.", nameof(name));
         }
 
         component = component with { Name = name, Version = component.Version + 1 };
@@ -167,10 +172,18 @@ public sealed class ComponentService : IComponentService
         string schemaSdl,
         CancellationToken cancellationToken)
     {
-        var session = await _accessor.GetSession(cancellationToken);
-        if (session is null)
+        var component = await _componentById.LoadAsync(componentId, cancellationToken);
+
+        if (!await _authorizationService
+                .RuleFor<Component>()
+                .IsAuthorizedAsync(component, Write, cancellationToken))
         {
             throw new UnauthorizedOperationException();
+        }
+
+        if (component is null)
+        {
+            throw new ComponentNotFoundException(componentId);
         }
 
         if (schemaSdl is null)
@@ -180,18 +193,6 @@ public sealed class ComponentService : IComponentService
 
         // we ensure that the schema is valid.
         _schemaService.CreateSchema(schemaSdl);
-
-        var component = await _componentById.LoadAsync(componentId, cancellationToken);
-
-        if (component is null)
-        {
-            throw new ComponentNotFoundException(componentId);
-        }
-
-        if (!session.HasPermission(component.Namespace, Permissions.WriteComponents))
-        {
-            throw new UnauthorizedOperationException();
-        }
 
         component = component with { Schema = schemaSdl, Version = component.Version + 1 };
 
@@ -212,22 +213,18 @@ public sealed class ComponentService : IComponentService
         IDictionary<string, object?> values,
         CancellationToken cancellationToken)
     {
-        var session = await _accessor.GetSession(cancellationToken);
-        if (session is null)
+        var component = await _componentById.LoadAsync(id, cancellationToken);
+
+        if (!await _authorizationService
+                .RuleFor<Component>()
+                .IsAuthorizedAsync(component, Write, cancellationToken))
         {
             throw new UnauthorizedOperationException();
         }
-
-        var component = await _componentById.LoadAsync(id, cancellationToken);
 
         if (component is null)
         {
             throw new ComponentNotFoundException(id);
-        }
-
-        if (!session.HasPermission(component.Namespace, Permissions.WriteComponents))
-        {
-            throw new UnauthorizedOperationException();
         }
 
         if (component?.Schema is null)
@@ -259,7 +256,9 @@ public sealed class ComponentService : IComponentService
     {
         var component = await _componentById.LoadAsync(id, cancellationToken);
 
-        if (!await _authorizationService.IsAuthorized(component, cancellationToken))
+        if (!await _authorizationService
+                .RuleFor<Component>()
+                .IsAuthorizedAsync(component, Read, cancellationToken))
         {
             throw new UnauthorizedOperationException();
         }
@@ -286,7 +285,9 @@ public sealed class ComponentService : IComponentService
     {
         var component = await _componentById.LoadAsync(id, cancellationToken);
 
-        if (!await _authorizationService.IsAuthorized(component, cancellationToken))
+        if (!await _authorizationService
+                .RuleFor<Component>()
+                .IsAuthorizedAsync(component, Read, cancellationToken))
         {
             throw new UnauthorizedOperationException();
         }
@@ -308,7 +309,9 @@ public sealed class ComponentService : IComponentService
     {
         var component = await _componentById.LoadAsync(id, cancellationToken);
 
-        if (!await _authorizationService.IsAuthorized(component, cancellationToken))
+        if (!await _authorizationService
+                .RuleFor<Component>()
+                .IsAuthorizedAsync(component, Read, cancellationToken))
         {
             throw new UnauthorizedOperationException();
         }

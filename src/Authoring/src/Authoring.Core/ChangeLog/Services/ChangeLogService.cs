@@ -23,6 +23,9 @@ public class ChangeLogService : IChangeLogService
     private readonly ChangeLogByComponentIdDataloader _changesByComponentId;
     private readonly IApplicationDataLoader _applicationById;
     private readonly IApplicationPartDataLoader _applicationPartById;
+    private readonly IApplicationPartComponentDataLoader _applicationPartComponentById;
+    private readonly IComponentDataLoader _componentById;
+    private readonly IVariableDataLoader _variableById;
     private readonly IAuthorizationService _authorizationService;
 
     public ChangeLogService(
@@ -37,7 +40,10 @@ public class ChangeLogService : IChangeLogService
         IApplicationDataLoader applicationById,
         IApplicationPartDataLoader applicationPartById,
         IApplicationPartComponentDataLoader componentDataLoader,
-        IAuthorizationService authorizationService)
+        IAuthorizationService authorizationService,
+        IApplicationPartComponentDataLoader applicationPartComponentById,
+        IComponentDataLoader componentById,
+        IVariableDataLoader variableById)
     {
         _changeLogStore = changeLogStore;
         _sessionAccessor = sessionAccessor;
@@ -50,8 +56,12 @@ public class ChangeLogService : IChangeLogService
         _applicationById = applicationById;
         _applicationPartById = applicationPartById;
         _authorizationService = authorizationService;
+        _applicationPartComponentById = applicationPartComponentById;
+        _componentById = componentById;
+        _variableById = variableById;
     }
 
+    // TODO this should not be in a service => move outside
     public async Task<ChangeLog> CreateAsync(
         IChange change,
         CancellationToken cancellationToken)
@@ -62,16 +72,13 @@ public class ChangeLogService : IChangeLogService
             throw new UnauthorizedOperationException();
         }
 
-        ChangeLog log = new ChangeLog(
-            Guid.NewGuid(),
-            change,
-            session.UserInfo,
-            DateTime.UtcNow);
+        var log = new ChangeLog(Guid.NewGuid(), change, session.UserInfo, DateTime.UtcNow);
 
         await _changeLogStore.AddAsync(log, cancellationToken);
         return log;
     }
 
+    // TODO this should not be in a service => move outside
     public async Task<IReadOnlyList<ChangeLog>> CreateAsync(
         IEnumerable<IChange> changes,
         CancellationToken cancellationToken)
@@ -96,7 +103,9 @@ public class ChangeLogService : IChangeLogService
         CancellationToken cancellationToken)
     {
         var application = await _applicationById.LoadAsync(applicationId, cancellationToken);
-        if (!await _authorizationService.IsAuthorized( Read, cancellationToken ))
+        if (!await _authorizationService
+                .RuleFor<ChangeLog>()
+                .IsAuthorizedFromAsync(application, Read, cancellationToken))
         {
             return Array.Empty<ChangeLog>();
         }
@@ -109,10 +118,12 @@ public class ChangeLogService : IChangeLogService
         Guid applicationPartId,
         CancellationToken cancellationToken)
     {
-        if (!await _authorizationService.IsAuthorized(
-                await _applicationPartById.LoadAsync(applicationPartId, cancellationToken),
-                cancellationToken
-            ))
+        if (!await _authorizationService
+                .RuleFor<ChangeLog>()
+                .IsAuthorizedFromAsync(
+                    await _applicationPartById.LoadAsync(applicationPartId, cancellationToken),
+                    Read,
+                    cancellationToken))
         {
             return Array.Empty<ChangeLog>();
         }
@@ -127,15 +138,21 @@ public class ChangeLogService : IChangeLogService
     {
         var result = await _byIdDataloader.LoadAsync(changeLogId, cancellationToken);
 
-        return await _authorizationService.AuthorizeAsync(result, cancellationToken);
+        return await _authorizationService
+            .RuleFor<ChangeLog>()
+            .AuthorizeOrNullAsync(result, Read, cancellationToken);
     }
 
     public async Task<IEnumerable<ChangeLog>> GetByApplicationPartComponentId(
         Guid applicationPartId,
         CancellationToken cancellationToken)
     {
+        var applicationPartComponent =
+            _applicationPartComponentById.LoadAsync(applicationPartId, cancellationToken);
+
         if (!await _authorizationService
-                .IsAuthorized<ApplicationPart>(applicationPartId, cancellationToken))
+                .RuleFor<ChangeLog>()
+                .IsAuthorizedFromAsync(applicationPartComponent, Read, cancellationToken))
         {
             return Array.Empty<ChangeLog>();
         }
@@ -148,7 +165,11 @@ public class ChangeLogService : IChangeLogService
         Guid componentId,
         CancellationToken cancellationToken)
     {
-        if (!await _authorizationService.IsAuthorized<Component>(componentId, cancellationToken))
+        var component = _componentById.LoadAsync(componentId, cancellationToken);
+
+        if (!await _authorizationService
+                .RuleFor<ChangeLog>()
+                .IsAuthorizedFromAsync(component, Read, cancellationToken))
         {
             return Array.Empty<ChangeLog>();
         }
@@ -161,7 +182,11 @@ public class ChangeLogService : IChangeLogService
         Guid variableId,
         CancellationToken cancellationToken)
     {
-        if (!await _authorizationService.IsAuthorized<Variable>(variableId, cancellationToken))
+        var variable = _variableById.LoadAsync(variableId, cancellationToken);
+
+        if (!await _authorizationService
+                .RuleFor<ChangeLog>()
+                .IsAuthorizedFromAsync(variable, Read, cancellationToken))
         {
             return Array.Empty<ChangeLog>();
         }
@@ -175,11 +200,13 @@ public class ChangeLogService : IChangeLogService
         int version,
         CancellationToken cancellationToken)
     {
-        return await _authorizationService.AuthorizeAsync(
-            await _changeLogStore
-                .GetByApplicationPartComponentIdAndVersionAsync(componentId,
-                    version,
-                    cancellationToken),
-            cancellationToken);
+        var changelog = await _changeLogStore
+            .GetByApplicationPartComponentIdAndVersionAsync(componentId,
+                version,
+                cancellationToken);
+
+        return await _authorizationService
+            .RuleFor<ChangeLog>()
+            .AuthorizeOrNullAsync(changelog, Read, cancellationToken);
     }
 }

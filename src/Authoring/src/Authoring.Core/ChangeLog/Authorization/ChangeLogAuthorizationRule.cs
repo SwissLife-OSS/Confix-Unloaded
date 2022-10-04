@@ -34,22 +34,65 @@ public class ChangeLogAuthorizationRule : AuthorizationRule<ChangeLog>
         return resource.Change switch
         {
             IComponentChange { ComponentId: var id } =>
-                await _authorization.IsAuthorized(
-                    await _componentById.LoadAsync(id, cancellationToken),
-                    permissions,
-                    cancellationToken),
+                await _authorization
+                    .RuleFor<Component>()
+                    .IsAuthorizedAsync(
+                        await _componentById.LoadAsync(id, cancellationToken),
+                        permissions,
+                        cancellationToken),
 
             IVariableChange { VariableId: var id } =>
-                await _authorization.IsAuthorized(
-                    await _variableDataLoader.LoadAsync(id, cancellationToken),
-                    permissions,
-                    cancellationToken),
+                await _authorization
+                    .RuleFor<Variable>()
+                    .IsAuthorizedAsync(
+                        await _variableDataLoader.LoadAsync(id, cancellationToken),
+                        permissions,
+                        cancellationToken),
 
-            IApplicationChange { ApplicationId: var id } => await _authorization
-                .IsAuthorized(
-                    await _applicationById.LoadAsync(id, cancellationToken),
-                    permissions,
-                    cancellationToken),
+            IApplicationChange { ApplicationId: var id } =>
+                await _authorization
+                    .RuleFor<Application>()
+                    .IsAuthorizedAsync(
+                        await _applicationById.LoadAsync(id, cancellationToken),
+                        permissions,
+                        cancellationToken),
+
+            _ => false
+        };
+    }
+
+    protected override async ValueTask<bool> IsAuthorizedFromAsync<TOther>(
+        TOther resource,
+        ISession session,
+        Permissions permissions,
+        CancellationToken cancellationToken)
+    {
+        if ((permissions & Permissions.Read) == 0)
+        {
+            return false;
+        }
+
+        return resource switch
+        {
+            Application r => await _authorization
+                .RuleFor<Application>()
+                .IsAuthorizedAsync(r, permissions, cancellationToken),
+
+            ApplicationPart r => await _authorization
+                .RuleFor<ApplicationPart>()
+                .IsAuthorizedAsync(r, permissions, cancellationToken),
+
+            ApplicationPartComponent r => await _authorization
+                .RuleFor<ApplicationPartComponent>()
+                .IsAuthorizedAsync(r, permissions, cancellationToken),
+
+            Component r => await _authorization
+                .RuleFor<Component>()
+                .IsAuthorizedAsync(r, permissions, cancellationToken),
+
+            Variable r => await _authorization
+                .RuleFor<Variable>()
+                .IsAuthorizedAsync(r, permissions, cancellationToken),
 
             _ => false
         };

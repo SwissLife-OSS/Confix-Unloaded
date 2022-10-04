@@ -53,33 +53,38 @@ public class EnvironmentService : IEnvironmentService
         Guid environmentId,
         CancellationToken cancellationToken = default)
     {
-        return await _authorizationService.AuthorizeAsync(
-            await _environmentByIdDataLoader.LoadAsync(environmentId, cancellationToken),
-            cancellationToken);
+        return await _authorizationService
+            .RuleFor<Environment>()
+            .AuthorizeOrNullAsync(
+                await _environmentByIdDataLoader.LoadAsync(environmentId, cancellationToken),
+                Read,
+                cancellationToken);
     }
 
     public async Task<Environment?> GetByNameAsync(
         string name,
         CancellationToken cancellationToken = default)
     {
-        return await _authorizationService.AuthorizeAsync(
-            await _store.GetByNameAsync(name, cancellationToken),
-            cancellationToken);
+        return await _authorizationService
+            .RuleFor<Environment>()
+            .AuthorizeOrNullAsync(
+                await _store.GetByNameAsync(name, cancellationToken),
+                Read,
+                cancellationToken);
     }
 
     public async Task<Environment> CreateAsync(
         string name,
         CancellationToken cancellationToken = default)
     {
-        var session = await _sessionAccessor.GetSession(cancellationToken);
+        Environment environment = new(Guid.NewGuid(), name);
 
-        if (session is not null &&
-            session.HasPermission(Global, ManageEnvironments))
+        if (!await _authorizationService
+                .RuleFor<Environment>()
+                .IsAuthorizedAsync(environment, Write, cancellationToken))
         {
             throw new UnauthorizedOperationException();
         }
-
-        Environment environment = new(Guid.NewGuid(), name);
 
         await _store.AddAsync(environment, cancellationToken);
 
@@ -91,10 +96,12 @@ public class EnvironmentService : IEnvironmentService
         string name,
         CancellationToken cancellationToken = default)
     {
-        var session = await _sessionAccessor.GetSession(cancellationToken);
+        var environment =
+            await _environmentByIdDataLoader.LoadAsync(environmentId, cancellationToken);
 
-        if (session is not null &&
-            session.HasPermission(Global, ManageEnvironments))
+        if (!await _authorizationService
+                .RuleFor<Environment>()
+                .IsAuthorizedAsync(environment, Write, cancellationToken))
         {
             throw new UnauthorizedOperationException();
         }
@@ -107,10 +114,12 @@ public class EnvironmentService : IEnvironmentService
         Guid environmentId,
         CancellationToken cancellationToken)
     {
-        var session = await _sessionAccessor.GetSession(cancellationToken);
+        var environment =
+            await _environmentByIdDataLoader.LoadAsync(environmentId, cancellationToken);
 
-        if (session is not null &&
-            session.HasPermission(Global, ManageEnvironments))
+        if (!await _authorizationService
+                .RuleFor<Environment>()
+                .IsAuthorizedAsync(environment, Write, cancellationToken))
         {
             throw new UnauthorizedOperationException();
         }
@@ -119,10 +128,16 @@ public class EnvironmentService : IEnvironmentService
             throw new EnvironmentNotFoundException(environmentId);
     }
 
-    public IQueryable<Environment> SearchAsync(
+    public async Task<IQueryable<Environment>> SearchAsync(
         string? search,
         CancellationToken cancellationToken = default)
     {
+        var session = await _sessionAccessor.GetSession(cancellationToken);
+        if (session is null || session.HasPermission(Global, Scope.Environment, Read))
+        {
+            return Array.Empty<Environment>().AsQueryable();
+        }
+
         return _store.SearchAsync(search, cancellationToken);
     }
 
@@ -131,14 +146,21 @@ public class EnvironmentService : IEnvironmentService
         Guid parentId,
         CancellationToken cancellationToken = default)
     {
+        var (environment, parent) = await TaskHelper.WhenAll(
+            _store.GetByIdAsync(environmentId, cancellationToken),
+            _store.GetByIdAsync(parentId, cancellationToken));
+
+        if (!await _authorizationService
+                .RuleFor<Environment>()
+                .IsAuthorizedAsync(environment, Write, cancellationToken))
+        {
+            throw new UnauthorizedOperationException();
+        }
+
         if (parentId == environmentId)
         {
             throw ThrowHelper.EnvironmentCycleDetected(Array.Empty<string>());
         }
-
-        var (environment, parent) = await TaskHelper.WhenAll(
-            _store.GetByIdAsync(environmentId, cancellationToken),
-            _store.GetByIdAsync(parentId, cancellationToken));
 
         if (environment is null)
         {

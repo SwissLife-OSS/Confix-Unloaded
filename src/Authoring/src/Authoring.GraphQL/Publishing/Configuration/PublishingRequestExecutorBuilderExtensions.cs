@@ -13,13 +13,16 @@ public static class PublishingRequestExecutorBuilderExtensions
     {
         // dataloaders
         builder.AddDataLoader<
-            IPublishedApplicationPartByPartIdDataloader,
-            PublishedApplicationPartByIdPartDataloader>();
-        builder.AddDataLoader<PublishedApplicationPartByIdDataloader>();
+            IPublishedApplicationPartsByPartIdDataloader,
+            PublishedApplicationPartsByPartByIdPartDataloader>();
+        builder
+            .AddDataLoader<
+                IPublishedApplicationPartByIdDataloader,
+                PublishedApplicationPartByByIdDataloader>();
 
         builder.Services
             .AddScoped<IDataLoader<Guid, PublishedApplicationPart>>(
-                sp => sp.GetRequiredService<PublishedApplicationPartByIdDataloader>());
+                sp => sp.GetRequiredService<PublishedApplicationPartByByIdDataloader>());
 
         // nodes
         builder.AddType<PublishedApplicationPartNode>();

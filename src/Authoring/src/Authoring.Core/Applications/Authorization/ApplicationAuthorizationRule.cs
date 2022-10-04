@@ -1,7 +1,5 @@
-using System.ComponentModel;
 using Confix.Authentication.Authorization;
 using Confix.Authoring.Store;
-using static Confix.Authentication.Authorization.Permissions;
 
 namespace Confix.Authoring;
 
@@ -19,5 +17,14 @@ public class ApplicationAuthorizationRule : AuthorizationRule<Application>
     {
         return new ValueTask<bool>(
             session.HasPermission(resource.Namespace, Scope.Application, permissions));
+    }
+
+    protected override ValueTask<bool> IsAuthorizedFromAsync<TOther>(
+        TOther resource,
+        ISession session,
+        Permissions permissions,
+        CancellationToken cancellationToken)
+    {
+        return new ValueTask<bool>(false);
     }
 }

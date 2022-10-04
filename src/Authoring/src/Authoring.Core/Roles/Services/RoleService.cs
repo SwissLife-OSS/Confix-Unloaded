@@ -8,25 +8,29 @@ namespace Confix.Authentication.Authorization;
 public class RoleService : IRoleService
 {
     private readonly IRoleStore _roleStore;
-    private readonly ISessionAccessor _sessionAccessor;
+    private readonly IAuthorizationService _authorizationService;
 
-    public RoleService(IRoleStore roleStore, ISessionAccessor sessionAccessor)
+    public RoleService(
+        IRoleStore roleStore,
+        IAuthorizationService authorizationService)
     {
         _roleStore = roleStore;
-        _sessionAccessor = sessionAccessor;
+        _authorizationService = authorizationService;
     }
 
     public async Task<Role> CreateAsync(
         string name,
-        Permissions permissions,
+        IReadOnlyList<Permission> permissions,
         CancellationToken cancellationToken)
     {
-        if (!await _sessionAccessor.HasPermission(Global, ManageIdentity, cancellationToken))
+        var role = new Role(Guid.NewGuid(), name, permissions);
+
+        if (!await _authorizationService
+                .RuleFor<Role>()
+                .IsAuthorizedAsync(role, Write, cancellationToken))
         {
             throw new UnauthorizedOperationException();
         }
-
-        var role = new Role(Guid.NewGuid(), name, permissions);
 
         await _roleStore.UpsertAsync(role, cancellationToken);
 
@@ -36,17 +40,20 @@ public class RoleService : IRoleService
     public async Task<Role> UpdateAsync(
         Guid id,
         string? name,
-        Permissions? permissions,
+        IReadOnlyList<Permission>? permissions,
         CancellationToken cancellationToken)
     {
-        if (!await _sessionAccessor.HasPermission(Global, ManageIdentity, cancellationToken))
-        {
-            throw new UnauthorizedOperationException();
-        }
-
         using (var scope = Transactions.Create())
         {
             var role = await _roleStore.GetByIdAsync(id, cancellationToken);
+
+            if (!await _authorizationService
+                    .RuleFor<Role>()
+                    .IsAuthorizedAsync(role, Write, cancellationToken))
+            {
+                throw new UnauthorizedOperationException();
+            }
+
             if (role is null)
             {
                 throw new Exception($"role with id ({id}) was not found.");
@@ -65,13 +72,22 @@ public class RoleService : IRoleService
         }
     }
 
-    public async Task<Role> DeleteByIdAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<Role?> DeleteByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        if (!await _sessionAccessor.HasPermission(Global, ManageIdentity, cancellationToken))
+        using (var scope = Transactions.Create())
         {
-            throw new UnauthorizedOperationException();
-        }
+            var role = await _roleStore.DeleteByIdAsync(id, cancellationToken);
 
-        return await _roleStore.DeleteByIdAsync(id, cancellationToken);
+            if (!await _authorizationService
+                    .RuleFor<Role>()
+                    .IsAuthorizedAsync(role, Write, cancellationToken))
+            {
+                throw new UnauthorizedOperationException();
+            }
+
+            scope.Complete();
+
+            return role;
+        }
     }
 }

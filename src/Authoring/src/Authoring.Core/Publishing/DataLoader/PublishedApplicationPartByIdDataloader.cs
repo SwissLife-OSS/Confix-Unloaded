@@ -3,12 +3,13 @@ using GreenDonut;
 
 namespace Confix.Authoring.Publishing;
 
-public class PublishedApplicationPartByIdDataloader
+public class PublishedApplicationPartByByIdDataloader
     : BatchDataLoader<Guid, PublishedApplicationPart>
+    , IPublishedApplicationPartByIdDataloader
 {
     private readonly IPublishingStore _publishingStore;
 
-    public PublishedApplicationPartByIdDataloader(
+    public PublishedApplicationPartByByIdDataloader(
         IPublishingStore publishingStore,
         IBatchScheduler batchScheduler,
         DataLoaderOptions? options = null) : base(batchScheduler, options)

@@ -6,21 +6,52 @@ namespace Confix.Authoring.Publishing.Authorization;
 public class PublishedApplicationPartAuthorizationRule : AuthorizationRule<PublishedApplicationPart>
 {
     private readonly IAuthorizationService _authorizationService;
+    private readonly IApplicationByPartIdDataLoader _applicationByPartId;
 
     public PublishedApplicationPartAuthorizationRule(
         ISessionAccessor accessor,
-        IAuthorizationService authorizationService) : base(accessor)
+        IAuthorizationService authorizationService,
+        IApplicationByPartIdDataLoader applicationByPartId) : base(accessor)
     {
         _authorizationService = authorizationService;
+        _applicationByPartId = applicationByPartId;
     }
 
-    protected override ValueTask<bool> IsAuthorizedAsync(
+    protected override async ValueTask<bool> IsAuthorizedAsync(
         PublishedApplicationPart resource,
         ISession session,
         Permissions permissions,
         CancellationToken cancellationToken)
     {
-        return _authorizationService
-            .IsAuthorized<ApplicationPart>(resource.Part.Id, permissions, cancellationToken);
+        if ((permissions & Permissions.Read) != 0)
+        {
+            return false;
+        }
+
+        var application = await _applicationByPartId.LoadAsync(resource.Part.Id, cancellationToken);
+
+        return await _authorizationService
+            .RuleFor<Application>()
+            .IsAuthorizedAsync(application, permissions, cancellationToken);
+    }
+
+    protected override async ValueTask<bool> IsAuthorizedFromAsync<TOther>(
+        TOther resource,
+        ISession session,
+        Permissions permissions,
+        CancellationToken cancellationToken)
+    {
+        if ((permissions & Permissions.Read) != 0)
+        {
+            return false;
+        }
+
+        return resource switch
+        {
+            ApplicationPart r => await _authorizationService
+                .RuleFor<ApplicationPart>()
+                .IsAuthorizedAsync(r, permissions, cancellationToken),
+            _ => false
+        };
     }
 }
