@@ -24,6 +24,8 @@ public static class AuthenticationExtensions
         serviceCollection.AddClientCredentialsClient(
             VaultClient.HttpClientName,
             "Confix:Authoring:VaultClient");
+
+        return serviceCollection;
     }
 
     private static void ConfigureAuthentication(

@@ -22,10 +22,8 @@ public interface IVariableService
         IEnumerable<string> names,
         CancellationToken cancellationToken);
 
-    Task<IQueryable<Variable>> SearchVariables(string? search);
-
-    Task<IEnumerable<Variable>> GetManyAsync(
-        IEnumerable<Guid> ids,
+    Task<IQueryable<Variable>> SearchVariables(
+        string? search,
         CancellationToken cancellationToken);
 
     Task<Variable?> GetByIdAsync(

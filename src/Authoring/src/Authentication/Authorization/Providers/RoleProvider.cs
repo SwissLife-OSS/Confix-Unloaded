@@ -41,6 +41,7 @@ public class RoleProvider
         catch
         {
             _cache.Remove(CacheKey);
+            throw;
         }
     }
 

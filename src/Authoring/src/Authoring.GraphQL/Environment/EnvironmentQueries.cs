@@ -13,7 +13,7 @@ namespace Confix.Authoring.GraphQL;
 public class EnvironmentQueries
 {
     [UsePaging]
-    public IQueryable<Environment> SearchEnvironments(
+    public Task<IQueryable<Environment>> SearchEnvironments(
         [Service] IEnvironmentService environmentService,
         string? search,
         CancellationToken cancellationToken)

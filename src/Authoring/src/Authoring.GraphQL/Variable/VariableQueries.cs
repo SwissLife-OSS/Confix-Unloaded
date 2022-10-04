@@ -20,10 +20,11 @@ public class VariableQueries
         => await variableService.GetAllAsync(cancellationToken);
 
     [UsePaging]
-    public IQueryable<Variable> SearchVariables(
+    public Task<IQueryable<Variable>> SearchVariables(
         [Service] IVariableService variableService,
-        string? search)
-        => variableService.SearchVariables(search);
+        string? search,
+        CancellationToken cancellationToken)
+        => variableService.SearchVariables(search, cancellationToken);
 
     public async Task<Variable?> GetVariableAsync(
         [Service] IVariableService variableService,
@@ -40,8 +41,7 @@ public class VariableQueries
     {
         VariableValueFilter filter = new(variableId)
         {
-            ApplicationId = applicationId,
-            PartId = applicationPartId
+            ApplicationId = applicationId, PartId = applicationPartId
         };
         return await variableService.GetValuesAsync(filter, false, cancellationToken);
     }

@@ -32,7 +32,10 @@ public class VariableService : IVariableService
         IChangeLogService changeLogService,
         IEncryptor encryptor,
         IDecryptor decryptor,
-        IAuthorizationService authorizationService)
+        IAuthorizationService authorizationService,
+        ISessionAccessor sessionAccessor,
+        IApplicationByPartIdDataLoader applicationByPartId,
+        IApplicationDataLoader applicationById)
     {
         _variableStore = variableStore;
         _variableValueStore = variableValueStore;
@@ -40,6 +43,9 @@ public class VariableService : IVariableService
         _encryptor = encryptor;
         _decryptor = decryptor;
         _authorizationService = authorizationService;
+        _sessionAccessor = sessionAccessor;
+        _applicationByPartId = applicationByPartId;
+        _applicationById = applicationById;
     }
 
     public async Task<Variable?> CreateAsync(
@@ -158,7 +164,7 @@ public class VariableService : IVariableService
         return values;
     }
 
-    public async Task<IQueryable<Variable?>> SearchVariables(
+    public async Task<IQueryable<Variable>> SearchVariables(
         string? search,
         CancellationToken cancellationToken)
     {

@@ -1,7 +1,6 @@
 using Confix.Common;
 using Confix.Common.Exceptions;
 using static Confix.Authentication.Authorization.Permissions;
-using static Confix.Authentication.Authorization.WellKnownNamespaces;
 
 namespace Confix.Authentication.Authorization;
 

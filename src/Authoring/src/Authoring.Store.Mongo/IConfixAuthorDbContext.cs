@@ -14,7 +14,7 @@ public interface IConfixAuthorDbContext
 
     IMongoCollection<Component> Components { get; }
 
-    IMongoCollection<Variable?> Variables { get; }
+    IMongoCollection<Variable> Variables { get; }
 
     IMongoCollection<VariableValue> VariableValues { get; }
 

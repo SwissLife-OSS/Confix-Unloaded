@@ -32,7 +32,7 @@ public class ConfixAuthorDbContext : MongoDbContext, IConfixAuthorDbContext
             .ConfigureCollection(new VariableValueCollectionConfiguration())
             .ConfigureCollection(new ComponentCollectionConfiguration())
             .ConfigureCollection(new GroupCollectionConfiguration())
-            .ConfigureCollection(new RoCo());
+            .ConfigureCollection(new RoleCollectionConfiguration());
     }
 
     public IMongoCollection<Application> Applications

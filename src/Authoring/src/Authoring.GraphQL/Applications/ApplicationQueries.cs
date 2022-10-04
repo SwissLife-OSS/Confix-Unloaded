@@ -20,9 +20,10 @@ public class ApplicationQueries
     /// </summary>
     [UsePaging]
     [UseFiltering(typeof(ApplicationFilterInputType))]
-    public IQueryable<Application> GetApplications(
-        [Service] IApplicationService applicationService) =>
-        applicationService.Query(TODO);
+    public Task<IQueryable<Application>> GetApplicationsAsync(
+        [Service] IApplicationService applicationService,
+        CancellationToken cancellationToken) =>
+        applicationService.Query(cancellationToken);
 
     /// <summary>
     /// Get a specific application configuration by its ID.

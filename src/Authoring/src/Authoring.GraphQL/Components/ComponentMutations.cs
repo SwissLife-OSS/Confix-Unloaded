@@ -1,11 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using HotChocolate;
-using HotChocolate.Types;
-using HotChocolate.Types.Relay;
-
 namespace Confix.Authoring.GraphQL.Components;
 
 [ExtendObjectType(OperationTypeNames.Mutation)]
@@ -15,10 +7,11 @@ public class ComponentMutations
     public async Task<Component> CreateComponentAsync(
         [Service] IComponentService service,
         string name,
+        string @namespace,
         [DefaultValue("type Component { text: String! }")] string schema,
         [GraphQLType(typeof(AnyType))] Dictionary<string, object?>? values,
         CancellationToken cancellationToken)
-        => await service.CreateAsync(name, schema, values, cancellationToken);
+        => await service.CreateAsync(name, schema, @namespace, values, cancellationToken);
 
     public async Task<Component> RenameComponentAsync(
         [Service] IComponentService service,

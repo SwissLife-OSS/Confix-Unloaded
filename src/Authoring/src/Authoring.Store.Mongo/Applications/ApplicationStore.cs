@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using MongoDB.Driver;
-using MongoDB.Driver.Linq;
 using static MongoDB.Driver.Builders<Confix.Authoring.Store.Application>;
 
 namespace Confix.Authoring.Store.Mongo;
@@ -23,7 +17,7 @@ public class ApplicationStore : IApplicationStore
         CancellationToken cancellationToken = default)
     {
         // TODO Unique index on application name
-        FilterDefinition<Application> filter = Filter.Eq(x => x.Name, applicationName);
+        var filter = Filter.Eq(x => x.Name, applicationName);
 
         return await _dbContext.Applications.Find(filter).FirstOrDefaultAsync(cancellationToken);
     }
@@ -32,28 +26,51 @@ public class ApplicationStore : IApplicationStore
         Guid id,
         CancellationToken cancellationToken)
     {
-        return await _dbContext.Applications
-            .AsQueryable()
-            .Where(x => x.Id == id)
-            .SingleAsync(cancellationToken);
+        var filter = Filter.Eq(x => x.Id, id);
+        return await _dbContext.Applications.Find(filter).SingleOrDefaultAsync(cancellationToken);
     }
 
     public Task<Application?> GetByPartIdAsync(
         Guid partId,
-        CancellationToken cancellationToken) =>
-        _dbContext.Applications.AsQueryable()
-            .FirstOrDefaultAsync(
-                x => x.Parts.Any(p => p.Id == partId),
-                cancellationToken)!;
+        CancellationToken cancellationToken)
+    {
+        var filter =
+            Filter.ElemMatch(x => x.Parts, Builders<ApplicationPart>.Filter.Eq(x => x.Id, partId));
+
+        return _dbContext.Applications.Find(filter).FirstOrDefaultAsync(cancellationToken)!;
+    }
 
     public Task<Application?> GetByComponentPartIdAsync(
         Guid componentPartId,
-        CancellationToken cancellationToken) =>
-        _dbContext.Applications.AsQueryable()
-            .FirstOrDefaultAsync(
-                x => x.Parts.Any(p => p.Components.Any(y => y.Id == componentPartId)),
-                cancellationToken)!;
+        CancellationToken cancellationToken)
+    {
+        var filter = Filter.ElemMatch(x => x.Parts,
+            Builders<ApplicationPart>.Filter.ElemMatch(x => x.Components,
+                Builders<ApplicationPartComponent>.Filter.Eq(x => x.Id, componentPartId)));
 
+        return _dbContext.Applications.Find(filter).FirstOrDefaultAsync(cancellationToken)!;
+    }
+
+    public async Task<IReadOnlyList<Application>> GetApplicationsByComponentIdAsync(
+        IEnumerable<Guid> componentIds,
+        CancellationToken cancellationToken)
+    {
+        var filter = Filter.In(
+            $"{nameof(Application.Parts)}.{nameof(ApplicationPart.Components)}.{nameof(ApplicationPartComponent.Id)}",
+            componentIds);
+
+        return await _dbContext.Applications.Find(filter).ToListAsync(cancellationToken);
+    }
+
+    public async Task<IReadOnlyList<Application>> GetApplicationsByPartIdsAsync(
+        IEnumerable<Guid> partIds,
+        CancellationToken cancellationToken)
+    {
+        var filter = Filter.ElemMatch(x => x.Parts,
+            Builders<ApplicationPart>.Filter.In(x => x.Id, partIds));
+
+        return await _dbContext.Applications.Find(filter).ToListAsync(cancellationToken);
+    }
 
     public async Task<ApplicationPart?> GetPartByIdAsync(
         Guid id,
@@ -67,56 +84,13 @@ public class ApplicationStore : IApplicationStore
         IEnumerable<Guid> ids,
         CancellationToken cancellationToken)
     {
-        return await _dbContext.Applications
-            .AsQueryable()
-            .Where(x => ids.Contains(x.Id))
-            .ToListAsync(cancellationToken);
-    }
+        var filter = Filter.In(x => x.Id, ids);
 
-    public async Task<IReadOnlyCollection<ApplicationPart>> GetManyPartsByIdAsync(
-        IEnumerable<Guid> ids,
-        CancellationToken cancellationToken)
-    {
-        List<Application> applications =
-            await _dbContext.Applications
-                .AsQueryable()
-                .Where(x => x.Parts.Any(p => ids.Contains(p.Id)))
-                .ToListAsync(cancellationToken);
-
-        return applications
-            .SelectMany(x => x.Parts)
-            .Where(x => ids.Contains(x.Id))
-            .ToList();
-    }
-
-    public async Task<IReadOnlyCollection<ApplicationPartComponent>>
-        GetManyComponentPartsByIdAsync(
-        IEnumerable<Guid> ids,
-        CancellationToken cancellationToken)
-    {
-        var idSet = ids.ToHashSet();
-        FilterDefinition<Application> filter = Filter.In(
-            $"{nameof(Application.Parts)}.{nameof(ApplicationPart.Components)}.{nameof(ApplicationPartComponent.Id)}",
-            idSet);
-
-        List<Application> result =
-            await _dbContext.Applications.Find(filter).ToListAsync(cancellationToken);
-        return result.SelectMany(x => x.Parts)
-            .SelectMany(x => x.Components)
-            .Where(x => idSet.Contains(x.Id))
-            .DistinctBy(x => x.Id)
-            .ToList();
+        return await _dbContext.Applications.Find(filter).ToListAsync(cancellationToken);
     }
 
     public IQueryable<Application> Query() =>
         _dbContext.Applications.AsQueryable();
-
-    public async Task<IEnumerable<Application>> GetAllAsync(CancellationToken cancellationToken)
-    {
-        return await _dbContext.Applications
-            .AsQueryable()
-            .ToListAsync(cancellationToken);
-    }
 
     public async Task AddAsync(
         Application application,

@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-
 namespace Confix.Authoring.Store;
 
 public interface IVariableStore
@@ -15,10 +9,6 @@ public interface IVariableStore
         CancellationToken cancellationToken);
 
     Task<Variable?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
-
-    Task<IEnumerable<Variable?>> GetAllAsync(
-        IEnumerable<string> names,
-        CancellationToken cancellationToken);
 
     Task<IReadOnlyList<Variable?>> GetByNamesAsync(
         IEnumerable<string> names,
@@ -54,5 +44,5 @@ public interface IVariableStore
 
     Task<Variable?> UpdateAsync(Variable? variable, CancellationToken cancellationToken);
 
-    IQueryable<Variable?> Query();
+    IQueryable<Variable> Query();
 }

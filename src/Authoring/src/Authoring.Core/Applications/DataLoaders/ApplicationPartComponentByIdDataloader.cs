@@ -26,10 +26,15 @@ public class ApplicationPartComponentByIdDataloader
         IReadOnlyList<Guid> keys,
         CancellationToken cancellationToken)
     {
-        IEnumerable<ApplicationPartComponent> parts =
-            await _applicationStore
-                .GetManyComponentPartsByIdAsync(keys, cancellationToken);
+        var idSet = keys.ToHashSet();
 
-        return parts.ToDictionary(x => x.Id)!;
+        IEnumerable<Application> apps =
+            await _applicationStore.GetApplicationsByComponentIdAsync(keys, cancellationToken);
+
+        return apps.SelectMany(x => x.Parts)
+            .SelectMany(x => x.Components)
+            .Where(x => idSet.Contains(x.Id))
+            .DistinctBy(x => x.Id)
+            .ToDictionary(x => x.Id)!;
     }
 }

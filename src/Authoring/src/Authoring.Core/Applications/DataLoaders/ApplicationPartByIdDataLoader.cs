@@ -21,10 +21,14 @@ public class ApplicationPartByIdDataLoader
         IReadOnlyList<Guid> keys,
         CancellationToken cancellationToken)
     {
-        IEnumerable<ApplicationPart>? parts =
-            await _applicationStore
-                .GetManyPartsByIdAsync(keys, cancellationToken);
+        var ids = keys.ToHashSet();
 
-        return parts.ToDictionary(x => x.Id)!;
+        IEnumerable<Application> apps =
+            await _applicationStore.GetApplicationsByPartIdsAsync(keys, cancellationToken);
+
+        return apps
+            .SelectMany(x => x.Parts)
+            .Where(x => ids.Contains(x.Id))
+            .ToDictionary(x => x.Id)!;
     }
 }
