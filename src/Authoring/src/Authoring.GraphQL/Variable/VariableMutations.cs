@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Confix.Authoring.Store;
+using Confix.Common.Exceptions;
 using HotChocolate;
 using HotChocolate.Types;
 using HotChocolate.Types.Relay;
@@ -11,6 +12,7 @@ namespace Confix.Authoring.GraphQL;
 [ExtendObjectType(OperationTypeNames.Mutation)]
 public class VariableMutations
 {
+    [Error(typeof(UnauthorizedOperationException))]
     public async Task<Variable?> CreateVariableAsync(
         [Service] IVariableService variableService,
         string name,
@@ -21,6 +23,7 @@ public class VariableMutations
         => await variableService
             .CreateAsync(name, @namespace, isSecret, defaultValue, cancellationToken);
 
+    [Error(typeof(UnauthorizedOperationException))]
     [UseMutationConvention(PayloadFieldName = "value")]
     public async Task<VariableValue> SaveVariableValueAsync(
         [Service] IVariableService variableService,
@@ -39,6 +42,7 @@ public class VariableMutations
             environmentId,
             cancellationToken);
 
+    [Error(typeof(UnauthorizedOperationException))]
     [UseMutationConvention(PayloadFieldName = "value")]
     public async Task<VariableValue> DeleteVariableValueAsync(
         [Service] IVariableService variableService,
@@ -46,6 +50,7 @@ public class VariableMutations
         CancellationToken cancellationToken)
         => await variableService.DeleteValueAsync(id, cancellationToken);
 
+    [Error(typeof(UnauthorizedOperationException))]
     public async Task<Variable?> RenameVariableAsync(
         [Service] IVariableService variableService,
         [ID(nameof(Variable))] Guid id,

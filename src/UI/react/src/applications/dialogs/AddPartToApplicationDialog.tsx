@@ -35,11 +35,11 @@ export const addPartToApplicationMutation = graphql`
 `;
 
 export const AddPartToApplicationDialog: React.FC<{
-  visible: boolean;
+  open: boolean;
   onClose: () => void;
   applicationName: string;
   applicationId: string;
-}> = ({ visible, applicationId, applicationName, onClose }) => {
+}> = ({ open, applicationId, applicationName, onClose }) => {
   const [commit, isInFlight] = useMutation<AddPartToApplicationDialogMutation>(
     addPartToApplicationMutation
   );
@@ -58,7 +58,7 @@ export const AddPartToApplicationDialog: React.FC<{
   return (
     <Modal
       title={`Add Application Part to ${applicationName}`}
-      visible={visible}
+      open={open}
       onOk={handleAddApplication}
       confirmLoading={isInFlight}
       onCancel={onClose}

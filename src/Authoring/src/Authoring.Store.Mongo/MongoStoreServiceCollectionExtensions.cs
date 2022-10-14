@@ -33,7 +33,9 @@ public static class MongoStoreServiceCollectionExtensions
         services.AddSingleton<IPublishingStore, PublishingStore>();
         services.AddSingleton<IRoleStore, RoleStore>();
         services.AddSingleton<IGroupStore, GroupStore>();
+        SerializerHelpers.RegisterSerializers();
 
         return services;
     }
+
 }

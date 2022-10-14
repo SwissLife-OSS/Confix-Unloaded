@@ -1,23 +1,25 @@
+/**
+ * @generated SignedSource<<c7ed3f9a7fc46e9631aa9eea93df1fb5>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
-
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ChangeLog_DeleteVariableValueChange = {
-    readonly variable: {
-        readonly name: string;
-    } | null;
-    readonly " $refType": "ChangeLog_DeleteVariableValueChange";
+export type ChangeLog_DeleteVariableValueChange$data = {
+  readonly variable: {
+    readonly name: string;
+  } | null;
+  readonly " $fragmentType": "ChangeLog_DeleteVariableValueChange";
 };
-export type ChangeLog_DeleteVariableValueChange$data = ChangeLog_DeleteVariableValueChange;
 export type ChangeLog_DeleteVariableValueChange$key = {
-    readonly " $data"?: ChangeLog_DeleteVariableValueChange$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"ChangeLog_DeleteVariableValueChange">;
+  readonly " $data"?: ChangeLog_DeleteVariableValueChange$data;
+  readonly " $fragmentSpreads": FragmentRefs<"ChangeLog_DeleteVariableValueChange">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -47,5 +49,7 @@ const node: ReaderFragment = {
   "type": "DeleteVariableValueChange",
   "abstractKey": null
 };
-(node as any).hash = 'ad734ac110fc2fd23202b145a82250f9';
+
+(node as any).hash = "ad734ac110fc2fd23202b145a82250f9";
+
 export default node;

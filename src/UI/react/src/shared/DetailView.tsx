@@ -13,7 +13,9 @@ export const DetailView: React.FC<
   </Suspense>
 );
 
-export const PageLoader = () => (
+export const PageLoader: React.FC<{ message?: string }> = ({
+  message = "Loading...",
+}) => (
   <div
     css={css`
       flex: 1;
@@ -33,7 +35,7 @@ export const PageLoader = () => (
     >
       <Spin />
       <Typography css={{ color: Colors.text.secondaryText }}>
-        Loading...
+        {message}
       </Typography>
     </div>
   </div>

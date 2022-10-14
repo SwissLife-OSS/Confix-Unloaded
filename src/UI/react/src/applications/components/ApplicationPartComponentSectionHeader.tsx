@@ -6,6 +6,7 @@ import { AddComponentsToApplicationPartDialog } from "../dialogs/AddComponentsTo
 export const ApplicationPartComponentSectionHeader: React.FC<{
   applicationPartName: string;
   applicationPartId: string;
+  children: React.ReactElement;
 }> = ({ applicationPartId, applicationPartName, children }) => {
   const [isEdit, , enable, disable] = useToggle();
   return (
@@ -16,7 +17,7 @@ export const ApplicationPartComponentSectionHeader: React.FC<{
       <AddComponentsToApplicationPartDialog
         applicationPartName={applicationPartName}
         applicationPartId={applicationPartId}
-        visible={isEdit}
+        open={isEdit}
         onClose={disable}
       />
     </>

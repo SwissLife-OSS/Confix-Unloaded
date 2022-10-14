@@ -113,7 +113,7 @@ public class ApplicationService : IApplicationService
             return Array.Empty<Application>().AsQueryable();
         }
 
-        return _appStore.Query().Where(x => x.Namespace.Contains(x.Namespace));
+        return _appStore.Query().Where(x => session.Namespaces.Contains(x.Namespace));
     }
 
     public async Task<Application> CreateAsync(

@@ -1,9 +1,9 @@
 import styled from "@emotion/styled";
 import { Card, Space } from "antd";
 
-export const FullSizeBox = styled(Card)`
+export const FullSizeBox = styled(Card)<{ grow?: boolean }>`
   display: flex;
-  overflow: scroll;
+  overflow: auto;
   .ant-card-body {
     flex: 1;
     display: flex;

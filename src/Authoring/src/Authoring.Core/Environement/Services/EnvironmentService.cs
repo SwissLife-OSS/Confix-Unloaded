@@ -133,7 +133,7 @@ public class EnvironmentService : IEnvironmentService
         CancellationToken cancellationToken = default)
     {
         var session = await _sessionAccessor.GetSession(cancellationToken);
-        if (session is null || session.HasPermission(Global, Scope.Environment, Read))
+        if (session is null || !session.HasPermission(Global, Scope.Environment, Read))
         {
             return Array.Empty<Environment>().AsQueryable();
         }

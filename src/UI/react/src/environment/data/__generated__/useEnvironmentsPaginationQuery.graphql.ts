@@ -1,49 +1,26 @@
+/**
+ * @generated SignedSource<<c02d01f0964f8f9b4aeb6b8c68cb050a>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest } from "relay-runtime";
-
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type useEnvironmentsPaginationQueryVariables = {
-    count?: number | null | undefined;
-    cursor?: string | null | undefined;
+export type useEnvironmentsPaginationQuery$variables = {
+  count?: number | null;
+  cursor?: string | null;
 };
-export type useEnvironmentsPaginationQueryResponse = {
-    readonly " $fragmentRefs": FragmentRefs<"useEnvironments_searchEnvironments">;
+export type useEnvironmentsPaginationQuery$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"useEnvironments_searchEnvironments">;
 };
 export type useEnvironmentsPaginationQuery = {
-    readonly response: useEnvironmentsPaginationQueryResponse;
-    readonly variables: useEnvironmentsPaginationQueryVariables;
+  response: useEnvironmentsPaginationQuery$data;
+  variables: useEnvironmentsPaginationQuery$variables;
 };
-
-
-
-/*
-query useEnvironmentsPaginationQuery(
-  $count: Int
-  $cursor: String
-) {
-  ...useEnvironments_searchEnvironments
-}
-
-fragment useEnvironments_searchEnvironments on Query {
-  searchEnvironments(after: $cursor, first: $count) {
-    edges {
-      node {
-        id
-        name
-        __typename
-      }
-      cursor
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -199,5 +176,7 @@ return {
   }
 };
 })();
-(node as any).hash = '919293b06c3e60921850070d82637bb1';
+
+(node as any).hash = "919293b06c3e60921850070d82637bb1";
+
 export default node;

@@ -1,57 +1,40 @@
+/**
+ * @generated SignedSource<<7cf086d11c37fa5ea8339ae9bbd00e72>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest } from "relay-runtime";
-
+import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type CreateComponentInput = {
-    name: string;
-    schema?: string | null | undefined;
-    values?: object | null | undefined;
+  name: string;
+  namespace: string;
+  schema?: string | null;
+  values?: any | null;
 };
-export type NewComponentMutationVariables = {
-    input: CreateComponentInput;
-    connectionIds: Array<string>;
+export type NewComponentMutation$variables = {
+  connectionIds: ReadonlyArray<string>;
+  input: CreateComponentInput;
 };
-export type NewComponentMutationResponse = {
-    readonly createComponent: {
-        readonly component: {
-            readonly id: string;
-            readonly name: string;
-        } | null;
-        readonly errors: ReadonlyArray<{
-            readonly message?: string | undefined;
-            readonly code?: string | undefined;
-        }> | null;
-    };
+export type NewComponentMutation$data = {
+  readonly createComponent: {
+    readonly component: {
+      readonly id: string;
+      readonly name: string;
+    } | null;
+    readonly errors: ReadonlyArray<{
+      readonly code?: string;
+      readonly message?: string;
+    }> | null;
+  };
 };
 export type NewComponentMutation = {
-    readonly response: NewComponentMutationResponse;
-    readonly variables: NewComponentMutationVariables;
+  response: NewComponentMutation$data;
+  variables: NewComponentMutation$variables;
 };
-
-
-
-/*
-mutation NewComponentMutation(
-  $input: CreateComponentInput!
-) {
-  createComponent(input: $input) {
-    component {
-      id
-      name
-    }
-    errors {
-      __typename
-      ... on IUserError {
-        __isIUserError: __typename
-        message
-        code
-      }
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = {
@@ -228,5 +211,7 @@ return {
   }
 };
 })();
-(node as any).hash = '1ee6ee9073cd5d3c186f692977cfdcd3';
+
+(node as any).hash = "fa3380b3db6de90efd26d35e00f38e9f";
+
 export default node;

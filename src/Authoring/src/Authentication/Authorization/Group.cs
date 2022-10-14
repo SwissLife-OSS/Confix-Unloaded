@@ -1,7 +1,10 @@
+using System.Collections.Immutable;
+using HotChocolate.Types.Relay;
+
 namespace Confix.Authentication.Authorization;
 
 public record Group(
-    Guid Id,
+    [property: ID] Guid Id,
     string Name,
-    IReadOnlySet<Requirement> Requirements,
-    IReadOnlySet<RoleScope> Roles);
+    ImmutableHashSet<Requirement> Requirements,
+    ImmutableHashSet<RoleScope> Roles);

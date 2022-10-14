@@ -14,7 +14,7 @@ import { AddIcon, DeleteIcon, EditIcon } from "../icons/icons";
 import { EditApplication_part$key } from "./__generated__/EditApplication_part.graphql";
 import { ApplicationPartSectionHeader } from "./components/ApplicationPartSectionHeader";
 import {
-  EditApplication_Application_Fragment,
+  EditApplication_Application_Fragment$data,
   EditApplication_Application_Fragment$key,
 } from "./__generated__/EditApplication_Application_Fragment.graphql";
 import { useToggle } from "../shared/useToggle";
@@ -115,21 +115,36 @@ export const EditApplication = () => {
           <ApplicationPartSectionHeader applicationKey={application} />
         </Col>
         <Col xs={24}>
-          <Tabs defaultActiveKey={tab} key={tab} onChange={navigateToTab}>
-            <Tabs.TabPane tab="Parts" key="edit">
-              <ApplicationParts application={application} />
-            </Tabs.TabPane>
-            <Tabs.TabPane tab="Variables" key="variables">
-              <DefaultSuspense>
-                <Variables data={application} refetch={refresh} />
-              </DefaultSuspense>
-            </Tabs.TabPane>
-            <Tabs.TabPane tab="Change Log" key="changelog">
-              <DefaultSuspense>
-                <ApplicationChangeLog data={application} />
-              </DefaultSuspense>
-            </Tabs.TabPane>
-          </Tabs>
+          <Tabs
+            defaultActiveKey={tab}
+            key={tab}
+            onChange={navigateToTab}
+            items={[
+              {
+                key: "edit",
+                label: "Parts",
+                children: <ApplicationParts application={application} />,
+              },
+              {
+                key: "variables",
+                label: "Variables",
+                children: (
+                  <DefaultSuspense>
+                    <Variables data={application} refetch={refresh} />
+                  </DefaultSuspense>
+                ),
+              },
+              {
+                key: "changelog",
+                label: "Change Log",
+                children: (
+                  <DefaultSuspense>
+                    <ApplicationChangeLog data={application} />
+                  </DefaultSuspense>
+                ),
+              },
+            ]}
+          />
         </Col>
       </Row>
     </DetailView>
@@ -139,7 +154,7 @@ export const EditApplication = () => {
 export type VariableOption = { label: string; value: string };
 
 const Variables: React.FC<{
-  data: EditApplication_Application_Fragment;
+  data: EditApplication_Application_Fragment$data;
   refetch: () => void;
 }> = ({ data, refetch }) => {
   const { variableValues } =
@@ -199,7 +214,7 @@ const Variables: React.FC<{
 };
 
 const ApplicationParts: React.FC<{
-  application: EditApplication_Application_Fragment;
+  application: EditApplication_Application_Fragment$data;
 }> = ({ application }) => {
   if (application.parts.length === 0) {
     return <Empty description="No Application Parts"></Empty>;
@@ -275,13 +290,13 @@ const ApplicationPartsDisplay: React.FC<{
       <RemovePartFromApplicationDialog
         applicationPartName={name}
         applicationPartId={id}
-        visible={isRemoveDialogShown}
+        open={isRemoveDialogShown}
         onClose={disableRemoveDialog}
       />
       <AddComponentsToApplicationPartDialog
         applicationPartName={name}
         applicationPartId={id}
-        visible={isAddComponentVisible}
+        open={isAddComponentVisible}
         onClose={disableAddComponent}
       />
     </>
@@ -301,7 +316,7 @@ const ComponentListItem: React.FC<{ id: string; name: string }> = ({
 
 const CardBody = styled("div")`
   height: 200px;
-  overflow-y: scroll;
+  overflow-y: auto;
 `;
 
 const Header: React.FC<{ name: string; namespace: string; id: string }> = ({
@@ -320,14 +335,14 @@ const Header: React.FC<{ name: string; namespace: string; id: string }> = ({
         name={name}
         id={id}
         onClose={disable}
-        visible={isEdit}
+        open={isEdit}
       />
     </EditableBreadcrumbHeader>
   );
 };
 
 const ApplicationChangeLog: React.FC<{
-  data: EditApplication_Application_Fragment;
+  data: EditApplication_Application_Fragment$data;
 }> = ({ data }) => {
   const { changeLog } = useFragment<EditApplication_ChangeLog_Fragment$key>(
     applicationChangeLogFragment,

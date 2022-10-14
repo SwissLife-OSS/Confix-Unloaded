@@ -1,3 +1,8 @@
 module.exports = {
-  customScalars: { Any: "object", SDL: "string", DateTime: "Date" },
+  schema: "./schema.graphql",
+  schemaExtensions: [],
+  src: "./src",
+  eagerEsModules: false,
+  noFutureProofEnums: false,
+  language: "typescript",
 };

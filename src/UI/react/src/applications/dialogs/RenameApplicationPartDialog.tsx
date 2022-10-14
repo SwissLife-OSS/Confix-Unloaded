@@ -36,11 +36,11 @@ const renameApplicationPartMutation = graphql`
 `;
 
 export const RenameApplicationPartDialog: React.FC<{
-  visible: boolean;
+  open: boolean;
   onClose: () => void;
   applicationPartName: string;
   applicationPartId: string;
-}> = ({ visible, applicationPartName, applicationPartId, onClose }) => {
+}> = ({ open, applicationPartName, applicationPartId, onClose }) => {
   const [commit, isInFlight] = useMutation<RenameApplicationPartDialogMutation>(
     renameApplicationPartMutation
   );
@@ -67,7 +67,7 @@ export const RenameApplicationPartDialog: React.FC<{
   return (
     <Modal
       title={`Rename ApplicationPart ${applicationPartName}`}
-      visible={visible}
+      open={open}
       onOk={handleRename}
       confirmLoading={isInFlight}
       onCancel={onClose}

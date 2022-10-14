@@ -32,6 +32,15 @@ public class GroupStore : IGroupStore
         return await _dbContext.Groups.Find(filter).FirstOrDefaultAsync(cancellationToken);
     }
 
+    public async Task<IReadOnlyList<Group>?> GetByIdsAsync(
+        IEnumerable<Guid> ids,
+        CancellationToken cancellationToken)
+    {
+        var filter = Builders<Group>.Filter.In(x => x.Id, ids);
+
+        return await _dbContext.Groups.Find(filter).ToListAsync(cancellationToken);
+    }
+
     public async Task<Group> UpsertAsync(Group group, CancellationToken cancellationToken)
     {
         var filter = Builders<Group>.Filter.Eq(x => x.Id, group.Id);
@@ -49,4 +58,6 @@ public class GroupStore : IGroupStore
         return await _dbContext.Groups
             .FindOneAndDeleteAsync(filter, default, cancellationToken);
     }
+
+    public IQueryable<Group> Query() => _dbContext.Groups.AsQueryable();
 }

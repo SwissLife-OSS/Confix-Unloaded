@@ -1,75 +1,40 @@
+/**
+ * @generated SignedSource<<8a4db48496b62f1ecf5505205f81ac43>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest } from "relay-runtime";
-
+import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type CreateApplicationInput = {
-    name: string;
-    namespace?: string | null | undefined;
-    parts?: Array<string> | null | undefined;
+  name: string;
+  namespace: string;
+  parts?: ReadonlyArray<string> | null;
 };
-export type NewApplicationMutationVariables = {
-    input: CreateApplicationInput;
-    connectionIds: Array<string>;
+export type NewApplicationMutation$variables = {
+  connectionIds: ReadonlyArray<string>;
+  input: CreateApplicationInput;
 };
-export type NewApplicationMutationResponse = {
-    readonly createApplication: {
-        readonly application: {
-            readonly id: string;
-            readonly " $fragmentRefs": FragmentRefs<"ApplicationsList_applicationsEdge">;
-        } | null;
-        readonly errors: ReadonlyArray<{
-            readonly message?: string | undefined;
-            readonly code?: string | undefined;
-        }> | null;
-    };
+export type NewApplicationMutation$data = {
+  readonly createApplication: {
+    readonly application: {
+      readonly id: string;
+      readonly " $fragmentSpreads": FragmentRefs<"ApplicationsList_applicationsEdge">;
+    } | null;
+    readonly errors: ReadonlyArray<{
+      readonly code?: string;
+      readonly message?: string;
+    }> | null;
+  };
 };
 export type NewApplicationMutation = {
-    readonly response: NewApplicationMutationResponse;
-    readonly variables: NewApplicationMutationVariables;
+  response: NewApplicationMutation$data;
+  variables: NewApplicationMutation$variables;
 };
-
-
-
-/*
-mutation NewApplicationMutation(
-  $input: CreateApplicationInput!
-) {
-  createApplication(input: $input) {
-    application {
-      id
-      ...ApplicationsList_applicationsEdge
-    }
-    errors {
-      __typename
-      ... on IUserError {
-        __isIUserError: __typename
-        message
-        code
-      }
-    }
-  }
-}
-
-fragment ApplicationsList_applicationsEdge on Application {
-  id
-  name
-  namespace
-  parts {
-    id
-    name
-    components {
-      id
-      definition {
-        id
-        name
-      }
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = {
@@ -308,5 +273,7 @@ return {
   }
 };
 })();
-(node as any).hash = 'f0163c5ed37aa92207eabb3882e3a033';
+
+(node as any).hash = "d159c2764ba04fd8fb1de2abb6afd69e";
+
 export default node;

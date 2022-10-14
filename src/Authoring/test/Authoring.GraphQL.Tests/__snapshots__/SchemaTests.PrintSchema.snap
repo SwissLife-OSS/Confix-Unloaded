@@ -108,7 +108,7 @@ type ApplicationNameTaken implements IUserError {
 }
 
 type ApplicationNotFoundError implements IUserError {
-  applicationId: UUID!
+  applicationId: ID!
   code: String!
   message: String!
 }
@@ -136,7 +136,7 @@ type ApplicationPartComponent {
 }
 
 type ApplicationPartComponentNotFoundError implements IUserError {
-  componentPartId: UUID!
+  componentPartId: ID!
   code: String!
   message: String!
 }
@@ -165,7 +165,7 @@ type ApplicationPartNameTaken implements IUserError {
 }
 
 type ApplicationPartNotFoundError implements IUserError {
-  applicationPartId: UUID!
+  applicationPartId: ID!
   code: String!
   message: String!
 }
@@ -193,6 +193,17 @@ type ChangeLog {
   change: Change!
   modifiedBy: UserInfo!
   modifiedAt: DateTime!
+}
+
+type ChangeRolePermissionsPayload {
+  role: Role
+  errors: [ChangeRolePermissionsError!]
+  query: Query!
+}
+
+type ClaimRequirement {
+  type: String!
+  value: String!
 }
 
 type ClaimVersionFailedError implements IUserError {
@@ -250,7 +261,7 @@ type Component implements Node {
 }
 
 type ComponentNotFoundError implements IUserError {
-  componentId: UUID!
+  componentId: ID!
   code: String!
   message: String!
 }
@@ -314,6 +325,18 @@ type CreateComponentPayload {
 type CreateEnvironmentPayload {
   environment: Environment
   errors: [CreateEnvironmentError!]
+  query: Query!
+}
+
+type CreateGroupPayload {
+  group: Group
+  errors: [CreateGroupError!]
+  query: Query!
+}
+
+type CreateRolePayload {
+  role: Role
+  errors: [CreateRoleError!]
   query: Query!
 }
 
@@ -390,9 +413,16 @@ type EnvironmentNameCollisionError implements IUserError {
 }
 
 type EnvironmentNotFoundError implements IUserError {
-  environmentId: UUID!
+  environmentId: ID!
   code: String!
   message: String!
+}
+
+type Group {
+  id: ID!
+  name: String!
+  requirements: [Requirement!]!
+  roles: [RoleScope!]!
 }
 
 type Mutation {
@@ -425,6 +455,15 @@ type Mutation {
   renameVariable(input: RenameVariableInput!): RenameVariablePayload!
   publishApplicationPartById(input: PublishApplicationPartByIdInput!): PublishApplicationPartByIdPayload!
   claimVersion(input: ClaimVersionInput!): ClaimVersionPayload!
+  createRole(input: CreateRoleInput!): CreateRolePayload!
+  renameRole(input: RenameRoleInput!): RenameRolePayload!
+  changeRolePermissions(input: ChangeRolePermissionsInput!): ChangeRolePermissionsPayload!
+  removeRoleById(input: RemoveRoleByIdInput!): RemoveRoleByIdPayload!
+  createGroup(input: CreateGroupInput!): CreateGroupPayload!
+  renameGroup(input: RenameGroupInput!): RenameGroupPayload!
+  updateGroupRequirements(input: UpdateGroupRequirementsInput!): UpdateGroupRequirementsPayload!
+  updateGroupRoles(input: UpdateGroupRolesInput!): UpdateGroupRolesPayload!
+  removeGroupById(input: RemoveGroupByIdInput!): RemoveGroupByIdPayload!
 }
 
 "Information about pagination in a connection."
@@ -437,6 +476,19 @@ type PageInfo {
   startCursor: String
   "When paginating forwards, the cursor to continue."
   endCursor: String
+}
+
+type Permission {
+  scope: Scope!
+  permissions: PermissionsFlags!
+}
+
+type PermissionsFlags {
+  isRead: Boolean!
+  isWrite: Boolean!
+  isClaim: Boolean!
+  isPublish: Boolean!
+  isDecrypt: Boolean!
 }
 
 "A connection to a list of items."
@@ -525,6 +577,10 @@ type Query {
   variableValues(variableId: ID! applicationId: ID applicationPartId: ID): [VariableValue!]!
   globalVariableValues: [VariableValue!]!
   changeLogById(id: ID!): ChangeLog
+  searchRoles(search: String "Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String): SearchRolesConnection
+  roleById(id: ID!): Role
+  searchGroups(search: String "Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String): SearchGroupsConnection
+  groupById(id: ID!): Group
 }
 
 type RemoveApplicationPartPayload {
@@ -562,6 +618,12 @@ type RemoveEnvironmentByIdPayload {
   query: Query!
 }
 
+type RemoveGroupByIdPayload {
+  group: Group
+  errors: [RemoveGroupByIdError!]
+  query: Query!
+}
+
 type RemovePartFromApplicationChange implements ApplicationPartChange & ApplicationChange & Change {
   kind: String!
   application: Application
@@ -569,6 +631,12 @@ type RemovePartFromApplicationChange implements ApplicationPartChange & Applicat
   applicationVersion: Int!
   part: ApplicationPart
   partVersion: Int!
+}
+
+type RemoveRoleByIdPayload {
+  role: Role
+  errors: [RemoveRoleByIdError!]
+  query: Query!
 }
 
 type RenameApplicationChange implements ApplicationChange & Change {
@@ -617,6 +685,18 @@ type RenameEnvironmentPayload {
   query: Query!
 }
 
+type RenameGroupPayload {
+  group: Group
+  errors: [RenameGroupError!]
+  query: Query!
+}
+
+type RenameRolePayload {
+  role: Role
+  errors: [RenameRoleError!]
+  query: Query!
+}
+
 type RenameVariableChange implements VariableChange & Change {
   variable: Variable
   variableVersion: Int!
@@ -627,6 +707,17 @@ type RenameVariableChange implements VariableChange & Change {
 type RenameVariablePayload {
   variable: Variable
   query: Query!
+}
+
+type Role {
+  id: ID!
+  name: String!
+  permissions: [Permission!]!
+}
+
+type RoleScope {
+  namespace: String!
+  roles: [Role!]!
 }
 
 type SaveVariableValuePayload {
@@ -658,6 +749,42 @@ type SearchEnvironmentsEdge {
 }
 
 "A connection to a list of items."
+type SearchGroupsConnection {
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "A list of edges."
+  edges: [SearchGroupsEdge!]
+  "A flattened list of the nodes."
+  nodes: [Group!]
+}
+
+"An edge in a connection."
+type SearchGroupsEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: Group!
+}
+
+"A connection to a list of items."
+type SearchRolesConnection {
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "A list of edges."
+  edges: [SearchRolesEdge!]
+  "A flattened list of the nodes."
+  nodes: [Role!]
+}
+
+"An edge in a connection."
+type SearchRolesEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: Role!
+}
+
+"A connection to a list of items."
 type SearchVariablesConnection {
   "Information to aid in pagination."
   pageInfo: PageInfo!
@@ -681,6 +808,11 @@ type SetParentOfEnvironmentPayload {
   query: Query!
 }
 
+type UnauthorizedOperationError implements IUserError {
+  message: String!
+  code: String!
+}
+
 type UpdateApplicationPartComponentValuesPayload {
   component: ApplicationPartComponent
   errors: [UpdateApplicationPartComponentValuesError!]
@@ -695,6 +827,18 @@ type UpdateComponentSchemaPayload {
 type UpdateComponentValuesPayload {
   component: Component
   errors: [UpdateComponentValuesError!]
+  query: Query!
+}
+
+type UpdateGroupRequirementsPayload {
+  group: Group
+  errors: [UpdateGroupRequirementsError!]
+  query: Query!
+}
+
+type UpdateGroupRolesPayload {
+  group: Group
+  errors: [UpdateGroupRolesError!]
   query: Query!
 }
 
@@ -720,10 +864,10 @@ type Variable implements Node {
 }
 
 type VariableKey {
-  variableId: UUID!
-  applicationId: UUID
-  partId: UUID
-  environmentId: UUID
+  variableId: ID!
+  applicationId: ID
+  partId: ID
+  environmentId: ID
 }
 
 type VariableValue {
@@ -746,37 +890,57 @@ type VariableValueChange implements VariableChange & Change {
   kind: String!
 }
 
-union AddComponentsToApplicationPartError = ApplicationPartIdInvalid
+union AddComponentsToApplicationPartError = ApplicationPartIdInvalid | UnauthorizedOperationError
 
-union AddPartToApplicationError = ApplicationNotFoundError | ApplicationPartNameTaken
+union AddPartToApplicationError = ApplicationNotFoundError | ApplicationPartNameTaken | UnauthorizedOperationError
+
+union ChangeRolePermissionsError = UnauthorizedOperationError
 
 union ClaimVersionError = ClaimVersionFailedError
 
-union CreateApplicationError = ApplicationNameTaken
+union CreateApplicationError = ApplicationNameTaken | UnauthorizedOperationError
 
 union CreateComponentError = ValueSchemaViolation
 
 union CreateEnvironmentError = EnvironmentNameCollisionError
 
+union CreateGroupError = UnauthorizedOperationError
+
+union CreateRoleError = UnauthorizedOperationError
+
 union PublishApplicationPartByIdError = PublishingError
 
-union RemoveApplicationPartError = ApplicationPartNotFoundError
+union RemoveApplicationPartError = ApplicationPartNotFoundError | UnauthorizedOperationError
 
-union RemoveComponentFromApplicationPartError = ApplicationPartNotFoundError
+union RemoveComponentFromApplicationPartError = ApplicationPartNotFoundError | UnauthorizedOperationError
 
 union RemoveEnvironmentByIdError = EnvironmentNotFoundError
 
-union RenameApplicationError = ApplicationIdInvalid | ApplicationNameTaken
+union RemoveGroupByIdError = UnauthorizedOperationError
 
-union RenameApplicationPartError = ApplicationIdInvalid | ApplicationPartIdInvalid | ApplicationPartNameTaken
+union RemoveRoleByIdError = UnauthorizedOperationError
+
+union RenameApplicationError = ApplicationIdInvalid | ApplicationNameTaken | UnauthorizedOperationError
+
+union RenameApplicationPartError = ApplicationIdInvalid | ApplicationPartIdInvalid | ApplicationPartNameTaken | UnauthorizedOperationError
 
 union RenameEnvironmentError = EnvironmentNotFoundError | EnvironmentNameCollisionError
 
+union RenameGroupError = UnauthorizedOperationError
+
+union RenameRoleError = UnauthorizedOperationError
+
+union Requirement = ClaimRequirement
+
 union SetParentOfEnvironmentError = EnvironmentNotFoundError | EnvironmentCycleDetectedError
 
-union UpdateApplicationPartComponentValuesError = ApplicationPartComponentNotFoundError | ComponentNotFoundError
+union UpdateApplicationPartComponentValuesError = ApplicationPartComponentNotFoundError | ComponentNotFoundError | UnauthorizedOperationError
 
 union UpdateComponentValuesError = ValueSchemaViolation
+
+union UpdateGroupRequirementsError = UnauthorizedOperationError
+
+union UpdateGroupRolesError = UnauthorizedOperationError
 
 input AddComponentsToApplicationPartInput {
   applicationPartId: ID!
@@ -793,6 +957,16 @@ input ApplicationFilterInput {
   or: [ApplicationFilterInput!]
   name: StringOperationFilterInput
   namespace: StringOperationFilterInput
+}
+
+input ChangeRolePermissionsInput {
+  id: ID!
+  permissions: [PermissionInput!]!
+}
+
+input ClaimRequirementInput {
+  type: String!
+  value: String!
 }
 
 input ClaimVersionInput {
@@ -825,6 +999,17 @@ input CreateEnvironmentInput {
   name: String!
 }
 
+input CreateGroupInput {
+  name: String!
+  requirements: [RequirementInput!]!
+  roles: [RoleScopeInput!]!
+}
+
+input CreateRoleInput {
+  name: String!
+  permissions: [PermissionInput!]!
+}
+
 input CreateVariableInput {
   name: String!
   isSecret: Boolean!
@@ -834,6 +1019,19 @@ input CreateVariableInput {
 
 input DeleteVariableValueInput {
   id: ID!
+}
+
+input PermissionInput {
+  scope: Scope!
+  permissions: PermissionsFlagsInput!
+}
+
+input PermissionsFlagsInput {
+  isRead: Boolean
+  isWrite: Boolean
+  isClaim: Boolean
+  isPublish: Boolean
+  isDecrypt: Boolean
 }
 
 input PublishApplicationPartByIdInput {
@@ -849,6 +1047,14 @@ input RemoveComponentFromApplicationPartInput {
 }
 
 input RemoveEnvironmentByIdInput {
+  id: ID!
+}
+
+input RemoveGroupByIdInput {
+  id: ID!
+}
+
+input RemoveRoleByIdInput {
   id: ID!
 }
 
@@ -872,9 +1078,28 @@ input RenameEnvironmentInput {
   name: String!
 }
 
+input RenameGroupInput {
+  id: ID!
+  name: String!
+}
+
+input RenameRoleInput {
+  id: ID!
+  name: String!
+}
+
 input RenameVariableInput {
   id: ID!
   name: String!
+}
+
+input RequirementInput @oneOf {
+  claimRequirement: ClaimRequirementInput
+}
+
+input RoleScopeInput {
+  namespace: String!
+  roleIds: [UUID!]!
 }
 
 input SaveVariableValueInput {
@@ -921,6 +1146,16 @@ input UpdateComponentValuesInput {
   values: Any
 }
 
+input UpdateGroupRequirementsInput {
+  id: ID!
+  requirements: [RequirementInput!]!
+}
+
+input UpdateGroupRolesInput {
+  id: ID!
+  roles: [RoleScopeInput!]!
+}
+
 enum ApplyPolicy {
   BEFORE_RESOLVER
   AFTER_RESOLVER
@@ -929,6 +1164,15 @@ enum ApplyPolicy {
 enum ComponentState {
   ACTIVE
   DEPRECATED
+}
+
+enum Scope {
+  CONFIGURATION
+  APPLICATION
+  VARIABLE
+  IDENTITY
+  COMPONENT
+  ENVIRONMENT
 }
 
 enum VariableState {
@@ -940,6 +1184,9 @@ directive @authorize("The name of the authorization policy that determines acces
 
 "The `@defer` directive may be provided for fragment spreads and inline fragments to inform the executor to delay the execution of the current fragment to indicate deprioritization of the current fragment. A query with `@defer` directive will cause the request to potentially return multiple responses, where non-deferred data is delivered in the initial response and data deferred is delivered in a subsequent response. `@include` and `@skip` take precedence over `@defer`."
 directive @defer("If this argument label has a value other than null, it will be passed on to the result of this defer directive. This label is intended to give client applications a way to identify to which fragment a deferred result belongs to." label: String "Deferred when true." if: Boolean) on FRAGMENT_SPREAD | INLINE_FRAGMENT
+
+"The `@oneOf` directive is used within the type system definition language\n to indicate:\n\n - an Input Object is a Oneof Input Object, or\n - an Object Type's Field is a Oneof Field."
+directive @oneOf on INPUT_OBJECT
 
 "The `@specifiedBy` directive is used within the type system definition language to provide a URL for specifying the behavior of custom scalar definitions."
 directive @specifiedBy("The specifiedBy URL points to a human-readable specification. This field will only read a result for scalar types." url: String!) on SCALAR

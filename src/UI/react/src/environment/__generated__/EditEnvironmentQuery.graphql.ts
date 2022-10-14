@@ -1,45 +1,28 @@
+/**
+ * @generated SignedSource<<699fa59957e6f2e1b49d41e4a4cd027a>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest } from "relay-runtime";
-
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type EditEnvironmentQueryVariables = {
-    id: string;
+export type EditEnvironmentQuery$variables = {
+  id: string;
 };
-export type EditEnvironmentQueryResponse = {
-    readonly environmentById: {
-        readonly id: string;
-        readonly " $fragmentRefs": FragmentRefs<"EditEnvironment_Environment">;
-    } | null;
+export type EditEnvironmentQuery$data = {
+  readonly environmentById: {
+    readonly id: string;
+    readonly " $fragmentSpreads": FragmentRefs<"EditEnvironment_Environment">;
+  } | null;
 };
 export type EditEnvironmentQuery = {
-    readonly response: EditEnvironmentQueryResponse;
-    readonly variables: EditEnvironmentQueryVariables;
+  response: EditEnvironmentQuery$data;
+  variables: EditEnvironmentQuery$variables;
 };
-
-
-
-/*
-query EditEnvironmentQuery(
-  $id: ID!
-) {
-  environmentById(id: $id) {
-    id
-    ...EditEnvironment_Environment
-  }
-}
-
-fragment EditEnvironment_Environment on Environment {
-  id
-  name
-  parent {
-    id
-    name
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -142,5 +125,7 @@ return {
   }
 };
 })();
-(node as any).hash = 'bb3096ceb0cc7df8ddc858950ae65621';
+
+(node as any).hash = "bb3096ceb0cc7df8ddc858950ae65621";
+
 export default node;

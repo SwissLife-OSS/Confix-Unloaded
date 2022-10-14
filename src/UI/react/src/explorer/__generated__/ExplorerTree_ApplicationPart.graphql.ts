@@ -1,40 +1,42 @@
+/**
+ * @generated SignedSource<<28c24678e653a9684e663dce40715fd4>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
-
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ExplorerTree_ApplicationPart = {
+export type ExplorerTree_ApplicationPart$data = {
+  readonly components: ReadonlyArray<{
+    readonly definition: {
+      readonly id: string;
+      readonly name: string;
+    };
     readonly id: string;
-    readonly name: string;
-    readonly variableValues: ReadonlyArray<{
-        readonly id: string;
-        readonly environment: {
-            readonly id: string;
-            readonly name: string;
-        } | null;
-        readonly variable: {
-            readonly id: string;
-            readonly name: string;
-        } | null;
-    }>;
-    readonly components: ReadonlyArray<{
-        readonly id: string;
-        readonly definition: {
-            readonly id: string;
-            readonly name: string;
-        };
-    }>;
-    readonly " $refType": "ExplorerTree_ApplicationPart";
+  }>;
+  readonly id: string;
+  readonly name: string;
+  readonly variableValues: ReadonlyArray<{
+    readonly environment: {
+      readonly id: string;
+      readonly name: string;
+    } | null;
+    readonly id: string;
+    readonly variable: {
+      readonly id: string;
+      readonly name: string;
+    } | null;
+  }>;
+  readonly " $fragmentType": "ExplorerTree_ApplicationPart";
 };
-export type ExplorerTree_ApplicationPart$data = ExplorerTree_ApplicationPart;
 export type ExplorerTree_ApplicationPart$key = {
-    readonly " $data"?: ExplorerTree_ApplicationPart$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"ExplorerTree_ApplicationPart">;
+  readonly " $data"?: ExplorerTree_ApplicationPart$data;
+  readonly " $fragmentSpreads": FragmentRefs<"ExplorerTree_ApplicationPart">;
 };
-
-
 
 const node: ReaderFragment = (function(){
 var v0 = {
@@ -122,5 +124,7 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = 'd1c5efc303a0612f1e8111c2c1497942';
+
+(node as any).hash = "d1c5efc303a0612f1e8111c2c1497942";
+
 export default node;

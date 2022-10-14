@@ -1,4 +1,5 @@
 using System;
+using Confix.Authoring.Store;
 
 namespace Confix.Authoring.GraphQL.Applications;
 
@@ -15,5 +16,6 @@ public class ApplicationNotFoundError : UserError
     {
     }
 
+    [ID(nameof(Application))]
     public Guid ApplicationId { get; }
 }

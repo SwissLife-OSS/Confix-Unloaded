@@ -6,4 +6,6 @@ public class UnauthorizedOperationException : Exception
         : base("You are not allowed to perform this operation")
     {
     }
+
+    public string Code { get; set; } = "UNAUTHORIZED_OPERATION_EXCEPTION";
 }

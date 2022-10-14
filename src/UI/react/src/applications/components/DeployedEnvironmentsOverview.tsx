@@ -1,11 +1,8 @@
 import * as React from "react";
 import { graphql } from "babel-plugin-relay/macro";
-import {
-  DeployedEnvironmentsOverviewFragment,
-  DeployedEnvironmentsOverviewFragment$key,
-} from "./__generated__/DeployedEnvironmentsOverviewFragment.graphql";
+import { DeployedEnvironmentsOverviewFragment$key } from "./__generated__/DeployedEnvironmentsOverviewFragment.graphql";
 import { useFragment } from "react-relay";
-import { Steps, Tag, Timeline } from "antd";
+import { Steps } from "antd";
 import { ensureDate } from "../../shared/ensureDate";
 
 const deployedEnvironmentsOverview = graphql`

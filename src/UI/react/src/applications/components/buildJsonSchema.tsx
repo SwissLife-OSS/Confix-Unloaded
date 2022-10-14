@@ -54,7 +54,7 @@ export const translateType = (
   isNonNull: boolean = false
 ): any => {
   if (type.kind === Kind.LIST_TYPE) {
-    var oneOf: JSONSchema6[] = [
+    let oneOf: JSONSchema6[] = [
       {
         type: "array",
         items: translateType(type.type, field, false),
@@ -75,7 +75,7 @@ export const translateType = (
       : {
           $ref: `#/definitions/${type.name.value}`,
         };
-    var oneOf = [definition];
+    let oneOf = [definition];
     if (!isNonNull) {
       oneOf = [{ type: "null" }, ...oneOf];
     }

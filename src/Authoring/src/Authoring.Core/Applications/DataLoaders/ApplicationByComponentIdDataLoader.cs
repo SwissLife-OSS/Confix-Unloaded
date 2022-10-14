@@ -24,6 +24,11 @@ public class ApplicationByComponentIdDataLoader
         IEnumerable<Application>? parts =
             await _applicationStore.GetApplicationsByComponentIdAsync(keys, cancellationToken);
 
-        return parts.ToLookup(x => x.Id).ToDictionary(x => x.Key, x => x.FirstOrDefault());
+        return parts
+            .SelectMany(
+                application => application.Parts.SelectMany(
+                    part => part.Components.Select(component => (component, application))))
+            .ToLookup(x => x.component.Id, x => x.application)
+            .ToDictionary(x => x.Key, x => x.FirstOrDefault());
     }
 }

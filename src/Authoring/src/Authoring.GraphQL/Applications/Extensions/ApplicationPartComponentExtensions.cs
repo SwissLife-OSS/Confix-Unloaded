@@ -28,7 +28,7 @@ public class ApplicationPartComponentExtensions
         int? version,
         CancellationToken cancellationToken)
     {
-        if (version is null)
+        if (version is null || version == parent.Version)
         {
             return parent.Values;
         }

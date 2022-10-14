@@ -1,13 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Confix.Authoring.Store;
-using HotChocolate;
-using HotChocolate.Types;
-using HotChocolate.Types.Relay;
-using Microsoft.AspNetCore.Identity;
 
 namespace Confix.Authoring.GraphQL;
 

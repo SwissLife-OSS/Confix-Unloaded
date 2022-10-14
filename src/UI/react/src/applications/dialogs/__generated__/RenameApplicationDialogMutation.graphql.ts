@@ -1,73 +1,38 @@
+/**
+ * @generated SignedSource<<73a0db0de36bb3355fb5b2f6a4c0b573>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest } from "relay-runtime";
-
+import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type RenameApplicationInput = {
-    id: string;
-    name: string;
+  id: string;
+  name: string;
 };
-export type RenameApplicationDialogMutationVariables = {
-    input: RenameApplicationInput;
+export type RenameApplicationDialogMutation$variables = {
+  input: RenameApplicationInput;
 };
-export type RenameApplicationDialogMutationResponse = {
-    readonly renameApplication: {
-        readonly application: {
-            readonly id: string;
-            readonly " $fragmentRefs": FragmentRefs<"ApplicationsList_applicationsEdge">;
-        } | null;
-        readonly errors: ReadonlyArray<{
-            readonly message?: string | undefined;
-            readonly code?: string | undefined;
-        }> | null;
-    };
+export type RenameApplicationDialogMutation$data = {
+  readonly renameApplication: {
+    readonly application: {
+      readonly id: string;
+      readonly " $fragmentSpreads": FragmentRefs<"ApplicationsList_applicationsEdge">;
+    } | null;
+    readonly errors: ReadonlyArray<{
+      readonly code?: string;
+      readonly message?: string;
+    }> | null;
+  };
 };
 export type RenameApplicationDialogMutation = {
-    readonly response: RenameApplicationDialogMutationResponse;
-    readonly variables: RenameApplicationDialogMutationVariables;
+  response: RenameApplicationDialogMutation$data;
+  variables: RenameApplicationDialogMutation$variables;
 };
-
-
-
-/*
-mutation RenameApplicationDialogMutation(
-  $input: RenameApplicationInput!
-) {
-  renameApplication(input: $input) {
-    application {
-      id
-      ...ApplicationsList_applicationsEdge
-    }
-    errors {
-      __typename
-      ... on IUserError {
-        __isIUserError: __typename
-        message
-        code
-      }
-    }
-  }
-}
-
-fragment ApplicationsList_applicationsEdge on Application {
-  id
-  name
-  namespace
-  parts {
-    id
-    name
-    components {
-      id
-      definition {
-        id
-        name
-      }
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -276,5 +241,7 @@ return {
   }
 };
 })();
-(node as any).hash = 'b6814a34c2a6be233cd42fdeb1fdfc8c';
+
+(node as any).hash = "b6814a34c2a6be233cd42fdeb1fdfc8c";
+
 export default node;

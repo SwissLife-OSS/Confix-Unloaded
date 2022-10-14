@@ -6,6 +6,10 @@ public interface IRoleStore
 
     Task<Role?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
 
+    Task<IReadOnlyList<Role>> GetByIdsAsync(
+        IEnumerable<Guid> ids,
+        CancellationToken cancellationToken);
+
     Task<Role> UpsertAsync(
         Role group,
         CancellationToken cancellationToken);
@@ -13,4 +17,6 @@ public interface IRoleStore
     Task<Role?> DeleteByIdAsync(
         Guid id,
         CancellationToken cancellationToken);
+
+    IQueryable<Role> Query();
 }

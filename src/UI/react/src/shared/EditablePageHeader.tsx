@@ -12,6 +12,7 @@ export const EditableBreadcrumbHeader: React.FC<{
   onEdit?: () => void;
   isEditable?: boolean;
   loading?: boolean;
+  children?: React.ReactElement[] | React.ReactElement;
 }> = ({
   title,
   children,
@@ -56,7 +57,7 @@ const Wrapper = styled("div")`
 const Title = styled("div")`
   flex: 1;
   .ant-breadcrumb {
-    font-size: 14px;
+    font-size: 16px;
   }
   .ant-breadcrumb > span:last-child {
     font-size: 18px;

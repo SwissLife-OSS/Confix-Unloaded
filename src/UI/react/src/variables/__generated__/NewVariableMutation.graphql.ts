@@ -1,46 +1,36 @@
+/**
+ * @generated SignedSource<<1def172c7669ad1c8445dec416cf9177>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest } from "relay-runtime";
-
+import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type CreateVariableInput = {
-    name: string;
-    isSecret: boolean;
-    namespace?: string | null | undefined;
-    defaultValue?: string | null | undefined;
+  defaultValue?: string | null;
+  isSecret: boolean;
+  name: string;
+  namespace?: string | null;
 };
-export type NewVariableMutationVariables = {
-    input: CreateVariableInput;
-    connectionIds: Array<string>;
+export type NewVariableMutation$variables = {
+  connectionIds: ReadonlyArray<string>;
+  input: CreateVariableInput;
 };
-export type NewVariableMutationResponse = {
-    readonly createVariable: {
-        readonly variable: {
-            readonly id: string;
-            readonly name: string;
-        } | null;
-    };
+export type NewVariableMutation$data = {
+  readonly createVariable: {
+    readonly variable: {
+      readonly id: string;
+      readonly name: string;
+    } | null;
+  };
 };
 export type NewVariableMutation = {
-    readonly response: NewVariableMutationResponse;
-    readonly variables: NewVariableMutationVariables;
+  response: NewVariableMutation$data;
+  variables: NewVariableMutation$variables;
 };
-
-
-
-/*
-mutation NewVariableMutation(
-  $input: CreateVariableInput!
-) {
-  createVariable(input: $input) {
-    variable {
-      id
-      name
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = {
@@ -165,5 +155,7 @@ return {
   }
 };
 })();
-(node as any).hash = '63ad09a324a8c28aceb9ee8762f6807e';
+
+(node as any).hash = "157656d75529e7a8ecc597545ad73d17";
+
 export default node;

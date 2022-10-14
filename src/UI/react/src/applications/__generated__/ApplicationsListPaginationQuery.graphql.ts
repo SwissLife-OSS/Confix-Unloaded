@@ -1,89 +1,47 @@
+/**
+ * @generated SignedSource<<532b229e95559f13b423b2919f8f2680>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest } from "relay-runtime";
-
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type ApplicationFilterInput = {
-    and?: Array<ApplicationFilterInput> | null | undefined;
-    or?: Array<ApplicationFilterInput> | null | undefined;
-    name?: StringOperationFilterInput | null | undefined;
-    namespace?: StringOperationFilterInput | null | undefined;
+  and?: ReadonlyArray<ApplicationFilterInput> | null;
+  name?: StringOperationFilterInput | null;
+  namespace?: StringOperationFilterInput | null;
+  or?: ReadonlyArray<ApplicationFilterInput> | null;
 };
 export type StringOperationFilterInput = {
-    and?: Array<StringOperationFilterInput> | null | undefined;
-    or?: Array<StringOperationFilterInput> | null | undefined;
-    eq?: string | null | undefined;
-    neq?: string | null | undefined;
-    contains?: string | null | undefined;
-    ncontains?: string | null | undefined;
-    in?: Array<string | null> | null | undefined;
-    nin?: Array<string | null> | null | undefined;
-    startsWith?: string | null | undefined;
-    nstartsWith?: string | null | undefined;
-    endsWith?: string | null | undefined;
-    nendsWith?: string | null | undefined;
+  and?: ReadonlyArray<StringOperationFilterInput> | null;
+  contains?: string | null;
+  endsWith?: string | null;
+  eq?: string | null;
+  in?: ReadonlyArray<string | null> | null;
+  ncontains?: string | null;
+  nendsWith?: string | null;
+  neq?: string | null;
+  nin?: ReadonlyArray<string | null> | null;
+  nstartsWith?: string | null;
+  or?: ReadonlyArray<StringOperationFilterInput> | null;
+  startsWith?: string | null;
 };
-export type ApplicationsListPaginationQueryVariables = {
-    count?: number | null | undefined;
-    cursor?: string | null | undefined;
-    where?: ApplicationFilterInput | null | undefined;
+export type ApplicationsListPaginationQuery$variables = {
+  count?: number | null;
+  cursor?: string | null;
+  where?: ApplicationFilterInput | null;
 };
-export type ApplicationsListPaginationQueryResponse = {
-    readonly " $fragmentRefs": FragmentRefs<"ApplicationsList_applications">;
+export type ApplicationsListPaginationQuery$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"ApplicationsList_applications">;
 };
 export type ApplicationsListPaginationQuery = {
-    readonly response: ApplicationsListPaginationQueryResponse;
-    readonly variables: ApplicationsListPaginationQueryVariables;
+  response: ApplicationsListPaginationQuery$data;
+  variables: ApplicationsListPaginationQuery$variables;
 };
-
-
-
-/*
-query ApplicationsListPaginationQuery(
-  $count: Int
-  $cursor: String
-  $where: ApplicationFilterInput
-) {
-  ...ApplicationsList_applications
-}
-
-fragment ApplicationsList_applications on Query {
-  applications(after: $cursor, first: $count, where: $where) {
-    edges {
-      node {
-        id
-        name
-        ...ApplicationsList_applicationsEdge
-        __typename
-      }
-      cursor
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-}
-
-fragment ApplicationsList_applicationsEdge on Application {
-  id
-  name
-  namespace
-  parts {
-    id
-    name
-    components {
-      id
-      definition {
-        id
-        name
-      }
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -289,14 +247,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "344f96e62d41629159c0c3feb73c149b",
+    "cacheID": "dc2b6e4487ba14501a3f8316e8a7ac67",
     "id": null,
     "metadata": {},
     "name": "ApplicationsListPaginationQuery",
     "operationKind": "query",
-    "text": "query ApplicationsListPaginationQuery(\n  $count: Int\n  $cursor: String\n  $where: ApplicationFilterInput\n) {\n  ...ApplicationsList_applications\n}\n\nfragment ApplicationsList_applications on Query {\n  applications(after: $cursor, first: $count, where: $where) {\n    edges {\n      node {\n        id\n        name\n        ...ApplicationsList_applicationsEdge\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment ApplicationsList_applicationsEdge on Application {\n  id\n  name\n  namespace\n  parts {\n    id\n    name\n    components {\n      id\n      definition {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": "query ApplicationsListPaginationQuery(\n  $count: Int\n  $cursor: String\n  $where: ApplicationFilterInput\n) {\n  ...ApplicationsList_applications\n}\n\nfragment ApplicationsList_applications on Query {\n  applications(after: $cursor, first: $count, where: $where) {\n    edges {\n      node {\n        id\n        name\n        namespace\n        ...ApplicationsList_applicationsEdge\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment ApplicationsList_applicationsEdge on Application {\n  id\n  name\n  namespace\n  parts {\n    id\n    name\n    components {\n      id\n      definition {\n        id\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
-(node as any).hash = '0f0154047f5af2c4603c0c0a9abfe895';
+
+(node as any).hash = "d7b4ad1923d9adae56e491423417c7a1";
+
 export default node;

@@ -36,7 +36,7 @@ public class ApplicationPartComponentAuthorizationRule : AuthorizationRule<Appli
         Permissions permissions,
         CancellationToken cancellationToken)
     {
-        if ((permissions & (Read | Write | Publish)) == 0)
+        if ((permissions & (Read | Write)) == 0)
         {
             return new ValueTask<bool>(false);
         }

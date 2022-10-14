@@ -1,27 +1,29 @@
+/**
+ * @generated SignedSource<<7f89451977bac852c1054e78caba2c40>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
-import ComponentsListPaginationQuery from "./ComponentsListPaginationQuery.graphql";
+import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ComponentsList_components = {
-    readonly components: {
-        readonly edges: ReadonlyArray<{
-            readonly node: {
-                readonly " $fragmentRefs": FragmentRefs<"ComponentsList_componentEdge">;
-            };
-        }> | null;
-    } | null;
-    readonly " $refType": "ComponentsList_components";
+export type ComponentsList_components$data = {
+  readonly components: {
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly " $fragmentSpreads": FragmentRefs<"ComponentsList_componentEdge">;
+      };
+    }> | null;
+  } | null;
+  readonly " $fragmentType": "ComponentsList_components";
 };
-export type ComponentsList_components$data = ComponentsList_components;
 export type ComponentsList_components$key = {
-    readonly " $data"?: ComponentsList_components$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"ComponentsList_components">;
+  readonly " $data"?: ComponentsList_components$data;
+  readonly " $fragmentSpreads": FragmentRefs<"ComponentsList_components">;
 };
-
-
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -58,7 +60,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": ComponentsListPaginationQuery
+      "operation": require('./ComponentsListPaginationQuery.graphql')
     }
   },
   "name": "ComponentsList_components",
@@ -88,16 +90,16 @@ return {
               "plural": false,
               "selections": [
                 {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "ComponentsList_componentEdge"
+                },
+                {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
                   "name": "__typename",
                   "storageKey": null
-                },
-                {
-                  "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "ComponentsList_componentEdge"
                 }
               ],
               "storageKey": null
@@ -145,5 +147,7 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = 'd19d5adb277a80308b5687e44afb844d';
+
+(node as any).hash = "d19d5adb277a80308b5687e44afb844d";
+
 export default node;

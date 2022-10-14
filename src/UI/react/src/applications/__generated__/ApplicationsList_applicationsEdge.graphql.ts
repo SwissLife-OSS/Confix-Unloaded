@@ -1,34 +1,36 @@
+/**
+ * @generated SignedSource<<8094d0ecffd7ac02ea5dc798035ce8b6>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
-
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ApplicationsList_applicationsEdge = {
-    readonly id: string;
-    readonly name: string;
-    readonly namespace: string | null;
-    readonly parts: ReadonlyArray<{
+export type ApplicationsList_applicationsEdge$data = {
+  readonly id: string;
+  readonly name: string;
+  readonly namespace: string;
+  readonly parts: ReadonlyArray<{
+    readonly components: ReadonlyArray<{
+      readonly definition: {
         readonly id: string;
         readonly name: string;
-        readonly components: ReadonlyArray<{
-            readonly id: string;
-            readonly definition: {
-                readonly id: string;
-                readonly name: string;
-            };
-        }>;
+      };
+      readonly id: string;
     }>;
-    readonly " $refType": "ApplicationsList_applicationsEdge";
+    readonly id: string;
+    readonly name: string;
+  }>;
+  readonly " $fragmentType": "ApplicationsList_applicationsEdge";
 };
-export type ApplicationsList_applicationsEdge$data = ApplicationsList_applicationsEdge;
 export type ApplicationsList_applicationsEdge$key = {
-    readonly " $data"?: ApplicationsList_applicationsEdge$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"ApplicationsList_applicationsEdge">;
+  readonly " $data"?: ApplicationsList_applicationsEdge$data;
+  readonly " $fragmentSpreads": FragmentRefs<"ApplicationsList_applicationsEdge">;
 };
-
-
 
 const node: ReaderFragment = (function(){
 var v0 = {
@@ -103,5 +105,7 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = 'b13ef3817de6dd565836f0daba25eb2c';
+
+(node as any).hash = "b13ef3817de6dd565836f0daba25eb2c";
+
 export default node;

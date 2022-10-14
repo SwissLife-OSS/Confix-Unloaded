@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Transactions;
 using Confix.Authentication.Authorization;
 using Confix.Authoring.Store;
@@ -18,6 +13,7 @@ public class VariableService : IVariableService
 {
     private readonly IVariableStore _variableStore;
     private readonly IVariableValueStore _variableValueStore;
+    private readonly IVariableDataLoader _variableById;
     private readonly IChangeLogService _changeLogService;
     private readonly IAuthorizationService _authorizationService;
     private readonly ISessionAccessor _sessionAccessor;
@@ -35,7 +31,8 @@ public class VariableService : IVariableService
         IAuthorizationService authorizationService,
         ISessionAccessor sessionAccessor,
         IApplicationByPartIdDataLoader applicationByPartId,
-        IApplicationDataLoader applicationById)
+        IApplicationDataLoader applicationById,
+        IVariableDataLoader variableById)
     {
         _variableStore = variableStore;
         _variableValueStore = variableValueStore;
@@ -46,6 +43,7 @@ public class VariableService : IVariableService
         _sessionAccessor = sessionAccessor;
         _applicationByPartId = applicationByPartId;
         _applicationById = applicationById;
+        _variableById = variableById;
     }
 
     public async Task<Variable?> CreateAsync(
@@ -169,11 +167,6 @@ public class VariableService : IVariableService
         CancellationToken cancellationToken)
     {
         var session = await _sessionAccessor.GetSession(cancellationToken);
-        if (session is null)
-        {
-            return Array.Empty<Variable>().AsQueryable();
-        }
-
         var queryable = _variableStore
             .Query()
             .Where(x => session.Namespaces.Contains(x.Namespace));
@@ -284,7 +277,26 @@ public class VariableService : IVariableService
             return Array.Empty<VariableValue>();
         }
 
-        return await _variableStore.GetGlobalVariableValue(cancellationToken);
+        var values = await _variableStore.GetGlobalVariableValue(cancellationToken);
+        var variableIds = values.Select(x => x.Key.VariableId).ToHashSet();
+
+        var rule = _authorizationService.RuleFor<VariableValue>();
+
+        var variables = await _variableById.LoadAsync(variableIds, cancellationToken)
+            .ToAsyncEnumerable()
+            .SelectMany(x => x.ToAsyncEnumerable())
+            .OfType<Variable>()
+            .SelectAwait(SelectVariableAndPermissions)
+            .Where(x => x.IsAuthorized)
+            .Select(x => x.Variable)
+            .Distinct()
+            .ToDictionaryAsync(x => x.Id, cancellationToken: cancellationToken);
+
+        return values.Where(x => variables.ContainsKey(x.Key.VariableId)).ToList();
+
+        async ValueTask<(Variable Variable, bool IsAuthorized)> SelectVariableAndPermissions(
+            Variable variable)
+            => (variable, await rule.IsAuthorizedFromAsync(variable, Read, cancellationToken));
     }
 
     public async Task<IEnumerable<VariableValue>> GetValuesAsync(

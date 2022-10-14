@@ -5,7 +5,7 @@ import {
   useFragment,
 } from "react-relay";
 import { graphql } from "babel-plugin-relay/macro";
-import { Settings } from "../settings";
+import { config } from "../config";
 import { InfiniteScrollList } from "../shared/InfiniteScrollList";
 import { ComponentsListQuery } from "./__generated__/ComponentsListQuery.graphql";
 import { ComponentsList_componentEdge$key } from "./__generated__/ComponentsList_componentEdge.graphql";
@@ -42,7 +42,7 @@ export const ComponentsList: React.FC<{
   search: string | undefined;
 }> = ({ search, onItemSelect }) => {
   const queryData = useLazyLoadQuery<ComponentsListQuery>(componentsQuery, {
-    count: Settings.pagination.pageSize,
+    count: config.pagination.pageSize,
   });
   const {
     data: connection,

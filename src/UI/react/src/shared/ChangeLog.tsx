@@ -1,6 +1,7 @@
 import { DownOutlined } from "@ant-design/icons";
 import { css } from "@emotion/react";
 import { Button, Dropdown, Menu, Table, Tag } from "antd";
+import { ItemType } from "antd/lib/menu/hooks/useItems";
 import { graphql } from "babel-plugin-relay/macro";
 import React, { useCallback, useContext, useState } from "react";
 import { useFragment } from "react-relay";
@@ -17,7 +18,7 @@ import { ChangeLog_CreateComponentChange$key } from "./__generated__/ChangeLog_C
 import { ChangeLog_CreateVariableChange$key } from "./__generated__/ChangeLog_CreateVariableChange.graphql";
 import { ChangeLog_DeleteVariableValueChange$key } from "./__generated__/ChangeLog_DeleteVariableValueChange.graphql";
 import {
-  ChangeLog_fragment,
+  ChangeLog_fragment$data,
   ChangeLog_fragment$key,
 } from "./__generated__/ChangeLog_fragment.graphql";
 import { ChangeLog_PublishedApplicationPartChange$key } from "./__generated__/ChangeLog_PublishedApplicationPartChange.graphql";
@@ -55,6 +56,21 @@ const changeLogFragment = graphql`
       ...ChangeLog_RenameVariableChange
       ...ChangeLog_VariableValueChange
       ...ChangeLog_PublishedApplicationPartChange
+      ... on ApplicationChange {
+        versionOfApp: applicationVersion
+      }
+      ... on ApplicationPartChange {
+        versionOfPart: partVersion
+      }
+      ... on ApplicationPartComponentChange {
+        versionOfPartComponent: partComponentVersion
+      }
+      ... on ComponentChange {
+        versionOfComponent: componentVersion
+      }
+      ... on VariableChange {
+        versionOfVariable: variableVersion
+      }
     }
     modifiedAt
     modifiedBy {
@@ -64,10 +80,24 @@ const changeLogFragment = graphql`
 `;
 const columns = [
   {
+    title: "Version",
+    dataIndex: "version",
+    key: "version",
+    render: (_: unknown, value: ChangeLog_fragment$data[0]) => (
+      <>
+        {value.change.versionOfApp ??
+          value.change.versionOfComponent ??
+          value.change.versionOfPart ??
+          value.change.versionOfPartComponent ??
+          value.change.versionOfVariable}
+      </>
+    ),
+  },
+  {
     title: "Modifed By",
     dataIndex: "modifiedBy",
     key: "name",
-    render: (_: unknown, value: ChangeLog_fragment[0]) => (
+    render: (_: unknown, value: ChangeLog_fragment$data[0]) => (
       <>{value.modifiedBy.email}</>
     ),
   },
@@ -75,7 +105,7 @@ const columns = [
     title: "Modified At",
     dataIndex: "modifiedAt",
     key: "modifiedAt",
-    render: (_: unknown, value: ChangeLog_fragment[0]) => (
+    render: (_: unknown, value: ChangeLog_fragment$data[0]) => (
       <>{formatDate(value.modifiedAt)}</>
     ),
   },
@@ -83,14 +113,14 @@ const columns = [
     title: "Kind",
     dataIndex: "kind",
     key: "kind",
-    render: (_: unknown, value: ChangeLog_fragment[0]) => (
+    render: (_: unknown, value: ChangeLog_fragment$data[0]) => (
       <>{value.change.kind}</>
     ),
   },
   {
     title: "Value",
     key: "value",
-    render: (_: unknown, value: ChangeLog_fragment[0]) => {
+    render: (_: unknown, value: ChangeLog_fragment$data[0]) => {
       switch (value.change.__typename) {
         case "RenameApplicationChange": {
           return <ChangeLogRenameApplicationChange data={value.change} />;
@@ -405,6 +435,34 @@ const ChangeLogApplicationPartComponentValuesChange: React.FC<{
     partComponentVersion === selectedForCompare.version;
   const isComparable = isSelectionOfThisPart && !isSelectionThisVersion;
 
+  const menuItems: ItemType[] = [
+    {
+      key: "showDif",
+      label: <Link to={compareToPrevious}>Show diff to previous</Link>,
+    },
+    {
+      onClick: selectForCompare,
+      disabled: isSelectionThisVersion,
+      key: "selectForCompare",
+      label: "Select for compare",
+    },
+  ];
+
+  if (isComparable) {
+    menuItems.push({
+      key: "compareWithSelected",
+      onClick: compareWithSelected,
+      label: "Compare with selected",
+    });
+  }
+
+  if (!isCurrent) {
+    menuItems.push({
+      key: "compareToCurrent",
+      label: <Link to={compareToCurrent}>Show diff to current</Link>,
+    });
+  }
+
   return (
     <div
       css={css`
@@ -415,33 +473,7 @@ const ChangeLogApplicationPartComponentValuesChange: React.FC<{
       <div>
         <Dropdown
           disabled={isSelectForCompareActive && !isSelectionOfThisPart}
-          overlay={
-            <Menu>
-              <Menu.Item key={"showDif"}>
-                <Link to={compareToPrevious}>Show diff to previous</Link>
-              </Menu.Item>
-              <Menu.Item
-                onClick={selectForCompare}
-                disabled={isSelectionThisVersion}
-                key={"selectForCompare"}
-              >
-                Select for compare
-              </Menu.Item>
-              {isComparable && (
-                <Menu.Item
-                  onClick={compareWithSelected}
-                  key={"compareWithSelected"}
-                >
-                  Compare with selected
-                </Menu.Item>
-              )}
-              {!isCurrent && (
-                <Menu.Item key={"compareToCurrent"}>
-                  <Link to={compareToCurrent}>Show diff to current</Link>
-                </Menu.Item>
-              )}
-            </Menu>
-          }
+          overlay={<Menu items={menuItems}></Menu>}
         >
           <Button disabled={isSelectForCompareActive && !isSelectionOfThisPart}>
             Actions <DownOutlined />
@@ -571,7 +603,7 @@ const ChangeLogDeleteVariableValueChange: React.FC<{
     changeLogDeleteVariableValueChange,
     data
   );
-  return <>Deleted value</>;
+  return <>Deleted value {variable?.name}</>;
 };
 
 const changeLogVariableValueChange = graphql`

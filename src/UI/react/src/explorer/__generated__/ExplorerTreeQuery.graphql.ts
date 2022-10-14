@@ -1,97 +1,26 @@
+/**
+ * @generated SignedSource<<37f33be6e8127994ed790e53b42b4b2e>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest } from "relay-runtime";
-
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ExplorerTreeQueryVariables = {
-    cursor?: string | null | undefined;
-    count?: number | null | undefined;
+export type ExplorerTreeQuery$variables = {
+  count?: number | null;
+  cursor?: string | null;
 };
-export type ExplorerTreeQueryResponse = {
-    readonly " $fragmentRefs": FragmentRefs<"ExplorerTree_Applications">;
+export type ExplorerTreeQuery$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"ExplorerTree_Applications">;
 };
 export type ExplorerTreeQuery = {
-    readonly response: ExplorerTreeQueryResponse;
-    readonly variables: ExplorerTreeQueryVariables;
+  response: ExplorerTreeQuery$data;
+  variables: ExplorerTreeQuery$variables;
 };
-
-
-
-/*
-query ExplorerTreeQuery(
-  $cursor: String
-  $count: Int
-) {
-  ...ExplorerTree_Applications
-}
-
-fragment ExplorerTree_Application on Application {
-  id
-  name
-  ...ExplorerTree_ApplicationDetails @defer(label: "ExplorerTree_Application$defer$ExplorerTree_ApplicationDetails")
-}
-
-fragment ExplorerTree_ApplicationDetails on Application {
-  variableValues {
-    id
-    environment {
-      id
-      name
-    }
-    variable {
-      id
-      name
-    }
-  }
-  parts {
-    id
-    name
-    ...ExplorerTree_ApplicationPart @defer(label: "ExplorerTree_ApplicationDetails$defer$ExplorerTree_ApplicationPart")
-  }
-}
-
-fragment ExplorerTree_ApplicationPart on ApplicationPart {
-  id
-  name
-  variableValues {
-    id
-    environment {
-      id
-      name
-    }
-    variable {
-      id
-      name
-    }
-  }
-  components {
-    id
-    definition {
-      id
-      name
-    }
-  }
-}
-
-fragment ExplorerTree_Applications on Query {
-  applications(after: $cursor, first: $count) {
-    edges {
-      node {
-        id
-        ...ExplorerTree_Application
-        __typename
-      }
-      cursor
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = {
@@ -221,13 +150,6 @@ return {
                   (v3/*: any*/),
                   (v4/*: any*/),
                   {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "__typename",
-                    "storageKey": null
-                  },
-                  {
                     "if": null,
                     "kind": "Defer",
                     "label": "ExplorerTree_Application$defer$ExplorerTree_ApplicationDetails",
@@ -279,6 +201,13 @@ return {
                         "storageKey": null
                       }
                     ]
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "__typename",
+                    "storageKey": null
                   }
                 ],
                 "storageKey": null
@@ -342,5 +271,7 @@ return {
   }
 };
 })();
-(node as any).hash = '6c9cdae74916fd73591ecf5047d92e10';
+
+(node as any).hash = "6c9cdae74916fd73591ecf5047d92e10";
+
 export default node;

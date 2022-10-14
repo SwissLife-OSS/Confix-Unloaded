@@ -1,16 +1,19 @@
 using Confix.Authentication;
 using Confix.Vault.Client;
+using IdentityModel;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Confix.Authoring.Authentication;
 
 public static class AuthenticationExtensions
 {
-    public static IServiceCollection AddAuthentication(this IServiceCollection serviceCollection)
+    public static IServiceCollection RegisterAuthentication(
+        this IServiceCollection serviceCollection)
     {
         serviceCollection
             .AddAuthentication(ConfigureAuthentication)
@@ -19,6 +22,17 @@ public static class AuthenticationExtensions
 
         serviceCollection
             .AddOptions<OpenIdConnectOptions>(OpenIdConnectDefaults.AuthenticationScheme)
+            .Configure(x =>
+            {
+                x.CorrelationCookie.SameSite = SameSiteMode.None;
+                x.GetClaimsFromUserInfoEndpoint = true;
+                x.ClaimActions.MapAll();
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    NameClaimType = JwtClaimTypes.Name,
+                    RoleClaimType = JwtClaimTypes.Role
+                };
+            })
             .BindConfiguration("Confix:Authoring:OpenIdConnectOptions");
 
         serviceCollection.AddClientCredentialsClient(
@@ -28,8 +42,7 @@ public static class AuthenticationExtensions
         return serviceCollection;
     }
 
-    private static void ConfigureAuthentication(
-        Microsoft.AspNetCore.Authentication.AuthenticationOptions x)
+    private static void ConfigureAuthentication(AuthenticationOptions x)
     {
         x.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
         x.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
@@ -40,5 +53,6 @@ public static class AuthenticationExtensions
         x.Cookie.SameSite = SameSiteMode.Strict;
         x.Cookie.HttpOnly = true;
         x.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        x.Cookie.Name = "confix";
     }
 }

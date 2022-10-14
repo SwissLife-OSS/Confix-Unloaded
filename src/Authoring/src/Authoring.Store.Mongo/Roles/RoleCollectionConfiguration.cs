@@ -1,4 +1,5 @@
 using Confix.Authentication.Authorization;
+using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using MongoDB.Extensions.Context;
 
@@ -17,8 +18,14 @@ internal class RoleCollectionConfiguration : IMongoCollectionConfiguration<Role>
             })
             .WithCollectionSettings(s => s.ReadConcern = ReadConcern.Majority)
             .WithCollectionSettings(s => s.ReadPreference = ReadPreference.Nearest)
-            .WithCollectionConfiguration(collection =>
+            .WithCollectionConfiguration(_ =>
             {
+                BsonClassMap.RegisterClassMap<Requirement>(x =>
+                {
+                    x.SetIsRootClass(true);
+                    x.AutoMap();
+                });
+                BsonClassMap.RegisterClassMap<ClaimRequirement>().AutoMap();
             });
     }
 }

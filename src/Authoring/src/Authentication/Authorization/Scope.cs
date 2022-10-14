@@ -7,5 +7,5 @@ public enum Scope
     Variable,
     Identity,
     Component,
-    Environment,
+    Environment
 }

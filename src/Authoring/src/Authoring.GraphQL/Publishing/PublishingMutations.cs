@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Confix.Authoring.Publishing;
 using Confix.Authoring.Publishing.Stores;
 using Confix.Authoring.Store;
+using Confix.Common.Exceptions;
 using HotChocolate;
 using HotChocolate.Types;
 using HotChocolate.Types.Relay;
@@ -14,6 +15,7 @@ namespace Confix.Authoring.GraphQL.Publishing;
 public class PublishingMutations
 {
     [Error(typeof(PublishingException))]
+    [Error(typeof(UnauthorizedOperationException))]
     public async Task<PublishedApplicationPart> PublishApplicationPartByIdAsync(
         [Service] IPublishingService service,
         [ID(nameof(ApplicationPart))] Guid applicationPartId,
@@ -21,6 +23,7 @@ public class PublishingMutations
         => await service.PublishPartByIdAsync(applicationPartId, cancellationToken);
 
     [Error(typeof(ClaimVersionFailedException))]
+    [Error(typeof(UnauthorizedOperationException))]
     public async Task<ClaimedVersion> ClaimVersionAsync(
         [Service] IPublishingService service,
         string gitVersion,

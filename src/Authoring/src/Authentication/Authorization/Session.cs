@@ -4,8 +4,6 @@ namespace Confix.Authentication.Authorization;
 
 public class Session : ISession
 {
-    private readonly IReadOnlyList<Group> _groups;
-
     private readonly IReadOnlyDictionary<Guid, Role> _roleMap;
 
     private readonly ConcurrentDictionary<Grant, bool> _cache = new();
@@ -14,14 +12,13 @@ public class Session : ISession
 
     private UserInfo? _userInfo;
 
-
     public Session(
         string sub,
         IReadOnlyList<Group> groups,
         IReadOnlyDictionary<Guid, Role> roleMap)
     {
         Sub = sub;
-        _groups = groups;
+        Groups = groups;
         _roleMap = roleMap;
     }
 
@@ -38,6 +35,17 @@ public class Session : ISession
         }
     }
 
+    public IReadOnlyList<Group> Groups { get; }
+
+    public IReadOnlySet<string> Namespaces
+    {
+        get
+        {
+            _namespaces ??= Groups.SelectMany(x => x.Roles).Select(x => x.Namespace).ToHashSet();
+            return _namespaces;
+        }
+    }
+
     public bool HasPermission(string @namespace, Scope scope, Permissions permission)
     {
         var grant = new Grant(@namespace, scope, permission);
@@ -46,7 +54,7 @@ public class Session : ISession
 
         bool HasPermissionCheck()
         {
-            foreach (var group in _groups)
+            foreach (var group in Groups)
             {
                 foreach (var roleScope in group.Roles)
                 {
@@ -69,22 +77,16 @@ public class Session : ISession
                                 continue;
                             }
 
-                            return rolePermission.Permissions.HasFlag(permission);
+                            if (rolePermission.Permissions.HasFlag(permission))
+                            {
+                                return true;
+                            }
                         }
                     }
                 }
             }
 
             return false;
-        }
-    }
-
-    public IReadOnlySet<string> Namespaces
-    {
-        get
-        {
-            _namespaces ??= _groups.SelectMany(x => x.Roles).Select(x => x.Namespace).ToHashSet();
-            return _namespaces;
         }
     }
 

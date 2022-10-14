@@ -33,11 +33,11 @@ export const removePartFromApplicationDialog = graphql`
 `;
 
 export const RemovePartFromApplicationDialog: React.FC<{
-  visible: boolean;
+  open: boolean;
   onClose: () => void;
   applicationPartId: string;
   applicationPartName: string;
-}> = ({ visible, applicationPartId, applicationPartName, onClose }) => {
+}> = ({ open, applicationPartId, applicationPartName, onClose }) => {
   const [commit, isInFlight] =
     useMutation<RemovePartFromApplicationDialogMutation>(
       removePartFromApplicationDialog
@@ -55,7 +55,7 @@ export const RemovePartFromApplicationDialog: React.FC<{
   return (
     <Modal
       title={`Remove ${applicationPartName}`}
-      visible={visible}
+      open={open}
       onOk={handleAddApplication}
       confirmLoading={isInFlight}
       onCancel={onClose}

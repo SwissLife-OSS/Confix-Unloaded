@@ -52,6 +52,8 @@ public class SessionAccessor
         var groups = await _groupProvider.GetGroupsOfUserAsync(context.User, cancellationToken);
         var roleMap = await _roleProvider.GetRoleMapAsync(cancellationToken);
 
+        // apply defaults
+
         var sub = context.User.FindFirstValue("sub");
 
         return new Session(sub, groups, roleMap);

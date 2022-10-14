@@ -27,7 +27,7 @@ public class RoleProvider
                 if (!_cache.TryGetValue(CacheKey, out cacheEntry))
                 {
                     cacheEntry = new CacheEntry(GetRoleMap(cancellationToken));
-                    var entry = _cache.CreateEntry(CacheKey);
+                    using var entry = _cache.CreateEntry(CacheKey);
                     entry.AbsoluteExpirationRelativeToNow = _cacheExpiration;
                     entry.Value = cacheEntry;
                 }
@@ -48,7 +48,8 @@ public class RoleProvider
     private async Task<IReadOnlyDictionary<Guid, Role>> GetRoleMap(
         CancellationToken cancellationToken)
     {
-        var roles = await _roleStore.GetAllAsync(cancellationToken);
+        IEnumerable<Role> roles = await _roleStore.GetAllAsync(cancellationToken);
+        roles = roles.Concat(AuthorizationDefaults.DefaultRoles);
 
         return roles.ToDictionary(x => x.Id);
     }

@@ -158,6 +158,11 @@ const gray = [
   "#000000",
 ];
 export const Colors = {
+  theme: {
+    primary: "#1c9cd9",
+    secondary: "#fcdd18",
+    background: "#1d1e1d",
+  },
   error: red[5],
   success: green[6],
   warning: gold[6],

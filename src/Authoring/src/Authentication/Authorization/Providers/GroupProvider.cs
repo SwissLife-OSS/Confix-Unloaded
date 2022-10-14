@@ -46,11 +46,12 @@ public class GroupProvider
                     {
                         groupsOfUser ??= groups
                             .Where(x => x.Requirements.Any(r => r.Validate(principal)))
+                            .Concat(AuthorizationDefaults.DefaultGroups)
                             .ToList();
 
                         return groupsOfUser;
                     };
-                    var entry = _cache.CreateEntry(cacheKey);
+                    using var entry = _cache.CreateEntry(cacheKey);
                     entry.AbsoluteExpirationRelativeToNow = _cacheExpiration;
                     entry.Value = cachedGroups;
                 }
@@ -71,7 +72,7 @@ public class GroupProvider
                 if (!_cache.TryGetValue(cacheKey, out cachedGroups))
                 {
                     cachedGroups = _groupStore.GetAllAsync(cancellationToken);
-                    var entry = _cache.CreateEntry(cacheKey);
+                    using var entry = _cache.CreateEntry(cacheKey);
                     entry.AbsoluteExpirationRelativeToNow = _cacheExpiration;
                     entry.Value = cachedGroups;
 

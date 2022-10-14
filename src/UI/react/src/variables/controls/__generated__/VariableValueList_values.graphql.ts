@@ -1,30 +1,32 @@
+/**
+ * @generated SignedSource<<19d4a89a52ef87cb2e1d4ca74dbf0283>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
-
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type VariableValueList_values = ReadonlyArray<{
+export type VariableValueList_values$data = ReadonlyArray<{
+  readonly environment: {
     readonly id: string;
-    readonly environment: {
-        readonly id: string;
-        readonly name: string;
-    } | null;
-    readonly variable: {
-        readonly id: string;
-        readonly name: string;
-    } | null;
-    readonly value: string;
-    readonly " $refType": "VariableValueList_values";
+    readonly name: string;
+  } | null;
+  readonly id: string;
+  readonly value: string | null;
+  readonly variable: {
+    readonly id: string;
+    readonly name: string;
+  } | null;
+  readonly " $fragmentType": "VariableValueList_values";
 }>;
-export type VariableValueList_values$data = VariableValueList_values;
 export type VariableValueList_values$key = ReadonlyArray<{
-    readonly " $data"?: VariableValueList_values$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"VariableValueList_values">;
+  readonly " $data"?: VariableValueList_values$data;
+  readonly " $fragmentSpreads": FragmentRefs<"VariableValueList_values">;
 }>;
-
-
 
 const node: ReaderFragment = (function(){
 var v0 = {
@@ -85,5 +87,7 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = '5593fe8164e0837e92220c270942cafc';
+
+(node as any).hash = "5593fe8164e0837e92220c270942cafc";
+
 export default node;

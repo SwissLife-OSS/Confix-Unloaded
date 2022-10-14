@@ -7,6 +7,7 @@ export const SectionHeader: React.FC<{
   disabled?: boolean;
   onAdd?: () => void;
   onSave?: () => void;
+  children?: React.ReactElement;
 }> = ({ title, onSave, onAdd, loading, disabled }) => {
   return (
     <Wrapper>
@@ -46,4 +47,5 @@ const Wrapper = styled("div")`
 
 export const HeaderButton = styled(Button)`
   flex: 0;
+  margin-left: 10px;
 `;

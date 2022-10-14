@@ -1,29 +1,31 @@
+/**
+ * @generated SignedSource<<50f8c0018f04ec6a28eda34392d6d021>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
-import EnvironmentsListPaginationQuery from "./EnvironmentsListPaginationQuery.graphql";
+import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type EnvironmentsList_Environments = {
-    readonly searchEnvironments: {
-        readonly edges: ReadonlyArray<{
-            readonly node: {
-                readonly id: string;
-                readonly name: string;
-                readonly " $fragmentRefs": FragmentRefs<"EnvironmentsList_EnvironmentEdge">;
-            };
-        }> | null;
-    } | null;
-    readonly " $refType": "EnvironmentsList_Environments";
+export type EnvironmentsList_Environments$data = {
+  readonly searchEnvironments: {
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly id: string;
+        readonly name: string;
+        readonly " $fragmentSpreads": FragmentRefs<"EnvironmentsList_EnvironmentEdge">;
+      };
+    }> | null;
+  } | null;
+  readonly " $fragmentType": "EnvironmentsList_Environments";
 };
-export type EnvironmentsList_Environments$data = EnvironmentsList_Environments;
 export type EnvironmentsList_Environments$key = {
-    readonly " $data"?: EnvironmentsList_Environments$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"EnvironmentsList_Environments">;
+  readonly " $data"?: EnvironmentsList_Environments$data;
+  readonly " $fragmentSpreads": FragmentRefs<"EnvironmentsList_Environments">;
 };
-
-
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -64,7 +66,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": EnvironmentsListPaginationQuery
+      "operation": require('./EnvironmentsListPaginationQuery.graphql')
     }
   },
   "name": "EnvironmentsList_Environments",
@@ -114,16 +116,16 @@ return {
                   "storageKey": null
                 },
                 {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "EnvironmentsList_EnvironmentEdge"
+                },
+                {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
                   "name": "__typename",
                   "storageKey": null
-                },
-                {
-                  "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "EnvironmentsList_EnvironmentEdge"
                 }
               ],
               "storageKey": null
@@ -171,5 +173,7 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = '5b3eae102322d04bd73afa1dd1d11813';
+
+(node as any).hash = "5b3eae102322d04bd73afa1dd1d11813";
+
 export default node;

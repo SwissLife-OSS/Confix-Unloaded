@@ -1,23 +1,25 @@
+/**
+ * @generated SignedSource<<29b66d7cb773eaee96d2f057314a44db>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
-
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ChangeLog_CreateVariableChange = {
-    readonly variable: {
-        readonly name: string;
-    } | null;
-    readonly " $refType": "ChangeLog_CreateVariableChange";
+export type ChangeLog_CreateVariableChange$data = {
+  readonly variable: {
+    readonly name: string;
+  } | null;
+  readonly " $fragmentType": "ChangeLog_CreateVariableChange";
 };
-export type ChangeLog_CreateVariableChange$data = ChangeLog_CreateVariableChange;
 export type ChangeLog_CreateVariableChange$key = {
-    readonly " $data"?: ChangeLog_CreateVariableChange$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"ChangeLog_CreateVariableChange">;
+  readonly " $data"?: ChangeLog_CreateVariableChange$data;
+  readonly " $fragmentSpreads": FragmentRefs<"ChangeLog_CreateVariableChange">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -47,5 +49,7 @@ const node: ReaderFragment = {
   "type": "CreateVariableChange",
   "abstractKey": null
 };
-(node as any).hash = '493c09c20eea46360b88675b280ffd04';
+
+(node as any).hash = "493c09c20eea46360b88675b280ffd04";
+
 export default node;

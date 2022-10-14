@@ -15,6 +15,7 @@ const applicationFragment = graphql`
 
 export const ApplicationPartSectionHeader: React.FC<{
   applicationKey: ApplicationPartSectionHeaderFragment$key;
+  children?: React.ReactElement;
 }> = ({ applicationKey, children }) => {
   const { name: applicationName, id: applicationId } = useFragment(
     applicationFragment,
@@ -29,7 +30,7 @@ export const ApplicationPartSectionHeader: React.FC<{
       <AddPartToApplicationDialog
         applicationName={applicationName}
         applicationId={applicationId}
-        visible={isEdit}
+        open={isEdit}
         onClose={disable}
       />
     </>

@@ -1,55 +1,37 @@
+/**
+ * @generated SignedSource<<2a855ff6b666b6ee5c183b5e1bb6dd65>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest } from "relay-runtime";
-
+import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type PublishApplicationPartByIdInput = {
-    applicationPartId: string;
+  applicationPartId: string;
 };
-export type PublishApplicationPartDialogMutationVariables = {
-    input: PublishApplicationPartByIdInput;
+export type PublishApplicationPartDialogMutation$variables = {
+  input: PublishApplicationPartByIdInput;
 };
-export type PublishApplicationPartDialogMutationResponse = {
-    readonly publishApplicationPartById: {
-        readonly publishedApplicationPart: {
-            readonly id: string;
-            readonly version: number;
-        } | null;
-        readonly errors: ReadonlyArray<{
-            readonly __typename: string;
-            readonly message?: string | undefined;
-            readonly code?: string | undefined;
-        }> | null;
-    };
+export type PublishApplicationPartDialogMutation$data = {
+  readonly publishApplicationPartById: {
+    readonly errors: ReadonlyArray<{
+      readonly __typename: string;
+      readonly code?: string;
+      readonly message?: string;
+    }> | null;
+    readonly publishedApplicationPart: {
+      readonly id: string;
+      readonly version: number;
+    } | null;
+  };
 };
 export type PublishApplicationPartDialogMutation = {
-    readonly response: PublishApplicationPartDialogMutationResponse;
-    readonly variables: PublishApplicationPartDialogMutationVariables;
+  response: PublishApplicationPartDialogMutation$data;
+  variables: PublishApplicationPartDialogMutation$variables;
 };
-
-
-
-/*
-mutation PublishApplicationPartDialogMutation(
-  $input: PublishApplicationPartByIdInput!
-) {
-  publishApplicationPartById(input: $input) {
-    publishedApplicationPart {
-      id
-      version
-    }
-    errors {
-      __typename
-      ... on IUserError {
-        __isIUserError: __typename
-        message
-        code
-      }
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -169,5 +151,7 @@ return {
   }
 };
 })();
-(node as any).hash = '31e92c4467c3775a88e41dece18c522e';
+
+(node as any).hash = "31e92c4467c3775a88e41dece18c522e";
+
 export default node;

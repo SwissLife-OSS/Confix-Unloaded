@@ -1,5 +1,5 @@
+using HotChocolate.Types.Relay;
+
 namespace Confix.Authentication.Authorization;
 
-public record Role(Guid Id, string Name, IReadOnlyList<Permission> Permissions);
-
-public record Permission(Scope Scope, Permissions Permissions);
+public record Role([property: ID] Guid Id, string Name, IReadOnlyList<Permission> Permissions);

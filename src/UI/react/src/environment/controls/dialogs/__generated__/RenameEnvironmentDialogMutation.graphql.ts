@@ -1,49 +1,34 @@
+/**
+ * @generated SignedSource<<85b99ce579295ad1367b8b7cf0d3d449>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest } from "relay-runtime";
-
+import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type RenameEnvironmentInput = {
-    id: string;
-    name: string;
+  id: string;
+  name: string;
 };
-export type RenameEnvironmentDialogMutationVariables = {
-    input: RenameEnvironmentInput;
+export type RenameEnvironmentDialogMutation$variables = {
+  input: RenameEnvironmentInput;
 };
-export type RenameEnvironmentDialogMutationResponse = {
-    readonly renameEnvironment: {
-        readonly environment: {
-            readonly id: string;
-            readonly " $fragmentRefs": FragmentRefs<"EnvironmentsList_EnvironmentEdge">;
-        } | null;
-    };
+export type RenameEnvironmentDialogMutation$data = {
+  readonly renameEnvironment: {
+    readonly environment: {
+      readonly id: string;
+      readonly " $fragmentSpreads": FragmentRefs<"EnvironmentsList_EnvironmentEdge">;
+    } | null;
+  };
 };
 export type RenameEnvironmentDialogMutation = {
-    readonly response: RenameEnvironmentDialogMutationResponse;
-    readonly variables: RenameEnvironmentDialogMutationVariables;
+  response: RenameEnvironmentDialogMutation$data;
+  variables: RenameEnvironmentDialogMutation$variables;
 };
-
-
-
-/*
-mutation RenameEnvironmentDialogMutation(
-  $input: RenameEnvironmentInput!
-) {
-  renameEnvironment(input: $input) {
-    environment {
-      id
-      ...EnvironmentsList_EnvironmentEdge
-    }
-  }
-}
-
-fragment EnvironmentsList_EnvironmentEdge on Environment {
-  id
-  name
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -154,5 +139,7 @@ return {
   }
 };
 })();
-(node as any).hash = 'd70fa7e52bc51e2934286c5cd837af05';
+
+(node as any).hash = "d70fa7e52bc51e2934286c5cd837af05";
+
 export default node;

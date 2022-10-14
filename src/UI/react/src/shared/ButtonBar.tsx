@@ -1,7 +1,7 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { css } from "@emotion/react";
 
-export const ButtonBar: React.FC = ({ children }) => (
+export const ButtonBar: React.FC<{ children: ReactNode }> = ({ children }) => (
   <div
     css={css`
       margin-top: 5px;

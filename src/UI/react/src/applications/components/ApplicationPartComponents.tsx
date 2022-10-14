@@ -7,12 +7,12 @@ import { generatePath, Link } from "react-router-dom";
 import { EditIcon, DeleteIcon } from "../../icons/icons";
 import { useToggle } from "../../shared/useToggle";
 import { RemoveComponentFromApplicationPartDialog } from "../dialogs/RemoveComponentFromApplicationPartDialog";
-import { EditApplicationPart_fragment } from "../__generated__/EditApplicationPart_fragment.graphql";
+import { EditApplicationPart_fragment$data } from "../__generated__/EditApplicationPart_fragment.graphql";
 import { ApplicationPartComponents_component$key } from "./__generated__/ApplicationPartComponents_component.graphql";
 
 export const ApplicationPartComponents: React.FC<{
   applicationId: string;
-  components: EditApplicationPart_fragment["components"];
+  components: EditApplicationPart_fragment$data["components"];
 }> = ({ applicationId, components }) => {
   if (components.length === 0) {
     return <Empty description="No Application Parts"></Empty>;
@@ -46,7 +46,7 @@ const ApplicationPartComponentsDisplay: React.FC<{
   applicationId: string;
   componentPartId: string;
   part: ApplicationPartComponents_component$key;
-}> = ({ part, applicationId, componentPartId }) => {
+}> = ({ part, applicationId }) => {
   const [isRemoveDialogShown, , enableRemoveDialog, disableRemoveDialog] =
     useToggle();
   const {
@@ -83,7 +83,7 @@ const ApplicationPartComponentsDisplay: React.FC<{
       <RemoveComponentFromApplicationPartDialog
         partComponentId={id}
         componentName={name}
-        visible={isRemoveDialogShown}
+        open={isRemoveDialogShown}
         onClose={disableRemoveDialog}
       />
     </>
@@ -91,5 +91,5 @@ const ApplicationPartComponentsDisplay: React.FC<{
 };
 const CardBody = styled("div")`
   height: 200px;
-  overflow-y: scroll;
+  overflow-y: auto;
 `;

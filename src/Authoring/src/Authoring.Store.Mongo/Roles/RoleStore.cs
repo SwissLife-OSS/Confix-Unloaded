@@ -26,6 +26,15 @@ public class RoleStore : IRoleStore
         return await _dbContext.Roles.Find(filter).FirstOrDefaultAsync(cancellationToken);
     }
 
+    public async Task<IReadOnlyList<Role>> GetByIdsAsync(
+        IEnumerable<Guid> ids,
+        CancellationToken cancellationToken)
+    {
+        var filter = Builders<Role>.Filter.In(x => x.Id, ids);
+
+        return await _dbContext.Roles.Find(filter).ToListAsync(cancellationToken);
+    }
+
     public async Task<Role> UpsertAsync(Role group, CancellationToken cancellationToken)
     {
         var filter = Builders<Role>.Filter.Eq(x => x.Id, group.Id);
@@ -43,4 +52,6 @@ public class RoleStore : IRoleStore
         return await _dbContext.Roles
             .FindOneAndDeleteAsync(filter, default, cancellationToken);
     }
+
+    public IQueryable<Role> Query() => _dbContext.Roles.AsQueryable();
 }

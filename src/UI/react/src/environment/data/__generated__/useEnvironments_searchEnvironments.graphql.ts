@@ -1,28 +1,30 @@
+/**
+ * @generated SignedSource<<1b3cd7e882ff9c75df3c38c751ebac1c>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
-import useEnvironmentsPaginationQuery from "./useEnvironmentsPaginationQuery.graphql";
+import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type useEnvironments_searchEnvironments = {
-    readonly searchEnvironments: {
-        readonly edges: ReadonlyArray<{
-            readonly node: {
-                readonly id: string;
-                readonly name: string;
-            };
-        }> | null;
-    } | null;
-    readonly " $refType": "useEnvironments_searchEnvironments";
+export type useEnvironments_searchEnvironments$data = {
+  readonly searchEnvironments: {
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly id: string;
+        readonly name: string;
+      };
+    }> | null;
+  } | null;
+  readonly " $fragmentType": "useEnvironments_searchEnvironments";
 };
-export type useEnvironments_searchEnvironments$data = useEnvironments_searchEnvironments;
 export type useEnvironments_searchEnvironments$key = {
-    readonly " $data"?: useEnvironments_searchEnvironments$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"useEnvironments_searchEnvironments">;
+  readonly " $data"?: useEnvironments_searchEnvironments$data;
+  readonly " $fragmentSpreads": FragmentRefs<"useEnvironments_searchEnvironments">;
 };
-
-
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -59,7 +61,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": useEnvironmentsPaginationQuery
+      "operation": require('./useEnvironmentsPaginationQuery.graphql')
     }
   },
   "name": "useEnvironments_searchEnvironments",
@@ -155,5 +157,7 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = '919293b06c3e60921850070d82637bb1';
+
+(node as any).hash = "919293b06c3e60921850070d82637bb1";
+
 export default node;

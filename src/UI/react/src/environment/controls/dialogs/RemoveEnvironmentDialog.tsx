@@ -34,11 +34,11 @@ export const removeEnvironmentDialog = graphql`
 `;
 
 export const RemoveEnvironmentDialog: React.FC<{
-  visible: boolean;
+  open: boolean;
   onClose: (removed: boolean) => void;
   environmentId: string;
   environmentName: string;
-}> = ({ visible, environmentId, environmentName, onClose }) => {
+}> = ({ open, environmentId, environmentName, onClose }) => {
   const [commit, isInFlight] = useMutation<RemoveEnvironmentDialogMutation>(
     removeEnvironmentDialog
   );
@@ -67,7 +67,7 @@ export const RemoveEnvironmentDialog: React.FC<{
   return (
     <Modal
       title={`Remove ${environmentName}`}
-      visible={visible}
+      open={open}
       onOk={handleRemoveEnvironment}
       confirmLoading={isInFlight}
       onCancel={handleClose}

@@ -2,8 +2,6 @@ import styled from "@emotion/styled";
 import Icon from "@ant-design/icons";
 import { CustomIconComponentProps } from "@ant-design/icons/lib/components/Icon";
 import {
-  mdiArrowCollapseDown,
-  mdiArrowCollapseRight,
   mdiBell,
   mdiCancel,
   mdiCheck,
@@ -22,6 +20,7 @@ import {
   mdiPackage,
   mdiPackageVariant,
   mdiPencil,
+  mdiLogout,
   mdiPlus,
   mdiServer,
   mdiShieldStarOutline,
@@ -55,6 +54,7 @@ export const PackageVariantIcon = createIcon(mdiPackageVariant);
 export const ToyBrickOutlineIcon = createIcon(mdiToyBrickOutline);
 export const VariablesIcon = createIcon(mdiVariable);
 export const ServerIcon = createIcon(mdiServer);
+export const Logout = createIcon(mdiLogout);
 export const CheckIcon = createIcon(mdiCheck);
 export const NotCheckIcon = createIcon(mdiClose);
 export const EditIcon = createIcon(mdiPencil);

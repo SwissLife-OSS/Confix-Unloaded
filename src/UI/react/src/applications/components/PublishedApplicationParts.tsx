@@ -2,7 +2,7 @@ import * as React from "react";
 import { usePaginationFragment } from "react-relay";
 import { graphql } from "babel-plugin-relay/macro";
 import {
-  PublishedApplicationPartsFragment,
+  PublishedApplicationPartsFragment$data,
   PublishedApplicationPartsFragment$key,
 } from "./__generated__/PublishedApplicationPartsFragment.graphql";
 import { Lookup } from "../../shared/hacks";
@@ -46,7 +46,7 @@ const publishedPartsConnection = graphql`
   }
 `;
 type Value = Lookup<
-  PublishedApplicationPartsFragment,
+  PublishedApplicationPartsFragment$data,
   "publishedVersions",
   "edges",
   0
@@ -120,7 +120,7 @@ export const PublishedApplicationParts: React.FC<{
   } else {
     return (
       <div
-        style={{ flex: 1, overflow: "scroll", overscrollBehavior: "contain" }}
+        style={{ flex: 1, overflow: "auto", overscrollBehavior: "contain" }}
         id="published_application_parts"
       >
         <InfiniteScroll

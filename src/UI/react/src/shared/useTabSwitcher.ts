@@ -4,7 +4,6 @@ import { useParams, useNavigate } from "react-router-dom";
 
 export const useTabSwitcher = () => {
   const { tab } = useParams();
-  console.log(tab);
   const navigate = useNavigate();
   const location = useLocation();
   const navigateToTab = useCallback(

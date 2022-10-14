@@ -5,10 +5,10 @@ import {
   usePaginationFragment,
 } from "react-relay";
 import { graphql } from "babel-plugin-relay/macro";
-import { Settings } from "../settings";
+import { config } from "../config";
 import { ExplorerTreeQuery } from "./__generated__/ExplorerTreeQuery.graphql";
 import {
-  ExplorerTree_Applications,
+  ExplorerTree_Applications$data,
   ExplorerTree_Applications$key,
 } from "./__generated__/ExplorerTree_Applications.graphql";
 import { Divider, Skeleton, TreeDataNode } from "antd";
@@ -26,11 +26,11 @@ import styled from "@emotion/styled";
 import { css } from "@emotion/react";
 import { ExplorerTree_Application$key } from "./__generated__/ExplorerTree_Application.graphql";
 import {
-  ExplorerTree_ApplicationDetails,
+  ExplorerTree_ApplicationDetails$data,
   ExplorerTree_ApplicationDetails$key,
 } from "./__generated__/ExplorerTree_ApplicationDetails.graphql";
 import {
-  ExplorerTree_ApplicationPart,
+  ExplorerTree_ApplicationPart$data,
   ExplorerTree_ApplicationPart$key,
 } from "./__generated__/ExplorerTree_ApplicationPart.graphql";
 import { DefaultSuspense } from "../shared/DefaultSuspense";
@@ -126,7 +126,7 @@ export const ExplorerTree: React.FC<{
   ) => void;
 }> = ({ search, onClick }) => {
   const queryData = useLazyLoadQuery<ExplorerTreeQuery>(exploreTreeQuery, {
-    count: Settings.pagination.pageSize,
+    count: config.pagination.pageSize,
   });
   const {
     data: connection,
@@ -142,7 +142,7 @@ export const ExplorerTree: React.FC<{
   const applications = connection.applications?.edges ?? [];
   return (
     <div
-      style={{ flex: 1, overflow: "scroll", overscrollBehavior: "contain" }}
+      style={{ flex: 1, overflow: "auto", overscrollBehavior: "contain" }}
       id="scrollableDiv"
     >
       <InfiniteScroll
@@ -171,7 +171,7 @@ export const ExplorerTree: React.FC<{
 const ApplictionNode: React.FC<{
   data:
     | NonNullable<
-        NonNullable<ExplorerTree_Applications["applications"]>["edges"]
+        NonNullable<ExplorerTree_Applications$data["applications"]>["edges"]
       >["0"]["node"];
 }> = ({ data }) => {
   const application = useFragment<ExplorerTree_Application$key>(
@@ -238,7 +238,7 @@ const ApplicationNodeChildren: React.FC<{
 
 const ApplicationPartNodeDetails: React.FC<{
   applicationId: string;
-  data: ExplorerTree_ApplicationDetails["parts"][0];
+  data: ExplorerTree_ApplicationDetails$data["parts"][0];
 }> = ({ data, applicationId }) => {
   const partDetails = useFragment<ExplorerTree_ApplicationPart$key>(
     exploreTreeApplicationPartFragment,
@@ -270,7 +270,7 @@ const ApplicationPartNodeDetails: React.FC<{
 
 const ApplicationPartComponentNode: React.FC<{
   applicationId: string;
-  data: ExplorerTree_ApplicationPart["components"][0];
+  data: ExplorerTree_ApplicationPart$data["components"][0];
 }> = ({ data, applicationId }) => {
   return (
     <TreeNode
@@ -286,7 +286,7 @@ const ApplicationPartComponentNode: React.FC<{
 const VariableValuesNode: React.FC<{
   indent: number;
   data: NonNullable<
-    NonNullable<ExplorerTree_ApplicationDetails["variableValues"]>
+    NonNullable<ExplorerTree_ApplicationDetails$data["variableValues"]>
   >["0"][];
   url: string;
   urlParams?: Record<string, string>;
@@ -329,6 +329,7 @@ const TreeNode: React.FC<{
   hasChildren?: boolean;
   state?: any;
   urlParams?: Record<string, string>;
+  children?: React.ReactNode;
 }> = ({
   icon,
   text,

@@ -1,71 +1,45 @@
+/**
+ * @generated SignedSource<<69db0d056fc2887e264f50f8d74fe214>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest } from "relay-runtime";
-
-export type VariableEditorQueryVariables = {
-    variableId: string;
-    applicationId?: string | null | undefined;
-    applicationPartId?: string | null | undefined;
+import { ConcreteRequest, Query } from 'relay-runtime';
+export type VariableEditorQuery$variables = {
+  applicationId?: string | null;
+  applicationPartId?: string | null;
+  variableId: string;
 };
-export type VariableEditorQueryResponse = {
-    readonly variableValues: ReadonlyArray<{
-        readonly id: string;
-        readonly application: {
-            readonly id: string;
-            readonly name: string;
-        } | null;
-        readonly variable: {
-            readonly id: string;
-            readonly name: string;
-        } | null;
-        readonly environment: {
-            readonly id: string;
-            readonly name: string;
-        } | null;
-        readonly applicationPart: {
-            readonly id: string;
-            readonly name: string;
-        } | null;
-        readonly value: string;
-    }>;
+export type VariableEditorQuery$data = {
+  readonly variableValues: ReadonlyArray<{
+    readonly application: {
+      readonly id: string;
+      readonly name: string;
+    } | null;
+    readonly applicationPart: {
+      readonly id: string;
+      readonly name: string;
+    } | null;
+    readonly environment: {
+      readonly id: string;
+      readonly name: string;
+    } | null;
+    readonly id: string;
+    readonly value: string | null;
+    readonly variable: {
+      readonly id: string;
+      readonly name: string;
+    } | null;
+  }>;
 };
 export type VariableEditorQuery = {
-    readonly response: VariableEditorQueryResponse;
-    readonly variables: VariableEditorQueryVariables;
+  response: VariableEditorQuery$data;
+  variables: VariableEditorQuery$variables;
 };
-
-
-
-/*
-query VariableEditorQuery(
-  $variableId: ID!
-  $applicationId: ID
-  $applicationPartId: ID
-) {
-  variableValues(variableId: $variableId, applicationId: $applicationId, applicationPartId: $applicationPartId) {
-    id
-    application {
-      id
-      name
-    }
-    variable {
-      id
-      name
-    }
-    environment {
-      id
-      name
-    }
-    applicationPart {
-      id
-      name
-    }
-    value
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = {
@@ -212,5 +186,7 @@ return {
   }
 };
 })();
-(node as any).hash = '47fd6ec0499faf67a267fab92bb41836';
+
+(node as any).hash = "7c5bf1dde420921d86e403d04241d12b";
+
 export default node;

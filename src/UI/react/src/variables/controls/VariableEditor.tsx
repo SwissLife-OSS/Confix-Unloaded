@@ -14,7 +14,7 @@ import { useStringEventHanlder } from "../../shared/useEventListener";
 import { VariableEditorDeleteVariableValueMutation } from "./__generated__/VariableEditorDeleteVariableValueMutation.graphql";
 import {
   VariableEditorQuery,
-  VariableEditorQueryResponse,
+  VariableEditorQuery$data,
 } from "./__generated__/VariableEditorQuery.graphql";
 import { VariableEditorSaveVariableMutation } from "./__generated__/VariableEditorSaveVariableMutation.graphql";
 
@@ -74,7 +74,7 @@ export const VariableEditor: React.FC<{
   );
   const valueByEnv: Record<
     string,
-    VariableEditorQueryResponse["variableValues"][0]
+    VariableEditorQuery$data["variableValues"][0]
   > = data.variableValues.reduce(
     (p, c) => ({
       ...p,
@@ -103,7 +103,7 @@ export const VariableEditor: React.FC<{
               variableId
             }
             environment={x}
-            value={valueByEnv[x.id]?.value}
+            value={valueByEnv[x.id]?.value ?? ""}
             valueId={valueByEnv[x.id]?.id}
             applicationId={applicationId}
             applicationPartId={applicationPartId}

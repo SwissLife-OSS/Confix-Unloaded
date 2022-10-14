@@ -36,6 +36,7 @@
     <PackageVersion Include="System.Net.Http" Version="4.3.4" />
 
     <PackageVersion Include="IdentityModel" Version="6.0.0" />
+    <PackageVersion Include="Yarp.ReverseProxy" Version="1.1.1" />
   </ItemGroup>
   <ItemGroup>
     <PackageVersion Include="FluentAssertions" Version="6.7.0" />

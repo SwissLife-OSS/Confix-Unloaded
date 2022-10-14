@@ -5,7 +5,7 @@ namespace Confix.Authentication.Authorization;
 
 public static class AuthorizationPolicyExtensions
 {
-    public static IServiceCollection AddAuthorization(this IServiceCollection services)
+    public static IServiceCollection AddAuthorizationAndPolicies(this IServiceCollection services)
     {
         services.AddAuthorization(ConfigurePolicies);
 
@@ -17,6 +17,7 @@ public static class AuthorizationPolicyExtensions
         services.AddSingleton<IGroupProvider, GroupProvider>();
         services.AddSingleton<IRoleProvider, RoleProvider>();
 
+        services.AddHttpContextAccessor();
         services.AddScoped<ISessionAccessor, SessionAccessor>();
 
         return services;

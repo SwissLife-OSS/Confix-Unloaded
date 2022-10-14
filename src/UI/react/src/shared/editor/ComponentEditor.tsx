@@ -11,6 +11,7 @@ export type ComponentValueEditorConfiguration = ReturnType<
 export const useComponentValueEditorRef = () => {
   const ref = useRef<editor.IStandaloneCodeEditor | undefined>();
   const m = useMonaco();
+
   const monacoRef = useRef<typeof m>();
   monacoRef.current = m;
   const format = useCallback(() => {

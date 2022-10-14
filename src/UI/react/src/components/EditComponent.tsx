@@ -10,7 +10,7 @@ import { RenameComponentDialog } from "./controls/dialogs/RenameComponentDialog"
 import { SchemaComponentEditor } from "../applications/components/SchemaComponentEditor";
 import {
   EditComponentUpdateMutation,
-  EditComponentUpdateMutationResponse,
+  EditComponentUpdateMutation$data,
 } from "./__generated__/EditComponentUpdateMutation.graphql";
 import React, { useState } from "react";
 import { EditComponent_component$key } from "./__generated__/EditComponent_component.graphql";
@@ -76,6 +76,7 @@ export const EditComponent = () => {
   const { id: componentId = "" } = useParams();
 
   const { tab, navigateToTab } = useTabSwitcher();
+
   const component = useLazyLoadQuery<EditComponentQuery>(componentByIdQuery, {
     id: componentId,
   });
@@ -106,16 +107,29 @@ export const EditComponent = () => {
         </Col>
       </Row>
       <TabRow>
-        <Tabs defaultActiveKey={tab} key={tab} onChange={navigateToTab}>
-          <Tabs.TabPane tab="Parts" key="edit">
-            <EditComponentForm id={id} data={component.componentById} />
-          </Tabs.TabPane>
-          <Tabs.TabPane tab="Change Log" key="changelog">
-            <DefaultSuspense>
-              <ComponentChangeLog data={component.componentById} />
-            </DefaultSuspense>
-          </Tabs.TabPane>
-        </Tabs>
+        <Tabs
+          defaultActiveKey={tab}
+          key={tab}
+          onChange={navigateToTab}
+          items={[
+            {
+              key: "edit",
+              label: "Parts",
+              children: (
+                <EditComponentForm id={id} data={component.componentById} />
+              ),
+            },
+            {
+              key: "changelog",
+              label: "Change Log",
+              children: (
+                <DefaultSuspense>
+                  <ComponentChangeLog data={component.componentById} />
+                </DefaultSuspense>
+              ),
+            },
+          ]}
+        />
       </TabRow>
     </DetailView>
   );
@@ -140,7 +154,7 @@ const EditComponentForm: React.FC<{
     component.values as any
   );
   const handleUpdate = React.useCallback(() => {
-    const isSuccess = (r: EditComponentUpdateMutationResponse) =>
+    const isSuccess = (r: EditComponentUpdateMutation$data) =>
       !!r.updateComponentSchema.component?.id &&
       !!r.updateComponentValues.component?.id;
 
@@ -180,7 +194,7 @@ const Header: React.FC<{ name: string; id: string }> = ({ name, id }) => {
         key={name}
         id={id}
         onClose={disable}
-        visible={isEdit}
+        open={isEdit}
       />
     </EditableBreadcrumbHeader>
   );

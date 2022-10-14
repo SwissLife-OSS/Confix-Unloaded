@@ -1,23 +1,25 @@
+/**
+ * @generated SignedSource<<c6ae52610ad3bcab0d2dc2a9cdbc2de2>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
-
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type EditApplicationPartComponent_ChangeLog_Fragment = {
-    readonly changeLog: ReadonlyArray<{
-        readonly " $fragmentRefs": FragmentRefs<"ChangeLog_fragment">;
-    }>;
-    readonly " $refType": "EditApplicationPartComponent_ChangeLog_Fragment";
+export type EditApplicationPartComponent_ChangeLog_Fragment$data = {
+  readonly changeLog: ReadonlyArray<{
+    readonly " $fragmentSpreads": FragmentRefs<"ChangeLog_fragment">;
+  }>;
+  readonly " $fragmentType": "EditApplicationPartComponent_ChangeLog_Fragment";
 };
-export type EditApplicationPartComponent_ChangeLog_Fragment$data = EditApplicationPartComponent_ChangeLog_Fragment;
 export type EditApplicationPartComponent_ChangeLog_Fragment$key = {
-    readonly " $data"?: EditApplicationPartComponent_ChangeLog_Fragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"EditApplicationPartComponent_ChangeLog_Fragment">;
+  readonly " $data"?: EditApplicationPartComponent_ChangeLog_Fragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"EditApplicationPartComponent_ChangeLog_Fragment">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -45,5 +47,7 @@ const node: ReaderFragment = {
   "type": "ApplicationPartComponent",
   "abstractKey": null
 };
-(node as any).hash = 'd4f9ab880bda698f515b8aa45e5f3675';
+
+(node as any).hash = "d4f9ab880bda698f515b8aa45e5f3675";
+
 export default node;

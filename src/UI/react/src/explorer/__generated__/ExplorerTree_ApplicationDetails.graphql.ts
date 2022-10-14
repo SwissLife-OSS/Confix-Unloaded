@@ -1,36 +1,38 @@
+/**
+ * @generated SignedSource<<bddb3f392911ade661f725829d0278b0>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
-
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ExplorerTree_ApplicationDetails = {
-    readonly variableValues: ReadonlyArray<{
-        readonly id: string;
-        readonly environment: {
-            readonly id: string;
-            readonly name: string;
-        } | null;
-        readonly variable: {
-            readonly id: string;
-            readonly name: string;
-        } | null;
-    }>;
-    readonly parts: ReadonlyArray<{
-        readonly id: string;
-        readonly name: string;
-        readonly " $fragmentRefs": FragmentRefs<"ExplorerTree_ApplicationPart">;
-    }>;
-    readonly " $refType": "ExplorerTree_ApplicationDetails";
+export type ExplorerTree_ApplicationDetails$data = {
+  readonly parts: ReadonlyArray<{
+    readonly id: string;
+    readonly name: string;
+    readonly " $fragmentSpreads": FragmentRefs<"ExplorerTree_ApplicationPart">;
+  }>;
+  readonly variableValues: ReadonlyArray<{
+    readonly environment: {
+      readonly id: string;
+      readonly name: string;
+    } | null;
+    readonly id: string;
+    readonly variable: {
+      readonly id: string;
+      readonly name: string;
+    } | null;
+  }>;
+  readonly " $fragmentType": "ExplorerTree_ApplicationDetails";
 };
-export type ExplorerTree_ApplicationDetails$data = ExplorerTree_ApplicationDetails;
 export type ExplorerTree_ApplicationDetails$key = {
-    readonly " $data"?: ExplorerTree_ApplicationDetails$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"ExplorerTree_ApplicationDetails">;
+  readonly " $data"?: ExplorerTree_ApplicationDetails$data;
+  readonly " $fragmentSpreads": FragmentRefs<"ExplorerTree_ApplicationDetails">;
 };
-
-
 
 const node: ReaderFragment = (function(){
 var v0 = {
@@ -117,5 +119,7 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = '41b537d1e23a55100078f8891cb66f2e';
+
+(node as any).hash = "41b537d1e23a55100078f8891cb66f2e";
+
 export default node;

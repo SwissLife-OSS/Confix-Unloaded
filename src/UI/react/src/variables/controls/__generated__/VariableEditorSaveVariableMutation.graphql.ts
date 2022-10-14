@@ -1,47 +1,37 @@
+/**
+ * @generated SignedSource<<bbb902f47f6a8c7d89887c3358f3cea6>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest } from "relay-runtime";
-
+import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type SaveVariableValueInput = {
-    variableId: string;
-    value: string;
-    valueId?: string | null | undefined;
-    applicationId?: string | null | undefined;
-    partId?: string | null | undefined;
-    environmentId?: string | null | undefined;
+  applicationId?: string | null;
+  environmentId?: string | null;
+  partId?: string | null;
+  value: string;
+  valueId?: string | null;
+  variableId: string;
 };
-export type VariableEditorSaveVariableMutationVariables = {
-    input: SaveVariableValueInput;
+export type VariableEditorSaveVariableMutation$variables = {
+  input: SaveVariableValueInput;
 };
-export type VariableEditorSaveVariableMutationResponse = {
-    readonly saveVariableValue: {
-        readonly value: {
-            readonly id: string;
-            readonly value: string;
-        } | null;
-    };
+export type VariableEditorSaveVariableMutation$data = {
+  readonly saveVariableValue: {
+    readonly value: {
+      readonly id: string;
+      readonly value: string | null;
+    } | null;
+  };
 };
 export type VariableEditorSaveVariableMutation = {
-    readonly response: VariableEditorSaveVariableMutationResponse;
-    readonly variables: VariableEditorSaveVariableMutationVariables;
+  response: VariableEditorSaveVariableMutation$data;
+  variables: VariableEditorSaveVariableMutation$variables;
 };
-
-
-
-/*
-mutation VariableEditorSaveVariableMutation(
-  $input: SaveVariableValueInput!
-) {
-  saveVariableValue(input: $input) {
-    value {
-      id
-      value
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -122,5 +112,7 @@ return {
   }
 };
 })();
-(node as any).hash = '54889752de94756f3431fc0ff1fa57fa';
+
+(node as any).hash = "54889752de94756f3431fc0ff1fa57fa";
+
 export default node;

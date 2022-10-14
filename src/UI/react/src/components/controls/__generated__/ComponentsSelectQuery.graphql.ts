@@ -1,62 +1,50 @@
+/**
+ * @generated SignedSource<<6c6cf294359df6c7805264b880746a53>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest } from "relay-runtime";
-
+import { ConcreteRequest, Query } from 'relay-runtime';
 export type ComponentFilterInput = {
-    and?: Array<ComponentFilterInput> | null | undefined;
-    or?: Array<ComponentFilterInput> | null | undefined;
-    name?: StringOperationFilterInput | null | undefined;
+  and?: ReadonlyArray<ComponentFilterInput> | null;
+  name?: StringOperationFilterInput | null;
+  or?: ReadonlyArray<ComponentFilterInput> | null;
 };
 export type StringOperationFilterInput = {
-    and?: Array<StringOperationFilterInput> | null | undefined;
-    or?: Array<StringOperationFilterInput> | null | undefined;
-    eq?: string | null | undefined;
-    neq?: string | null | undefined;
-    contains?: string | null | undefined;
-    ncontains?: string | null | undefined;
-    in?: Array<string | null> | null | undefined;
-    nin?: Array<string | null> | null | undefined;
-    startsWith?: string | null | undefined;
-    nstartsWith?: string | null | undefined;
-    endsWith?: string | null | undefined;
-    nendsWith?: string | null | undefined;
+  and?: ReadonlyArray<StringOperationFilterInput> | null;
+  contains?: string | null;
+  endsWith?: string | null;
+  eq?: string | null;
+  in?: ReadonlyArray<string | null> | null;
+  ncontains?: string | null;
+  nendsWith?: string | null;
+  neq?: string | null;
+  nin?: ReadonlyArray<string | null> | null;
+  nstartsWith?: string | null;
+  or?: ReadonlyArray<StringOperationFilterInput> | null;
+  startsWith?: string | null;
 };
-export type ComponentsSelectQueryVariables = {
-    where?: ComponentFilterInput | null | undefined;
+export type ComponentsSelectQuery$variables = {
+  where?: ComponentFilterInput | null;
 };
-export type ComponentsSelectQueryResponse = {
-    readonly components: {
-        readonly edges: ReadonlyArray<{
-            readonly node: {
-                readonly id: string;
-                readonly name: string;
-            };
-        }> | null;
-    } | null;
+export type ComponentsSelectQuery$data = {
+  readonly components: {
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly id: string;
+        readonly name: string;
+      };
+    }> | null;
+  } | null;
 };
 export type ComponentsSelectQuery = {
-    readonly response: ComponentsSelectQueryResponse;
-    readonly variables: ComponentsSelectQueryVariables;
+  response: ComponentsSelectQuery$data;
+  variables: ComponentsSelectQuery$variables;
 };
-
-
-
-/*
-query ComponentsSelectQuery(
-  $where: ComponentFilterInput
-) {
-  components(where: $where) {
-    edges {
-      node {
-        id
-        name
-      }
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -148,5 +136,7 @@ return {
   }
 };
 })();
-(node as any).hash = 'e508c4a8a83d3e985121e888459f528f';
+
+(node as any).hash = "e508c4a8a83d3e985121e888459f528f";
+
 export default node;

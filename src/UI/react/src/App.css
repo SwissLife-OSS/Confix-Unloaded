@@ -4,6 +4,16 @@
   background: rgba(255, 255, 255, 0.3);
 }
 
+.ant-menu-dark .ant-menu-sub,
+.ant-menu.ant-menu-dark,
+.ant-menu.ant-menu-dark .ant-menu-sub,
+.ant-layout-sider {
+  background-color: #1d1e1d !important;
+}
+.ant-layout-sider-trigger {
+  background-color: #2c2c2c !important;
+}
+
 .site-layout .site-layout-background {
   background: #fff;
 }

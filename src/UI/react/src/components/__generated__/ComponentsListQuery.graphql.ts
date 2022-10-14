@@ -1,54 +1,26 @@
+/**
+ * @generated SignedSource<<e341cc56ca86b829cb5d4e048a4993a7>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest } from "relay-runtime";
-
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ComponentsListQueryVariables = {
-    cursor?: string | null | undefined;
-    count?: number | null | undefined;
+export type ComponentsListQuery$variables = {
+  count?: number | null;
+  cursor?: string | null;
 };
-export type ComponentsListQueryResponse = {
-    readonly " $fragmentRefs": FragmentRefs<"ComponentsList_components">;
+export type ComponentsListQuery$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"ComponentsList_components">;
 };
 export type ComponentsListQuery = {
-    readonly response: ComponentsListQueryResponse;
-    readonly variables: ComponentsListQueryVariables;
+  response: ComponentsListQuery$data;
+  variables: ComponentsListQuery$variables;
 };
-
-
-
-/*
-query ComponentsListQuery(
-  $cursor: String
-  $count: Int
-) {
-  ...ComponentsList_components
-}
-
-fragment ComponentsList_componentEdge on Component {
-  id
-  name
-}
-
-fragment ComponentsList_components on Query {
-  components(after: $cursor, first: $count) {
-    edges {
-      node {
-        ...ComponentsList_componentEdge
-        id
-        __typename
-      }
-      cursor
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = {
@@ -208,5 +180,7 @@ return {
   }
 };
 })();
-(node as any).hash = 'fa8e804ce96076e79b6ff152a440b2f5';
+
+(node as any).hash = "fa8e804ce96076e79b6ff152a440b2f5";
+
 export default node;

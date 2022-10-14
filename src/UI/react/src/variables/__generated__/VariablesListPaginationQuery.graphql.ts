@@ -1,57 +1,27 @@
+/**
+ * @generated SignedSource<<226ebd434c3a53b9357192afb0a282eb>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest } from "relay-runtime";
-
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type VariablesListPaginationQueryVariables = {
-    count?: number | null | undefined;
-    cursor?: string | null | undefined;
-    search?: string | null | undefined;
+export type VariablesListPaginationQuery$variables = {
+  count?: number | null;
+  cursor?: string | null;
+  search?: string | null;
 };
-export type VariablesListPaginationQueryResponse = {
-    readonly " $fragmentRefs": FragmentRefs<"VariablesList_Variables">;
+export type VariablesListPaginationQuery$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"VariablesList_Variables">;
 };
 export type VariablesListPaginationQuery = {
-    readonly response: VariablesListPaginationQueryResponse;
-    readonly variables: VariablesListPaginationQueryVariables;
+  response: VariablesListPaginationQuery$data;
+  variables: VariablesListPaginationQuery$variables;
 };
-
-
-
-/*
-query VariablesListPaginationQuery(
-  $count: Int
-  $cursor: String
-  $search: String
-) {
-  ...VariablesList_Variables
-}
-
-fragment VariablesList_VariableEdge on Variable {
-  id
-  name
-}
-
-fragment VariablesList_Variables on Query {
-  searchVariables(after: $cursor, first: $count, search: $search) {
-    edges {
-      node {
-        id
-        name
-        ...VariablesList_VariableEdge
-        __typename
-      }
-      cursor
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -219,5 +189,7 @@ return {
   }
 };
 })();
-(node as any).hash = 'b2f8df3c3361e91c95ebef4f6d606cf6';
+
+(node as any).hash = "b2f8df3c3361e91c95ebef4f6d606cf6";
+
 export default node;

@@ -4,13 +4,13 @@ import {
   usePaginationFragment,
   useFragment,
 } from "react-relay";
-import { Settings } from "../settings";
+import { config } from "../config";
 import { InfiniteScrollList } from "../shared/InfiniteScrollList";
 import { ApplicationsListQuery } from "./__generated__/ApplicationsListQuery.graphql";
 import { ApplicationsList_applications$key } from "./__generated__/ApplicationsList_applications.graphql";
 import { graphql } from "babel-plugin-relay/macro";
 import {
-  ApplicationsList_applicationsEdge,
+  ApplicationsList_applicationsEdge$data,
   ApplicationsList_applicationsEdge$key,
 } from "./__generated__/ApplicationsList_applicationsEdge.graphql";
 import styled from "@emotion/styled";
@@ -23,7 +23,7 @@ import { RemovePartFromApplicationDialog } from "./dialogs/RemovePartFromApplica
 import { AddComponentsToApplicationPartDialog } from "./dialogs/AddComponentsToApplicationPartDialog";
 import { RemoveComponentFromApplicationPartDialog } from "./dialogs/RemoveComponentFromApplicationPartDialog";
 import { useGoTo } from "../shared/useGoTo";
-import { generatePath, useHref } from "react-router";
+import { useHref } from "react-router";
 
 const applicationsQuery = graphql`
   query ApplicationsListQuery(
@@ -44,6 +44,7 @@ const applicationsConnectionFragment = graphql`
         node {
           id
           name
+          namespace
           ...ApplicationsList_applicationsEdge
         }
       }
@@ -76,7 +77,7 @@ export const ApplicationList: React.FC<{
   search: string | undefined;
 }> = ({ search, onItemSelect, selectedApplicationId }) => {
   const queryData = useLazyLoadQuery<ApplicationsListQuery>(applicationsQuery, {
-    count: Settings.pagination.pageSize,
+    count: config.pagination.pageSize,
     where: !search
       ? null
       : {
@@ -174,7 +175,7 @@ const SelectedApplicationListItem: React.FC<{
       <AddPartToApplicationDialog
         applicationName={name}
         applicationId={id}
-        visible={isAddPartVisible}
+        open={isAddPartVisible}
         onClose={disableAddPart}
       />
     </SelectedListItem>
@@ -183,7 +184,7 @@ const SelectedApplicationListItem: React.FC<{
 
 const ApplicationPart: React.FC<{
   applicationId: string;
-  data: ApplicationsList_applicationsEdge["parts"][0];
+  data: ApplicationsList_applicationsEdge$data["parts"][0];
 }> = ({ applicationId, data: { id, name, components } }) => {
   const [isRemoveDialogShown, , enableRemoveDialog, disableRemoveDialog] =
     useToggle();
@@ -224,13 +225,13 @@ const ApplicationPart: React.FC<{
       <RemovePartFromApplicationDialog
         applicationPartName={name}
         applicationPartId={id}
-        visible={isRemoveDialogShown}
+        open={isRemoveDialogShown}
         onClose={disableRemoveDialog}
       />
       <AddComponentsToApplicationPartDialog
         applicationPartName={name}
         applicationPartId={id}
-        visible={isCompnentDialogShow}
+        open={isCompnentDialogShow}
         onClose={disableComponentDialog}
       />
     </>
@@ -239,7 +240,7 @@ const ApplicationPart: React.FC<{
 
 const Component: React.FC<{
   applicationId: string;
-  data: ApplicationsList_applicationsEdge["parts"][0]["components"][0];
+  data: ApplicationsList_applicationsEdge$data["parts"][0]["components"][0];
 }> = ({
   applicationId,
   data: {
@@ -265,19 +266,22 @@ const Component: React.FC<{
       <RemoveComponentFromApplicationPartDialog
         partComponentId={partComponentId}
         componentName={name}
-        visible={isRemoveDialogShown}
+        open={isRemoveDialogShown}
         onClose={disableRemoveDialog}
       />
     </SubItem>
   );
 };
 
-const SubItemTitle = styled("div")`
-  flex: 1;
-`;
 const SubItemButton = styled(Button)`
+  opacity: 0;
+  transition: opacity 100ms;
   margin-left: 5px;
   flex: 0;
+`;
+
+const SubItemTitle = styled("div")`
+  flex: 1;
 `;
 
 const SubItem = styled("div")<{ indent?: number }>`
@@ -289,6 +293,9 @@ const SubItem = styled("div")<{ indent?: number }>`
   padding-left: ${(props) => (props.indent ?? 0) * 20 + 5}px;
   :hover {
     background-color: ${Colors.gray[5]};
+  }
+  :hover ${SubItemButton} {
+    opacity: 1;
   }
   .ant-list-item-meta-content {
     display: table;

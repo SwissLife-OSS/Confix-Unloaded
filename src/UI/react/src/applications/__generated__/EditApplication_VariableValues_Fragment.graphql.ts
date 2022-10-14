@@ -1,23 +1,25 @@
+/**
+ * @generated SignedSource<<71a534a2b8a964942bb63c4c7ce0a516>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
-
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type EditApplication_VariableValues_Fragment = {
-    readonly variableValues: ReadonlyArray<{
-        readonly " $fragmentRefs": FragmentRefs<"VariableValueList_values">;
-    }>;
-    readonly " $refType": "EditApplication_VariableValues_Fragment";
+export type EditApplication_VariableValues_Fragment$data = {
+  readonly variableValues: ReadonlyArray<{
+    readonly " $fragmentSpreads": FragmentRefs<"VariableValueList_values">;
+  }>;
+  readonly " $fragmentType": "EditApplication_VariableValues_Fragment";
 };
-export type EditApplication_VariableValues_Fragment$data = EditApplication_VariableValues_Fragment;
 export type EditApplication_VariableValues_Fragment$key = {
-    readonly " $data"?: EditApplication_VariableValues_Fragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"EditApplication_VariableValues_Fragment">;
+  readonly " $data"?: EditApplication_VariableValues_Fragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"EditApplication_VariableValues_Fragment">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -45,5 +47,7 @@ const node: ReaderFragment = {
   "type": "Application",
   "abstractKey": null
 };
-(node as any).hash = 'e91cf98abe9627682e3cb95136dbe800';
+
+(node as any).hash = "e91cf98abe9627682e3cb95136dbe800";
+
 export default node;

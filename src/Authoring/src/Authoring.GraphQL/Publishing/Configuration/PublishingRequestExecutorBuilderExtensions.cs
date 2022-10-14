@@ -21,8 +21,8 @@ public static class PublishingRequestExecutorBuilderExtensions
                 PublishedApplicationPartByByIdDataloader>();
 
         builder.Services
-            .AddScoped<IDataLoader<Guid, PublishedApplicationPart>>(
-                sp => sp.GetRequiredService<PublishedApplicationPartByByIdDataloader>());
+            .AddScoped<IDataLoader<Guid, PublishedApplicationPart?>>(
+                sp => sp.GetRequiredService<IPublishedApplicationPartByIdDataloader>());
 
         // nodes
         builder.AddType<PublishedApplicationPartNode>();

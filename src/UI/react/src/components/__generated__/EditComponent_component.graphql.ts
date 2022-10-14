@@ -1,35 +1,37 @@
+/**
+ * @generated SignedSource<<5863afa048841cc2767a62d754a5c37e>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
-
-import { FragmentRefs } from "relay-runtime";
+import { Fragment, ReaderFragment } from 'relay-runtime';
 export type ComponentState = "ACTIVE" | "DEPRECATED" | "%future added value";
-export type EditComponent_component = {
-    readonly id: string;
-    readonly name: string;
-    readonly state: ComponentState;
-    readonly schemaSdl: string | null;
-    readonly schema: object | null;
-    readonly values: object | null;
-    readonly defaults: object | null;
-    readonly schemaViolations: ReadonlyArray<{
-        readonly path: object;
-        readonly code: string;
-    }>;
-    readonly changeLog: ReadonlyArray<{
-        readonly " $fragmentRefs": FragmentRefs<"ChangeLog_fragment">;
-    }>;
-    readonly " $refType": "EditComponent_component";
+import { FragmentRefs } from "relay-runtime";
+export type EditComponent_component$data = {
+  readonly changeLog: ReadonlyArray<{
+    readonly " $fragmentSpreads": FragmentRefs<"ChangeLog_fragment">;
+  }>;
+  readonly defaults: any | null;
+  readonly id: string;
+  readonly name: string;
+  readonly schema: any | null;
+  readonly schemaSdl: any | null;
+  readonly schemaViolations: ReadonlyArray<{
+    readonly code: string;
+    readonly path: any;
+  }>;
+  readonly state: ComponentState;
+  readonly values: any | null;
+  readonly " $fragmentType": "EditComponent_component";
 };
-export type EditComponent_component$data = EditComponent_component;
 export type EditComponent_component$key = {
-    readonly " $data"?: EditComponent_component$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"EditComponent_component">;
+  readonly " $data"?: EditComponent_component$data;
+  readonly " $fragmentSpreads": FragmentRefs<"EditComponent_component">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -131,5 +133,7 @@ const node: ReaderFragment = {
   "type": "Component",
   "abstractKey": null
 };
-(node as any).hash = '0bc4b461c49a6c830c8ccbdaa2e19b9f';
+
+(node as any).hash = "0bc4b461c49a6c830c8ccbdaa2e19b9f";
+
 export default node;

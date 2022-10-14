@@ -1,29 +1,31 @@
+/**
+ * @generated SignedSource<<a913fcac4e59c17b12f61375cef1e552>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
-import VariablesListPaginationQuery from "./VariablesListPaginationQuery.graphql";
+import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type VariablesList_Variables = {
-    readonly searchVariables: {
-        readonly edges: ReadonlyArray<{
-            readonly node: {
-                readonly id: string;
-                readonly name: string;
-                readonly " $fragmentRefs": FragmentRefs<"VariablesList_VariableEdge">;
-            };
-        }> | null;
-    } | null;
-    readonly " $refType": "VariablesList_Variables";
+export type VariablesList_Variables$data = {
+  readonly searchVariables: {
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly id: string;
+        readonly name: string;
+        readonly " $fragmentSpreads": FragmentRefs<"VariablesList_VariableEdge">;
+      };
+    }> | null;
+  } | null;
+  readonly " $fragmentType": "VariablesList_Variables";
 };
-export type VariablesList_Variables$data = VariablesList_Variables;
 export type VariablesList_Variables$key = {
-    readonly " $data"?: VariablesList_Variables$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"VariablesList_Variables">;
+  readonly " $data"?: VariablesList_Variables$data;
+  readonly " $fragmentSpreads": FragmentRefs<"VariablesList_Variables">;
 };
-
-
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -64,7 +66,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": VariablesListPaginationQuery
+      "operation": require('./VariablesListPaginationQuery.graphql')
     }
   },
   "name": "VariablesList_Variables",
@@ -114,16 +116,16 @@ return {
                   "storageKey": null
                 },
                 {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "VariablesList_VariableEdge"
+                },
+                {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
                   "name": "__typename",
                   "storageKey": null
-                },
-                {
-                  "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "VariablesList_VariableEdge"
                 }
               ],
               "storageKey": null
@@ -171,5 +173,7 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = 'b2f8df3c3361e91c95ebef4f6d606cf6';
+
+(node as any).hash = "b2f8df3c3361e91c95ebef4f6d606cf6";
+
 export default node;

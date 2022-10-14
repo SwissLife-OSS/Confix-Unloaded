@@ -1,49 +1,26 @@
+/**
+ * @generated SignedSource<<a3173cc446b905bf270fecb3eb70431d>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest } from "relay-runtime";
-
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type useEnvironmentsQueryVariables = {
-    cursor?: string | null | undefined;
-    count?: number | null | undefined;
+export type useEnvironmentsQuery$variables = {
+  count?: number | null;
+  cursor?: string | null;
 };
-export type useEnvironmentsQueryResponse = {
-    readonly " $fragmentRefs": FragmentRefs<"useEnvironments_searchEnvironments">;
+export type useEnvironmentsQuery$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"useEnvironments_searchEnvironments">;
 };
 export type useEnvironmentsQuery = {
-    readonly response: useEnvironmentsQueryResponse;
-    readonly variables: useEnvironmentsQueryVariables;
+  response: useEnvironmentsQuery$data;
+  variables: useEnvironmentsQuery$variables;
 };
-
-
-
-/*
-query useEnvironmentsQuery(
-  $cursor: String
-  $count: Int
-) {
-  ...useEnvironments_searchEnvironments
-}
-
-fragment useEnvironments_searchEnvironments on Query {
-  searchEnvironments(after: $cursor, first: $count) {
-    edges {
-      node {
-        id
-        name
-        __typename
-      }
-      cursor
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = {
@@ -203,5 +180,7 @@ return {
   }
 };
 })();
-(node as any).hash = '55c5fc063f7297dbc75bf694ec43bd8b';
+
+(node as any).hash = "55c5fc063f7297dbc75bf694ec43bd8b";
+
 export default node;

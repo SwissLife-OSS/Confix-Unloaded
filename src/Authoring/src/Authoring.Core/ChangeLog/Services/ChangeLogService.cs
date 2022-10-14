@@ -148,7 +148,7 @@ public class ChangeLogService : IChangeLogService
         CancellationToken cancellationToken)
     {
         var applicationPartComponent =
-            _applicationPartComponentById.LoadAsync(applicationPartId, cancellationToken);
+            await _applicationPartComponentById.LoadAsync(applicationPartId, cancellationToken);
 
         if (!await _authorizationService
                 .RuleFor<ChangeLog>()
@@ -157,6 +157,7 @@ public class ChangeLogService : IChangeLogService
             return Array.Empty<ChangeLog>();
         }
 
+        // TODO this is wrong
         return (await _changesByAppCompId.LoadAsync(applicationPartId, cancellationToken))
             .OfType<ChangeLog>();
     }
@@ -165,7 +166,7 @@ public class ChangeLogService : IChangeLogService
         Guid componentId,
         CancellationToken cancellationToken)
     {
-        var component = _componentById.LoadAsync(componentId, cancellationToken);
+        var component = await _componentById.LoadAsync(componentId, cancellationToken);
 
         if (!await _authorizationService
                 .RuleFor<ChangeLog>()
@@ -182,7 +183,7 @@ public class ChangeLogService : IChangeLogService
         Guid variableId,
         CancellationToken cancellationToken)
     {
-        var variable = _variableById.LoadAsync(variableId, cancellationToken);
+        var variable = await _variableById.LoadAsync(variableId, cancellationToken);
 
         if (!await _authorizationService
                 .RuleFor<ChangeLog>()

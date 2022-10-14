@@ -1,21 +1,23 @@
+/**
+ * @generated SignedSource<<edbb7f01719626b91874d0fb3a78427b>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
-
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ChangeLog_RenameApplicationChange = {
-    readonly name: string;
-    readonly " $refType": "ChangeLog_RenameApplicationChange";
+export type ChangeLog_RenameApplicationChange$data = {
+  readonly name: string;
+  readonly " $fragmentType": "ChangeLog_RenameApplicationChange";
 };
-export type ChangeLog_RenameApplicationChange$data = ChangeLog_RenameApplicationChange;
 export type ChangeLog_RenameApplicationChange$key = {
-    readonly " $data"?: ChangeLog_RenameApplicationChange$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"ChangeLog_RenameApplicationChange">;
+  readonly " $data"?: ChangeLog_RenameApplicationChange$data;
+  readonly " $fragmentSpreads": FragmentRefs<"ChangeLog_RenameApplicationChange">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -34,5 +36,7 @@ const node: ReaderFragment = {
   "type": "RenameApplicationChange",
   "abstractKey": null
 };
-(node as any).hash = 'a7f0718bfaa10331762605e61e1b4b74';
+
+(node as any).hash = "a7f0718bfaa10331762605e61e1b4b74";
+
 export default node;

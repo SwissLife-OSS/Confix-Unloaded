@@ -2,18 +2,12 @@ import React, { useCallback, useMemo, useState } from "react";
 import { useFragment, useLazyLoadQuery, useMutation } from "react-relay";
 import { DetailView } from "../shared/DetailView";
 import { graphql } from "babel-plugin-relay/macro";
-import {
-  generatePath,
-  useLocation,
-  useMatch,
-  useNavigate,
-  useParams,
-} from "react-router";
+import { useParams } from "react-router";
 import { EditApplicationPartComponent_GetById_Query } from "./__generated__/EditApplicationPartComponent_GetById_Query.graphql";
-import { Button, Col, Row, Space, Tabs } from "antd";
+import { Button, Col, Row, Tabs } from "antd";
 import { EditableBreadcrumbHeader } from "../shared/EditablePageHeader";
 import {
-  EditApplicationPartComponent_fragment,
+  EditApplicationPartComponent_fragment$data,
   EditApplicationPartComponent_fragment$key,
 } from "./__generated__/EditApplicationPartComponent_fragment.graphql";
 import { SectionHeader } from "../shared/SectionHeader";
@@ -27,7 +21,6 @@ import {
 } from "../shared/pipeCommitFn";
 import { DefaultSuspense } from "../shared/DefaultSuspense";
 import { CompareApplicationPartComponentVersions } from "./CompareApplicationPartComponentVersions";
-import styled from "@emotion/styled";
 import { ButtonBar } from "../shared/ButtonBar";
 import { EditApplicationPartComponent_ChangeLog_Fragment$key } from "./__generated__/EditApplicationPartComponent_ChangeLog_Fragment.graphql";
 import { ChangeLog } from "../shared/ChangeLog";
@@ -144,6 +137,7 @@ export const EditApplicationPartComponent = () => {
     },
   } = component;
 
+  console.log({ tab });
   return (
     <DetailView
       css={css`
@@ -168,33 +162,46 @@ export const EditApplicationPartComponent = () => {
         </Col>
       </Row>
       <TabRow>
-        <Tabs defaultActiveKey={tab} activeKey={tab} onChange={navigateToTab}>
-          <Tabs.TabPane tab="Configuration" key="edit">
-            <DefaultSuspense>
-              <EditConfiguration
-                partComponentId={partComponentId}
-                component={component}
-                globalVariableValues={data.globalVariableValues}
-              />
-            </DefaultSuspense>
-          </Tabs.TabPane>
-          <Tabs.TabPane tab="Change Log" key="changelog">
-            <DefaultSuspense>
-              <ApplicationPartComponentChangeLog data={component} />
-            </DefaultSuspense>
-          </Tabs.TabPane>
-          <Tabs.TabPane
-            tab="Compare Versions"
-            key="compare"
-            disabled={version < 2}
-          >
-            <DefaultSuspense>
-              <CompareApplicationPartComponentVersions
-                mostRecentVersion={version}
-              />
-            </DefaultSuspense>
-          </Tabs.TabPane>
-        </Tabs>
+        <Tabs
+          defaultActiveKey={tab}
+          key={tab}
+          onChange={navigateToTab}
+          items={[
+            {
+              key: "edit",
+              label: "Configuration",
+              children: (
+                <DefaultSuspense>
+                  <EditConfiguration
+                    partComponentId={partComponentId}
+                    component={component}
+                    globalVariableValues={data.globalVariableValues}
+                  />
+                </DefaultSuspense>
+              ),
+            },
+            {
+              key: "changelog",
+              label: "Change Log",
+              children: (
+                <DefaultSuspense>
+                  <ApplicationPartComponentChangeLog data={component} />
+                </DefaultSuspense>
+              ),
+            },
+            {
+              key: "compare",
+              label: "Compare Versions",
+              children: (
+                <DefaultSuspense>
+                  <CompareApplicationPartComponentVersions
+                    mostRecentVersion={version}
+                  />
+                </DefaultSuspense>
+              ),
+            },
+          ]}
+        />
       </TabRow>
     </DetailView>
   );
@@ -202,7 +209,7 @@ export const EditApplicationPartComponent = () => {
 
 export const EditConfiguration: React.FC<{
   partComponentId: string;
-  component: EditApplicationPartComponent_fragment;
+  component: EditApplicationPartComponent_fragment$data;
   globalVariableValues: EditApplicationPartComponent_GetById_Query["response"]["globalVariableValues"];
 }> = ({ component, partComponentId, globalVariableValues }) => {
   const [commit, isInFlight] =

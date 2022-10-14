@@ -1,12 +1,12 @@
 directive @connection(
-  key: String!
+  key: ID!
   filters: [String]
   handler: String
   dynamicKey_UNSTABLE: String
 ) on FIELD
 
 directive @stream_connection(
-  key: String!
+  key: ID!
   filters: [String]
   handler: String
   label: String!
@@ -25,9 +25,9 @@ directive @relay(
 
 directive @fetchable(field_name: String!) on OBJECT
 directive @refetchable(queryName: String!) on FRAGMENT_DEFINITION
-directive @appendEdge(connections: [String!]!) on FIELD
-directive @prependEdge(connections: [String!]!) on FIELD
-directive @appendNode(connections: [String!]!, edgeTypeName: String!) on FIELD
-directive @prependNode(connections: [String!]!, edgeTypeName: String!) on FIELD
+directive @appendEdge(connections: [ID!]!) on FIELD
+directive @prependEdge(connections: [ID!]!) on FIELD
+directive @appendNode(connections: [ID!]!, edgeTypeName: String!) on FIELD
+directive @prependNode(connections: [ID!]!, edgeTypeName: String!) on FIELD
 
 directive @deleteNode on FIELD

@@ -1,21 +1,35 @@
+using System.Collections.Immutable;
+
 namespace Confix.Authentication.Authorization;
 
 public interface IGroupService
 {
     Task<Group> CreateAsync(
         string name,
-        IReadOnlySet<Requirement> requirements,
-        IReadOnlySet<RoleScope> roles,
+        IEnumerable<Requirement> requirements,
+        IEnumerable<RoleScope> roles,
         CancellationToken cancellationToken);
 
-    Task<Group> UpdateAsync(
+    Task<Group> RenameGroupAsync(
         Guid id,
         string name,
-        IReadOnlySet<Requirement> requirements,
-        IReadOnlySet<RoleScope> roles,
         CancellationToken cancellationToken);
 
-    Task<Group?> DeleteByIdAsync(
+    Task<Group> UpdateGroupRequirementsAsync(
         Guid id,
+        IEnumerable<Requirement> requirements,
         CancellationToken cancellationToken);
+
+    Task<Group> UpdateGroupRolesAsync(
+        Guid id,
+        IEnumerable<RoleScope> roles,
+        CancellationToken cancellationToken);
+
+    Task<Group?> DeleteByIdAsync(Guid id, CancellationToken cancellationToken);
+
+    Task<IQueryable<Group>> SearchGroupAsync(
+        string? name,
+        CancellationToken cancellationToken);
+
+    Task<Group?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
 }

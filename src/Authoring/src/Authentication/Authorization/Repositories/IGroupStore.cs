@@ -13,4 +13,10 @@ public interface IGroupStore
     Task<Group?> DeleteByIdAsync(
         Guid id,
         CancellationToken cancellationToken);
+
+    IQueryable<Group> Query();
+
+    Task<IReadOnlyList<Group>> GetByIdsAsync(
+        IEnumerable<Guid> ids,
+        CancellationToken cancellationToken);
 }

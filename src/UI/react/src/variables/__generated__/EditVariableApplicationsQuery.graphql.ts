@@ -1,93 +1,55 @@
+/**
+ * @generated SignedSource<<4f11a6efd2715db083a9f6e7d40b7e8b>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest } from "relay-runtime";
-
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type ApplicationFilterInput = {
-    and?: Array<ApplicationFilterInput> | null | undefined;
-    or?: Array<ApplicationFilterInput> | null | undefined;
-    name?: StringOperationFilterInput | null | undefined;
-    namespace?: StringOperationFilterInput | null | undefined;
+  and?: ReadonlyArray<ApplicationFilterInput> | null;
+  name?: StringOperationFilterInput | null;
+  namespace?: StringOperationFilterInput | null;
+  or?: ReadonlyArray<ApplicationFilterInput> | null;
 };
 export type StringOperationFilterInput = {
-    and?: Array<StringOperationFilterInput> | null | undefined;
-    or?: Array<StringOperationFilterInput> | null | undefined;
-    eq?: string | null | undefined;
-    neq?: string | null | undefined;
-    contains?: string | null | undefined;
-    ncontains?: string | null | undefined;
-    in?: Array<string | null> | null | undefined;
-    nin?: Array<string | null> | null | undefined;
-    startsWith?: string | null | undefined;
-    nstartsWith?: string | null | undefined;
-    endsWith?: string | null | undefined;
-    nendsWith?: string | null | undefined;
+  and?: ReadonlyArray<StringOperationFilterInput> | null;
+  contains?: string | null;
+  endsWith?: string | null;
+  eq?: string | null;
+  in?: ReadonlyArray<string | null> | null;
+  ncontains?: string | null;
+  nendsWith?: string | null;
+  neq?: string | null;
+  nin?: ReadonlyArray<string | null> | null;
+  nstartsWith?: string | null;
+  or?: ReadonlyArray<StringOperationFilterInput> | null;
+  startsWith?: string | null;
 };
-export type EditVariableApplicationsQueryVariables = {
-    cursor?: string | null | undefined;
-    count?: number | null | undefined;
-    where?: ApplicationFilterInput | null | undefined;
+export type EditVariableApplicationsQuery$variables = {
+  count?: number | null;
+  cursor?: string | null;
+  where?: ApplicationFilterInput | null;
 };
-export type EditVariableApplicationsQueryResponse = {
-    readonly applications: {
-        readonly edges: ReadonlyArray<{
-            readonly node: {
-                readonly id: string;
-                readonly name: string;
-                readonly " $fragmentRefs": FragmentRefs<"ApplicationsList_applicationsEdge">;
-            };
-        }> | null;
-    } | null;
+export type EditVariableApplicationsQuery$data = {
+  readonly applications: {
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly id: string;
+        readonly name: string;
+        readonly " $fragmentSpreads": FragmentRefs<"ApplicationsList_applicationsEdge">;
+      };
+    }> | null;
+  } | null;
 };
 export type EditVariableApplicationsQuery = {
-    readonly response: EditVariableApplicationsQueryResponse;
-    readonly variables: EditVariableApplicationsQueryVariables;
+  response: EditVariableApplicationsQuery$data;
+  variables: EditVariableApplicationsQuery$variables;
 };
-
-
-
-/*
-query EditVariableApplicationsQuery(
-  $cursor: String
-  $count: Int
-  $where: ApplicationFilterInput
-) {
-  applications(after: $cursor, first: $count, where: $where) {
-    edges {
-      node {
-        id
-        name
-        ...ApplicationsList_applicationsEdge
-        __typename
-      }
-      cursor
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-}
-
-fragment ApplicationsList_applicationsEdge on Application {
-  id
-  name
-  namespace
-  parts {
-    id
-    name
-    components {
-      id
-      definition {
-        id
-        name
-      }
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = {
@@ -215,12 +177,12 @@ return {
                 "selections": [
                   (v4/*: any*/),
                   (v5/*: any*/),
-                  (v6/*: any*/),
                   {
                     "args": null,
                     "kind": "FragmentSpread",
                     "name": "ApplicationsList_applicationsEdge"
-                  }
+                  },
+                  (v6/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -363,5 +325,7 @@ return {
   }
 };
 })();
-(node as any).hash = '652751f2a2860073d69f4e3e10174930';
+
+(node as any).hash = "652751f2a2860073d69f4e3e10174930";
+
 export default node;

@@ -1,26 +1,28 @@
+/**
+ * @generated SignedSource<<2e2ce2c9f8a9376b9191a901926e4f5b>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
-
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type Connections_applications = ReadonlyArray<{
-    readonly id: string;
+export type Connections_applications$data = ReadonlyArray<{
+  readonly id: string;
+  readonly name: string;
+  readonly namespace: string;
+  readonly parts: ReadonlyArray<{
     readonly name: string;
-    readonly namespace: string | null;
-    readonly parts: ReadonlyArray<{
-        readonly name: string;
-    }>;
-    readonly " $refType": "Connections_applications";
+  }>;
+  readonly " $fragmentType": "Connections_applications";
 }>;
-export type Connections_applications$data = Connections_applications;
 export type Connections_applications$key = ReadonlyArray<{
-    readonly " $data"?: Connections_applications$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"Connections_applications">;
+  readonly " $data"?: Connections_applications$data;
+  readonly " $fragmentSpreads": FragmentRefs<"Connections_applications">;
 }>;
-
-
 
 const node: ReaderFragment = (function(){
 var v0 = {
@@ -70,5 +72,7 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = '754af67edfb263a3c5cd88080fe29269';
+
+(node as any).hash = "754af67edfb263a3c5cd88080fe29269";
+
 export default node;
