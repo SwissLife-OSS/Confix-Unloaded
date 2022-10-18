@@ -1,35 +1,37 @@
+/**
+ * @generated SignedSource<<b5922a93205710dc00ff2dd3f054e8f5>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
-import EditApplicationPartRefetchPartQuery from "./EditApplicationPartRefetchPartQuery.graphql";
+import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type EditApplicationPart_fragment = {
+export type EditApplicationPart_fragment$data = {
+  readonly application: {
     readonly id: string;
     readonly name: string;
-    readonly application: {
-        readonly id: string;
-        readonly namespace: string | null;
-        readonly name: string;
-    } | null;
-    readonly components: ReadonlyArray<{
-        readonly id: string;
-        readonly definition: {
-            readonly id: string;
-        };
-        readonly " $fragmentRefs": FragmentRefs<"ApplicationPartComponents_component">;
-    }>;
-    readonly " $fragmentRefs": FragmentRefs<"EditApplicationPart_VariableValues_Fragment" | "ApplicationPartChangeLog_ChangeLog_Fragment" | "EditApplicationPart_DeployedEnvironment_Fragment" | "PublishedApplicationPartsFragment">;
-    readonly " $refType": "EditApplicationPart_fragment";
+    readonly namespace: string;
+  } | null;
+  readonly components: ReadonlyArray<{
+    readonly definition: {
+      readonly id: string;
+    };
+    readonly id: string;
+    readonly " $fragmentSpreads": FragmentRefs<"ApplicationPartComponents_component">;
+  }>;
+  readonly id: string;
+  readonly name: string;
+  readonly " $fragmentSpreads": FragmentRefs<"ApplicationPartChangeLog_ChangeLog_Fragment" | "EditApplicationPart_DeployedEnvironment_Fragment" | "EditApplicationPart_VariableValues_Fragment" | "PublishedApplicationPartsFragment">;
+  readonly " $fragmentType": "EditApplicationPart_fragment";
 };
-export type EditApplicationPart_fragment$data = EditApplicationPart_fragment;
 export type EditApplicationPart_fragment$key = {
-    readonly " $data"?: EditApplicationPart_fragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"EditApplicationPart_fragment">;
+  readonly " $data"?: EditApplicationPart_fragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"EditApplicationPart_fragment">;
 };
-
-
 
 const node: ReaderFragment = (function(){
 var v0 = {
@@ -55,7 +57,7 @@ return {
       "fragmentPathInResult": [
         "node"
       ],
-      "operation": EditApplicationPartRefetchPartQuery,
+      "operation": require('./EditApplicationPartRefetchPartQuery.graphql'),
       "identifierField": "id"
     }
   },
@@ -152,5 +154,7 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = 'c8f759aa76978deb8c028ee4e3bc12e7';
+
+(node as any).hash = "c8f759aa76978deb8c028ee4e3bc12e7";
+
 export default node;

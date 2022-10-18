@@ -14,6 +14,9 @@ public static class ApplicationRequestExecutorBuilderExtensions
         builder
             .AddDataLoader<IApplicationDataLoader, ApplicationByIdDataLoader>()
             .AddDataLoader<IApplicationPartDataLoader, ApplicationPartByIdDataLoader>()
+            .AddDataLoader<IApplicationByPartIdDataLoader, ApplicationByPartIdDataLoader>()
+            .AddDataLoader<IApplicationByComponentIdDataLoader,
+                ApplicationByComponentIdDataLoader>()
             .AddDataLoader<IApplicationPartComponentDataLoader,
                 ApplicationPartComponentByIdDataloader>()
             .AddDataLoader<ChangeLogByApplicationIdDataloader>()

@@ -1,23 +1,25 @@
+/**
+ * @generated SignedSource<<15f647af7024d505740e9ffc0545aceb>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
-
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ExplorerTree_Application = {
-    readonly id: string;
-    readonly name: string;
-    readonly " $fragmentRefs": FragmentRefs<"ExplorerTree_ApplicationDetails">;
-    readonly " $refType": "ExplorerTree_Application";
+export type ExplorerTree_Application$data = {
+  readonly id: string;
+  readonly name: string;
+  readonly " $fragmentSpreads": FragmentRefs<"ExplorerTree_ApplicationDetails">;
+  readonly " $fragmentType": "ExplorerTree_Application";
 };
-export type ExplorerTree_Application$data = ExplorerTree_Application;
 export type ExplorerTree_Application$key = {
-    readonly " $data"?: ExplorerTree_Application$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"ExplorerTree_Application">;
+  readonly " $data"?: ExplorerTree_Application$data;
+  readonly " $fragmentSpreads": FragmentRefs<"ExplorerTree_Application">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -53,5 +55,7 @@ const node: ReaderFragment = {
   "type": "Application",
   "abstractKey": null
 };
-(node as any).hash = 'ab3bb66e6d747d565ea9e884d68db513';
+
+(node as any).hash = "ab3bb66e6d747d565ea9e884d68db513";
+
 export default node;

@@ -1,4 +1,5 @@
 using System;
+using Confix.Authentication.Authorization;
 using Confix.Authoring.Store;
 
 namespace Confix.Authoring.Publishing;

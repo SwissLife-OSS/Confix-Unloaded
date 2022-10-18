@@ -1,28 +1,30 @@
+/**
+ * @generated SignedSource<<173ffa70c17ddf9a8dbfdc65e3b63d20>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
-import ExplorerTreePaginationQuery from "./ExplorerTreePaginationQuery.graphql";
+import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ExplorerTree_Applications = {
-    readonly applications: {
-        readonly edges: ReadonlyArray<{
-            readonly node: {
-                readonly id: string;
-                readonly " $fragmentRefs": FragmentRefs<"ExplorerTree_Application">;
-            };
-        }> | null;
-    } | null;
-    readonly " $refType": "ExplorerTree_Applications";
+export type ExplorerTree_Applications$data = {
+  readonly applications: {
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly id: string;
+        readonly " $fragmentSpreads": FragmentRefs<"ExplorerTree_Application">;
+      };
+    }> | null;
+  } | null;
+  readonly " $fragmentType": "ExplorerTree_Applications";
 };
-export type ExplorerTree_Applications$data = ExplorerTree_Applications;
 export type ExplorerTree_Applications$key = {
-    readonly " $data"?: ExplorerTree_Applications$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"ExplorerTree_Applications">;
+  readonly " $data"?: ExplorerTree_Applications$data;
+  readonly " $fragmentSpreads": FragmentRefs<"ExplorerTree_Applications">;
 };
-
-
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -59,7 +61,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": ExplorerTreePaginationQuery
+      "operation": require('./ExplorerTreePaginationQuery.graphql')
     }
   },
   "name": "ExplorerTree_Applications",
@@ -96,16 +98,16 @@ return {
                   "storageKey": null
                 },
                 {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "ExplorerTree_Application"
+                },
+                {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
                   "name": "__typename",
                   "storageKey": null
-                },
-                {
-                  "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "ExplorerTree_Application"
                 }
               ],
               "storageKey": null
@@ -153,5 +155,7 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = 'ab0102538098b31dd4eccbae01646549';
+
+(node as any).hash = "ab0102538098b31dd4eccbae01646549";
+
 export default node;

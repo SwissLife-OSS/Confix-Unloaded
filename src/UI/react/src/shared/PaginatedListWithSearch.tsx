@@ -53,7 +53,7 @@ export function PaginatedListWithSearch<T>({
         </Space>
       </div>
       <div
-        style={{ flex: 1, overflow: "scroll", overscrollBehavior: "contain" }}
+        style={{ flex: 1, overflow: "auto", overscrollBehavior: "contain" }}
         id="scrollableDiv"
       >
         <InfiniteScroll

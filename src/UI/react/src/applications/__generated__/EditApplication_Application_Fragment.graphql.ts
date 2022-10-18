@@ -1,27 +1,29 @@
+/**
+ * @generated SignedSource<<f417adfff232b8c933ce63a4d1bb0d5a>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
-import EditApplicationRefetchApplicationQuery from "./EditApplicationRefetchApplicationQuery.graphql";
+import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type EditApplication_Application_Fragment = {
-    readonly id: string;
-    readonly name: string;
-    readonly namespace: string | null;
-    readonly parts: ReadonlyArray<{
-        readonly " $fragmentRefs": FragmentRefs<"EditApplication_part">;
-    }>;
-    readonly " $fragmentRefs": FragmentRefs<"EditApplication_VariableValues_Fragment" | "EditApplication_ChangeLog_Fragment" | "ApplicationPartSectionHeaderFragment">;
-    readonly " $refType": "EditApplication_Application_Fragment";
+export type EditApplication_Application_Fragment$data = {
+  readonly id: string;
+  readonly name: string;
+  readonly namespace: string;
+  readonly parts: ReadonlyArray<{
+    readonly " $fragmentSpreads": FragmentRefs<"EditApplication_part">;
+  }>;
+  readonly " $fragmentSpreads": FragmentRefs<"ApplicationPartSectionHeaderFragment" | "EditApplication_ChangeLog_Fragment" | "EditApplication_VariableValues_Fragment">;
+  readonly " $fragmentType": "EditApplication_Application_Fragment";
 };
-export type EditApplication_Application_Fragment$data = EditApplication_Application_Fragment;
 export type EditApplication_Application_Fragment$key = {
-    readonly " $data"?: EditApplication_Application_Fragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"EditApplication_Application_Fragment">;
+  readonly " $data"?: EditApplication_Application_Fragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"EditApplication_Application_Fragment">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -32,7 +34,7 @@ const node: ReaderFragment = {
       "fragmentPathInResult": [
         "node"
       ],
-      "operation": EditApplicationRefetchApplicationQuery,
+      "operation": require('./EditApplicationRefetchApplicationQuery.graphql'),
       "identifierField": "id"
     }
   },
@@ -104,5 +106,7 @@ const node: ReaderFragment = {
   "type": "Application",
   "abstractKey": null
 };
-(node as any).hash = 'a27ad84c13cc32ede2bf2b354ce275e2';
+
+(node as any).hash = "a27ad84c13cc32ede2bf2b354ce275e2";
+
 export default node;

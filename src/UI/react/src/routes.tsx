@@ -1,4 +1,6 @@
-import { RouteObject } from "react-router";
+import Icon from "@ant-design/icons";
+import { IconComponentProps } from "@ant-design/icons/lib/components/Icon";
+import { NonIndexRouteObject } from "react-router-dom";
 import { Applications } from "./applications/Applications";
 import { Components } from "./components/Components";
 import { Environments } from "./environment/Environments";
@@ -12,13 +14,20 @@ import {
   VariablesIcon,
   VaultIcon,
 } from "./icons/icons";
+import { Settings } from "./settings/Settings";
+import { Permission } from "./shared/useUser";
+import { Scope } from "./shared/useUser";
 import { Variables } from "./variables/Variables";
 
-export interface RouteDefinition extends RouteObject {
+export interface RouteDefinition extends NonIndexRouteObject {
   name: string;
   path: string;
   link: string;
-  icon: React.FC;
+  permissions?: {
+    scope: Scope;
+    permissions: Permission;
+  };
+  icon: React.FC<typeof Icon.defaultProps>;
 }
 
 export const navigation: RouteDefinition[] = [
@@ -47,15 +56,12 @@ export const navigation: RouteDefinition[] = [
     name: "Environments",
     path: "/environments/*",
     link: "/environments",
+    permissions: {
+      permissions: "isRead",
+      scope: "ENVIRONMENT",
+    },
     element: <Environments />,
     icon: EnvironmentIcon,
-  },
-  {
-    name: "Vaults",
-    path: "/vaults/*",
-    link: "/vaults",
-    element: <div>bar</div>,
-    icon: VaultIcon,
   },
   {
     name: "Explorer",
@@ -66,9 +72,13 @@ export const navigation: RouteDefinition[] = [
   },
   {
     name: "Settings",
-    path: "/settings",
-    link: "/settings",
-    element: <div>bar</div>,
+    path: "/settings/*",
+    link: "/settings/groups",
+    permissions: {
+      permissions: "isWrite",
+      scope: "IDENTITY",
+    },
+    element: <Settings />,
     icon: SettingsIcon,
   },
 ];

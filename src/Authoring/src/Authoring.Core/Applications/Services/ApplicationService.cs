@@ -1,13 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Transactions;
+using Confix.Authentication.Authorization;
 using Confix.Authoring.Extensions;
 using Confix.Authoring.Internal;
 using Confix.Authoring.Store;
+using Confix.Common.Exceptions;
 using GreenDonut;
+using static Confix.Authentication.Authorization.Permissions;
 
 namespace Confix.Authoring;
 
@@ -21,6 +19,8 @@ public class ApplicationService : IApplicationService
     private readonly IApplicationPartComponentDataLoader
         _applicationPartByIdDataloaderDataLoader;
     private readonly IApplicationPartDataLoader _applicationPartByIdDataLoader;
+    private readonly ISessionAccessor _sessionAccessor;
+    private readonly IAuthorizationService _authorizationService;
 
     public ApplicationService(
         IApplicationStore appStore,
@@ -29,7 +29,9 @@ public class ApplicationService : IApplicationService
         IApplicationPartComponentDataLoader applicationPartComponentByIdDataloader,
         IComponentStore compStore,
         IDataLoader<Guid, Component> componentById,
-        ISchemaService schemaService)
+        ISchemaService schemaService,
+        ISessionAccessor sessionAccessor,
+        IAuthorizationService authorizationService)
     {
         _appStore = appStore;
         _changeLogService = changeLogService;
@@ -37,60 +39,97 @@ public class ApplicationService : IApplicationService
         _applicationPartByIdDataloaderDataLoader = applicationPartComponentByIdDataloader;
         _compStore = compStore;
         _schemaService = schemaService;
+        _sessionAccessor = sessionAccessor;
+        _authorizationService = authorizationService;
         _componentById = componentById;
     }
 
-    public Task<Application?> GetByIdAsync(
+    public async Task<Application?> GetByIdAsync(
         Guid applicationId,
-        CancellationToken cancellationToken = default) =>
-        _appStore.GetByIdAsync(applicationId, cancellationToken);
+        CancellationToken cancellationToken = default)
+        => await _authorizationService
+            .RuleFor<Application>()
+            .AuthorizeOrNullAsync(
+                await _appStore.GetByIdAsync(applicationId, cancellationToken),
+                Read,
+                cancellationToken);
 
-    public Task<Application?> GetByPartIdAsync(
+    public async Task<Application?> GetByPartIdAsync(
+        Guid partId,
+        CancellationToken cancellationToken = default)
+        => await _authorizationService
+            .RuleFor<Application>()
+            .AuthorizeOrNullAsync(
+                await _appStore.GetByPartIdAsync(partId, cancellationToken),
+                Read,
+                cancellationToken);
+
+    public async Task<ApplicationPart?> GetApplicationPartByIdAsync(
         Guid partId,
         CancellationToken cancellationToken = default) =>
-        _appStore.GetByPartIdAsync(partId, cancellationToken);
+        await _authorizationService
+            .RuleFor<ApplicationPart>()
+            .AuthorizeOrNullAsync(
+                await _applicationPartByIdDataLoader.LoadAsync(partId, cancellationToken),
+                Read,
+                cancellationToken);
 
-    public Task<ApplicationPart?> GetApplicationPartByIdAsync(
-        Guid partId,
-        CancellationToken cancellationToken = default) =>
-        _applicationPartByIdDataLoader.LoadAsync(partId, cancellationToken);
-
-    public Task<ApplicationPartComponent?> GetApplicationPartComponentByIdAsync(
+    public async Task<ApplicationPartComponent?> GetApplicationPartComponentByIdAsync(
         Guid componentPartId,
         CancellationToken cancellationToken = default) =>
-        _applicationPartByIdDataloaderDataLoader
-            .LoadAsync(componentPartId, cancellationToken);
+        await _authorizationService
+            .RuleFor<ApplicationPartComponent>()
+            .AuthorizeOrNullAsync(
+                await _applicationPartByIdDataloaderDataLoader
+                    .LoadAsync(componentPartId, cancellationToken),
+                Read,
+                cancellationToken);
 
-    public Task<Application?> FindByApplicationNameAsync(
+    public async Task<Application?> FindByApplicationNameAsync(
         string applicationName,
         CancellationToken cancellationToken = default)
-        => _appStore.FindByApplicationNameAsync(applicationName, cancellationToken);
+        => await _authorizationService
+            .RuleFor<Application>()
+            .AuthorizeOrNullAsync(
+                await _appStore.FindByApplicationNameAsync(applicationName, cancellationToken),
+                Read,
+                cancellationToken);
 
-    public Task<IReadOnlyCollection<Application>> GetManyByIdAsync(
-        IEnumerable<Guid> applicationIds,
-        CancellationToken cancellationToken = default) =>
-        _appStore.GetManyByIdAsync(applicationIds, cancellationToken);
-
-    public Task<ApplicationPart?> GetPartByIdAsync(
+    public async Task<ApplicationPart?> GetPartByIdAsync(
         Guid id,
         CancellationToken cancellationToken = default) =>
-        _appStore.GetPartByIdAsync(id, cancellationToken);
+        await _authorizationService
+            .RuleFor<ApplicationPart>()
+            .AuthorizeOrNullAsync(
+                await _appStore.GetPartByIdAsync(id, cancellationToken),
+                Read,
+                cancellationToken);
 
-    public Task<IReadOnlyCollection<ApplicationPart>> GetManyPartsByIdAsync(
-        IEnumerable<Guid> ids,
-        CancellationToken cancellationToken = default) =>
-        _appStore.GetManyPartsByIdAsync(ids, cancellationToken);
+    public async Task<IQueryable<Application>> Query(CancellationToken cancellationToken)
+    {
+        var session = await _sessionAccessor.GetSession(cancellationToken);
+        if (session is null)
+        {
+            return Array.Empty<Application>().AsQueryable();
+        }
 
-    public IQueryable<Application> Query() =>
-        _appStore.Query();
+        return _appStore.Query().Where(x => session.Namespaces.Contains(x.Namespace));
+    }
 
     public async Task<Application> CreateAsync(
         string name,
-        string? @namespace,
+        string @namespace,
         IReadOnlyList<string>? parts = null,
         CancellationToken cancellationToken = default)
     {
         Application application = new(Guid.NewGuid(), name, @namespace);
+
+        if (!await _authorizationService
+                .RuleFor<Application>()
+                .IsAuthorizedAsync(application, Write, cancellationToken))
+        {
+            throw new UnauthorizedOperationException();
+        }
 
         List<IChange> changeLogs = new();
         List<ApplicationPart> applicationParts = new();
@@ -145,7 +184,14 @@ public class ApplicationService : IApplicationService
 
         if (application is null)
         {
-            throw new EntityIdInvalidException(nameof(ApplicationPart), applicationId);
+            throw new EntityIdInvalidException(nameof(Application), applicationId);
+        }
+
+        if (!await _authorizationService
+                .RuleFor<Application>()
+                .IsAuthorizedAsync(application, Write, cancellationToken))
+        {
+            throw new EntityIdInvalidException(nameof(Application), applicationId);
         }
 
         application = application with { Name = name, Version = application.Version + 1 };
@@ -170,6 +216,13 @@ public class ApplicationService : IApplicationService
     {
         Application? application =
             await _appStore.GetByPartIdAsync(applicationPartId, cancellationToken);
+
+        if (!await _authorizationService
+                .RuleFor<ApplicationPart>()
+                .IsAuthorizedFromAsync(application, Write, cancellationToken))
+        {
+            throw new EntityIdInvalidException(nameof(ApplicationPart), applicationPartId);
+        }
 
         ApplicationPart? applicationPart =
             application?.Parts.FirstOrDefault(p => p.Id == applicationPartId);
@@ -211,6 +264,13 @@ public class ApplicationService : IApplicationService
     {
         Application? application =
             await _appStore.GetByPartIdAsync(applicationPartId, cancellationToken);
+
+        if (!await _authorizationService
+                .RuleFor<ApplicationPart>()
+                .IsAuthorizedFromAsync(application, Write, cancellationToken))
+        {
+            throw new EntityIdInvalidException(nameof(ApplicationPart), applicationPartId);
+        }
 
         ApplicationPart? applicationPart =
             application?.Parts.FirstOrDefault(p => p.Id == applicationPartId);
@@ -275,6 +335,13 @@ public class ApplicationService : IApplicationService
             throw new ApplicationNotFoundException(applicationId);
         }
 
+        if (!await _authorizationService
+                .RuleFor<Application>()
+                .IsAuthorizedAsync(application, Write, cancellationToken))
+        {
+            throw new ApplicationNotFoundException(applicationId);
+        }
+
         if (application.Parts.Any(x => x.Name == partName))
         {
             throw new NameTakenException(partName);
@@ -318,6 +385,13 @@ public class ApplicationService : IApplicationService
             throw new ApplicationPartNotFoundException(applicationPartId);
         }
 
+        if (!await _authorizationService
+                .RuleFor<Application>()
+                .IsAuthorizedAsync(application, Write, cancellationToken))
+        {
+            throw new ApplicationPartNotFoundException(applicationPartId);
+        }
+
         var version = application.Version + 1;
         application = application with
         {
@@ -352,6 +426,13 @@ public class ApplicationService : IApplicationService
             await _appStore.GetByComponentPartIdAsync(partComponentId, cancellationToken);
 
         if (application is null)
+        {
+            throw new ApplicationPartComponentNotFoundException(partComponentId);
+        }
+
+        if (!await _authorizationService
+                .RuleFor<ApplicationPart>()
+                .IsAuthorizedFromAsync(application, Write, cancellationToken))
         {
             throw new ApplicationPartComponentNotFoundException(partComponentId);
         }
@@ -422,6 +503,13 @@ public class ApplicationService : IApplicationService
             await _appStore.GetByComponentPartIdAsync(partComponentId, cancellationToken);
 
         if (application is null)
+        {
+            throw new ApplicationPartComponentNotFoundException(partComponentId);
+        }
+
+        if (!await _authorizationService
+                .RuleFor<ApplicationPartComponent>()
+                .IsAuthorizedFromAsync(application, Write, cancellationToken))
         {
             throw new ApplicationPartComponentNotFoundException(partComponentId);
         }
@@ -506,6 +594,14 @@ public class ApplicationService : IApplicationService
     {
         Application? application =
             await _appStore.GetByPartIdAsync(applicationPartId, cancellationToken);
+
+        if (!await _authorizationService
+                .RuleFor<ApplicationPart>()
+                .IsAuthorizedFromAsync(application, Publish, cancellationToken))
+        {
+            throw new ApplicationPartNotFoundException(applicationPartId);
+        }
+
         ApplicationPart? applicationPart =
             application?.Parts.FirstOrDefault(x => x.Id == applicationPartId);
 
@@ -516,6 +612,7 @@ public class ApplicationService : IApplicationService
 
         ApplicationPart updatedApplicationPart =
             applicationPart with { Version = applicationPart.Version + 1 };
+
         application = application with
         {
             Version = application.Version + 1,

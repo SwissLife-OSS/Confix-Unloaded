@@ -1,3 +1,4 @@
+using Confix.Authentication.Authorization;
 using Confix.Authoring.Publishing;
 using MongoDB.Driver;
 
@@ -20,4 +21,8 @@ public interface IConfixAuthorDbContext
     IMongoCollection<PublishedApplicationPart> PublishedApplicationParts { get; }
 
     IMongoCollection<ClaimedVersion> ClaimedVersions { get; }
+
+    IMongoCollection<Group> Groups { get; }
+
+    IMongoCollection<Role> Roles { get; }
 }

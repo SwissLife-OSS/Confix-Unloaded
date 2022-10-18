@@ -32,11 +32,11 @@ export const publishApplicationPartMutation = graphql`
 `;
 
 export const PublishApplicationPartDialog: React.FC<{
-  visible: boolean;
+  open: boolean;
   onClose: () => void;
   applicationPartName: string;
   applicationPartId: string;
-}> = ({ visible, applicationPartId, applicationPartName, onClose }) => {
+}> = ({ open, applicationPartId, applicationPartName, onClose }) => {
   const [commit, isInFlight] =
     useMutation<PublishApplicationPartDialogMutation>(
       publishApplicationPartMutation
@@ -61,7 +61,7 @@ export const PublishApplicationPartDialog: React.FC<{
   return (
     <Modal
       title={`Publish ${applicationPartName}`}
-      visible={visible}
+      open={open}
       onOk={handlePublish}
       confirmLoading={isInFlight}
       onCancel={onClose}

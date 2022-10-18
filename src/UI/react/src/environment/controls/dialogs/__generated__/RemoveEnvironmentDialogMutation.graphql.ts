@@ -1,62 +1,39 @@
+/**
+ * @generated SignedSource<<8999fdd9aed5af17f458482aaf06326a>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest } from "relay-runtime";
-
+import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type RemoveEnvironmentByIdInput = {
-    id: string;
+  id: string;
 };
-export type RemoveEnvironmentDialogMutationVariables = {
-    input: RemoveEnvironmentByIdInput;
-    connectionIds: Array<string>;
+export type RemoveEnvironmentDialogMutation$variables = {
+  connectionIds: ReadonlyArray<string>;
+  input: RemoveEnvironmentByIdInput;
 };
-export type RemoveEnvironmentDialogMutationResponse = {
-    readonly removeEnvironmentById: {
-        readonly environment: {
-            readonly id: string;
-            readonly " $fragmentRefs": FragmentRefs<"EnvironmentsList_EnvironmentEdge">;
-        } | null;
-        readonly errors: ReadonlyArray<{
-            readonly __typename: string;
-            readonly message?: string | undefined;
-            readonly code?: string | undefined;
-        }> | null;
-    };
+export type RemoveEnvironmentDialogMutation$data = {
+  readonly removeEnvironmentById: {
+    readonly environment: {
+      readonly id: string;
+      readonly " $fragmentSpreads": FragmentRefs<"EnvironmentsList_EnvironmentEdge">;
+    } | null;
+    readonly errors: ReadonlyArray<{
+      readonly __typename: string;
+      readonly code?: string;
+      readonly message?: string;
+    }> | null;
+  };
 };
 export type RemoveEnvironmentDialogMutation = {
-    readonly response: RemoveEnvironmentDialogMutationResponse;
-    readonly variables: RemoveEnvironmentDialogMutationVariables;
+  response: RemoveEnvironmentDialogMutation$data;
+  variables: RemoveEnvironmentDialogMutation$variables;
 };
-
-
-
-/*
-mutation RemoveEnvironmentDialogMutation(
-  $input: RemoveEnvironmentByIdInput!
-) {
-  removeEnvironmentById(input: $input) {
-    environment {
-      id
-      ...EnvironmentsList_EnvironmentEdge
-    }
-    errors {
-      __typename
-      ... on IUserError {
-        __isIUserError: __typename
-        message
-        code
-      }
-    }
-  }
-}
-
-fragment EnvironmentsList_EnvironmentEdge on Environment {
-  id
-  name
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = {
@@ -207,6 +184,7 @@ return {
                   }
                 ]
               },
+              (v3/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -233,5 +211,7 @@ return {
   }
 };
 })();
-(node as any).hash = 'b07061a0412ec56378d174371e170163';
+
+(node as any).hash = "b07061a0412ec56378d174371e170163";
+
 export default node;

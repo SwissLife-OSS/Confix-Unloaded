@@ -1,49 +1,34 @@
+/**
+ * @generated SignedSource<<c7c7e7e43fa92bca886497ab06db30cc>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest } from "relay-runtime";
-
+import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type RenameVariableInput = {
-    id: string;
-    name: string;
+  id: string;
+  name: string;
 };
-export type RenameVariableDialogMutationVariables = {
-    input: RenameVariableInput;
+export type RenameVariableDialogMutation$variables = {
+  input: RenameVariableInput;
 };
-export type RenameVariableDialogMutationResponse = {
-    readonly renameVariable: {
-        readonly variable: {
-            readonly id: string;
-            readonly " $fragmentRefs": FragmentRefs<"VariablesList_VariableEdge">;
-        } | null;
-    };
+export type RenameVariableDialogMutation$data = {
+  readonly renameVariable: {
+    readonly variable: {
+      readonly id: string;
+      readonly " $fragmentSpreads": FragmentRefs<"VariablesList_VariableEdge">;
+    } | null;
+  };
 };
 export type RenameVariableDialogMutation = {
-    readonly response: RenameVariableDialogMutationResponse;
-    readonly variables: RenameVariableDialogMutationVariables;
+  response: RenameVariableDialogMutation$data;
+  variables: RenameVariableDialogMutation$variables;
 };
-
-
-
-/*
-mutation RenameVariableDialogMutation(
-  $input: RenameVariableInput!
-) {
-  renameVariable(input: $input) {
-    variable {
-      id
-      ...VariablesList_VariableEdge
-    }
-  }
-}
-
-fragment VariablesList_VariableEdge on Variable {
-  id
-  name
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -154,5 +139,7 @@ return {
   }
 };
 })();
-(node as any).hash = '1a2b0d88f368062790f5faff5c8f785a';
+
+(node as any).hash = "1a2b0d88f368062790f5faff5c8f785a";
+
 export default node;

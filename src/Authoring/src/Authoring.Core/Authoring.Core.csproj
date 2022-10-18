@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Authentication\Authentication.csproj" />
     <ProjectReference Include="..\Authoring.Abstractions\Authoring.Abstractions.csproj" />
     <ProjectReference Include="..\Vault.Client\Vault.Client.csproj" />
   </ItemGroup>

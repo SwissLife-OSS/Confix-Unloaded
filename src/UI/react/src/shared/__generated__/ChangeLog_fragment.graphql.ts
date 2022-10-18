@@ -1,30 +1,37 @@
+/**
+ * @generated SignedSource<<21ee863c323731067bd18134af263fd4>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
-
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ChangeLog_fragment = ReadonlyArray<{
-    readonly id: string;
-    readonly change: {
-        readonly kind: string;
-        readonly __typename: string;
-        readonly " $fragmentRefs": FragmentRefs<"ChangeLog_RenameApplicationChange" | "ChangeLog_RenameApplicationPartChange" | "ChangeLog_AddComponentToApplicationPartChange" | "ChangeLog_AddPartToApplicationChange" | "ChangeLog_RemoveComponentFromApplicationPartChange" | "ChangeLog_RemovePartFromApplicationChange" | "ChangeLog_ApplicationPartComponentValuesChange" | "ChangeLog_ComponentSchemaChange" | "ChangeLog_ComponentValuesChange" | "ChangeLog_CreateComponentChange" | "ChangeLog_RemoveComponentChange" | "ChangeLog_RenameComponentChange" | "ChangeLog_CreateVariableChange" | "ChangeLog_DeleteVariableValueChange" | "ChangeLog_RenameVariableChange" | "ChangeLog_VariableValueChange" | "ChangeLog_PublishedApplicationPartChange">;
-    };
-    readonly modifiedAt: Date;
-    readonly modifiedBy: {
-        readonly email: string | null;
-    };
-    readonly " $refType": "ChangeLog_fragment";
+export type ChangeLog_fragment$data = ReadonlyArray<{
+  readonly change: {
+    readonly __typename: string;
+    readonly kind: string;
+    readonly versionOfApp?: number;
+    readonly versionOfComponent?: number;
+    readonly versionOfPart?: number;
+    readonly versionOfPartComponent?: number;
+    readonly versionOfVariable?: number;
+    readonly " $fragmentSpreads": FragmentRefs<"ChangeLog_AddComponentToApplicationPartChange" | "ChangeLog_AddPartToApplicationChange" | "ChangeLog_ApplicationPartComponentValuesChange" | "ChangeLog_ComponentSchemaChange" | "ChangeLog_ComponentValuesChange" | "ChangeLog_CreateComponentChange" | "ChangeLog_CreateVariableChange" | "ChangeLog_DeleteVariableValueChange" | "ChangeLog_PublishedApplicationPartChange" | "ChangeLog_RemoveComponentChange" | "ChangeLog_RemoveComponentFromApplicationPartChange" | "ChangeLog_RemovePartFromApplicationChange" | "ChangeLog_RenameApplicationChange" | "ChangeLog_RenameApplicationPartChange" | "ChangeLog_RenameComponentChange" | "ChangeLog_RenameVariableChange" | "ChangeLog_VariableValueChange">;
+  };
+  readonly id: string;
+  readonly modifiedAt: any;
+  readonly modifiedBy: {
+    readonly email: string | null;
+  };
+  readonly " $fragmentType": "ChangeLog_fragment";
 }>;
-export type ChangeLog_fragment$data = ChangeLog_fragment;
 export type ChangeLog_fragment$key = ReadonlyArray<{
-    readonly " $data"?: ChangeLog_fragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"ChangeLog_fragment">;
+  readonly " $data"?: ChangeLog_fragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"ChangeLog_fragment">;
 }>;
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -147,6 +154,76 @@ const node: ReaderFragment = {
           "args": null,
           "kind": "FragmentSpread",
           "name": "ChangeLog_PublishedApplicationPartChange"
+        },
+        {
+          "kind": "InlineFragment",
+          "selections": [
+            {
+              "alias": "versionOfApp",
+              "args": null,
+              "kind": "ScalarField",
+              "name": "applicationVersion",
+              "storageKey": null
+            }
+          ],
+          "type": "ApplicationChange",
+          "abstractKey": "__isApplicationChange"
+        },
+        {
+          "kind": "InlineFragment",
+          "selections": [
+            {
+              "alias": "versionOfPart",
+              "args": null,
+              "kind": "ScalarField",
+              "name": "partVersion",
+              "storageKey": null
+            }
+          ],
+          "type": "ApplicationPartChange",
+          "abstractKey": "__isApplicationPartChange"
+        },
+        {
+          "kind": "InlineFragment",
+          "selections": [
+            {
+              "alias": "versionOfPartComponent",
+              "args": null,
+              "kind": "ScalarField",
+              "name": "partComponentVersion",
+              "storageKey": null
+            }
+          ],
+          "type": "ApplicationPartComponentChange",
+          "abstractKey": "__isApplicationPartComponentChange"
+        },
+        {
+          "kind": "InlineFragment",
+          "selections": [
+            {
+              "alias": "versionOfComponent",
+              "args": null,
+              "kind": "ScalarField",
+              "name": "componentVersion",
+              "storageKey": null
+            }
+          ],
+          "type": "ComponentChange",
+          "abstractKey": "__isComponentChange"
+        },
+        {
+          "kind": "InlineFragment",
+          "selections": [
+            {
+              "alias": "versionOfVariable",
+              "args": null,
+              "kind": "ScalarField",
+              "name": "variableVersion",
+              "storageKey": null
+            }
+          ],
+          "type": "VariableChange",
+          "abstractKey": "__isVariableChange"
         }
       ],
       "storageKey": null
@@ -180,5 +257,7 @@ const node: ReaderFragment = {
   "type": "ChangeLog",
   "abstractKey": null
 };
-(node as any).hash = '2ed28345f3883f7ce3e3d24416457c40';
+
+(node as any).hash = "653b17cf6e24af73539df21103c0ecf5";
+
 export default node;

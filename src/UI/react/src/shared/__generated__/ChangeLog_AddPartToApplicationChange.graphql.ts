@@ -1,23 +1,25 @@
+/**
+ * @generated SignedSource<<6949289abe97ebbd1bcf57a337057aa9>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
-
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ChangeLog_AddPartToApplicationChange = {
-    readonly addedPart: {
-        readonly name: string;
-    };
-    readonly " $refType": "ChangeLog_AddPartToApplicationChange";
+export type ChangeLog_AddPartToApplicationChange$data = {
+  readonly addedPart: {
+    readonly name: string;
+  };
+  readonly " $fragmentType": "ChangeLog_AddPartToApplicationChange";
 };
-export type ChangeLog_AddPartToApplicationChange$data = ChangeLog_AddPartToApplicationChange;
 export type ChangeLog_AddPartToApplicationChange$key = {
-    readonly " $data"?: ChangeLog_AddPartToApplicationChange$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"ChangeLog_AddPartToApplicationChange">;
+  readonly " $data"?: ChangeLog_AddPartToApplicationChange$data;
+  readonly " $fragmentSpreads": FragmentRefs<"ChangeLog_AddPartToApplicationChange">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -47,5 +49,7 @@ const node: ReaderFragment = {
   "type": "AddPartToApplicationChange",
   "abstractKey": null
 };
-(node as any).hash = 'b9346431a6f714731a17665acb87adc1';
+
+(node as any).hash = "b9346431a6f714731a17665acb87adc1";
+
 export default node;

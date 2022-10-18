@@ -1,12 +1,9 @@
 import styled from "@emotion/styled";
-import Editor, { useMonaco } from "@monaco-editor/react";
 import { Colors } from "../../shared/colors";
-import React, { useCallback, useRef } from "react";
-import { editor } from "monaco-editor";
+import React, { useCallback } from "react";
 import { css } from "@emotion/react";
 import { Button } from "antd";
 import { sdlToJsonSchema } from "./buildJsonSchema";
-import { JSONSchema6 } from "json-schema";
 import { useDelay } from "../../shared/useDelay";
 import { noop } from "../../shared/noop";
 import {

@@ -1,47 +1,49 @@
+/**
+ * @generated SignedSource<<ce8afe42284e74671edcbadfc317f738>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
-
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type DeployedEnvironmentsOverviewFragment = ReadonlyArray<{
-    readonly environment: {
-        readonly id: string;
+export type DeployedEnvironmentsOverviewFragment$data = ReadonlyArray<{
+  readonly claimedVersions: {
+    readonly nodes: ReadonlyArray<{
+      readonly application: {
         readonly name: string;
-        readonly parent: {
-            readonly id: string;
-            readonly name: string;
-        } | null;
+      } | null;
+      readonly applicationPart: {
+        readonly name: string;
+      } | null;
+      readonly environment: {
+        readonly name: string;
+      } | null;
+      readonly gitVersion: string;
+      readonly publishedApplicationPart: {
+        readonly id: string;
+        readonly publishedAt: any;
+        readonly version: number;
+      } | null;
+    }> | null;
+  } | null;
+  readonly environment: {
+    readonly id: string;
+    readonly name: string;
+    readonly parent: {
+      readonly id: string;
+      readonly name: string;
     } | null;
-    readonly claimedVersions: {
-        readonly nodes: ReadonlyArray<{
-            readonly gitVersion: string;
-            readonly application: {
-                readonly name: string;
-            } | null;
-            readonly applicationPart: {
-                readonly name: string;
-            } | null;
-            readonly publishedApplicationPart: {
-                readonly id: string;
-                readonly version: number;
-                readonly publishedAt: Date;
-            } | null;
-            readonly environment: {
-                readonly name: string;
-            } | null;
-        }> | null;
-    } | null;
-    readonly " $refType": "DeployedEnvironmentsOverviewFragment";
+  } | null;
+  readonly " $fragmentType": "DeployedEnvironmentsOverviewFragment";
 }>;
-export type DeployedEnvironmentsOverviewFragment$data = DeployedEnvironmentsOverviewFragment;
 export type DeployedEnvironmentsOverviewFragment$key = ReadonlyArray<{
-    readonly " $data"?: DeployedEnvironmentsOverviewFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"DeployedEnvironmentsOverviewFragment">;
+  readonly " $data"?: DeployedEnvironmentsOverviewFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"DeployedEnvironmentsOverviewFragment">;
 }>;
-
-
 
 const node: ReaderFragment = (function(){
 var v0 = {
@@ -185,5 +187,7 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = '7c890dae78848db2691f1b2ed9768452';
+
+(node as any).hash = "7c890dae78848db2691f1b2ed9768452";
+
 export default node;

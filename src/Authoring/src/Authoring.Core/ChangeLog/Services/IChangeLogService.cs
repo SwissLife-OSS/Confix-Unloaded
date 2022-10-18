@@ -26,7 +26,7 @@ public interface IChangeLogService
         CancellationToken cancellationToken);
 
     Task<IEnumerable<ChangeLog>> GetByApplicationPartComponentId(
-        Guid componentId,
+        Guid applicationPartId,
         CancellationToken cancellationToken);
 
     Task<ChangeLog?> GetByApplicationPartComponentIdAndVersion(

@@ -17,7 +17,7 @@ import { NewEnvironmentMutation } from "./__generated__/NewEnvironmentMutation.g
 const newEnvironmentMutation = graphql`
   mutation NewEnvironmentMutation(
     $input: CreateEnvironmentInput!
-    $connectionIds: [String!]!
+    $connectionIds: [ID!]!
   ) {
     createEnvironment(input: $input) {
       environment

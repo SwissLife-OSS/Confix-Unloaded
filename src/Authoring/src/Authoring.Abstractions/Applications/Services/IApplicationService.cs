@@ -29,23 +29,15 @@ public interface IApplicationService
         string applicationName,
         CancellationToken cancellationToken = default);
 
-    Task<IReadOnlyCollection<Application>> GetManyByIdAsync(
-        IEnumerable<Guid> ids,
-        CancellationToken cancellationToken = default);
-
     Task<ApplicationPart?> GetPartByIdAsync(
         Guid id,
         CancellationToken cancellationToken = default);
 
-    Task<IReadOnlyCollection<ApplicationPart>> GetManyPartsByIdAsync(
-        IEnumerable<Guid> ids,
-        CancellationToken cancellationToken = default);
-
-    IQueryable<Application> Query();
+    Task<IQueryable<Application>> Query(CancellationToken cancellationToken);
 
     Task<Application> CreateAsync(
         string name,
-        string? @namespace,
+        string @namespace,
         IReadOnlyList<string>? parts = null,
         CancellationToken cancellationToken = default);
 

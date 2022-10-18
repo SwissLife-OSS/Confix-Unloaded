@@ -1,10 +1,13 @@
-import { FormikConfig, useFormik } from "formik";
+import { FormikConfig, FormikValues, useFormik } from "formik";
 import { Disposable, UseMutationConfig } from "react-relay";
 import { MutationParameters } from "relay-runtime";
 import { pipeCommitFn } from "./pipeCommitFn";
 import { UseFormik } from "./UseFormik";
 
-export const useCommitForm = <TMutation extends MutationParameters, T>(
+export const useCommitForm = <
+  TMutation extends MutationParameters,
+  T extends FormikValues
+>(
   commit: (config: UseMutationConfig<TMutation>) => Disposable,
   initialValues: T,
   variablesSelector: (values: T) => UseMutationConfig<TMutation>["variables"],

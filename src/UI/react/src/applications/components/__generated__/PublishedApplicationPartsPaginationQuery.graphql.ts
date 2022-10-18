@@ -1,74 +1,29 @@
+/**
+ * @generated SignedSource<<8e0e239237b57b00ed7df87a98ec4b46>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest } from "relay-runtime";
-
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type PublishedApplicationPartsPaginationQueryVariables = {
-    count?: number | null | undefined;
-    cursor?: string | null | undefined;
-    id: string;
+export type PublishedApplicationPartsPaginationQuery$variables = {
+  count?: number | null;
+  cursor?: string | null;
+  id: string;
 };
-export type PublishedApplicationPartsPaginationQueryResponse = {
-    readonly node: {
-        readonly " $fragmentRefs": FragmentRefs<"PublishedApplicationPartsFragment">;
-    } | null;
+export type PublishedApplicationPartsPaginationQuery$data = {
+  readonly node: {
+    readonly " $fragmentSpreads": FragmentRefs<"PublishedApplicationPartsFragment">;
+  } | null;
 };
 export type PublishedApplicationPartsPaginationQuery = {
-    readonly response: PublishedApplicationPartsPaginationQueryResponse;
-    readonly variables: PublishedApplicationPartsPaginationQueryVariables;
+  response: PublishedApplicationPartsPaginationQuery$data;
+  variables: PublishedApplicationPartsPaginationQuery$variables;
 };
-
-
-
-/*
-query PublishedApplicationPartsPaginationQuery(
-  $count: Int = 20
-  $cursor: String
-  $id: ID!
-) {
-  node(id: $id) {
-    __typename
-    ...PublishedApplicationPartsFragment_1G22uz
-    id
-  }
-}
-
-fragment PublishedApplicationPartsFragment_1G22uz on ApplicationPart {
-  publishedVersions(first: $count, after: $cursor) {
-    edges {
-      node {
-        id
-        publishedAt
-        part {
-          name
-          id
-        }
-        publishedBy {
-          email
-        }
-        version
-        claimsVersions {
-          gitVersion
-          environment {
-            name
-            id
-          }
-          id
-        }
-        __typename
-      }
-      cursor
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-  id
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -354,5 +309,7 @@ return {
   }
 };
 })();
-(node as any).hash = 'caedcb107c67258ae33719f146bc9daf';
+
+(node as any).hash = "caedcb107c67258ae33719f146bc9daf";
+
 export default node;

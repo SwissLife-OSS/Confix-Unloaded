@@ -15,5 +15,6 @@ public class EnvironmentNotFoundError : UserError
     {
     }
 
+    [ID(nameof(Environment))]
     public Guid EnvironmentId { get; }
 }

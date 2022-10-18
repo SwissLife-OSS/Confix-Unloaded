@@ -38,11 +38,11 @@ const setParentMutation = graphql`
 `;
 
 export const SetParentEnvironmentDialog: React.FC<{
-  visible: boolean;
+  open: boolean;
   onClose: () => void;
   name: string;
   id: string;
-}> = ({ visible, name, id, onClose }) => {
+}> = ({ open, name, id, onClose }) => {
   const [commit, isInFlight] =
     useMutation<SetParentEnvironmentDialogMutation>(setParentMutation);
   const [parent, setParent] = React.useState<string>();
@@ -62,7 +62,7 @@ export const SetParentEnvironmentDialog: React.FC<{
   return (
     <Modal
       title={`SetParent Environment ${name}`}
-      visible={visible}
+      open={open}
       onOk={handleSetParent}
       confirmLoading={isInFlight}
       onCancel={onClose}

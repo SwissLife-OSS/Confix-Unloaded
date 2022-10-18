@@ -1,72 +1,40 @@
+/**
+ * @generated SignedSource<<a745e17261f95206f9baf483978fd055>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest } from "relay-runtime";
-
+import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type SetParentOfEnvironmentInput = {
-    environmentId: string;
-    parentId: string;
+  environmentId: string;
+  parentId: string;
 };
-export type SetParentEnvironmentDialogMutationVariables = {
-    input: SetParentOfEnvironmentInput;
+export type SetParentEnvironmentDialogMutation$variables = {
+  input: SetParentOfEnvironmentInput;
 };
-export type SetParentEnvironmentDialogMutationResponse = {
-    readonly setParentOfEnvironment: {
-        readonly environment: {
-            readonly id: string;
-            readonly " $fragmentRefs": FragmentRefs<"EditEnvironment_Environment">;
-        } | null;
-        readonly errors: ReadonlyArray<{
-            readonly path?: ReadonlyArray<string> | undefined;
-            readonly code?: string | undefined;
-            readonly message?: string | undefined;
-            readonly environmentId?: unknown | undefined;
-        }> | null;
-    };
+export type SetParentEnvironmentDialogMutation$data = {
+  readonly setParentOfEnvironment: {
+    readonly environment: {
+      readonly id: string;
+      readonly " $fragmentSpreads": FragmentRefs<"EditEnvironment_Environment">;
+    } | null;
+    readonly errors: ReadonlyArray<{
+      readonly code?: string;
+      readonly environmentId?: string;
+      readonly message?: string;
+      readonly path?: ReadonlyArray<string>;
+    }> | null;
+  };
 };
 export type SetParentEnvironmentDialogMutation = {
-    readonly response: SetParentEnvironmentDialogMutationResponse;
-    readonly variables: SetParentEnvironmentDialogMutationVariables;
+  response: SetParentEnvironmentDialogMutation$data;
+  variables: SetParentEnvironmentDialogMutation$variables;
 };
-
-
-
-/*
-mutation SetParentEnvironmentDialogMutation(
-  $input: SetParentOfEnvironmentInput!
-) {
-  setParentOfEnvironment(input: $input) {
-    environment {
-      id
-      ...EditEnvironment_Environment
-    }
-    errors {
-      __typename
-      ... on EnvironmentCycleDetectedError {
-        path
-        code
-        message
-      }
-      ... on EnvironmentNotFoundError {
-        environmentId
-        code
-        message
-      }
-    }
-  }
-}
-
-fragment EditEnvironment_Environment on Environment {
-  id
-  name
-  parent {
-    id
-    name
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -270,5 +238,7 @@ return {
   }
 };
 })();
-(node as any).hash = 'a8721a008fb26c79773c7e633d67d03e';
+
+(node as any).hash = "a8721a008fb26c79773c7e633d67d03e";
+
 export default node;

@@ -1,25 +1,27 @@
+/**
+ * @generated SignedSource<<04def5d31e1b032d27f26da11ea151ef>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
-
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type EditApplicationPart_DeployedEnvironment_Fragment = {
-    readonly deployments: {
-        readonly nodes: ReadonlyArray<{
-            readonly " $fragmentRefs": FragmentRefs<"DeployedEnvironmentsOverviewFragment">;
-        }> | null;
-    } | null;
-    readonly " $refType": "EditApplicationPart_DeployedEnvironment_Fragment";
+export type EditApplicationPart_DeployedEnvironment_Fragment$data = {
+  readonly deployments: {
+    readonly nodes: ReadonlyArray<{
+      readonly " $fragmentSpreads": FragmentRefs<"DeployedEnvironmentsOverviewFragment">;
+    }> | null;
+  } | null;
+  readonly " $fragmentType": "EditApplicationPart_DeployedEnvironment_Fragment";
 };
-export type EditApplicationPart_DeployedEnvironment_Fragment$data = EditApplicationPart_DeployedEnvironment_Fragment;
 export type EditApplicationPart_DeployedEnvironment_Fragment$key = {
-    readonly " $data"?: EditApplicationPart_DeployedEnvironment_Fragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"EditApplicationPart_DeployedEnvironment_Fragment">;
+  readonly " $data"?: EditApplicationPart_DeployedEnvironment_Fragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"EditApplicationPart_DeployedEnvironment_Fragment">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -58,5 +60,7 @@ const node: ReaderFragment = {
   "type": "ApplicationPart",
   "abstractKey": null
 };
-(node as any).hash = '648c53e289b5a2dd51346775d16ea9f8';
+
+(node as any).hash = "648c53e289b5a2dd51346775d16ea9f8";
+
 export default node;

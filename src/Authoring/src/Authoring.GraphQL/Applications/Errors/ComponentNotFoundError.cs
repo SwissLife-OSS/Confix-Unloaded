@@ -15,5 +15,6 @@ public class ComponentNotFoundError : UserError
     {
     }
 
+    [ID(nameof(Component))]
     public Guid ComponentId { get; }
 }

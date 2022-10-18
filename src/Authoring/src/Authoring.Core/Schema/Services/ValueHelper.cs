@@ -1,9 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 using HotChocolate;
 using HotChocolate.Types;
+using Path = HotChocolate.Path;
 
 namespace Confix.Authoring.Internal;
 

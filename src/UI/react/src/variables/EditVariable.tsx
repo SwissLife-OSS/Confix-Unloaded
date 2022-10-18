@@ -90,16 +90,27 @@ export const EditVariable = () => {
       </Row>
 
       <TabRow>
-        <Tabs defaultActiveKey={tab} key={tab} onChange={navigateToTab}>
-          <Tabs.TabPane tab="Parts" key="edit">
-            <EditVariableForm id={id} data={variable} />
-          </Tabs.TabPane>
-          <Tabs.TabPane tab="Change Log" key="changelog">
-            <DefaultSuspense>
-              <VariableChangeLog data={variable} />
-            </DefaultSuspense>
-          </Tabs.TabPane>
-        </Tabs>
+        <Tabs
+          defaultActiveKey={tab}
+          key={tab}
+          onChange={navigateToTab}
+          items={[
+            {
+              key: "edit",
+              label: "Edit",
+              children: <EditVariableForm id={id} data={variable} />,
+            },
+            {
+              key: "changelog",
+              label: "Change Log",
+              children: (
+                <DefaultSuspense>
+                  <VariableChangeLog data={variable} />
+                </DefaultSuspense>
+              ),
+            },
+          ]}
+        />
       </TabRow>
     </DetailView>
   );
@@ -212,7 +223,7 @@ const Header: React.FC<{
         key={name}
         id={id}
         onClose={disable}
-        visible={isEdit}
+        open={isEdit}
       />
     </EditableBreadcrumbHeader>
   );

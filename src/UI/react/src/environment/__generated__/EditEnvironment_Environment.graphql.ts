@@ -1,26 +1,28 @@
+/**
+ * @generated SignedSource<<048a1e8e8b847432376c4223bb810f89>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
-
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type EditEnvironment_Environment = {
+export type EditEnvironment_Environment$data = {
+  readonly id: string;
+  readonly name: string;
+  readonly parent: {
     readonly id: string;
     readonly name: string;
-    readonly parent: {
-        readonly id: string;
-        readonly name: string;
-    } | null;
-    readonly " $refType": "EditEnvironment_Environment";
+  } | null;
+  readonly " $fragmentType": "EditEnvironment_Environment";
 };
-export type EditEnvironment_Environment$data = EditEnvironment_Environment;
 export type EditEnvironment_Environment$key = {
-    readonly " $data"?: EditEnvironment_Environment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"EditEnvironment_Environment">;
+  readonly " $data"?: EditEnvironment_Environment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"EditEnvironment_Environment">;
 };
-
-
 
 const node: ReaderFragment = (function(){
 var v0 = {
@@ -63,5 +65,7 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = 'eb11ee17a07a5e4b77b058c58308697a';
+
+(node as any).hash = "eb11ee17a07a5e4b77b058c58308697a";
+
 export default node;

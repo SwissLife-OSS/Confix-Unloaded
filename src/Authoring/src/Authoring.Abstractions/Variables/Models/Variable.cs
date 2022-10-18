@@ -1,4 +1,5 @@
 using System;
+using Confix.Authoring.Store;
 using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring;
@@ -10,7 +11,7 @@ public record Variable
         VariableState state,
         string name,
         bool isSecret,
-        string? ns,
+        string ns,
         int version)
     {
         Id = id;
@@ -21,7 +22,7 @@ public record Variable
         Version = version;
     }
 
-    public Variable(Guid id, VariableState state, string name, bool isSecret, string? @namespace)
+    public Variable(Guid id, VariableState state, string name, bool isSecret, string @namespace)
     {
         Id = id;
         State = state;
@@ -39,7 +40,7 @@ public record Variable
 
     public bool IsSecret { get; init; }
 
-    public string? Namespace { get; init; }
+    public string Namespace { get; init; }
 
     public int Version { get; init; }
 }
@@ -58,12 +59,16 @@ public record VariableKey
         EnvironmentId = environmentId;
     }
 
+    [ID(nameof(Variable))]
     public Guid VariableId { get; init; }
 
+    [ID(nameof(Application))]
     public Guid? ApplicationId { get; init; }
 
+    [ID(nameof(ApplicationPart))]
     public Guid? PartId { get; init; }
 
+    [ID(nameof(Environment))]
     public Guid? EnvironmentId { get; init; }
 }
 

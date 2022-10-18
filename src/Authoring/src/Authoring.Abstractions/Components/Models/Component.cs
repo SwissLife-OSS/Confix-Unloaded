@@ -12,7 +12,8 @@ public record Component
         string? schema,
         string? values,
         int version,
-        ComponentState state)
+        ComponentState state,
+        string ns)
     {
         Id = id;
         Name = name;
@@ -20,15 +21,23 @@ public record Component
         Values = values;
         Version = version;
         State = state;
+        Namespace = ns;
     }
 
-    public Component(Guid id, string? name, string? schema, string? values, ComponentState state)
+    public Component(
+        Guid id,
+        string? name,
+        string? schema,
+        string? values,
+        ComponentState state,
+        string ns)
     {
         Id = id;
         Name = name;
         Schema = schema;
         Values = values;
         State = state;
+        Namespace = ns;
     }
 
     [ID]
@@ -41,6 +50,8 @@ public record Component
     public string? Schema { get; init; }
 
     public string? Values { get; init; }
+
+    public string Namespace { get; init; }
 
     public int Version { get; init; }
 

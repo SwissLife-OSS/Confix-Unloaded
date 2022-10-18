@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -19,33 +14,38 @@ public class VariableStore : IVariableStore
         _dbContext = dbContext;
     }
 
-    public async Task<IEnumerable<Variable>> GetAllAsync(CancellationToken cancellationToken)
-        => await _dbContext.Variables
-            .AsQueryable()
-            .ToListAsync(cancellationToken);
-
-    public async Task<IEnumerable<Variable>> GetAllAsync(
+    public async Task<IEnumerable<Variable?>> GetAllAsync(
         IEnumerable<string> names,
         CancellationToken cancellationToken)
     {
-        FilterDefinition<Variable> filter = Builders<Variable>.Filter.In(x => x.Name, names);
+        var filter = Builders<Variable>.Filter.In(x => x.Name, names);
 
         return await _dbContext.Variables.Find(filter).ToListAsync(cancellationToken);
     }
 
-    public async Task<Variable> GetByIdAsync(
+    public async Task<IEnumerable<Variable>> GetAllByNamespacesAsync(
+        IEnumerable<string> namespaces,
+        CancellationToken cancellationToken)
+    {
+        var filter = Builders<Variable>.Filter.In(x => x.Namespace, namespaces);
+
+        return await _dbContext.Variables.Find(filter).ToListAsync(cancellationToken);
+    }
+
+    public async Task<Variable?> GetByIdAsync(
         Guid id,
         CancellationToken cancellationToken)
-        => await _dbContext.Variables
-            .AsQueryable()
-            .Where(x => x.Id == id)
+    {
+        return await _dbContext.Variables
+            .Find(Builders<Variable>.Filter.Eq(x => x.Id, id))
             .FirstOrDefaultAsync(cancellationToken);
+    }
 
-    public async Task<IReadOnlyList<Variable>> GetByNamesAsync(
+    public async Task<IReadOnlyList<Variable?>> GetByNamesAsync(
         IEnumerable<string> names,
         CancellationToken cancellationToken)
     {
-        FilterDefinition<Variable> filter = Builders<Variable>.Filter.In(x => x.Name, names);
+        var filter = Builders<Variable>.Filter.In(x => x.Name, names);
 
         return await _dbContext.Variables.Find(filter).ToListAsync(cancellationToken);
     }
@@ -81,7 +81,7 @@ public class VariableStore : IVariableStore
         CancellationToken cancellationToken)
         => await GetGlobalVariableValueInternal(variableIds, cancellationToken);
 
-    public async Task<IEnumerable<Variable>> GetManyAsync(
+    public async Task<IEnumerable<Variable?>> GetManyAsync(
         IEnumerable<Guid> ids,
         CancellationToken cancellationToken)
         => await _dbContext.Variables
@@ -89,8 +89,8 @@ public class VariableStore : IVariableStore
             .Where(x => ids.Contains(x.Id))
             .ToListAsync(cancellationToken);
 
-    public async Task<Variable> CreateAsync(
-        Variable variable,
+    public async Task<Variable?> CreateAsync(
+        Variable? variable,
         CancellationToken cancellationToken)
     {
         await _dbContext.Variables.InsertOneAsync(variable, options: null, cancellationToken);
@@ -98,8 +98,8 @@ public class VariableStore : IVariableStore
         return variable;
     }
 
-    public async Task<Variable> UpdateAsync(
-        Variable variable,
+    public async Task<Variable?> UpdateAsync(
+        Variable? variable,
         CancellationToken cancellationToken)
     {
         ReplaceOptions options = new() { IsUpsert = false };
@@ -117,7 +117,7 @@ public class VariableStore : IVariableStore
         IEnumerable<Guid>? variableIds,
         CancellationToken cancellationToken)
     {
-        FilterDefinition<VariableValue> filter = Filter.Eq(x => x.Key.PartId, partId);
+        var filter = Filter.Eq(x => x.Key.PartId, partId);
 
         if (variableIds is not null)
         {
@@ -132,10 +132,9 @@ public class VariableStore : IVariableStore
         IEnumerable<Guid>? variableIds,
         CancellationToken cancellationToken)
     {
-        FilterDefinition<VariableValue> filter =
-            Filter.And(
-                Filter.Eq(x => x.Key.ApplicationId, applicationId),
-                Filter.Type(x => x.Key.PartId, BsonType.Null));
+        var filter = Filter.And(
+            Filter.Eq(x => x.Key.ApplicationId, applicationId),
+            Filter.Type(x => x.Key.PartId, BsonType.Null));
 
         if (variableIds is not null)
         {
@@ -149,10 +148,9 @@ public class VariableStore : IVariableStore
         IEnumerable<Guid>? variableIds,
         CancellationToken cancellationToken)
     {
-        FilterDefinition<VariableValue> filter =
-            Filter.And(
-                Filter.Type(x => x.Key.ApplicationId, BsonType.Null),
-                Filter.Type(x => x.Key.PartId, BsonType.Null));
+        var filter = Filter.And(
+            Filter.Type(x => x.Key.ApplicationId, BsonType.Null),
+            Filter.Type(x => x.Key.PartId, BsonType.Null));
 
         if (variableIds is not null)
         {

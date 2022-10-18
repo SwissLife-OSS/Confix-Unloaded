@@ -1,13 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Confix.Authoring.Store;
-using HotChocolate;
-using HotChocolate.Types;
-using HotChocolate.Types.Relay;
-using Microsoft.AspNetCore.Identity;
 
 namespace Confix.Authoring.GraphQL;
 
@@ -20,12 +11,13 @@ public class VariableQueries
         => await variableService.GetAllAsync(cancellationToken);
 
     [UsePaging]
-    public IQueryable<Variable> SearchVariables(
+    public Task<IQueryable<Variable>> SearchVariables(
         [Service] IVariableService variableService,
-        string? search)
-        => variableService.SearchVariables(search);
+        string? search,
+        CancellationToken cancellationToken)
+        => variableService.SearchVariables(search, cancellationToken);
 
-    public async Task<Variable> GetVariableAsync(
+    public async Task<Variable?> GetVariableAsync(
         [Service] IVariableService variableService,
         [ID(nameof(Variable))] Guid id,
         CancellationToken cancellationToken)
@@ -40,8 +32,7 @@ public class VariableQueries
     {
         VariableValueFilter filter = new(variableId)
         {
-            ApplicationId = applicationId,
-            PartId = applicationPartId
+            ApplicationId = applicationId, PartId = applicationPartId
         };
         return await variableService.GetValuesAsync(filter, false, cancellationToken);
     }

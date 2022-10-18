@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Confix.Authoring.Store;
+using Confix.Common.Exceptions;
 using HotChocolate;
 using HotChocolate.Types;
 using HotChocolate.Types.Relay;
@@ -16,10 +17,11 @@ public class ApplicationMutations
     /// Creates a new application configuration.
     /// </summary>
     [Error(typeof(ApplicationNameTaken))]
+    [Error(typeof(UnauthorizedOperationException))]
     public async Task<Application> CreateApplicationAsync(
         [Service] IApplicationService applicationService,
         string name,
-        string? @namespace,
+        string @namespace,
         IReadOnlyList<string>? parts = null,
         CancellationToken cancellationToken = default)
         => await applicationService.CreateAsync(name, @namespace, parts, cancellationToken);
@@ -29,6 +31,7 @@ public class ApplicationMutations
     /// </summary>
     [Error(typeof(ApplicationIdInvalid))]
     [Error(typeof(ApplicationNameTaken))]
+    [Error(typeof(UnauthorizedOperationException))]
     public async Task<Application> RenameApplicationAsync(
         [Service] IApplicationService applicationService,
         [ID(nameof(Application))] Guid id,
@@ -42,6 +45,7 @@ public class ApplicationMutations
     [Error(typeof(ApplicationIdInvalid))]
     [Error(typeof(ApplicationPartIdInvalid))]
     [Error(typeof(ApplicationPartNameTaken))]
+    [Error(typeof(UnauthorizedOperationException))]
     public async Task<ApplicationPart> RenameApplicationPartAsync(
         [Service] IApplicationService applicationService,
         [ID(nameof(ApplicationPart))] Guid applicationPartId,
@@ -53,6 +57,7 @@ public class ApplicationMutations
     /// Adds a component to an application part.
     /// </summary>
     [Error(typeof(ApplicationPartIdInvalid))]
+    [Error(typeof(UnauthorizedOperationException))]
     public async Task<ApplicationPart> AddComponentsToApplicationPartAsync(
         [Service] IApplicationService applicationService,
         [ID(nameof(ApplicationPart))] Guid applicationPartId,
@@ -66,6 +71,7 @@ public class ApplicationMutations
     /// </summary>
     [Error(typeof(ApplicationNotFoundError))]
     [Error(typeof(ApplicationPartNameTaken))]
+    [Error(typeof(UnauthorizedOperationException))]
     public async Task<Application> AddPartToApplicationAsync(
         [Service] IApplicationService applicationService,
         string partName,
@@ -78,6 +84,7 @@ public class ApplicationMutations
     /// Adds a component to an application part.
     /// </summary>
     [Error(typeof(ApplicationPartNotFoundError))]
+    [Error(typeof(UnauthorizedOperationException))]
     public async Task<Application> RemoveApplicationPartAsync(
         [Service] IApplicationService applicationService,
         [ID(nameof(ApplicationPart))] Guid applicationPartId,
@@ -88,6 +95,7 @@ public class ApplicationMutations
     /// Adds a component to an application part.
     /// </summary>
     [Error(typeof(ApplicationPartNotFoundError))]
+    [Error(typeof(UnauthorizedOperationException))]
     public async Task<ApplicationPart> RemoveComponentFromApplicationPartAsync(
         [Service] IApplicationService applicationService,
         [ID(nameof(ApplicationPartComponent))] Guid partComponentId,
@@ -100,6 +108,7 @@ public class ApplicationMutations
     /// </summary>
     [Error(typeof(ApplicationPartComponentNotFoundError))]
     [Error(typeof(ComponentNotFoundError))]
+    [Error(typeof(UnauthorizedOperationException))]
     [UseMutationConvention(PayloadFieldName = "component")]
     public async Task<ApplicationPartComponent> UpdateApplicationPartComponentValuesAsync(
         [Service] IApplicationService applicationService,

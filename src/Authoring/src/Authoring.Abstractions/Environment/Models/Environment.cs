@@ -1,4 +1,3 @@
-using System;
 using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring;
@@ -8,7 +7,6 @@ public record Environment
     public Environment(Guid id, string? name = null!)
     {
         name ??= string.Empty;
-
         Id = id;
         Name = name;
     }

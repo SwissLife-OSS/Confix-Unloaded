@@ -1,54 +1,56 @@
+/**
+ * @generated SignedSource<<c118b296cd9992be6305601c48bf4bae>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
-
-import { FragmentRefs } from "relay-runtime";
+import { Fragment, ReaderFragment } from 'relay-runtime';
 export type ComponentState = "ACTIVE" | "DEPRECATED" | "%future added value";
-export type EditApplicationPartComponent_fragment = {
-    readonly applicationPart: {
-        readonly name: string;
-        readonly application: {
-            readonly name: string;
-            readonly namespace: string | null;
-            readonly variableValues: ReadonlyArray<{
-                readonly variable: {
-                    readonly name: string;
-                } | null;
-            }>;
+import { FragmentRefs } from "relay-runtime";
+export type EditApplicationPartComponent_fragment$data = {
+  readonly applicationPart: {
+    readonly application: {
+      readonly name: string;
+      readonly namespace: string;
+      readonly variableValues: ReadonlyArray<{
+        readonly variable: {
+          readonly name: string;
         } | null;
-        readonly variableValues: ReadonlyArray<{
-            readonly variable: {
-                readonly name: string;
-            } | null;
-        }>;
+      }>;
     } | null;
-    readonly definition: {
-        readonly id: string;
+    readonly name: string;
+    readonly variableValues: ReadonlyArray<{
+      readonly variable: {
         readonly name: string;
-        readonly state: ComponentState;
-        readonly schemaSdl: string | null;
-        readonly schema: object | null;
-        readonly values: object | null;
-        readonly defaults: object | null;
-        readonly schemaViolations: ReadonlyArray<{
-            readonly path: object;
-            readonly code: string;
-        }>;
-    };
-    readonly version: number;
-    readonly values: string | null;
-    readonly " $fragmentRefs": FragmentRefs<"EditApplicationPartComponent_ChangeLog_Fragment">;
-    readonly " $refType": "EditApplicationPartComponent_fragment";
+      } | null;
+    }>;
+  } | null;
+  readonly definition: {
+    readonly defaults: any | null;
+    readonly id: string;
+    readonly name: string;
+    readonly schema: any | null;
+    readonly schemaSdl: any | null;
+    readonly schemaViolations: ReadonlyArray<{
+      readonly code: string;
+      readonly path: any;
+    }>;
+    readonly state: ComponentState;
+    readonly values: any | null;
+  };
+  readonly values: string | null;
+  readonly version: number;
+  readonly " $fragmentSpreads": FragmentRefs<"EditApplicationPartComponent_ChangeLog_Fragment">;
+  readonly " $fragmentType": "EditApplicationPartComponent_fragment";
 };
-export type EditApplicationPartComponent_fragment$data = EditApplicationPartComponent_fragment;
 export type EditApplicationPartComponent_fragment$key = {
-    readonly " $data"?: EditApplicationPartComponent_fragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"EditApplicationPartComponent_fragment">;
+  readonly " $data"?: EditApplicationPartComponent_fragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"EditApplicationPartComponent_fragment">;
 };
-
-
 
 const node: ReaderFragment = (function(){
 var v0 = {
@@ -223,5 +225,7 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = 'f00b4d66d4ba8893c488a8a8c455a56b';
+
+(node as any).hash = "f00b4d66d4ba8893c488a8a8c455a56b";
+
 export default node;

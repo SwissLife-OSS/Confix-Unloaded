@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Authentication\Authentication.csproj" />
     <ProjectReference Include="..\CryptoProviders.Abstractions\CryptoProviders.Abstractions.csproj" />
   </ItemGroup>
 

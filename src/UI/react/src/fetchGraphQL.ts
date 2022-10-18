@@ -1,13 +1,7 @@
 import { config } from "./config";
 import { meros } from "meros/browser";
 import type { FetchFunction } from "relay-runtime";
-import {
-  Environment,
-  Network,
-  Observable,
-  RecordSource,
-  Store,
-} from "relay-runtime";
+import { Observable } from "relay-runtime";
 
 export const fetchGraphQL: FetchFunction = (
   params,

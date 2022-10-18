@@ -1,42 +1,44 @@
+/**
+ * @generated SignedSource<<2e7beb6165c4e5a2fcc59b9ebe7d1236>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
-import PublishedApplicationPartsPaginationQuery from "./PublishedApplicationPartsPaginationQuery.graphql";
+import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type PublishedApplicationPartsFragment = {
-    readonly publishedVersions: {
-        readonly edges: ReadonlyArray<{
-            readonly node: {
-                readonly id: string;
-                readonly publishedAt: Date;
-                readonly part: {
-                    readonly name: string;
-                };
-                readonly publishedBy: {
-                    readonly email: string | null;
-                };
-                readonly version: number;
-                readonly claimsVersions: ReadonlyArray<{
-                    readonly gitVersion: string;
-                    readonly environment: {
-                        readonly name: string;
-                    } | null;
-                }>;
-            };
-        }> | null;
-    } | null;
-    readonly id: string;
-    readonly " $refType": "PublishedApplicationPartsFragment";
+export type PublishedApplicationPartsFragment$data = {
+  readonly id: string;
+  readonly publishedVersions: {
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly claimsVersions: ReadonlyArray<{
+          readonly environment: {
+            readonly name: string;
+          } | null;
+          readonly gitVersion: string;
+        }>;
+        readonly id: string;
+        readonly part: {
+          readonly name: string;
+        };
+        readonly publishedAt: any;
+        readonly publishedBy: {
+          readonly email: string | null;
+        };
+        readonly version: number;
+      };
+    }> | null;
+  } | null;
+  readonly " $fragmentType": "PublishedApplicationPartsFragment";
 };
-export type PublishedApplicationPartsFragment$data = PublishedApplicationPartsFragment;
 export type PublishedApplicationPartsFragment$key = {
-    readonly " $data"?: PublishedApplicationPartsFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"PublishedApplicationPartsFragment">;
+  readonly " $data"?: PublishedApplicationPartsFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"PublishedApplicationPartsFragment">;
 };
-
-
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -93,7 +95,7 @@ return {
       "fragmentPathInResult": [
         "node"
       ],
-      "operation": PublishedApplicationPartsPaginationQuery,
+      "operation": require('./PublishedApplicationPartsPaginationQuery.graphql'),
       "identifierField": "id"
     }
   },
@@ -248,5 +250,7 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = 'caedcb107c67258ae33719f146bc9daf';
+
+(node as any).hash = "caedcb107c67258ae33719f146bc9daf";
+
 export default node;

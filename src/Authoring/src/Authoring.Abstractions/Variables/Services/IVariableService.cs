@@ -9,26 +9,24 @@ namespace Confix.Authoring;
 
 public interface IVariableService
 {
-    Task<Variable> CreateAsync(
+    Task<Variable?> CreateAsync(
         string name,
-        string? @namespace,
+        string @namespace,
         bool isSecret,
         string? defaultValue,
         CancellationToken cancellationToken);
 
     Task<IEnumerable<Variable>> GetAllAsync(CancellationToken cancellationToken);
 
-    Task<IEnumerable<Variable>> GetByNamesAsync(
+    Task<IEnumerable<Variable?>> GetByNamesAsync(
         IEnumerable<string> names,
         CancellationToken cancellationToken);
 
-    IQueryable<Variable> SearchVariables(string? search);
-
-    Task<IEnumerable<Variable>> GetManyAsync(
-        IEnumerable<Guid> ids,
+    Task<IQueryable<Variable>> SearchVariables(
+        string? search,
         CancellationToken cancellationToken);
 
-    Task<Variable> GetByIdAsync(
+    Task<Variable?> GetByIdAsync(
         Guid id,
         CancellationToken cancellationToken);
 
@@ -64,7 +62,7 @@ public interface IVariableService
 
     Task<VariableValue> DeleteValueAsync(Guid id, CancellationToken cancellationToken);
 
-    Task<Variable> RenameAsync(
+    Task<Variable?> RenameAsync(
         Guid id,
         string name,
         CancellationToken cancellationToken);

@@ -1,22 +1,24 @@
+/**
+ * @generated SignedSource<<d0e761f035e9201a0270bc4e8924e3d5>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
-
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type Connections_components = ReadonlyArray<{
-    readonly id: string;
-    readonly name: string;
-    readonly " $refType": "Connections_components";
+export type Connections_components$data = ReadonlyArray<{
+  readonly id: string;
+  readonly name: string;
+  readonly " $fragmentType": "Connections_components";
 }>;
-export type Connections_components$data = Connections_components;
 export type Connections_components$key = ReadonlyArray<{
-    readonly " $data"?: Connections_components$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"Connections_components">;
+  readonly " $data"?: Connections_components$data;
+  readonly " $fragmentSpreads": FragmentRefs<"Connections_components">;
 }>;
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -44,5 +46,7 @@ const node: ReaderFragment = {
   "type": "Component",
   "abstractKey": null
 };
-(node as any).hash = '36d6276464536d9d0060b6883e76ba09';
+
+(node as any).hash = "36d6276464536d9d0060b6883e76ba09";
+
 export default node;

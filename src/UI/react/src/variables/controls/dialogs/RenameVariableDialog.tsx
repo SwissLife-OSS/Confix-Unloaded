@@ -6,7 +6,6 @@ import { FieldInput } from "../../../shared/FormField";
 import {
   pipeCommitFn,
   withSuccessMessage,
-  withErrorNotifications,
   withOnSuccess,
 } from "../../../shared/pipeCommitFn";
 import { useStringEventHanlder } from "../../../shared/useEventListener";
@@ -24,11 +23,11 @@ const renameVariableMutation = graphql`
 `;
 
 export const RenameVariableDialog: React.FC<{
-  visible: boolean;
+  open: boolean;
   onClose: () => void;
   name: string;
   id: string;
-}> = ({ visible, name, id, onClose }) => {
+}> = ({ open, name, id, onClose }) => {
   const [commit, isInFlight] = useMutation<RenameVariableDialogMutation>(
     renameVariableMutation
   );
@@ -46,7 +45,7 @@ export const RenameVariableDialog: React.FC<{
   return (
     <Modal
       title={`Rename Variable ${name}`}
-      visible={visible}
+      open={open}
       onOk={handleRename}
       confirmLoading={isInFlight}
       onCancel={onClose}

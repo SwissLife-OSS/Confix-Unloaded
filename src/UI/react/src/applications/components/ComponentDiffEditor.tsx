@@ -1,10 +1,9 @@
 import styled from "@emotion/styled";
-import { DiffEditor, useMonaco } from "@monaco-editor/react";
+import { DiffEditor } from "@monaco-editor/react";
 import { Colors } from "../../shared/colors";
-import React, { useCallback, useRef } from "react";
+import React from "react";
 import { editor } from "monaco-editor";
 import { css } from "@emotion/react";
-import { Button } from "antd";
 
 const options: editor.IStandaloneDiffEditorConstructionOptions = {
   glyphMargin: false,
@@ -23,7 +22,7 @@ const options: editor.IStandaloneDiffEditorConstructionOptions = {
 };
 
 interface IHeader {
-  title: string;
+  title: React.ReactNode;
   actions?: React.ReactElement[] | React.ReactElement;
 }
 interface IHeaders {

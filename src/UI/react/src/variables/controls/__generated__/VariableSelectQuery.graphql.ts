@@ -1,43 +1,31 @@
+/**
+ * @generated SignedSource<<a210753023b7266488f8275ead98fb8b>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest } from "relay-runtime";
-
-export type VariableSelectQueryVariables = {
-    search?: string | null | undefined;
+import { ConcreteRequest, Query } from 'relay-runtime';
+export type VariableSelectQuery$variables = {
+  search?: string | null;
 };
-export type VariableSelectQueryResponse = {
-    readonly searchVariables: {
-        readonly edges: ReadonlyArray<{
-            readonly node: {
-                readonly id: string;
-                readonly name: string;
-            };
-        }> | null;
-    } | null;
+export type VariableSelectQuery$data = {
+  readonly searchVariables: {
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly id: string;
+        readonly name: string;
+      };
+    }> | null;
+  } | null;
 };
 export type VariableSelectQuery = {
-    readonly response: VariableSelectQueryResponse;
-    readonly variables: VariableSelectQueryVariables;
+  response: VariableSelectQuery$data;
+  variables: VariableSelectQuery$variables;
 };
-
-
-
-/*
-query VariableSelectQuery(
-  $search: String
-) {
-  searchVariables(search: $search) {
-    edges {
-      node {
-        id
-        name
-      }
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -129,5 +117,7 @@ return {
   }
 };
 })();
-(node as any).hash = '7cd7565e65cda8d072ef74a58ada5b5e';
+
+(node as any).hash = "7cd7565e65cda8d072ef74a58ada5b5e";
+
 export default node;

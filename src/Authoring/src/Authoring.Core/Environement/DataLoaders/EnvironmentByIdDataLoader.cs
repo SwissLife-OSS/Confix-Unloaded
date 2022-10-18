@@ -14,8 +14,8 @@ public class EnvironmentByIdDataLoader : BatchDataLoader<Guid, Environment?>
 
     public EnvironmentByIdDataLoader(
         IEnvironmentStore applicationStore,
-        IBatchScheduler batchScheduler)
-        : base(batchScheduler)
+        IBatchScheduler batchScheduler,
+        DataLoaderOptions? options = null) : base(batchScheduler, options)
     {
         _applicationStore = applicationStore;
     }

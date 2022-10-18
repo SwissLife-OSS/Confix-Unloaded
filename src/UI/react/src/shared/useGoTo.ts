@@ -10,7 +10,7 @@ export const useGoTo = <
 ): (() => void) => {
   const navigate = useNavigate();
   const handleAdd = useCallback(
-    (...args) => {
+    (...args: any) => {
       let url: string | undefined = undefined;
       if (cb instanceof Function) {
         url = cb(...args);

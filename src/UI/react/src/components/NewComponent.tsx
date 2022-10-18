@@ -17,7 +17,7 @@ import { useCommitForm } from "../shared/useCommitForm";
 const newComponentMutation = graphql`
   mutation NewComponentMutation(
     $input: CreateComponentInput!
-    $connectionIds: [String!]!
+    $connectionIds: [ID!]!
   ) {
     createComponent(input: $input) {
       component
@@ -48,11 +48,11 @@ export const NewComponent: React.FC = () => {
     useMutation<NewComponentMutation>(newComponentMutation);
   const connectionId = useConnectionId("Query_components");
   const goToEdit = useGoTo((id: string) => `../${id}/edit`);
-  console.log(defaultSchema);
   const form = useCommitForm(
     commit,
     {
       name: "",
+      namespace: "",
       schema: defaultSchema,
     },
     (input) => ({ input, connectionIds: [connectionId] }),
@@ -78,6 +78,7 @@ export const NewComponent: React.FC = () => {
         <Col xs={24}>
           <form onSubmitCapture={form.handleSubmit}>
             <FormField form={form} field="name" label="Name" />
+            <FormField form={form} field="namespace" label="Namespace" />
             <FormEditor form={form} field="schema" label="Schema" />
             <FormActions>
               <Button type="primary" htmlType="submit" loading={isInFlight}>

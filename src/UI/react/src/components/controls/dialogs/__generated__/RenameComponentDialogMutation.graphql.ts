@@ -1,49 +1,34 @@
+/**
+ * @generated SignedSource<<b86940b0e72e63199fe6b46122a46c1f>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest } from "relay-runtime";
-
+import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type RenameComponentInput = {
-    id: string;
-    name: string;
+  id: string;
+  name: string;
 };
-export type RenameComponentDialogMutationVariables = {
-    input: RenameComponentInput;
+export type RenameComponentDialogMutation$variables = {
+  input: RenameComponentInput;
 };
-export type RenameComponentDialogMutationResponse = {
-    readonly renameComponent: {
-        readonly component: {
-            readonly id: string;
-            readonly " $fragmentRefs": FragmentRefs<"ComponentsList_componentEdge">;
-        } | null;
-    };
+export type RenameComponentDialogMutation$data = {
+  readonly renameComponent: {
+    readonly component: {
+      readonly id: string;
+      readonly " $fragmentSpreads": FragmentRefs<"ComponentsList_componentEdge">;
+    } | null;
+  };
 };
 export type RenameComponentDialogMutation = {
-    readonly response: RenameComponentDialogMutationResponse;
-    readonly variables: RenameComponentDialogMutationVariables;
+  response: RenameComponentDialogMutation$data;
+  variables: RenameComponentDialogMutation$variables;
 };
-
-
-
-/*
-mutation RenameComponentDialogMutation(
-  $input: RenameComponentInput!
-) {
-  renameComponent(input: $input) {
-    component {
-      id
-      ...ComponentsList_componentEdge
-    }
-  }
-}
-
-fragment ComponentsList_componentEdge on Component {
-  id
-  name
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -154,5 +139,7 @@ return {
   }
 };
 })();
-(node as any).hash = 'b859dc61c7019cfc0a1456384c577db5';
+
+(node as any).hash = "b859dc61c7019cfc0a1456384c577db5";
+
 export default node;

@@ -6,7 +6,6 @@ import { FieldInput } from "../../../shared/FormField";
 import {
   pipeCommitFn,
   withSuccessMessage,
-  withErrorNotifications,
   withOnSuccess,
 } from "../../../shared/pipeCommitFn";
 import { useStringEventHanlder } from "../../../shared/useEventListener";
@@ -24,11 +23,11 @@ const renameEnvironmentMutation = graphql`
 `;
 
 export const RenameEnvironmentDialog: React.FC<{
-  visible: boolean;
+  open: boolean;
   onClose: () => void;
   name: string;
   id: string;
-}> = ({ visible, name, id, onClose }) => {
+}> = ({ open, name, id, onClose }) => {
   const [commit, isInFlight] = useMutation<RenameEnvironmentDialogMutation>(
     renameEnvironmentMutation
   );
@@ -46,7 +45,7 @@ export const RenameEnvironmentDialog: React.FC<{
   return (
     <Modal
       title={`Rename Environment ${name}`}
-      visible={visible}
+      open={open}
       onOk={handleRename}
       confirmLoading={isInFlight}
       onCancel={onClose}

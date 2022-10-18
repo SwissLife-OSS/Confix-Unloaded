@@ -1,212 +1,30 @@
+/**
+ * @generated SignedSource<<06109a0cb0e2ba0249dcb4ecac814e67>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest } from "relay-runtime";
-
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type EditVariableQueryVariables = {
-    id: string;
+export type EditVariableQuery$variables = {
+  id: string;
 };
-export type EditVariableQueryResponse = {
-    readonly variable: {
-        readonly id: string;
-        readonly name: string;
-        readonly namespace: string | null;
-        readonly " $fragmentRefs": FragmentRefs<"EditVariable_Variable">;
-    };
+export type EditVariableQuery$data = {
+  readonly variable: {
+    readonly id: string;
+    readonly name: string;
+    readonly namespace: string;
+    readonly " $fragmentSpreads": FragmentRefs<"EditVariable_Variable">;
+  } | null;
 };
 export type EditVariableQuery = {
-    readonly response: EditVariableQueryResponse;
-    readonly variables: EditVariableQueryVariables;
+  response: EditVariableQuery$data;
+  variables: EditVariableQuery$variables;
 };
-
-
-
-/*
-query EditVariableQuery(
-  $id: ID!
-) {
-  variable(id: $id) {
-    id
-    name
-    namespace
-    ...EditVariable_Variable
-  }
-}
-
-fragment ChangeLog_AddComponentToApplicationPartChange on AddComponentToApplicationPartChange {
-  addedComponent {
-    definition {
-      name
-      id
-    }
-    id
-  }
-}
-
-fragment ChangeLog_AddPartToApplicationChange on AddPartToApplicationChange {
-  addedPart {
-    name
-    id
-  }
-}
-
-fragment ChangeLog_ApplicationPartComponentValuesChange on ApplicationPartComponentValuesChange {
-  part {
-    id
-  }
-  application {
-    id
-  }
-  partComponent {
-    id
-    version
-  }
-  partComponentVersion
-}
-
-fragment ChangeLog_ComponentSchemaChange on ComponentSchemaChange {
-  kind
-}
-
-fragment ChangeLog_ComponentValuesChange on ComponentValuesChange {
-  kind
-}
-
-fragment ChangeLog_CreateComponentChange on CreateComponentChange {
-  component {
-    name
-    id
-  }
-}
-
-fragment ChangeLog_CreateVariableChange on CreateVariableChange {
-  variable {
-    name
-    id
-  }
-}
-
-fragment ChangeLog_DeleteVariableValueChange on DeleteVariableValueChange {
-  variable {
-    name
-    id
-  }
-}
-
-fragment ChangeLog_PublishedApplicationPartChange on PublishedApplicationPartChange {
-  partVersion
-  part {
-    name
-    id
-  }
-}
-
-fragment ChangeLog_RemoveComponentChange on RemoveComponentChange {
-  component {
-    name
-    id
-  }
-}
-
-fragment ChangeLog_RemoveComponentFromApplicationPartChange on RemoveComponentFromApplicationPartChange {
-  removedComponent {
-    definition {
-      name
-      id
-    }
-    id
-  }
-}
-
-fragment ChangeLog_RemovePartFromApplicationChange on RemovePartFromApplicationChange {
-  removedPart {
-    name
-    id
-  }
-}
-
-fragment ChangeLog_RenameApplicationChange on RenameApplicationChange {
-  name
-}
-
-fragment ChangeLog_RenameApplicationPartChange on RenameApplicationPartChange {
-  name
-}
-
-fragment ChangeLog_RenameComponentChange on RenameComponentChange {
-  component {
-    name
-    id
-  }
-}
-
-fragment ChangeLog_RenameVariableChange on RenameVariableChange {
-  variable {
-    name
-    id
-  }
-}
-
-fragment ChangeLog_VariableValueChange on VariableValueChange {
-  variable {
-    name
-    id
-  }
-}
-
-fragment ChangeLog_fragment on ChangeLog {
-  id
-  change {
-    kind
-    __typename
-    ...ChangeLog_RenameApplicationChange
-    ...ChangeLog_RenameApplicationPartChange
-    ...ChangeLog_AddComponentToApplicationPartChange
-    ...ChangeLog_AddPartToApplicationChange
-    ...ChangeLog_RemoveComponentFromApplicationPartChange
-    ...ChangeLog_RemovePartFromApplicationChange
-    ...ChangeLog_ApplicationPartComponentValuesChange
-    ...ChangeLog_ComponentSchemaChange
-    ...ChangeLog_ComponentValuesChange
-    ...ChangeLog_CreateComponentChange
-    ...ChangeLog_RemoveComponentChange
-    ...ChangeLog_RenameComponentChange
-    ...ChangeLog_CreateVariableChange
-    ...ChangeLog_DeleteVariableValueChange
-    ...ChangeLog_RenameVariableChange
-    ...ChangeLog_VariableValueChange
-    ...ChangeLog_PublishedApplicationPartChange
-  }
-  modifiedAt
-  modifiedBy {
-    email
-  }
-}
-
-fragment EditVariable_Variable on Variable {
-  id
-  name
-  namespace
-  isSecret
-  state
-  values {
-    application {
-      id
-    }
-    applicationPart {
-      id
-    }
-    id
-    value
-  }
-  changeLog {
-    ...ChangeLog_fragment
-    id
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -612,6 +430,76 @@ return {
                     ],
                     "type": "PublishedApplicationPartChange",
                     "abstractKey": null
+                  },
+                  {
+                    "kind": "InlineFragment",
+                    "selections": [
+                      {
+                        "alias": "versionOfApp",
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "applicationVersion",
+                        "storageKey": null
+                      }
+                    ],
+                    "type": "ApplicationChange",
+                    "abstractKey": "__isApplicationChange"
+                  },
+                  {
+                    "kind": "InlineFragment",
+                    "selections": [
+                      {
+                        "alias": "versionOfPart",
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "partVersion",
+                        "storageKey": null
+                      }
+                    ],
+                    "type": "ApplicationPartChange",
+                    "abstractKey": "__isApplicationPartChange"
+                  },
+                  {
+                    "kind": "InlineFragment",
+                    "selections": [
+                      {
+                        "alias": "versionOfPartComponent",
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "partComponentVersion",
+                        "storageKey": null
+                      }
+                    ],
+                    "type": "ApplicationPartComponentChange",
+                    "abstractKey": "__isApplicationPartComponentChange"
+                  },
+                  {
+                    "kind": "InlineFragment",
+                    "selections": [
+                      {
+                        "alias": "versionOfComponent",
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "componentVersion",
+                        "storageKey": null
+                      }
+                    ],
+                    "type": "ComponentChange",
+                    "abstractKey": "__isComponentChange"
+                  },
+                  {
+                    "kind": "InlineFragment",
+                    "selections": [
+                      {
+                        "alias": "versionOfVariable",
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "variableVersion",
+                        "storageKey": null
+                      }
+                    ],
+                    "type": "VariableChange",
+                    "abstractKey": "__isVariableChange"
                   }
                 ],
                 "storageKey": null
@@ -650,14 +538,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "765ed4cd557d62054257ae4aedacbf14",
+    "cacheID": "0e611075f8ee9c6a8a196e0e3197560b",
     "id": null,
     "metadata": {},
     "name": "EditVariableQuery",
     "operationKind": "query",
-    "text": "query EditVariableQuery(\n  $id: ID!\n) {\n  variable(id: $id) {\n    id\n    name\n    namespace\n    ...EditVariable_Variable\n  }\n}\n\nfragment ChangeLog_AddComponentToApplicationPartChange on AddComponentToApplicationPartChange {\n  addedComponent {\n    definition {\n      name\n      id\n    }\n    id\n  }\n}\n\nfragment ChangeLog_AddPartToApplicationChange on AddPartToApplicationChange {\n  addedPart {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_ApplicationPartComponentValuesChange on ApplicationPartComponentValuesChange {\n  part {\n    id\n  }\n  application {\n    id\n  }\n  partComponent {\n    id\n    version\n  }\n  partComponentVersion\n}\n\nfragment ChangeLog_ComponentSchemaChange on ComponentSchemaChange {\n  kind\n}\n\nfragment ChangeLog_ComponentValuesChange on ComponentValuesChange {\n  kind\n}\n\nfragment ChangeLog_CreateComponentChange on CreateComponentChange {\n  component {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_CreateVariableChange on CreateVariableChange {\n  variable {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_DeleteVariableValueChange on DeleteVariableValueChange {\n  variable {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_PublishedApplicationPartChange on PublishedApplicationPartChange {\n  partVersion\n  part {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_RemoveComponentChange on RemoveComponentChange {\n  component {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_RemoveComponentFromApplicationPartChange on RemoveComponentFromApplicationPartChange {\n  removedComponent {\n    definition {\n      name\n      id\n    }\n    id\n  }\n}\n\nfragment ChangeLog_RemovePartFromApplicationChange on RemovePartFromApplicationChange {\n  removedPart {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_RenameApplicationChange on RenameApplicationChange {\n  name\n}\n\nfragment ChangeLog_RenameApplicationPartChange on RenameApplicationPartChange {\n  name\n}\n\nfragment ChangeLog_RenameComponentChange on RenameComponentChange {\n  component {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_RenameVariableChange on RenameVariableChange {\n  variable {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_VariableValueChange on VariableValueChange {\n  variable {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_fragment on ChangeLog {\n  id\n  change {\n    kind\n    __typename\n    ...ChangeLog_RenameApplicationChange\n    ...ChangeLog_RenameApplicationPartChange\n    ...ChangeLog_AddComponentToApplicationPartChange\n    ...ChangeLog_AddPartToApplicationChange\n    ...ChangeLog_RemoveComponentFromApplicationPartChange\n    ...ChangeLog_RemovePartFromApplicationChange\n    ...ChangeLog_ApplicationPartComponentValuesChange\n    ...ChangeLog_ComponentSchemaChange\n    ...ChangeLog_ComponentValuesChange\n    ...ChangeLog_CreateComponentChange\n    ...ChangeLog_RemoveComponentChange\n    ...ChangeLog_RenameComponentChange\n    ...ChangeLog_CreateVariableChange\n    ...ChangeLog_DeleteVariableValueChange\n    ...ChangeLog_RenameVariableChange\n    ...ChangeLog_VariableValueChange\n    ...ChangeLog_PublishedApplicationPartChange\n  }\n  modifiedAt\n  modifiedBy {\n    email\n  }\n}\n\nfragment EditVariable_Variable on Variable {\n  id\n  name\n  namespace\n  isSecret\n  state\n  values {\n    application {\n      id\n    }\n    applicationPart {\n      id\n    }\n    id\n    value\n  }\n  changeLog {\n    ...ChangeLog_fragment\n    id\n  }\n}\n"
+    "text": "query EditVariableQuery(\n  $id: ID!\n) {\n  variable(id: $id) {\n    id\n    name\n    namespace\n    ...EditVariable_Variable\n  }\n}\n\nfragment ChangeLog_AddComponentToApplicationPartChange on AddComponentToApplicationPartChange {\n  addedComponent {\n    definition {\n      name\n      id\n    }\n    id\n  }\n}\n\nfragment ChangeLog_AddPartToApplicationChange on AddPartToApplicationChange {\n  addedPart {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_ApplicationPartComponentValuesChange on ApplicationPartComponentValuesChange {\n  part {\n    id\n  }\n  application {\n    id\n  }\n  partComponent {\n    id\n    version\n  }\n  partComponentVersion\n}\n\nfragment ChangeLog_ComponentSchemaChange on ComponentSchemaChange {\n  kind\n}\n\nfragment ChangeLog_ComponentValuesChange on ComponentValuesChange {\n  kind\n}\n\nfragment ChangeLog_CreateComponentChange on CreateComponentChange {\n  component {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_CreateVariableChange on CreateVariableChange {\n  variable {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_DeleteVariableValueChange on DeleteVariableValueChange {\n  variable {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_PublishedApplicationPartChange on PublishedApplicationPartChange {\n  partVersion\n  part {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_RemoveComponentChange on RemoveComponentChange {\n  component {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_RemoveComponentFromApplicationPartChange on RemoveComponentFromApplicationPartChange {\n  removedComponent {\n    definition {\n      name\n      id\n    }\n    id\n  }\n}\n\nfragment ChangeLog_RemovePartFromApplicationChange on RemovePartFromApplicationChange {\n  removedPart {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_RenameApplicationChange on RenameApplicationChange {\n  name\n}\n\nfragment ChangeLog_RenameApplicationPartChange on RenameApplicationPartChange {\n  name\n}\n\nfragment ChangeLog_RenameComponentChange on RenameComponentChange {\n  component {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_RenameVariableChange on RenameVariableChange {\n  variable {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_VariableValueChange on VariableValueChange {\n  variable {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_fragment on ChangeLog {\n  id\n  change {\n    kind\n    __typename\n    ...ChangeLog_RenameApplicationChange\n    ...ChangeLog_RenameApplicationPartChange\n    ...ChangeLog_AddComponentToApplicationPartChange\n    ...ChangeLog_AddPartToApplicationChange\n    ...ChangeLog_RemoveComponentFromApplicationPartChange\n    ...ChangeLog_RemovePartFromApplicationChange\n    ...ChangeLog_ApplicationPartComponentValuesChange\n    ...ChangeLog_ComponentSchemaChange\n    ...ChangeLog_ComponentValuesChange\n    ...ChangeLog_CreateComponentChange\n    ...ChangeLog_RemoveComponentChange\n    ...ChangeLog_RenameComponentChange\n    ...ChangeLog_CreateVariableChange\n    ...ChangeLog_DeleteVariableValueChange\n    ...ChangeLog_RenameVariableChange\n    ...ChangeLog_VariableValueChange\n    ...ChangeLog_PublishedApplicationPartChange\n    ... on ApplicationChange {\n      __isApplicationChange: __typename\n      versionOfApp: applicationVersion\n    }\n    ... on ApplicationPartChange {\n      __isApplicationPartChange: __typename\n      versionOfPart: partVersion\n    }\n    ... on ApplicationPartComponentChange {\n      __isApplicationPartComponentChange: __typename\n      versionOfPartComponent: partComponentVersion\n    }\n    ... on ComponentChange {\n      __isComponentChange: __typename\n      versionOfComponent: componentVersion\n    }\n    ... on VariableChange {\n      __isVariableChange: __typename\n      versionOfVariable: variableVersion\n    }\n  }\n  modifiedAt\n  modifiedBy {\n    email\n  }\n}\n\nfragment EditVariable_Variable on Variable {\n  id\n  name\n  namespace\n  isSecret\n  state\n  values {\n    application {\n      id\n    }\n    applicationPart {\n      id\n    }\n    id\n    value\n  }\n  changeLog {\n    ...ChangeLog_fragment\n    id\n  }\n}\n"
   }
 };
 })();
-(node as any).hash = '2110ad2a64ace622de47a165d170a365';
+
+(node as any).hash = "2110ad2a64ace622de47a165d170a365";
+
 export default node;

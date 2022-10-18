@@ -1,31 +1,33 @@
+/**
+ * @generated SignedSource<<569cf434270dd28beb78d8a760888233>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
-
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ChangeLog_ApplicationPartComponentValuesChange = {
-    readonly part: {
-        readonly id: string;
-    } | null;
-    readonly application: {
-        readonly id: string;
-    } | null;
-    readonly partComponent: {
-        readonly id: string;
-        readonly version: number;
-    } | null;
-    readonly partComponentVersion: number;
-    readonly " $refType": "ChangeLog_ApplicationPartComponentValuesChange";
+export type ChangeLog_ApplicationPartComponentValuesChange$data = {
+  readonly application: {
+    readonly id: string;
+  } | null;
+  readonly part: {
+    readonly id: string;
+  } | null;
+  readonly partComponent: {
+    readonly id: string;
+    readonly version: number;
+  } | null;
+  readonly partComponentVersion: number;
+  readonly " $fragmentType": "ChangeLog_ApplicationPartComponentValuesChange";
 };
-export type ChangeLog_ApplicationPartComponentValuesChange$data = ChangeLog_ApplicationPartComponentValuesChange;
 export type ChangeLog_ApplicationPartComponentValuesChange$key = {
-    readonly " $data"?: ChangeLog_ApplicationPartComponentValuesChange$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"ChangeLog_ApplicationPartComponentValuesChange">;
+  readonly " $data"?: ChangeLog_ApplicationPartComponentValuesChange$data;
+  readonly " $fragmentSpreads": FragmentRefs<"ChangeLog_ApplicationPartComponentValuesChange">;
 };
-
-
 
 const node: ReaderFragment = (function(){
 var v0 = {
@@ -95,5 +97,7 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = '3b446df7e46597e8e07e1d7cd8b6d485';
+
+(node as any).hash = "3b446df7e46597e8e07e1d7cd8b6d485";
+
 export default node;

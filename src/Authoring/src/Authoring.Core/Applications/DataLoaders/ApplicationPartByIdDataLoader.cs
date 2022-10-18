@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Confix.Authoring.Store;
 using GreenDonut;
 
@@ -16,8 +11,8 @@ public class ApplicationPartByIdDataLoader
 
     public ApplicationPartByIdDataLoader(
         IApplicationStore applicationStore,
-        IBatchScheduler batchScheduler)
-        : base(batchScheduler)
+        IBatchScheduler batchScheduler,
+        DataLoaderOptions? options = null) : base(batchScheduler, options)
     {
         _applicationStore = applicationStore;
     }
@@ -26,10 +21,14 @@ public class ApplicationPartByIdDataLoader
         IReadOnlyList<Guid> keys,
         CancellationToken cancellationToken)
     {
-        IEnumerable<ApplicationPart>? parts =
-            await _applicationStore
-                .GetManyPartsByIdAsync(keys, cancellationToken);
+        var ids = keys.ToHashSet();
 
-        return parts.ToDictionary(x => x.Id)!;
+        IEnumerable<Application> apps =
+            await _applicationStore.GetApplicationsByPartIdsAsync(keys, cancellationToken);
+
+        return apps
+            .SelectMany(x => x.Parts)
+            .Where(x => ids.Contains(x.Id))
+            .ToDictionary(x => x.Id)!;
     }
 }

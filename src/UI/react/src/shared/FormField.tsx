@@ -1,8 +1,8 @@
-import { ClassNames, css, SerializedStyles } from "@emotion/react";
+import { css } from "@emotion/react";
 import styled from "@emotion/styled";
-import Editor from "@monaco-editor/react";
 import { Checkbox, Input, InputProps, Row, Select } from "antd";
-import React, { useCallback, useEffect } from "react";
+import { FormikValues } from "formik";
+import React, { ReactNode, useCallback } from "react";
 import { Colors } from "./colors";
 import { SchemaEditor, useSchemaEditorRef } from "./editor/SchemaEditor";
 import { UseFormik } from "./UseFormik";
@@ -31,6 +31,7 @@ export const Field: React.FC<{
   label: string;
   isError?: boolean;
   className?: string;
+  children: ReactNode;
 }> = ({ className, name, label, isError = false, children }) => (
   <Row
     css={[
@@ -60,14 +61,13 @@ export const FieldInput: React.FC<
   </Field>
 );
 
-export const FieldInputGroup: React.FC<
-  {
-    name?: string;
-    label: string;
-    isError?: boolean;
-    compact?: boolean;
-  } & InputProps
-> = ({ name, label, isError = false, compact, children, ...inputProps }) => (
+export const FieldGroup: React.FC<{
+  name?: string;
+  label: string;
+  isError?: boolean;
+  compact?: boolean;
+  children: React.ReactNode;
+}> = ({ name, label, isError = false, compact, children, ...inputProps }) => (
   <Field name={name} label={label} isError={isError}>
     <Input.Group
       compact={compact}
@@ -78,19 +78,32 @@ export const FieldInputGroup: React.FC<
         }
       `}
     >
-      <Input
-        name={name ?? label}
-        {...inputProps}
-        style={{
-          flex: "1",
-        }}
-      />
       {children}
     </Input.Group>
   </Field>
 );
 
-export function FormField<TValues>(props: {
+export const FieldInputGroup: React.FC<
+  {
+    name?: string;
+    label: string;
+    isError?: boolean;
+    compact?: boolean;
+  } & InputProps
+> = ({ name, label, isError = false, compact, children, ...inputProps }) => (
+  <FieldGroup name={name} label={label} isError={isError} compact={compact}>
+    <Input
+      name={name ?? label}
+      {...inputProps}
+      style={{
+        flex: "1",
+      }}
+    />
+    {children}
+  </FieldGroup>
+);
+
+export function FormField<TValues extends FormikValues>(props: {
   form: UseFormik<TValues>;
   field: keyof UseFormik<TValues>["values"];
   label: string;
@@ -116,7 +129,7 @@ export function FormField<TValues>(props: {
   );
 }
 
-export function FormEditor<TValues>(props: {
+export function FormEditor<TValues extends FormikValues>(props: {
   form: UseFormik<TValues>;
   field: keyof UseFormik<TValues>["values"];
   label: string;
@@ -153,7 +166,7 @@ export function FormEditor<TValues>(props: {
   );
 }
 
-export function FormCheckbox<TValues>(props: {
+export function FormCheckbox<TValues extends FormikValues>(props: {
   form: UseFormik<TValues>;
   field: keyof UseFormik<TValues>["values"];
   label: string;
@@ -175,7 +188,7 @@ export function FormCheckbox<TValues>(props: {
   );
 }
 
-export function TagSelectField<TValues>(props: {
+export function TagSelectField<TValues extends FormikValues>(props: {
   form: UseFormik<TValues>;
   field: keyof UseFormik<TValues>["values"];
   label: string;

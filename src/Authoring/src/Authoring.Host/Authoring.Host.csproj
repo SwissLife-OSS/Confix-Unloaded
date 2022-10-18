@@ -6,11 +6,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Authoring.Authentication\Authoring.Authentication.csproj" />
     <ProjectReference Include="..\Authoring.Core\Authoring.Core.csproj" />
     <ProjectReference Include="..\Authoring.GraphQL\Authoring.GraphQL.csproj" />
     <ProjectReference Include="..\Authoring.Store.Mongo\Authoring.Store.Mongo.csproj" />
     <ProjectReference Include="..\CryptoProviders.AzureKeyVault\CryptoProviders.AzureKeyVault.csproj" />
     <ProjectReference Include="..\CryptoProviders.Mongo\CryptoProviders.Mongo.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Yarp.ReverseProxy" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,5 @@
 using Confix.Authoring.GraphQL.Serialization;
+using HotChocolate.AspNetCore.Authorization;
 using HotChocolate.Execution.Configuration;
 using HotChocolate.Resolvers;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,6 +26,9 @@ public static class GraphQLServiceCollectionExtensions
             .AddVariables()
             .AddPublishing()
             .AddChangeLog()
+            .AddRoles()
+            .AddGroups()
+            .AddViewer()
             // server options
             .AddAuthorization()
             .AddGlobalObjectIdentification()
@@ -32,7 +36,12 @@ public static class GraphQLServiceCollectionExtensions
             .AddMutationConventions()
             .AddErrorInterfaceType<IUserError>()
             .AddFiltering()
-            .AddSorting();
+            .AddSorting()
+            .ModifyOptions(x =>
+            {
+                x.EnableFlagEnums = true;
+                x.EnableOneOf = true;
+            });
 
         builder
             .Services

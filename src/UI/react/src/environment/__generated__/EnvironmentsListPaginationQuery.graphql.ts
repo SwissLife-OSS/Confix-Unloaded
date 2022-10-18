@@ -1,57 +1,27 @@
+/**
+ * @generated SignedSource<<a56f4d4ba7a41ebeb359337b1385e5f8>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest } from "relay-runtime";
-
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type EnvironmentsListPaginationQueryVariables = {
-    count?: number | null | undefined;
-    cursor?: string | null | undefined;
-    search?: string | null | undefined;
+export type EnvironmentsListPaginationQuery$variables = {
+  count?: number | null;
+  cursor?: string | null;
+  search?: string | null;
 };
-export type EnvironmentsListPaginationQueryResponse = {
-    readonly " $fragmentRefs": FragmentRefs<"EnvironmentsList_Environments">;
+export type EnvironmentsListPaginationQuery$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"EnvironmentsList_Environments">;
 };
 export type EnvironmentsListPaginationQuery = {
-    readonly response: EnvironmentsListPaginationQueryResponse;
-    readonly variables: EnvironmentsListPaginationQueryVariables;
+  response: EnvironmentsListPaginationQuery$data;
+  variables: EnvironmentsListPaginationQuery$variables;
 };
-
-
-
-/*
-query EnvironmentsListPaginationQuery(
-  $count: Int
-  $cursor: String
-  $search: String
-) {
-  ...EnvironmentsList_Environments
-}
-
-fragment EnvironmentsList_EnvironmentEdge on Environment {
-  id
-  name
-}
-
-fragment EnvironmentsList_Environments on Query {
-  searchEnvironments(after: $cursor, first: $count, search: $search) {
-    edges {
-      node {
-        id
-        name
-        ...EnvironmentsList_EnvironmentEdge
-        __typename
-      }
-      cursor
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -219,5 +189,7 @@ return {
   }
 };
 })();
-(node as any).hash = '5b3eae102322d04bd73afa1dd1d11813';
+
+(node as any).hash = "5b3eae102322d04bd73afa1dd1d11813";
+
 export default node;

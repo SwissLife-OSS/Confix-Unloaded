@@ -87,7 +87,7 @@ const ParentEnvironement: React.FC<{
     editEnvironmentFragment,
     data
   );
-  const [visible, , enable, disable] = useToggle();
+  const [open, , enable, disable] = useToggle();
 
   return (
     <>
@@ -99,7 +99,7 @@ const ParentEnvironement: React.FC<{
       />
       <Button onClick={enable}>Change</Button>
       <SetParentEnvironmentDialog
-        visible={visible}
+        open={open}
         onClose={disable}
         name={environment.name}
         id={environment.id}
@@ -117,7 +117,7 @@ const Header: React.FC<{ name: string; id: string }> = ({ name, id }) => {
         key={name}
         id={id}
         onClose={disable}
-        visible={isEdit}
+        open={isEdit}
       />
     </EditableBreadcrumbHeader>
   );

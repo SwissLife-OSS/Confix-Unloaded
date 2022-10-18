@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>Confix.Common</AssemblyName>
+    <RootNamespace>Confix.Common</RootNamespace>
+  </PropertyGroup>
+
+</Project>

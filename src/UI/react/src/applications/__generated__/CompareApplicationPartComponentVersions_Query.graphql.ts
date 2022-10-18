@@ -1,56 +1,35 @@
+/**
+ * @generated SignedSource<<1ee6ecac687222d90e0d540b04d983f0>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest } from "relay-runtime";
-
-export type CompareApplicationPartComponentVersions_QueryVariables = {
-    partComponentId: string;
-    from: number;
-    to: number;
+import { ConcreteRequest, Query } from 'relay-runtime';
+export type CompareApplicationPartComponentVersions_Query$variables = {
+  from: number;
+  partComponentId: string;
+  to: number;
 };
-export type CompareApplicationPartComponentVersions_QueryResponse = {
-    readonly applicationPartComponentById: {
-        readonly version: number;
-        readonly fromValues: string | null;
-        readonly toValues: string | null;
-        readonly changeLog: ReadonlyArray<{
-            readonly change: {
-                readonly partComponentVersion?: number | undefined;
-            };
-        }>;
-    } | null;
+export type CompareApplicationPartComponentVersions_Query$data = {
+  readonly applicationPartComponentById: {
+    readonly changeLog: ReadonlyArray<{
+      readonly change: {
+        readonly partComponentVersion?: number;
+      };
+    }>;
+    readonly fromValues: string | null;
+    readonly toValues: string | null;
+    readonly version: number;
+  } | null;
 };
 export type CompareApplicationPartComponentVersions_Query = {
-    readonly response: CompareApplicationPartComponentVersions_QueryResponse;
-    readonly variables: CompareApplicationPartComponentVersions_QueryVariables;
+  response: CompareApplicationPartComponentVersions_Query$data;
+  variables: CompareApplicationPartComponentVersions_Query$variables;
 };
-
-
-
-/*
-query CompareApplicationPartComponentVersions_Query(
-  $partComponentId: ID!
-  $from: Int!
-  $to: Int!
-) {
-  applicationPartComponentById(partComponentId: $partComponentId) {
-    version
-    fromValues: values(version: $from)
-    toValues: values(version: $to)
-    changeLog {
-      change {
-        __typename
-        ... on ApplicationPartComponentValuesChange {
-          partComponentVersion
-        }
-      }
-      id
-    }
-    id
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = {
@@ -249,5 +228,7 @@ return {
   }
 };
 })();
-(node as any).hash = 'fd87212d73721a6f76bbf2ea70786b36';
+
+(node as any).hash = "fd87212d73721a6f76bbf2ea70786b36";
+
 export default node;

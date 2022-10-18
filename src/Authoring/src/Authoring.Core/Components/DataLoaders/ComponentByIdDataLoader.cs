@@ -1,11 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Confix.Authoring.Store;
 using GreenDonut;
-using HotChocolate.Fetching;
 
 namespace Confix.Authoring.DataLoaders;
 
@@ -15,8 +9,8 @@ public class ComponentByIdDataLoader : BatchDataLoader<Guid, Component?>, ICompo
 
     public ComponentByIdDataLoader(
         IComponentStore componentStore,
-        IBatchScheduler batchScheduler)
-        : base(batchScheduler)
+        IBatchScheduler batchScheduler,
+        DataLoaderOptions? options = null) : base(batchScheduler, options)
     {
         _componentStore = componentStore;
     }
@@ -25,7 +19,7 @@ public class ComponentByIdDataLoader : BatchDataLoader<Guid, Component?>, ICompo
         IReadOnlyList<Guid> keys,
         CancellationToken cancellationToken)
     {
-        IEnumerable<Component> components =
+        IReadOnlyCollection<Component> components =
             await _componentStore.GetManyByIdAsync(
                 keys,
                 cancellationToken);

@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Confix.Authoring.Store;
 using GreenDonut;
 
@@ -14,8 +9,8 @@ public class VariableByIdDataLoader : BatchDataLoader<Guid, Variable?>, IVariabl
 
     public VariableByIdDataLoader(
         IVariableStore variableStore,
-        IBatchScheduler batchScheduler)
-        : base(batchScheduler)
+        IBatchScheduler batchScheduler,
+        DataLoaderOptions? options = null) : base(batchScheduler, options)
     {
         _variableStore = variableStore;
     }
@@ -24,10 +19,7 @@ public class VariableByIdDataLoader : BatchDataLoader<Guid, Variable?>, IVariabl
         IReadOnlyList<Guid> keys,
         CancellationToken cancellationToken)
     {
-        IEnumerable<Variable> variables =
-            await _variableStore.GetManyAsync(
-                keys,
-                cancellationToken);
+        var variables = await _variableStore.GetManyAsync(keys, cancellationToken);
 
         return variables.ToDictionary(x => x.Id)!;
     }

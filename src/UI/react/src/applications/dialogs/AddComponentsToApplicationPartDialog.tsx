@@ -39,18 +39,17 @@ export const addComponentsToApplicationPartMutation = graphql`
 `;
 
 export const AddComponentsToApplicationPartDialog: React.FC<{
-  visible: boolean;
+  open: boolean;
   onClose: () => void;
   applicationPartName: string;
   applicationPartId: string;
-}> = ({ visible, applicationPartId, applicationPartName, onClose }) => {
+}> = ({ open, applicationPartId, applicationPartName, onClose }) => {
   const [commit, isInFlight] =
     useMutation<AddComponentsToApplicationPartDialogMutation>(
       addComponentsToApplicationPartMutation
     );
   const [options, setOptions] = useState<ComponentOption[]>([]);
   const handleAddParts = useCallback(() => {
-    console.log(options);
     pipeCommitFn(commit, [
       withSuccessMessage(
         (x) =>
@@ -72,7 +71,7 @@ export const AddComponentsToApplicationPartDialog: React.FC<{
   return (
     <Modal
       title={`Add Components to ${applicationPartName}`}
-      visible={visible}
+      open={open}
       onOk={handleAddParts}
       confirmLoading={isInFlight}
       onCancel={onClose}

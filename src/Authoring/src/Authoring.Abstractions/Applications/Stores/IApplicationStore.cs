@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-
 namespace Confix.Authoring.Store;
 
 // <summary>
@@ -84,26 +78,6 @@ public interface IApplicationStore
         CancellationToken cancellationToken);
 
     /// <summary>
-    /// Gets multiple application parts by their <paramref name="ids"/>.
-    /// </summary>
-    /// <param name="ids">
-    /// The application part ids.
-    /// </param>
-    /// <param name="cancellationToken">
-    /// The cancellation token.
-    /// </param>
-    /// <returns>
-    /// Returns a list of application parts that matched the <paramref name="ids"/>.
-    /// </returns>
-    Task<IReadOnlyCollection<ApplicationPart>> GetManyPartsByIdAsync(
-        IEnumerable<Guid> ids,
-        CancellationToken cancellationToken);
-
-    Task<IReadOnlyCollection<ApplicationPartComponent>> GetManyComponentPartsByIdAsync(
-        IEnumerable<Guid> ids,
-        CancellationToken cancellationToken);
-
-    /// <summary>
     /// Allows to query the application store.
     /// </summary>
     IQueryable<Application> Query();
@@ -142,5 +116,13 @@ public interface IApplicationStore
 
     Task<Application?> GetByComponentPartIdAsync(
         Guid componentPartId,
+        CancellationToken cancellationToken);
+
+    Task<IReadOnlyList<Application>> GetApplicationsByComponentIdAsync(
+        IEnumerable<Guid> componentIds,
+        CancellationToken cancellationToken);
+
+    Task<IReadOnlyList<Application>> GetApplicationsByPartIdsAsync(
+        IEnumerable<Guid> partIds,
         CancellationToken cancellationToken);
 }

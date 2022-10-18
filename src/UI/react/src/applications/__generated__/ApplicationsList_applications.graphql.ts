@@ -1,29 +1,32 @@
+/**
+ * @generated SignedSource<<d05116ec82d6c9dcf4effd9a6b2b3784>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
-import ApplicationsListPaginationQuery from "./ApplicationsListPaginationQuery.graphql";
+import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ApplicationsList_applications = {
-    readonly applications: {
-        readonly edges: ReadonlyArray<{
-            readonly node: {
-                readonly id: string;
-                readonly name: string;
-                readonly " $fragmentRefs": FragmentRefs<"ApplicationsList_applicationsEdge">;
-            };
-        }> | null;
-    } | null;
-    readonly " $refType": "ApplicationsList_applications";
+export type ApplicationsList_applications$data = {
+  readonly applications: {
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly id: string;
+        readonly name: string;
+        readonly namespace: string;
+        readonly " $fragmentSpreads": FragmentRefs<"ApplicationsList_applicationsEdge">;
+      };
+    }> | null;
+  } | null;
+  readonly " $fragmentType": "ApplicationsList_applications";
 };
-export type ApplicationsList_applications$data = ApplicationsList_applications;
 export type ApplicationsList_applications$key = {
-    readonly " $data"?: ApplicationsList_applications$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"ApplicationsList_applications">;
+  readonly " $data"?: ApplicationsList_applications$data;
+  readonly " $fragmentSpreads": FragmentRefs<"ApplicationsList_applications">;
 };
-
-
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -64,7 +67,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": ApplicationsListPaginationQuery
+      "operation": require('./ApplicationsListPaginationQuery.graphql')
     }
   },
   "name": "ApplicationsList_applications",
@@ -117,13 +120,20 @@ return {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
-                  "name": "__typename",
+                  "name": "namespace",
                   "storageKey": null
                 },
                 {
                   "args": null,
                   "kind": "FragmentSpread",
                   "name": "ApplicationsList_applicationsEdge"
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "__typename",
+                  "storageKey": null
                 }
               ],
               "storageKey": null
@@ -171,5 +181,7 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = '0f0154047f5af2c4603c0c0a9abfe895';
+
+(node as any).hash = "d7b4ad1923d9adae56e491423417c7a1";
+
 export default node;

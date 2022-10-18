@@ -1,3 +1,8 @@
+using Confix.Authentication.Authorization;
+using Confix.Authoring.Applications;
+using Confix.Authoring.ChangeLogs;
+using Confix.Authoring.Components;
+using Confix.Authoring.Environement;
 using Confix.Authoring.Internal;
 using Confix.Authoring.Publishing;
 using Confix.Vault.Client;
@@ -12,16 +17,16 @@ public static class AuthoringServiceCollectionExtensions
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.AddScoped<IUserSessionAccessor, DoNotUserSessionAccessor>();
-        services.AddScoped<IChangeLogService, ChangeLogService>();
-        services.AddScoped<IApplicationService, ApplicationService>();
-        services.AddScoped<IEnvironmentService, EnvironmentService>();
-        services.AddScoped<IComponentService, ComponentService>();
-        services.AddScoped<IVariableService, VariableService>();
-        services.AddScoped<ISchemaService, SchemaService>();
-        services.AddScoped<IPublishingService, PublishingService>();
+        services.AddApplications();
+        services.AddChangeLog();
+        services.AddComponents();
+        services.AddRoles();
+        services.AddGroups();
+        services.AddEnvironments();
+        services.AddVariables();
+        services.AddSchemas();
+        services.AddPublishing();
         services.AddVaultClient(configuration);
-
         return services;
     }
 }

@@ -1,39 +1,41 @@
+/**
+ * @generated SignedSource<<9306b1d736f03366689fb4072f2681cb>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
-
-import { FragmentRefs } from "relay-runtime";
+import { Fragment, ReaderFragment } from 'relay-runtime';
 export type VariableState = "ACTIVE" | "DEPRECATED" | "%future added value";
-export type EditVariable_Variable = {
+import { FragmentRefs } from "relay-runtime";
+export type EditVariable_Variable$data = {
+  readonly changeLog: ReadonlyArray<{
+    readonly " $fragmentSpreads": FragmentRefs<"ChangeLog_fragment">;
+  }>;
+  readonly id: string;
+  readonly isSecret: boolean;
+  readonly name: string;
+  readonly namespace: string;
+  readonly state: VariableState;
+  readonly values: ReadonlyArray<{
+    readonly application: {
+      readonly id: string;
+    } | null;
+    readonly applicationPart: {
+      readonly id: string;
+    } | null;
     readonly id: string;
-    readonly name: string;
-    readonly namespace: string | null;
-    readonly isSecret: boolean;
-    readonly state: VariableState;
-    readonly values: ReadonlyArray<{
-        readonly application: {
-            readonly id: string;
-        } | null;
-        readonly applicationPart: {
-            readonly id: string;
-        } | null;
-        readonly id: string;
-        readonly value: string;
-    }>;
-    readonly changeLog: ReadonlyArray<{
-        readonly " $fragmentRefs": FragmentRefs<"ChangeLog_fragment">;
-    }>;
-    readonly " $refType": "EditVariable_Variable";
+    readonly value: string | null;
+  }>;
+  readonly " $fragmentType": "EditVariable_Variable";
 };
-export type EditVariable_Variable$data = EditVariable_Variable;
 export type EditVariable_Variable$key = {
-    readonly " $data"?: EditVariable_Variable$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"EditVariable_Variable">;
+  readonly " $data"?: EditVariable_Variable$data;
+  readonly " $fragmentSpreads": FragmentRefs<"EditVariable_Variable">;
 };
-
-
 
 const node: ReaderFragment = (function(){
 var v0 = {
@@ -141,5 +143,7 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = '27ad8bf47cc0233d5a6b69c9c0b6c11f';
+
+(node as any).hash = "27ad8bf47cc0233d5a6b69c9c0b6c11f";
+
 export default node;

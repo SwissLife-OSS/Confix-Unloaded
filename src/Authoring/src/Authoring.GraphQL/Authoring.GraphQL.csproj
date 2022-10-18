@@ -20,6 +20,9 @@
 
   <ItemGroup>
     <Folder Include="Applications\Transport" />
+    <Folder Include="Groups\Dataloader" />
+    <Folder Include="Groups\Extensions" />
+    <Folder Include="Roles\Extensions" />
   </ItemGroup>
 
 </Project>

@@ -5,7 +5,7 @@ import {
   useFragment,
 } from "react-relay";
 import { graphql } from "babel-plugin-relay/macro";
-import { Settings } from "../settings";
+import { config } from "../config";
 import { InfiniteScrollList } from "../shared/InfiniteScrollList";
 import { EnvironmentsListQuery } from "./__generated__/EnvironmentsListQuery.graphql";
 import { EnvironmentsList_EnvironmentEdge$key } from "./__generated__/EnvironmentsList_EnvironmentEdge.graphql";
@@ -52,7 +52,7 @@ export const EnvironmentsList: React.FC<{
   search: string | undefined;
 }> = ({ search, onItemSelect, selectedEnvironmentId }) => {
   const queryData = useLazyLoadQuery<EnvironmentsListQuery>(environmentsQuery, {
-    count: Settings.pagination.pageSize,
+    count: config.pagination.pageSize,
     search,
   });
   const {
@@ -114,7 +114,7 @@ const EnvironmentListItem: React.FC<{
       <List.Item.Meta title={name} />
       <ListButton type="text" icon={<DeleteIcon />} onClick={enableRemoveEnv} />
       <RemoveEnvironmentDialog
-        visible={isRemoveEnvVisible}
+        open={isRemoveEnvVisible}
         environmentId={id}
         onClose={handleOnClose}
         environmentName={name}
@@ -123,15 +123,20 @@ const EnvironmentListItem: React.FC<{
   );
 };
 
+const ListButton = styled(Button)`
+  margin-left: 5px;
+  flex: 0;
+  opacity: 0;
+  transition: opacity 100ms;
+`;
+
 const ListItem = styled(List.Item)<{ selected: boolean }>`
   cursor: pointer;
   background-color: ${(props) => (props.selected ? Colors.gray[5] : "inherit")};
   :hover {
     background-color: ${Colors.gray[2]};
   }
-`;
-
-const ListButton = styled(Button)`
-  margin-left: 5px;
-  flex: 0;
+  :hover ${ListButton} {
+    opacity: 1;
+  }
 `;

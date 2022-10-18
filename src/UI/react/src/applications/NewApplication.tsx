@@ -18,7 +18,7 @@ import { useCommitForm } from "../shared/useCommitForm";
 const newApplicationMutation = graphql`
   mutation NewApplicationMutation(
     $input: CreateApplicationInput!
-    $connectionIds: [String!]!
+    $connectionIds: [ID!]!
   ) {
     createApplication(input: $input) {
       application

@@ -31,11 +31,11 @@ const renameApplicationMutation = graphql`
 `;
 
 export const RenameApplicationDialog: React.FC<{
-  visible: boolean;
+  open: boolean;
   onClose: () => void;
   name: string;
   id: string;
-}> = ({ visible, name, id, onClose }) => {
+}> = ({ open, name, id, onClose }) => {
   const [commit, isInFlight] = useMutation<RenameApplicationDialogMutation>(
     renameApplicationMutation
   );
@@ -54,7 +54,7 @@ export const RenameApplicationDialog: React.FC<{
   return (
     <Modal
       title={`Rename Application ${name}`}
-      visible={visible}
+      open={open}
       onOk={handleRename}
       confirmLoading={isInFlight}
       onCancel={onClose}

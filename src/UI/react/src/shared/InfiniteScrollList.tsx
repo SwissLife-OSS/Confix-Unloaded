@@ -35,7 +35,7 @@ export function InfiniteScrollList<T>({
   );
   return (
     <div
-      style={{ flex: 1, overflow: "scroll", overscrollBehavior: "contain" }}
+      style={{ flex: 1, overflow: "auto", overscrollBehavior: "contain" }}
       id="scrollableDiv"
     >
       <InfiniteScroll

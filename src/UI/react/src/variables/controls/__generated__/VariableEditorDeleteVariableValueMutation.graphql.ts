@@ -1,53 +1,37 @@
+/**
+ * @generated SignedSource<<f11e8054acd9d9a16c1cf58d68c09ba6>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest } from "relay-runtime";
-
+import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type DeleteVariableValueInput = {
-    id: string;
+  id: string;
 };
-export type VariableEditorDeleteVariableValueMutationVariables = {
-    input: DeleteVariableValueInput;
+export type VariableEditorDeleteVariableValueMutation$variables = {
+  input: DeleteVariableValueInput;
 };
-export type VariableEditorDeleteVariableValueMutationResponse = {
-    readonly deleteVariableValue: {
-        readonly value: {
-            readonly variable: {
-                readonly id: string;
-                readonly values: ReadonlyArray<{
-                    readonly id: string;
-                    readonly value: string;
-                }>;
-            } | null;
-        } | null;
-    };
+export type VariableEditorDeleteVariableValueMutation$data = {
+  readonly deleteVariableValue: {
+    readonly value: {
+      readonly variable: {
+        readonly id: string;
+        readonly values: ReadonlyArray<{
+          readonly id: string;
+          readonly value: string | null;
+        }>;
+      } | null;
+    } | null;
+  };
 };
 export type VariableEditorDeleteVariableValueMutation = {
-    readonly response: VariableEditorDeleteVariableValueMutationResponse;
-    readonly variables: VariableEditorDeleteVariableValueMutationVariables;
+  response: VariableEditorDeleteVariableValueMutation$data;
+  variables: VariableEditorDeleteVariableValueMutation$variables;
 };
-
-
-
-/*
-mutation VariableEditorDeleteVariableValueMutation(
-  $input: DeleteVariableValueInput!
-) {
-  deleteVariableValue(input: $input) {
-    value {
-      variable {
-        id
-        values {
-          id
-          value
-        }
-      }
-      id
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = [
@@ -178,5 +162,7 @@ return {
   }
 };
 })();
-(node as any).hash = '711576a5c5587d42d641470381d523bd';
+
+(node as any).hash = "711576a5c5587d42d641470381d523bd";
+
 export default node;

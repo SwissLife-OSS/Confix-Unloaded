@@ -1,4 +1,5 @@
 using System;
+using Confix.Authoring.Store;
 
 namespace Confix.Authoring.GraphQL.Applications;
 
@@ -16,5 +17,6 @@ public class ApplicationPartComponentNotFoundError : UserError
     {
     }
 
+    [ID(nameof(ApplicationPartComponent))]
     public Guid ComponentPartId { get; set; }
 }

@@ -1,89 +1,47 @@
+/**
+ * @generated SignedSource<<afaf07258b54e0c509625681fbddd50a>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest } from "relay-runtime";
-
+import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type ApplicationFilterInput = {
-    and?: Array<ApplicationFilterInput> | null | undefined;
-    or?: Array<ApplicationFilterInput> | null | undefined;
-    name?: StringOperationFilterInput | null | undefined;
-    namespace?: StringOperationFilterInput | null | undefined;
+  and?: ReadonlyArray<ApplicationFilterInput> | null;
+  name?: StringOperationFilterInput | null;
+  namespace?: StringOperationFilterInput | null;
+  or?: ReadonlyArray<ApplicationFilterInput> | null;
 };
 export type StringOperationFilterInput = {
-    and?: Array<StringOperationFilterInput> | null | undefined;
-    or?: Array<StringOperationFilterInput> | null | undefined;
-    eq?: string | null | undefined;
-    neq?: string | null | undefined;
-    contains?: string | null | undefined;
-    ncontains?: string | null | undefined;
-    in?: Array<string | null> | null | undefined;
-    nin?: Array<string | null> | null | undefined;
-    startsWith?: string | null | undefined;
-    nstartsWith?: string | null | undefined;
-    endsWith?: string | null | undefined;
-    nendsWith?: string | null | undefined;
+  and?: ReadonlyArray<StringOperationFilterInput> | null;
+  contains?: string | null;
+  endsWith?: string | null;
+  eq?: string | null;
+  in?: ReadonlyArray<string | null> | null;
+  ncontains?: string | null;
+  nendsWith?: string | null;
+  neq?: string | null;
+  nin?: ReadonlyArray<string | null> | null;
+  nstartsWith?: string | null;
+  or?: ReadonlyArray<StringOperationFilterInput> | null;
+  startsWith?: string | null;
 };
-export type ApplicationsListQueryVariables = {
-    cursor?: string | null | undefined;
-    count?: number | null | undefined;
-    where?: ApplicationFilterInput | null | undefined;
+export type ApplicationsListQuery$variables = {
+  count?: number | null;
+  cursor?: string | null;
+  where?: ApplicationFilterInput | null;
 };
-export type ApplicationsListQueryResponse = {
-    readonly " $fragmentRefs": FragmentRefs<"ApplicationsList_applications">;
+export type ApplicationsListQuery$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"ApplicationsList_applications">;
 };
 export type ApplicationsListQuery = {
-    readonly response: ApplicationsListQueryResponse;
-    readonly variables: ApplicationsListQueryVariables;
+  response: ApplicationsListQuery$data;
+  variables: ApplicationsListQuery$variables;
 };
-
-
-
-/*
-query ApplicationsListQuery(
-  $cursor: String
-  $count: Int
-  $where: ApplicationFilterInput
-) {
-  ...ApplicationsList_applications
-}
-
-fragment ApplicationsList_applications on Query {
-  applications(after: $cursor, first: $count, where: $where) {
-    edges {
-      node {
-        id
-        name
-        ...ApplicationsList_applicationsEdge
-        __typename
-      }
-      cursor
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-}
-
-fragment ApplicationsList_applicationsEdge on Application {
-  id
-  name
-  namespace
-  parts {
-    id
-    name
-    components {
-      id
-      definition {
-        id
-        name
-      }
-    }
-  }
-}
-*/
 
 const node: ConcreteRequest = (function(){
 var v0 = {
@@ -295,14 +253,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "ce6c3856cd8198b11f1d9a2f380256d1",
+    "cacheID": "ce55f876b6d7e6032c94e24e6bd51e03",
     "id": null,
     "metadata": {},
     "name": "ApplicationsListQuery",
     "operationKind": "query",
-    "text": "query ApplicationsListQuery(\n  $cursor: String\n  $count: Int\n  $where: ApplicationFilterInput\n) {\n  ...ApplicationsList_applications\n}\n\nfragment ApplicationsList_applications on Query {\n  applications(after: $cursor, first: $count, where: $where) {\n    edges {\n      node {\n        id\n        name\n        ...ApplicationsList_applicationsEdge\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment ApplicationsList_applicationsEdge on Application {\n  id\n  name\n  namespace\n  parts {\n    id\n    name\n    components {\n      id\n      definition {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": "query ApplicationsListQuery(\n  $cursor: String\n  $count: Int\n  $where: ApplicationFilterInput\n) {\n  ...ApplicationsList_applications\n}\n\nfragment ApplicationsList_applications on Query {\n  applications(after: $cursor, first: $count, where: $where) {\n    edges {\n      node {\n        id\n        name\n        namespace\n        ...ApplicationsList_applicationsEdge\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment ApplicationsList_applicationsEdge on Application {\n  id\n  name\n  namespace\n  parts {\n    id\n    name\n    components {\n      id\n      definition {\n        id\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
-(node as any).hash = '6b31a121f725620ea7c7068d4ccd39cc';
+
+(node as any).hash = "6b31a121f725620ea7c7068d4ccd39cc";
+
 export default node;

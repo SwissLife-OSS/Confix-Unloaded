@@ -15,8 +15,10 @@ public class ComponentQueries
 {
     [UsePaging]
     [UseFiltering(typeof(ComponentFilterInputType))]
-    public IQueryable<Component> GetComponents([Service] IComponentService componentService) =>
-        componentService.Query();
+    public async Task<IQueryable<Component>> GetComponents(
+        [Service] IComponentService componentService,
+        CancellationToken cancellationToken) =>
+        await componentService.Query(cancellationToken);
 
     public Task<Component?> GetComponentByIdAsync(
         [ID(nameof(Component))] Guid id,

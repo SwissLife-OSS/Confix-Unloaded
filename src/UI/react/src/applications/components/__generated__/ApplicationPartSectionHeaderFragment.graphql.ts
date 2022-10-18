@@ -1,22 +1,24 @@
+/**
+ * @generated SignedSource<<7ddbc4e998e118473e5f44a4abe393ba>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from "relay-runtime";
-
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ApplicationPartSectionHeaderFragment = {
-    readonly id: string;
-    readonly name: string;
-    readonly " $refType": "ApplicationPartSectionHeaderFragment";
+export type ApplicationPartSectionHeaderFragment$data = {
+  readonly id: string;
+  readonly name: string;
+  readonly " $fragmentType": "ApplicationPartSectionHeaderFragment";
 };
-export type ApplicationPartSectionHeaderFragment$data = ApplicationPartSectionHeaderFragment;
 export type ApplicationPartSectionHeaderFragment$key = {
-    readonly " $data"?: ApplicationPartSectionHeaderFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"ApplicationPartSectionHeaderFragment">;
+  readonly " $data"?: ApplicationPartSectionHeaderFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"ApplicationPartSectionHeaderFragment">;
 };
-
-
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
@@ -42,5 +44,7 @@ const node: ReaderFragment = {
   "type": "Application",
   "abstractKey": null
 };
-(node as any).hash = '91e1d10bb7bf2936aada64307571fffc';
+
+(node as any).hash = "91e1d10bb7bf2936aada64307571fffc";
+
 export default node;

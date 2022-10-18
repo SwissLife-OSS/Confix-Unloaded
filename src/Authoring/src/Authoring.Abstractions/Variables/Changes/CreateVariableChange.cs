@@ -7,7 +7,7 @@ namespace Confix.Authoring.Variables.Changes;
 
 public class CreateVariableChange : IVariableChange
 {
-    public CreateVariableChange(Guid variableId, int variableVersion, Variable value)
+    public CreateVariableChange(Guid variableId, int variableVersion, Variable? value)
     {
         VariableId = variableId;
         VariableVersion = variableVersion;
@@ -20,7 +20,7 @@ public class CreateVariableChange : IVariableChange
 
     public int VariableVersion { get; init; }
 
-    public Variable Value { get; init; }
+    public Variable? Value { get; init; }
 
     public string Kind => nameof(CreateVariableChange);
 }

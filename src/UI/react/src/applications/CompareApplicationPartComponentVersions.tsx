@@ -1,12 +1,13 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo } from "react";
 import { useLazyLoadQuery } from "react-relay";
 import { graphql } from "babel-plugin-relay/macro";
 import { generatePath, useNavigate, useParams } from "react-router";
 import { CompareApplicationPartComponentVersions_Query } from "./__generated__/CompareApplicationPartComponentVersions_Query.graphql";
-import { Pagination } from "antd";
+import { Pagination, Select } from "antd";
 import { css } from "@emotion/react";
 import { ComponentDiffEditor } from "./components/ComponentDiffEditor";
 import { useSearchQuery } from "../shared/useQuery";
+import { useHandler } from "../shared/useHandler";
 
 const applicationPartComponentQuery = graphql`
   query CompareApplicationPartComponentVersions_Query(
@@ -35,7 +36,7 @@ export const generateComparePartComponentVersionPath = (
   to: number | string,
   from: number | string
 ) =>
-  generatePath(
+  generatePath<any>(
     `../:applicationId/components/:partComponentId/compare?from=:from&to=:to`,
     {
       applicationId,
@@ -70,17 +71,20 @@ export const CompareApplicationPartComponentVersions: React.FC<{
     { fetchPolicy: "store-and-network" }
   );
   const navigate = useNavigate();
-  const handlePaginationChange = useCallback(
-    (page: number) => {
-      const compare = generateComparePartComponentVersionPath(
-        applicationId,
-        partComponentId,
-        page,
-        page - 1
-      );
-      navigate(compare);
-    },
-    [applicationId, partComponentId, navigate]
+  const handlePaginationChange = useHandler((from: number, to: number) => {
+    const compare = generateComparePartComponentVersionPath(
+      applicationId,
+      partComponentId,
+      from,
+      to
+    );
+    navigate(compare);
+  });
+  const handleFromChange = useHandler((from: number) =>
+    handlePaginationChange(from, to)
+  );
+  const handleToChange = useHandler((to: number) =>
+    handlePaginationChange(from, to)
   );
 
   if (!data.applicationPartComponentById) {
@@ -88,37 +92,63 @@ export const CompareApplicationPartComponentVersions: React.FC<{
   }
 
   const { fromValues, toValues, changeLog } = data.applicationPartComponentById;
-  const max = Math.max(
-    ...changeLog.map((x) => x.change?.partComponentVersion ?? 0)
-  );
+  const versions = useMemo(() => {
+    return Array.from(
+      new Set(
+        [
+          ...changeLog.map((x) => x.change?.partComponentVersion),
+          data.applicationPartComponentById?.version,
+        ].filter((x) => x !== undefined && x !== null) as number[]
+      )
+    ).sort();
+  }, [data.applicationPartComponentById]);
 
   return (
     <>
       <ComponentDiffEditor
         headers={{
           original: {
-            title: `From ${from}`,
+            title: (
+              <SelectVersion
+                title="From"
+                version={from}
+                versions={versions}
+                onChange={handleFromChange}
+              />
+            ),
           },
           modified: {
-            title: `To ${to}`,
+            title: (
+              <SelectVersion
+                title="To"
+                version={to}
+                versions={versions}
+                onChange={handleToChange}
+              />
+            ),
           },
         }}
         original={fromValues ?? ""}
         modified={toValues ?? ""}
       />
-      <div
-        css={css`
-          display: flex;
-          justify-content: space-around;
-        `}
-      >
-        <Pagination
-          defaultCurrent={to}
-          total={max}
-          pageSize={1}
-          onChange={handlePaginationChange}
-        />
-      </div>
+    </>
+  );
+};
+
+const SelectVersion: React.FC<{
+  title: string;
+  onChange: (version: number) => void;
+  version: number;
+  versions: number[];
+}> = ({ onChange, title, version, versions }) => {
+  return (
+    <>
+      {title}{" "}
+      <Select<number> value={version} onChange={onChange}>
+        {versions.map((x) => (
+          <Select.Option value={x}>{x}</Select.Option>
+        ))}
+      </Select>
     </>
   );
 };

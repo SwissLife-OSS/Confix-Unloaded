@@ -16,7 +16,7 @@ import {
 import { PublishIcon } from "../icons/icons";
 import { useToggle } from "../shared/useToggle";
 import {
-  EditApplicationPart_fragment,
+  EditApplicationPart_fragment$data,
   EditApplicationPart_fragment$key,
 } from "./__generated__/EditApplicationPart_fragment.graphql";
 import { RenameApplicationPartDialog } from "./dialogs/RenameApplicationPartDialog";
@@ -142,36 +142,59 @@ export const EditApplicationPart = () => {
       </Row>
       <Row>
         <Col xs={24}>
-          <Tabs defaultActiveKey={tab} key={tab} onChange={navigateToTab}>
-            <Tabs.TabPane tab="Overview" key="edit">
-              <Title>
-                <h3>Deployments</h3>
-              </Title>
-              <DeployedEnvironments data={applicationPartById} />
-              <Title>
-                <h3>Components</h3>
-              </Title>
-              <ApplicationPartComponents
-                applicationId={applicationId}
-                components={components}
-              />
-            </Tabs.TabPane>
-            <Tabs.TabPane tab="Variables" key="variables">
-              <DefaultSuspense>
-                <Variables data={applicationPartById} refetch={refresh} />
-              </DefaultSuspense>
-            </Tabs.TabPane>
-            <Tabs.TabPane tab="Publish Log" key="publish_log">
-              <DefaultSuspense>
-                <PublishedApplicationParts data={applicationPartById} />
-              </DefaultSuspense>
-            </Tabs.TabPane>
-            <Tabs.TabPane tab="Change Log" key="changelog">
-              <DefaultSuspense>
-                <ApplicationPartChangeLog data={applicationPartById} />
-              </DefaultSuspense>
-            </Tabs.TabPane>
-          </Tabs>
+          <Tabs
+            defaultActiveKey={tab}
+            key={tab}
+            onChange={navigateToTab}
+            items={[
+              {
+                key: "edit",
+                label: "Overview",
+                children: (
+                  <>
+                    <Title>
+                      <h3>Deployments</h3>
+                    </Title>
+                    <DeployedEnvironments data={applicationPartById} />
+                    <Title>
+                      <h3>Components</h3>
+                    </Title>
+                    <ApplicationPartComponents
+                      applicationId={applicationId}
+                      components={components}
+                    />
+                  </>
+                ),
+              },
+              {
+                key: "variables",
+                label: "Variables",
+                children: (
+                  <DefaultSuspense>
+                    <Variables data={applicationPartById} refetch={refresh} />
+                  </DefaultSuspense>
+                ),
+              },
+              {
+                key: "publish_log",
+                label: "Publish Log",
+                children: (
+                  <DefaultSuspense>
+                    <PublishedApplicationParts data={applicationPartById} />
+                  </DefaultSuspense>
+                ),
+              },
+              {
+                key: "changelog",
+                label: "Change Log",
+                children: (
+                  <DefaultSuspense>
+                    <ApplicationPartChangeLog data={applicationPartById} />
+                  </DefaultSuspense>
+                ),
+              },
+            ]}
+          />
         </Col>
       </Row>
     </DetailView>
@@ -179,7 +202,7 @@ export const EditApplicationPart = () => {
 };
 
 const Variables: React.FC<{
-  data: EditApplicationPart_fragment;
+  data: EditApplicationPart_fragment$data;
   refetch: () => void;
 }> = ({ data, refetch }) => {
   const { variableValues } =
@@ -290,11 +313,11 @@ const Header: React.FC<{
           applicationPartName={applicationName}
           applicationPartId={id}
           onClose={disableEdit}
-          visible={isEdit}
+          open={isEdit}
         />
       </EditableBreadcrumbHeader>
       <PublishApplicationPartDialog
-        visible={publishVisible}
+        open={publishVisible}
         onClose={disablePublish}
         applicationPartName={applicationPartName}
         applicationPartId={applicationPartId}

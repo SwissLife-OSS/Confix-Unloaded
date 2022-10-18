@@ -13,7 +13,7 @@ import { NewVariableMutation } from "./__generated__/NewVariableMutation.graphql
 const newVariableMutation = graphql`
   mutation NewVariableMutation(
     $input: CreateVariableInput!
-    $connectionIds: [String!]!
+    $connectionIds: [ID!]!
   ) {
     createVariable(input: $input) {
       variable
