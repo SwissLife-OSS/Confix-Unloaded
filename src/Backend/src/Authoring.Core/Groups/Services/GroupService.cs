@@ -8,10 +8,10 @@ namespace Confix.Authentication.Authorization;
 
 internal sealed class GroupService : IGroupService
 {
-    private readonly IGroupStore _groupStore;
     private readonly IAuthorizationService _authorizationService;
-    private readonly ISessionAccessor _sessionAccessor;
     private readonly IDataLoader<Guid, Group?> _groupById;
+    private readonly IGroupStore _groupStore;
+    private readonly ISessionAccessor _sessionAccessor;
 
     public GroupService(
         IGroupStore groupStore,
@@ -137,6 +137,7 @@ internal sealed class GroupService : IGroupService
             }
 
             scope.Complete();
+
             return group;
         }
     }
@@ -146,6 +147,7 @@ internal sealed class GroupService : IGroupService
         CancellationToken cancellationToken)
     {
         var session = await _sessionAccessor.GetSession(cancellationToken);
+
         if (session is null ||
             !session.HasPermission(WellKnownNamespaces.Global, Scope.Identity, Read))
         {
@@ -153,6 +155,7 @@ internal sealed class GroupService : IGroupService
         }
 
         var queryable = _groupStore.Query();
+
         if (name is { })
         {
             queryable = queryable.Where(x => x.Name.Contains(name));
@@ -164,6 +167,7 @@ internal sealed class GroupService : IGroupService
     public async Task<Group?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         var group = await _groupById.LoadAsync(id, cancellationToken);
+
         return await _authorizationService
             .RuleFor<Group>()
             .AuthorizeOrNullAsync(group, Read, cancellationToken);

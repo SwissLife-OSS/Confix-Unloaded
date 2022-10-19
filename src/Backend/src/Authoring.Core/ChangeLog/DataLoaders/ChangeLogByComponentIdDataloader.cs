@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Confix.Authoring.Changes;
 using Confix.Authoring.Store;
 using GreenDonut;
@@ -25,8 +20,7 @@ internal sealed class ChangeLogByComponentIdDataloader : GroupedDataLoader<Guid,
         IReadOnlyList<Guid> keys,
         CancellationToken cancellationToken)
     {
-        IReadOnlyList<ChangeLog> changeLogs =
-            await _store.GetByComponentIdAsync(keys, cancellationToken);
+        var changeLogs = await _store.GetByComponentIdAsync(keys, cancellationToken);
 
         return changeLogs
             .Where(x => x.Change is IComponentChange)

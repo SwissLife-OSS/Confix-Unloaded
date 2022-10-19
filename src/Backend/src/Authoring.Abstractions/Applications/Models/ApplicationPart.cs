@@ -3,7 +3,7 @@ using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring.Store;
 
-public sealed  record ApplicationPart
+public sealed record ApplicationPart
 {
     public ApplicationPart(Guid id, string? name, int version)
     {

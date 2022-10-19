@@ -8,7 +8,6 @@ public static class Policies
     {
         public const string VaultManage = nameof(Policies.VaultManage);
     }
-
     public static readonly AuthorizationPolicy VaultManage = new AuthorizationPolicyBuilder()
         .RequireClaim("scope", Scopes.VaultManage)
         .Build();

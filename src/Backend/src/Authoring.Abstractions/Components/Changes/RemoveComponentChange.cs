@@ -1,8 +1,6 @@
-using System;
 using Confix.Authoring.Store;
 using HotChocolate;
 using HotChocolate.Types;
-using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring.Changes;
 
@@ -15,6 +13,9 @@ public sealed class RemoveComponentChange : IComponentChange
         Component = component;
     }
 
+    [GraphQLIgnore]
+    public Component Component { get; init; }
+
     public string Kind => nameof(ComponentValuesChange);
 
     [GraphQLName("component")]
@@ -22,7 +23,4 @@ public sealed class RemoveComponentChange : IComponentChange
     public Guid ComponentId { get; init; }
 
     public int ComponentVersion { get; init; }
-
-    [GraphQLIgnore]
-    public Component Component { get; init; }
 }

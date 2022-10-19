@@ -1,14 +1,16 @@
-using System;
-using GreenDonut;
 using HotChocolate;
 using HotChocolate.Types;
-using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring.Store;
 
 public sealed record RemovePartFromApplicationChange : IApplicationPartChange
 {
-    public RemovePartFromApplicationChange(Guid applicationId, ApplicationPart removedPart, int applicationVersion, Guid partId, int partVersion)
+    public RemovePartFromApplicationChange(
+        Guid applicationId,
+        ApplicationPart removedPart,
+        int applicationVersion,
+        Guid partId,
+        int partVersion)
     {
         ApplicationId = applicationId;
         RemovedPart = removedPart;
@@ -17,13 +19,13 @@ public sealed record RemovePartFromApplicationChange : IApplicationPartChange
         PartVersion = partVersion;
     }
 
+    public ApplicationPart RemovedPart { get; init; }
+
     public string Kind => nameof(RemovePartFromApplicationChange);
 
     [GraphQLName("application")]
     [UseDataLoader(typeof(IApplicationDataLoader))]
     public Guid ApplicationId { get; init; }
-
-    public ApplicationPart RemovedPart { get; init; }
 
     public int ApplicationVersion { get; init; }
 

@@ -1,8 +1,5 @@
-using System;
-using GreenDonut;
 using HotChocolate;
 using HotChocolate.Types;
-using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring.Store;
 
@@ -22,6 +19,8 @@ public sealed record AddPartToApplicationChange : IApplicationPartChange
         AddedPart = addedPart;
     }
 
+    public ApplicationPart AddedPart { get; init; }
+
     public string Kind => nameof(AddPartToApplicationChange);
 
     [GraphQLName("application")]
@@ -35,6 +34,4 @@ public sealed record AddPartToApplicationChange : IApplicationPartChange
     public Guid PartId { get; init; }
 
     public int PartVersion { get; init; }
-
-    public ApplicationPart AddedPart { get; init; }
 }

@@ -2,14 +2,13 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace Confix.Authentication.Authorization;
 
-public class RoleProvider
-    : IRoleProvider
+public class RoleProvider : IRoleProvider
 {
     internal const string CacheKey = "role_service.role_map";
-    private readonly TimeSpan _cacheExpiration = TimeSpan.FromMinutes(15);
     private readonly IMemoryCache _cache;
-    private readonly IRoleStore _roleStore;
+    private readonly TimeSpan _cacheExpiration = TimeSpan.FromMinutes(15);
     private readonly object _roleLock = new();
+    private readonly IRoleStore _roleStore;
 
     public RoleProvider(IMemoryCache cache, IRoleStore roleStore)
     {
@@ -41,6 +40,7 @@ public class RoleProvider
         catch
         {
             _cache.Remove(CacheKey);
+
             throw;
         }
     }

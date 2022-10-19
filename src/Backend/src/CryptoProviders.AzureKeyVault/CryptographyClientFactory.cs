@@ -1,4 +1,3 @@
-using System;
 using Azure.Identity;
 using Azure.Security.KeyVault.Keys;
 using Azure.Security.KeyVault.Keys.Cryptography;
@@ -18,8 +17,14 @@ internal sealed class CryptographyClientFactory : ICryptographyClientFactory
     private DefaultAzureCredential Credentials => new();
 
     public CryptographyClient CreateCryptoClient(string keyId)
-        => new(new Uri($"{_options.CurrentValue.Url.Trim('/')}/keys/{keyId}"), Credentials);
+    {
+        return new CryptographyClient(
+            new Uri($"{_options.CurrentValue.Url.Trim('/')}/keys/{keyId}"),
+            Credentials);
+    }
 
     public KeyClient CreateKeyClient(string keyId)
-        => new(new Uri(_options.CurrentValue.Url), Credentials);
+    {
+        return new KeyClient(new Uri(_options.CurrentValue.Url), Credentials);
+    }
 }

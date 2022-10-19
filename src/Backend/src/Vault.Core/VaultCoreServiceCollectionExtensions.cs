@@ -1,7 +1,6 @@
 using Confix.Vault.Abstractions;
 using Confix.Vault.Core;
 using Confix.Vault.Host;
-using Microsoft.AspNetCore.Routing;
 
 namespace Microsoft.Extensions.DependencyInjection;
 

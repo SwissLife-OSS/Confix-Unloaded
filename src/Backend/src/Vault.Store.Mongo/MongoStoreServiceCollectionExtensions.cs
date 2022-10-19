@@ -16,6 +16,7 @@ public static class MongoStoreServiceCollectionExtensions
 
         builder.Services.AddSingleton<IVaultDbContext, VaultDbContext>();
         builder.Services.AddSingleton<IConfigurationStore, ConfigurationStore>();
+
         return builder;
     }
 }

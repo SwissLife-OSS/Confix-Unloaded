@@ -24,8 +24,7 @@ internal sealed class PublishedApplicationPartCollectionConfiguration
                 CreateIndexModel<PublishedApplicationPart>[] indexes =
                 {
                     new(IndexKeys.Ascending(project => project.Part.Id),
-                        new CreateIndexOptions { Name = "PartId_ASC" }
-                    )
+                        new CreateIndexOptions { Name = "PartId_ASC" })
                 };
                 collection.Indexes.CreateMany(indexes);
             });

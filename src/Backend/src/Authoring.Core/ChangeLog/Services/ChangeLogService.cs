@@ -1,32 +1,26 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Confix.Authentication.Authorization;
 using Confix.Authoring.Store;
 using Confix.Common.Exceptions;
-using GreenDonut;
 using static Confix.Authentication.Authorization.Permissions;
 
 namespace Confix.Authoring;
 
 internal sealed class ChangeLogService : IChangeLogService
 {
-    private readonly IChangeLogStore _changeLogStore;
-    private readonly ISessionAccessor _sessionAccessor;
-    private readonly ChangeLogByIdDataloader _byIdDataloader;
-    private readonly ChangeLogByApplicationIdDataloader _changesByAppId;
-    private readonly ChangeLogByApplicationPartIdDataloader _changesByPartId;
-    private readonly ChangeLogByApplicationPartComponentIdDataloader _changesByAppCompId;
-    private readonly ChangeLogByVariableIdDataloader _changesByVariableId;
-    private readonly ChangeLogByComponentIdDataloader _changesByComponentId;
     private readonly IApplicationDataLoader _applicationById;
     private readonly IApplicationPartDataLoader _applicationPartById;
     private readonly IApplicationPartComponentDataLoader _applicationPartComponentById;
-    private readonly IComponentDataLoader _componentById;
-    private readonly IVariableDataLoader _variableById;
     private readonly IAuthorizationService _authorizationService;
+    private readonly ChangeLogByIdDataloader _byIdDataloader;
+    private readonly IChangeLogStore _changeLogStore;
+    private readonly ChangeLogByApplicationPartComponentIdDataloader _changesByAppCompId;
+    private readonly ChangeLogByApplicationIdDataloader _changesByAppId;
+    private readonly ChangeLogByComponentIdDataloader _changesByComponentId;
+    private readonly ChangeLogByApplicationPartIdDataloader _changesByPartId;
+    private readonly ChangeLogByVariableIdDataloader _changesByVariableId;
+    private readonly IComponentDataLoader _componentById;
+    private readonly ISessionAccessor _sessionAccessor;
+    private readonly IVariableDataLoader _variableById;
 
     public ChangeLogService(
         IChangeLogStore changeLogStore,
@@ -62,11 +56,10 @@ internal sealed class ChangeLogService : IChangeLogService
     }
 
     // TODO this should not be in a service => move outside
-    public async Task<ChangeLog> CreateAsync(
-        IChange change,
-        CancellationToken cancellationToken)
+    public async Task<ChangeLog> CreateAsync(IChange change, CancellationToken cancellationToken)
     {
         var session = await _sessionAccessor.GetSession(cancellationToken);
+
         if (session is null)
         {
             throw new UnauthorizedOperationException();
@@ -75,6 +68,7 @@ internal sealed class ChangeLogService : IChangeLogService
         var log = new ChangeLog(Guid.NewGuid(), change, session.UserInfo, DateTime.UtcNow);
 
         await _changeLogStore.AddAsync(log, cancellationToken);
+
         return log;
     }
 
@@ -84,6 +78,7 @@ internal sealed class ChangeLogService : IChangeLogService
         CancellationToken cancellationToken)
     {
         var session = await _sessionAccessor.GetSession(cancellationToken);
+
         if (session is null)
         {
             throw new UnauthorizedOperationException();
@@ -103,6 +98,7 @@ internal sealed class ChangeLogService : IChangeLogService
         CancellationToken cancellationToken)
     {
         var application = await _applicationById.LoadAsync(applicationId, cancellationToken);
+
         if (!await _authorizationService
                 .RuleFor<ChangeLog>()
                 .IsAuthorizedFromAsync(application, Read, cancellationToken))
@@ -132,9 +128,7 @@ internal sealed class ChangeLogService : IChangeLogService
             .OfType<ChangeLog>();
     }
 
-    public async Task<ChangeLog?> GetById(
-        Guid changeLogId,
-        CancellationToken cancellationToken)
+    public async Task<ChangeLog?> GetById(Guid changeLogId, CancellationToken cancellationToken)
     {
         var result = await _byIdDataloader.LoadAsync(changeLogId, cancellationToken);
 
@@ -202,9 +196,7 @@ internal sealed class ChangeLogService : IChangeLogService
         CancellationToken cancellationToken)
     {
         var changelog = await _changeLogStore
-            .GetByApplicationPartComponentIdAndVersionAsync(componentId,
-                version,
-                cancellationToken);
+        .GetByApplicationPartComponentIdAndVersionAsync(componentId, version, cancellationToken);
 
         return await _authorizationService
             .RuleFor<ChangeLog>()

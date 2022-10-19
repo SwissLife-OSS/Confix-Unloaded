@@ -9,6 +9,7 @@ public static class GraphQlServiceCollectionExtensions
     public static IServiceCollection AddAuthoringGraphQL(this IServiceCollection services)
     {
         services.AddGraphQLServer().AddConfixSchema();
+
         return services;
     }
 
@@ -40,9 +41,7 @@ public static class GraphQlServiceCollectionExtensions
                 x.EnableOneOf = true;
             });
 
-        builder
-            .Services
-            .AddHttpResultSerializer<ForbiddenHttpResultSerializer>();
+        builder.Services.AddHttpResultSerializer<ForbiddenHttpResultSerializer>();
 
         return builder;
     }

@@ -1,4 +1,3 @@
-using System;
 using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring;
@@ -42,10 +41,4 @@ public sealed record Variable
     public string Namespace { get; init; }
 
     public int Version { get; init; }
-}
-
-public enum VariableState
-{
-    Active,
-    Deprecated
 }

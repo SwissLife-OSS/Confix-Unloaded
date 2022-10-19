@@ -1,4 +1,3 @@
-using System;
 using Confix.Authoring.Store;
 
 namespace Confix.Authoring.GraphQL.Applications;

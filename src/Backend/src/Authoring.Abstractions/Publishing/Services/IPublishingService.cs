@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-
 namespace Confix.Authoring.Publishing;
 
 public interface IPublishingService
@@ -28,9 +23,7 @@ public interface IPublishingService
         Guid publishedApplicationId,
         CancellationToken cancellationToken);
 
-    Task<PublishedApplicationPart?> GetPublishedById(
-        Guid id,
-        CancellationToken cancellationToken);
+    Task<PublishedApplicationPart?> GetPublishedById(Guid id, CancellationToken cancellationToken);
 
     Task<ClaimedVersion> ClaimVersionAsync(
         string gitVersion,

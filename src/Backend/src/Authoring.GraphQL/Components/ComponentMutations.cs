@@ -14,7 +14,9 @@ public sealed class ComponentMutations
         [DefaultValue("type Component { text: String! }")] string schema,
         [GraphQLType(typeof(AnyType))] Dictionary<string, object?>? values,
         CancellationToken cancellationToken)
-        => await service.CreateAsync(name, schema, @namespace, values, cancellationToken);
+    {
+        return await service.CreateAsync(name, schema, @namespace, values, cancellationToken);
+    }
 
     [Error(typeof(UnauthorizedOperationException))]
     public async Task<Component> RenameComponentAsync(
@@ -22,7 +24,9 @@ public sealed class ComponentMutations
         [ID(nameof(Component))] Guid id,
         string name,
         CancellationToken cancellationToken)
-        => await service.RenameAsync(id, name, cancellationToken);
+    {
+        return await service.RenameAsync(id, name, cancellationToken);
+    }
 
     [Error(typeof(UnauthorizedOperationException))]
     public async Task<Component> UpdateComponentSchemaAsync(
@@ -30,7 +34,9 @@ public sealed class ComponentMutations
         [ID(nameof(Component))] Guid id,
         string schema,
         CancellationToken cancellationToken)
-        => await service.SetSchemaAsync(id, schema, cancellationToken);
+    {
+        return await service.SetSchemaAsync(id, schema, cancellationToken);
+    }
 
     [Error(typeof(ValueSchemaViolation))]
     [Error(typeof(UnauthorizedOperationException))]
@@ -39,5 +45,7 @@ public sealed class ComponentMutations
         [ID(nameof(Component))] Guid id,
         [GraphQLType(typeof(AnyType))] Dictionary<string, object?> values,
         CancellationToken cancellationToken)
-        => await service.SetValuesAsync(id, values, cancellationToken);
+    {
+        return await service.SetValuesAsync(id, values, cancellationToken);
+    }
 }

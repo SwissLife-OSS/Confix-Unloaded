@@ -7,6 +7,7 @@ public static class QueryBuilderExtensions
     public static QueryBuilder AddParameter(this QueryBuilder builder, string name, string value)
     {
         builder.Add(name, value);
+
         return builder;
     }
 }

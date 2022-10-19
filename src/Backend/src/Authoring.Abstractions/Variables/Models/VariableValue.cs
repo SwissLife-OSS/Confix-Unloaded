@@ -1,4 +1,3 @@
-using System;
 using Confix.CryptoProviders;
 using HotChocolate;
 using HotChocolate.Types.Relay;

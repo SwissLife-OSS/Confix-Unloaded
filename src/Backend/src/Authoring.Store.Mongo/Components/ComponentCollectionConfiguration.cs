@@ -3,14 +3,11 @@ using MongoDB.Extensions.Context;
 
 namespace Confix.Authoring.Store.Mongo.Configuration;
 
-internal sealed class ComponentCollectionConfiguration :
-    IMongoCollectionConfiguration<Component>
+internal sealed class ComponentCollectionConfiguration : IMongoCollectionConfiguration<Component>
 {
-    public void OnConfiguring(
-        IMongoCollectionBuilder<Component> builder)
+    public void OnConfiguring(IMongoCollectionBuilder<Component> builder)
     {
-        builder
-            .WithCollectionName("component")
+        builder.WithCollectionName("component")
             .AddBsonClassMap<Component>(cm =>
             {
                 cm.AutoMap();
@@ -20,14 +17,13 @@ internal sealed class ComponentCollectionConfiguration :
             .WithCollectionSettings(s => s.ReadPreference = ReadPreference.Nearest)
             .WithCollectionConfiguration(collection =>
             {
-                collection.Indexes.CreateOne(
-                   new CreateIndexModel<Component>(
-                       Builders<Component>.IndexKeys.Ascending(project => project.Name),
-                       new CreateIndexOptions
-                       {
-                           Collation = new Collation("en", strength: CollationStrength.Secondary),
-                           Unique = true
-                       }));
+                collection.Indexes.CreateOne(new CreateIndexModel<Component>(
+                    Builders<Component>.IndexKeys.Ascending(project => project.Name),
+                    new CreateIndexOptions
+                    {
+                        Collation = new Collation("en", strength: CollationStrength.Secondary),
+                        Unique = true
+                    }));
             });
     }
 }

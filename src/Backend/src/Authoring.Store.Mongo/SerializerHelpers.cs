@@ -12,8 +12,7 @@ internal static class SerializerHelpers
 
     private static void ConfigureSerializers()
     {
-        BsonSerializer.RegisterGenericSerializerDefinition(
-            typeof(ImmutableHashSet<>),
+        BsonSerializer.RegisterGenericSerializerDefinition(typeof(ImmutableHashSet<>),
             typeof(ImmutableHashSetSerializer<>));
     }
 }

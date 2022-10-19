@@ -1,6 +1,4 @@
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 using HotChocolate;
 using HotChocolate.Language;
@@ -13,19 +11,16 @@ internal sealed class SchemaService : ISchemaService
     // TODO: Memory cache?
     private readonly ConcurrentDictionary<string, ISchema> _schemas = new();
 
-    public string CreateValuesForSchema(
-        string schemaSdl,
-        IDictionary<string, object?> values)
+    public string CreateValuesForSchema(string schemaSdl, IDictionary<string, object?> values)
     {
-        ISchema schema = CreateSchema(schemaSdl);
+        var schema = CreateSchema(schemaSdl);
+
         return CreateValuesForSchema(schema, values);
     }
 
-    public string CreateValuesForSchema(
-        ISchema schema,
-        IDictionary<string, object?> values)
+    public string CreateValuesForSchema(ISchema schema, IDictionary<string, object?> values)
     {
-        List<SchemaViolation> violations = ValidateDictionary(schema, values, schema.QueryType);
+        var violations = ValidateDictionary(schema, values, schema.QueryType);
 
         if (violations.Count > 0)
         {
@@ -37,14 +32,12 @@ internal sealed class SchemaService : ISchemaService
 
     public ISchema CreateSchema(string schema)
     {
-        DocumentNode schemaDoc = Utf8GraphQLParser.Parse(schema);
-        string rootTypeName = schemaDoc.Definitions
+        var schemaDoc = Utf8GraphQLParser.Parse(schema);
+        var rootTypeName = schemaDoc.Definitions
                 .OfType<ObjectTypeDefinitionNode>()
-                .FirstOrDefault()
-                ?.Name.Value ??
-            "Component";
+                .FirstOrDefault()?.Name.Value ?? "Component";
 
-        ISchema temp = _schemas.GetOrAdd(schema,
+        return _schemas.GetOrAdd(schema,
             s =>
                 SchemaBuilder.New()
                     .AddDocument(schemaDoc)
@@ -55,7 +48,5 @@ internal sealed class SchemaService : ISchemaService
                         c.StrictValidation = false;
                     })
                     .Create());
-
-        return temp;
     }
 }

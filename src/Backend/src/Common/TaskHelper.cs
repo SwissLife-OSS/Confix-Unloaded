@@ -2,9 +2,7 @@ namespace Confix.Common;
 
 public static class TaskHelper
 {
-    public static async Task<(T1, T2)> WhenAll<T1, T2>(
-        Task<T1> t1,
-        Task<T2> t2)
+    public static async Task<(T1, T2)> WhenAll<T1, T2>(Task<T1> t1, Task<T2> t2)
     {
         return (await t1, await t2);
     }

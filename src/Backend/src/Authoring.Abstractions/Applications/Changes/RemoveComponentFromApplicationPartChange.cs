@@ -1,8 +1,5 @@
-using System;
-using GreenDonut;
 using HotChocolate;
 using HotChocolate.Types;
-using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring.Store;
 
@@ -25,6 +22,8 @@ public sealed record RemoveComponentFromApplicationPartChange : IApplicationPart
         PartComponentVersion = partComponentVersion;
         RemovedComponent = removedComponent;
     }
+
+    public ApplicationPartComponent RemovedComponent { get; init; }
 
     public string Kind => nameof(RemoveComponentFromApplicationPartChange);
 
@@ -49,6 +48,4 @@ public sealed record RemoveComponentFromApplicationPartChange : IApplicationPart
     public Guid PartComponentId { get; init; }
 
     public int PartComponentVersion { get; init; }
-
-    public ApplicationPartComponent RemovedComponent { get; init; }
 }

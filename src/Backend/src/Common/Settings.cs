@@ -38,13 +38,11 @@ public static class Settings
 
             public static class Vault
             {
-                public const string Section =
-                    $"{Authentication.Section}:{nameof(Vault)}";
+                public const string Section = $"{Authentication.Section}:{nameof(Vault)}";
 
                 public static class HttpClient
                 {
-                    public const string Section =
-                        $"{Vault.Section}:{nameof(HttpClient)}";
+                    public const string Section = $"{Vault.Section}:{nameof(HttpClient)}";
                 }
             }
         }
@@ -69,8 +67,7 @@ public static class Settings
 
                 public static class JwtBearer
                 {
-                    public const string Section =
-                        $"{Authentication.Section}:{nameof(JwtBearer)}";
+                    public const string Section = $"{Authentication.Section}:{nameof(JwtBearer)}";
                 }
             }
         }
@@ -96,8 +93,7 @@ public static class Settings
 
                 public static class Mongo
                 {
-                    public const string Section =
-                        $"{DataEncryptionKey.Section}:{nameof(Mongo)}";
+                    public const string Section = $"{DataEncryptionKey.Section}:{nameof(Mongo)}";
                 }
             }
         }

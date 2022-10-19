@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Confix.Authoring.Store;
 using GreenDonut;
 
@@ -24,8 +19,7 @@ internal sealed class ChangeLogByIdDataloader : BatchDataLoader<Guid, ChangeLog?
         IReadOnlyList<Guid> keys,
         CancellationToken cancellationToken)
     {
-        IReadOnlyList<ChangeLog> changeLogs =
-            await _store.GetByIdsAsync(keys, cancellationToken);
+        var changeLogs = await _store.GetByIdsAsync(keys, cancellationToken);
 
         return changeLogs.ToDictionary(x => x.Id)!;
     }

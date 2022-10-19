@@ -30,9 +30,9 @@ public static class ConsoleExtensions
 
     public static async Task<int> ReportErrors(this IConsole console, IOperationResult result)
     {
-        if (result.Errors is {Count: > 0})
+        if (result.Errors is { Count: > 0 })
         {
-            foreach (IClientError error in result.Errors)
+            foreach (var error in result.Errors)
             {
                 await console.WriteErrorAsync(error.Message);
             }

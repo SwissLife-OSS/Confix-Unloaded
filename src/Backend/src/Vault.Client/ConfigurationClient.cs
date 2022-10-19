@@ -26,7 +26,7 @@ public sealed class VaultClient : IVaultClient
     {
         using var client = _clientFactory.CreateClient(HttpClientName);
 
-        var uriBuilder = new UriBuilder(client.BaseAddress!) { Path = "Configuration", };
+        var uriBuilder = new UriBuilder(client.BaseAddress!) { Path = "Configuration" };
 
         var payload = new PutConfigurationRequest(
             applicationName,
@@ -55,11 +55,15 @@ public sealed class VaultClient : IVaultClient
         string refreshToken,
         CancellationToken cancellationToken)
     {
-        using HttpClient client = _clientFactory.CreateClient(HttpClientName);
-        UriBuilder uriBuilder = new(client.BaseAddress!) { Path = "Configuration", };
+        using var client = _clientFactory.CreateClient(HttpClientName);
+        UriBuilder uriBuilder = new(client.BaseAddress!) { Path = "Configuration" };
 
-        RefreshConfigurationRequest payload =
-            new(applicationName, applicationPartName, environmentName, configuration, refreshToken);
+        RefreshConfigurationRequest payload = new(
+            applicationName,
+            applicationPartName,
+            environmentName,
+            configuration,
+            refreshToken);
 
         HttpRequestMessage request = new()
         {
@@ -78,7 +82,7 @@ public sealed class VaultClient : IVaultClient
         string token,
         CancellationToken cancellationToken)
     {
-        using HttpClient client = _clientFactory.CreateClient(HttpClientName);
+        using var client = _clientFactory.CreateClient(HttpClientName);
 
         UriBuilder uriBuilder = new(client.BaseAddress!)
         {
@@ -92,8 +96,7 @@ public sealed class VaultClient : IVaultClient
                 .Value
         };
 
-        HttpRequestMessage request =
-            new() { Method = HttpMethod.Get, RequestUri = uriBuilder.Uri, };
+        HttpRequestMessage request = new() { Method = HttpMethod.Get, RequestUri = uriBuilder.Uri };
 
         var repsonse =
             await RequestAsync<GetConfigurationResponse>(client, request, cancellationToken);
@@ -110,8 +113,7 @@ public sealed class VaultClient : IVaultClient
 
         response.EnsureSuccessStatusCode();
 
-        return await response.Content.ReadFromJsonAsync<T>(cancellationToken: cancellationToken)
-            ?? throw new HttpRequestException(
-                $"Could not deserialize result into {typeof(T).Name}");
+        return await response.Content.ReadFromJsonAsync<T>(cancellationToken: cancellationToken) ??
+            throw new HttpRequestException($"Could not deserialize result into {typeof(T).Name}");
     }
 }

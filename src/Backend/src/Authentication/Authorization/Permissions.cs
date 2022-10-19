@@ -7,5 +7,5 @@ public enum Permissions
     Write = 2,
     Claim = 4,
     Publish = 8,
-    Decrypt = 16,
+    Decrypt = 16
 }

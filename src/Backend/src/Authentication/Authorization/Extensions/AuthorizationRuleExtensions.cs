@@ -1,5 +1,4 @@
 using System.Runtime.CompilerServices;
-using Confix.Common.Exceptions;
 
 namespace Confix.Authentication.Authorization;
 

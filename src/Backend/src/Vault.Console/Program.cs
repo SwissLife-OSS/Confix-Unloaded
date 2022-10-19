@@ -1,16 +1,13 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
-using System.Text;
 using System.Text.Json;
-using System.Text.Json.Nodes;
-using Confix.Common;
 using Confix.Vault.Client;
 using Microsoft.Extensions.DependencyInjection;
 
 const string vaultUrl = "http://localhost:5003";
 
 CancellationTokenSource cancellationTokenSource = new();
-CancellationToken cancellationToken = cancellationTokenSource.Token;
+var cancellationToken = cancellationTokenSource.Token;
 
 Console.CancelKeyPress += (sender, eventArgs) =>
 {
@@ -19,28 +16,25 @@ Console.CancelKeyPress += (sender, eventArgs) =>
     eventArgs.Cancel = true;
 };
 
-IVaultClient client = new ServiceCollection()
-    .AddVaultClient()
+var client = new ServiceCollection().AddVaultClient()
     .BuildServiceProvider()
     .GetRequiredService<IVaultClient>();
 
 Console.Write("Application Name: ");
-string applicationName = ReadLine(cancellationToken);
+var applicationName = ReadLine(cancellationToken);
 Console.Write("Application Part Name: ");
-string applicationPartName = ReadLine(cancellationToken);
+var applicationPartName = ReadLine(cancellationToken);
 Console.Write("Environment Name: ");
-string environmentName = ReadLine(cancellationToken);
+var environmentName = ReadLine(cancellationToken);
 Console.Write("Token: ");
-string token = ReadLine(cancellationToken);
+var token = ReadLine(cancellationToken);
 
 Console.WriteLine("Fetching...");
-using JsonDocument? response =
-    await client.GetAsync(
-        applicationName,
-        applicationPartName,
-        environmentName,
-        token,
-        cancellationToken);
+using var response = await client.GetAsync(applicationName,
+    applicationPartName,
+    environmentName,
+    token,
+    cancellationToken);
 
 Console.WriteLine("Response...");
 
@@ -49,7 +43,8 @@ Console.WriteLine(JsonSerializer.Serialize(response, options));
 
 static string ReadLine(CancellationToken cancellationToken)
 {
-    string? value = Console.ReadLine();
+    var value = Console.ReadLine();
+
     while (!cancellationToken.IsCancellationRequested && string.IsNullOrEmpty(value))
     {
         Console.Write("Value cannot be null");

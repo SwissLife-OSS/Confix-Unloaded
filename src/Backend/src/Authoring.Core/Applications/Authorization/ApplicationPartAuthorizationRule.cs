@@ -6,8 +6,8 @@ namespace Confix.Authoring;
 
 internal sealed class ApplicationPartAuthorizationRule : AuthorizationRule<ApplicationPart>
 {
-    private readonly IAuthorizationService _authorizationService;
     private readonly IApplicationByPartIdDataLoader _applicationByPartId;
+    private readonly IAuthorizationService _authorizationService;
 
     public ApplicationPartAuthorizationRule(
         ISessionAccessor accessor,
@@ -31,8 +31,7 @@ internal sealed class ApplicationPartAuthorizationRule : AuthorizationRule<Appli
 
         var application = await _applicationByPartId.LoadAsync(resource.Id, cancellationToken);
 
-        return await _authorizationService
-            .RuleFor<Application>()
+        return await _authorizationService.RuleFor<Application>()
             .IsAuthorizedAsync(application, permissions, cancellationToken);
     }
 
@@ -50,7 +49,7 @@ internal sealed class ApplicationPartAuthorizationRule : AuthorizationRule<Appli
         return resource switch
         {
             Application app => await _authorizationService
-                .RuleFor<Application>()
+            .RuleFor<Application>()
                 .IsAuthorizedAsync(app, permissions, cancellationToken),
 
             _ => false

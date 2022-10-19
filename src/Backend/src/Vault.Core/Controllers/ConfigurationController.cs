@@ -1,9 +1,6 @@
-using System.Text.Json;
 using Confix.Vault.Abstractions;
-using Confix.Vault.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
 using Vault.Host.Configuration.Transport;
 
 namespace Vault.Host.Controllers;
@@ -25,7 +22,7 @@ public sealed class ConfigurationController : ControllerBase
         [FromBody] PutConfigurationRequest request,
         CancellationToken cancellationToken)
     {
-        TokenPair token = await _service.CreateAsync(
+        var token = await _service.CreateAsync(
             request.ApplicationName,
             request.ApplicationPartName,
             request.EnvironmentName,
@@ -83,7 +80,7 @@ public sealed class ConfigurationController : ControllerBase
             return GetConfigurationResponse.FromError(nameof(token) + " must be provided");
         }
 
-        JsonDocument? configuration = await _service.GetAsync(
+        var configuration = await _service.GetAsync(
             applicationName,
             applicationPartName,
             environmentName,

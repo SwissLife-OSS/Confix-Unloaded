@@ -3,11 +3,10 @@ using MongoDB.Extensions.Context;
 
 namespace Confix.Authoring.Store.Mongo.Configuration;
 
-internal sealed class EnvironmentCollectionConfiguration :
-    IMongoCollectionConfiguration<Environment>
+internal sealed class EnvironmentCollectionConfiguration
+    : IMongoCollectionConfiguration<Environment>
 {
-    public void OnConfiguring(
-        IMongoCollectionBuilder<Environment> builder)
+    public void OnConfiguring(IMongoCollectionBuilder<Environment> builder)
     {
         builder
             .WithCollectionName("environment")
@@ -20,7 +19,6 @@ internal sealed class EnvironmentCollectionConfiguration :
             .WithCollectionSettings(s => s.ReadPreference = ReadPreference.Nearest)
             .WithCollectionConfiguration(collection =>
             {
-
             });
     }
 }

@@ -10,18 +10,21 @@ public static class SessionManagementEndpoints
 {
     public static IEndpointRouteBuilder AddSessionManagement(this IEndpointRouteBuilder builder)
     {
-        return builder.AddLoginEndpoint().AddLogoutEndpoint();
+        return builder.AddLoginEndpoint()
+            .AddLogoutEndpoint();
     }
 
     public static IEndpointRouteBuilder AddLogoutEndpoint(this IEndpointRouteBuilder builder)
     {
         builder.MapGet("/logout", HandleLogout);
+
         return builder;
     }
 
     public static IEndpointRouteBuilder AddLoginEndpoint(this IEndpointRouteBuilder builder)
     {
         builder.MapGet("/login", HandleLogin);
+
         return builder;
     }
 
@@ -32,7 +35,7 @@ public static class SessionManagementEndpoints
             returnUrl = "/";
         }
 
-        return ctx.ChallengeAsync(new AuthenticationProperties() { RedirectUri = returnUrl });
+        return ctx.ChallengeAsync(new AuthenticationProperties { RedirectUri = returnUrl });
     }
 
     private static Task HandleLogout(HttpContext ctx)

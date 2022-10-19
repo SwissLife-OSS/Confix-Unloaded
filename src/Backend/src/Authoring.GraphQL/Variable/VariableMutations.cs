@@ -1,11 +1,5 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using Confix.Authoring.Store;
 using Confix.Common.Exceptions;
-using HotChocolate;
-using HotChocolate.Types;
-using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring.GraphQL;
 
@@ -20,8 +14,14 @@ public sealed class VariableMutations
         string? @namespace,
         string? defaultValue,
         CancellationToken cancellationToken)
-        => await variableService
-            .CreateAsync(name, @namespace, isSecret, defaultValue, cancellationToken);
+    {
+        return await variableService.CreateAsync(
+            name,
+            @namespace,
+            isSecret,
+            defaultValue,
+            cancellationToken);
+    }
 
     [Error(typeof(UnauthorizedOperationException))]
     [UseMutationConvention(PayloadFieldName = "value")]
@@ -34,13 +34,16 @@ public sealed class VariableMutations
         [ID(nameof(ApplicationPart))] Guid? partId,
         [ID(nameof(Environment))] Guid? environmentId,
         CancellationToken cancellationToken)
-        => await variableService.SaveValueAsync(variableId,
+    {
+        return await variableService.SaveValueAsync(
+            variableId,
             value,
             valueId,
             applicationId,
             partId,
             environmentId,
             cancellationToken);
+    }
 
     [Error(typeof(UnauthorizedOperationException))]
     [UseMutationConvention(PayloadFieldName = "value")]
@@ -48,7 +51,9 @@ public sealed class VariableMutations
         [Service] IVariableService variableService,
         [ID(nameof(VariableValue))] Guid id,
         CancellationToken cancellationToken)
-        => await variableService.DeleteValueAsync(id, cancellationToken);
+    {
+        return await variableService.DeleteValueAsync(id, cancellationToken);
+    }
 
     [Error(typeof(UnauthorizedOperationException))]
     public async Task<Variable?> RenameVariableAsync(
@@ -56,5 +61,7 @@ public sealed class VariableMutations
         [ID(nameof(Variable))] Guid id,
         string name,
         CancellationToken cancellationToken)
-        => await variableService.RenameAsync(id, name, cancellationToken);
+    {
+        return await variableService.RenameAsync(id, name, cancellationToken);
+    }
 }

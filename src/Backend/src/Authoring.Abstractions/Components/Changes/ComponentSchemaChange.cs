@@ -1,4 +1,3 @@
-using System;
 using Confix.Authoring.Store;
 using HotChocolate;
 using HotChocolate.Types;
@@ -14,6 +13,8 @@ public sealed class ComponentSchemaChange : IComponentChange
         Schema = schema;
     }
 
+    public string Schema { get; init; }
+
     public string Kind => nameof(ComponentSchemaChange);
 
     [GraphQLName("component")]
@@ -21,6 +22,4 @@ public sealed class ComponentSchemaChange : IComponentChange
     public Guid ComponentId { get; init; }
 
     public int ComponentVersion { get; init; }
-
-    public string Schema { get; init; }
 }

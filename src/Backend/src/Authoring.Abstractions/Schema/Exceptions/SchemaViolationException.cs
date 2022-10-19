@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace Confix.Authoring;
 
 public sealed class SchemaViolationException : Exception

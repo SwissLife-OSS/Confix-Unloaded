@@ -7,10 +7,10 @@ namespace Confix.Vault.Core;
 
 internal sealed class ConfigurationService : IConfigurationService
 {
-    private readonly ITokenProvider _tokenProvider;
-    private readonly IEncryptor _encryptor;
     private readonly IDecryptor _decryptor;
+    private readonly IEncryptor _encryptor;
     private readonly IConfigurationStore _store;
+    private readonly ITokenProvider _tokenProvider;
 
     public ConfigurationService(
         IEncryptor encryptor,
@@ -50,7 +50,7 @@ internal sealed class ConfigurationService : IConfigurationService
 
         await _store.StoreAsync(config, cancellationToken);
 
-        return new(accessToken.PlainText, refreshToken.PlainText);
+        return new TokenPair(accessToken.PlainText, refreshToken.PlainText);
     }
 
     public async Task RefreshConfigurationAsync(
@@ -61,17 +61,17 @@ internal sealed class ConfigurationService : IConfigurationService
         string refreshToken,
         CancellationToken cancellationToken)
     {
-        EncryptedValue encryptedValue = await _encryptor
+        var encryptedValue = await _encryptor
             .EncryptAsync($"configuration-{environmentName}", configuration, cancellationToken);
 
-        IReadOnlyList<Configuration> configurations = await _store.GetByRefreshTokenAsync(
+        var configurations = await _store.GetByRefreshTokenAsync(
             applicationName,
             applicationPartName,
             environmentName,
             _tokenProvider.GetPrefix(refreshToken),
             cancellationToken);
 
-        Configuration? config = configurations
+        var config = configurations
             .SingleOrDefault(x => !_tokenProvider.ValidateToken(refreshToken, x.RefreshToken));
 
         if (config is null)
@@ -89,22 +89,23 @@ internal sealed class ConfigurationService : IConfigurationService
         string token,
         CancellationToken cancellationToken)
     {
-        IReadOnlyList<Configuration> configurations = await _store.GetPossibleConfigurationsAsync(
+        var configurations = await _store.GetPossibleConfigurationsAsync(
             applicationName,
             applicationPartName,
             environmentName,
             _tokenProvider.GetPrefix(token),
             cancellationToken);
 
-        Configuration? configuration = configurations
-            .SingleOrDefault(x => !_tokenProvider.ValidateToken(token, x.AccessToken));
+        var configuration =
+            configurations.SingleOrDefault(x
+                => !_tokenProvider.ValidateToken(token, x.AccessToken));
 
         if (configuration is null)
         {
             return null;
         }
 
-        string? plaintext =
+        var plaintext =
             await _decryptor.DecryptAsync(configuration.EncryptedConfiguration, cancellationToken);
 
         return JsonDocument.Parse(plaintext);

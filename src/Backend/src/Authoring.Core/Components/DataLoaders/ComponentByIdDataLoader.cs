@@ -3,7 +3,9 @@ using GreenDonut;
 
 namespace Confix.Authoring.DataLoaders;
 
-internal sealed class ComponentByIdDataLoader : BatchDataLoader<Guid, Component?>, IComponentDataLoader
+internal sealed class ComponentByIdDataLoader
+    : BatchDataLoader<Guid, Component?>
+    , IComponentDataLoader
 {
     private readonly IComponentStore _componentStore;
 
@@ -19,10 +21,7 @@ internal sealed class ComponentByIdDataLoader : BatchDataLoader<Guid, Component?
         IReadOnlyList<Guid> keys,
         CancellationToken cancellationToken)
     {
-        IReadOnlyCollection<Component> components =
-            await _componentStore.GetManyByIdAsync(
-                keys,
-                cancellationToken);
+        var components = await _componentStore.GetManyByIdAsync(keys, cancellationToken);
 
         return components.ToDictionary(x => x.Id)!;
     }

@@ -29,8 +29,11 @@ internal class DataEncryptionKeyRepository : IDataEncryptionKeyRepository
             IsUpsert = true, ReturnDocument = ReturnDocument.After
         };
 
-        return await _dbContext.Secrets
-            .FindOneAndUpdateAsync(filter, update, options, cancellationToken);
+        return await _dbContext.Secrets.FindOneAndUpdateAsync(
+            filter,
+            update,
+            options,
+            cancellationToken);
     }
 
     public async Task<DataEncryptionKey> GetSecretByTopicAsync(

@@ -1,11 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Confix.Authoring;
-using Confix.Authoring.Store.Mongo;
-using MongoDB.Driver;
-using MongoDB.Extensions.Context;
-using Snapshooter.Xunit;
 using Squadron;
 using Xunit;
 
@@ -137,7 +129,6 @@ public class VariableValueStoreTests : IClassFixture<MongoResource>
             Value = "Newly inserted variable Value",
             Encryption = new VariableEncryptionInfo("AzureKeyVault", "xyz", "AES256")
         };
-
 
         VariableValueStore variableValueStore =
             new VariableValueStore(_docuStoreDbContext);

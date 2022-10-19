@@ -1,17 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using Confix.Authoring.Publishing;
-using HotChocolate;
-using HotChocolate.Types;
 
 namespace Confix.Authoring.GraphQL;
 
 public sealed class DeployedEnvironment
 {
-    private readonly Guid _environmentId;
     private readonly Guid _applicationPartId;
+    private readonly Guid _environmentId;
 
     public DeployedEnvironment(Guid applicationPartId, Guid environmentId)
     {
@@ -22,13 +16,16 @@ public sealed class DeployedEnvironment
     public async Task<Environment?> GetEnvironmentAsync(
         [Service] IEnvironmentService service,
         CancellationToken cancellationToken)
-        => await service.GetByIdAsync(_environmentId, cancellationToken);
+    {
+        return await service.GetByIdAsync(_environmentId, cancellationToken);
+    }
 
     [UsePaging]
     public async Task<IReadOnlyList<ClaimedVersion>?> GetClaimedVersions(
         [Service] IPublishingService service,
         CancellationToken cancellationToken)
-        => await service
+    {
+        return await service
             .GetClaimedVersionAsync(_applicationPartId, _environmentId, cancellationToken);
+    }
 }
-

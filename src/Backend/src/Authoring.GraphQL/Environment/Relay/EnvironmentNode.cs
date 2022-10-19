@@ -8,6 +8,8 @@ public sealed class EnvironmentNode
     public static async Task<Environment?> GetEnvironmentAsync(
         Guid id,
         [Service] IEnvironmentService service,
-        CancellationToken cancellationToken) =>
-        await service.GetByIdAsync(id, cancellationToken);
+        CancellationToken cancellationToken)
+    {
+        return await service.GetByIdAsync(id, cancellationToken);
+    }
 }

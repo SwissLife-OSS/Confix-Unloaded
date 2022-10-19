@@ -1,4 +1,3 @@
-using System;
 using Confix.Authoring.Store;
 using Confix.CryptoProviders;
 using HotChocolate;
@@ -22,17 +21,17 @@ public sealed class VariableValueChange : IVariableChange
         EncryptedValue = encryptedValue;
     }
 
-    [GraphQLName("variable")]
-    [UseDataLoader(typeof(IVariableDataLoader))]
-    public Guid VariableId { get; init; }
-
-    public int VariableVersion { get; init; }
-
     public VariableKey Key { get; init; }
 
     public string? Value { get; init; }
 
     public EncryptedValue? EncryptedValue { get; init; }
+
+    [GraphQLName("variable")]
+    [UseDataLoader(typeof(IVariableDataLoader))]
+    public Guid VariableId { get; init; }
+
+    public int VariableVersion { get; init; }
 
     public string Kind => nameof(VariableValueChange);
 }

@@ -10,13 +10,9 @@ public interface IRoleStore
         IEnumerable<Guid> ids,
         CancellationToken cancellationToken);
 
-    Task<Role> UpsertAsync(
-        Role group,
-        CancellationToken cancellationToken);
+    Task<Role> UpsertAsync(Role group, CancellationToken cancellationToken);
 
-    Task<Role?> DeleteByIdAsync(
-        Guid id,
-        CancellationToken cancellationToken);
+    Task<Role?> DeleteByIdAsync(Guid id, CancellationToken cancellationToken);
 
     IQueryable<Role> Query();
 }

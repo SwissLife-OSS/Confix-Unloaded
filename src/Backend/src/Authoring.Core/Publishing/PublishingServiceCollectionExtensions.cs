@@ -11,6 +11,7 @@ public static class PublishingServiceCollectionExtensions
         services.AddAuthorizationRule<PublishedApplicationPart,
             PublishedApplicationPartAuthorizationRule>();
         services.AddScoped<IPublishingService, PublishingService>();
+
         return services;
     }
 }

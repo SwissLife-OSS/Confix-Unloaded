@@ -1,4 +1,3 @@
-using System;
 using Confix.Authoring.Store;
 using HotChocolate;
 using HotChocolate.Types;
@@ -14,13 +13,13 @@ public sealed class RenameVariableChange : IVariableChange
         Name = name;
     }
 
+    public string Name { get; init; }
+
     [GraphQLName("variable")]
     [UseDataLoader(typeof(IVariableDataLoader))]
     public Guid VariableId { get; init; }
 
     public int VariableVersion { get; init; }
-
-    public string Name { get; init; }
 
     public string Kind => nameof(RenameVariableChange);
 }

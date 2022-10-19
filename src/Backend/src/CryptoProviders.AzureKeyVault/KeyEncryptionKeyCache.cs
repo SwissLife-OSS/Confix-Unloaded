@@ -1,7 +1,4 @@
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Confix.CryptoProviders.AzureKeyVault;
 
@@ -9,11 +6,10 @@ internal sealed class KeyEncryptionKeyCache : IKeyEncryptionKeyCache
 {
     private readonly ConcurrentDictionary<string, KeyHolder> _keys = new();
 
-    public async ValueTask<byte[]> GetOrCreateAsync(
-        string topic,
-        Func<Task<byte[]>> fetchKey)
+    public async ValueTask<byte[]> GetOrCreateAsync(string topic, Func<Task<byte[]>> fetchKey)
     {
-        KeyHolder holder = _keys.GetOrAdd(topic, (id) => new KeyHolder(fetchKey()));
+        var holder = _keys.GetOrAdd(topic, id => new KeyHolder(fetchKey()));
+
         try
         {
             return await holder.GetKeyAsync();
@@ -21,6 +17,7 @@ internal sealed class KeyEncryptionKeyCache : IKeyEncryptionKeyCache
         catch
         {
             _keys.Remove(topic, out _);
+
             throw;
         }
     }
@@ -29,21 +26,16 @@ internal sealed class KeyEncryptionKeyCache : IKeyEncryptionKeyCache
     {
         private readonly Task<byte[]> _loader;
 
+        private byte[]? _key;
+
         public KeyHolder(Task<byte[]> loader)
         {
             _loader = loader;
         }
 
-        private byte[]? _key = null;
-
         public async ValueTask<byte[]> GetKeyAsync()
         {
-            if (_key is null)
-            {
-                _key = await _loader;
-            }
-
-            return _key;
+            return _key ??= await _loader;
         }
     }
 }

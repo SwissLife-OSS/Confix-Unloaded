@@ -1,5 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
-
 namespace Confix.Authentication.Authorization;
 
 public interface IAuthorizationRule<in T>

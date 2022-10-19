@@ -1,9 +1,4 @@
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Confix.Authoring.Store;
-using HotChocolate;
-using HotChocolate.Types;
 
 namespace Confix.Authoring.GraphQL.Applications;
 
@@ -15,8 +10,9 @@ public sealed class ApplicationPartComponentExtensions
         [Parent] ApplicationPartComponent partComponent,
         CancellationToken cancellationToken)
     {
-        Application? application =
+        var application =
             await store.GetByComponentPartIdAsync(partComponent.Id, cancellationToken);
+
         return application?.Parts
             .FirstOrDefault(x => x.Components.Any(y => y.Id == partComponent.Id));
     }

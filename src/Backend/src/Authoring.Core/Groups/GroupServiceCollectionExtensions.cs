@@ -9,6 +9,7 @@ public static class GroupServiceCollectionExtensions
     {
         services.AddAuthorizationRule<Group, GroupAuthorizationRule>();
         services.AddScoped<IGroupService, GroupService>();
+
         return services;
     }
 }

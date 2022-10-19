@@ -1,5 +1,3 @@
-using System;
-
 namespace Confix.Authoring;
 
 public sealed class EnvironmentNotFoundException : Exception

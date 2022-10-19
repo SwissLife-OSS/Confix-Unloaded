@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 
@@ -17,9 +12,7 @@ internal sealed class EnvironmentStore : IEnvironmentStore
         _dbContext = dbContext;
     }
 
-    public async Task<Environment?> GetByIdAsync(
-        Guid id,
-        CancellationToken cancellationToken)
+    public async Task<Environment?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         return await _dbContext.Environments
             .AsQueryable()
@@ -27,9 +20,7 @@ internal sealed class EnvironmentStore : IEnvironmentStore
             .SingleAsync(cancellationToken);
     }
 
-    public async Task<Environment?> GetByNameAsync(
-        string name,
-        CancellationToken cancellationToken)
+    public async Task<Environment?> GetByNameAsync(string name, CancellationToken cancellationToken)
     {
         return await _dbContext.Environments
             .AsQueryable()
@@ -62,21 +53,18 @@ internal sealed class EnvironmentStore : IEnvironmentStore
             throw new ArgumentNullException(nameof(environmentId));
         }
 
-        Environment? result = await _dbContext.Environments.FindOneAndUpdateAsync(
+        return await _dbContext.Environments.FindOneAndUpdateAsync(
             Builders<Environment>.Filter.Eq(t => t.Id, environmentId),
             Builders<Environment>.Update.Set(t => t.Name, name),
-            new FindOneAndUpdateOptions<Environment>() { ReturnDocument = ReturnDocument.After },
-            cancellationToken: cancellationToken);
-
-        return result;
+            new FindOneAndUpdateOptions<Environment> { ReturnDocument = ReturnDocument.After },
+            cancellationToken);
     }
 
     public async Task<Environment?> RemoveByIdAsync(
         Guid environmentId,
         CancellationToken cancellationToken)
     {
-        FilterDefinition<Environment>? filter =
-            Builders<Environment>.Filter.Eq(x => x.Id, environmentId);
+        var filter = Builders<Environment>.Filter.Eq(x => x.Id, environmentId);
 
         return await _dbContext.Environments
             .FindOneAndDeleteAsync(filter, default, cancellationToken);
@@ -84,22 +72,22 @@ internal sealed class EnvironmentStore : IEnvironmentStore
 
     public IQueryable<Environment> SearchAsync(
         string? search,
-        CancellationToken cancellationToken = default) =>
-        search is null
+        CancellationToken cancellationToken = default)
+    {
+        return search is null
             ? _dbContext.Environments.AsQueryable()
             : _dbContext.Environments.AsQueryable().Where(x => x.Name.Contains(search));
+    }
 
     public async Task<Environment> UpdateAsync(
         Environment environment,
         CancellationToken cancellationToken)
     {
-        FilterDefinition<Environment>? filter =
-            Builders<Environment>.Filter.Eq(x => x.Id, environment.Id);
+        var filter = Builders<Environment>.Filter.Eq(x => x.Id, environment.Id);
 
         FindOneAndReplaceOptions<Environment> options = new()
         {
-            ReturnDocument = ReturnDocument.After,
-            IsUpsert = false
+            ReturnDocument = ReturnDocument.After, IsUpsert = false
         };
 
         return await _dbContext.Environments

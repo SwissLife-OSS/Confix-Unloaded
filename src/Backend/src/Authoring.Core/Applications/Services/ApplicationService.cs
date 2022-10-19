@@ -11,16 +11,15 @@ namespace Confix.Authoring;
 
 internal sealed class ApplicationService : IApplicationService
 {
+    private readonly IApplicationPartDataLoader _applicationPartByIdDataLoader;
+    private readonly IApplicationPartComponentDataLoader _applicationPartByIdDataloaderDataLoader;
     private readonly IApplicationStore _appStore;
+    private readonly IAuthorizationService _authorizationService;
     private readonly IChangeLogService _changeLogService;
+    private readonly IDataLoader<Guid, Component> _componentById;
     private readonly IComponentStore _compStore;
     private readonly ISchemaService _schemaService;
-    private readonly IDataLoader<Guid, Component> _componentById;
-    private readonly IApplicationPartComponentDataLoader
-        _applicationPartByIdDataloaderDataLoader;
-    private readonly IApplicationPartDataLoader _applicationPartByIdDataLoader;
     private readonly ISessionAccessor _sessionAccessor;
-    private readonly IAuthorizationService _authorizationService;
 
     public ApplicationService(
         IApplicationStore appStore,
@@ -160,7 +159,8 @@ internal sealed class ApplicationService : IApplicationService
 
         application = application with
         {
-            Version = application.Version + 1, Parts = applicationParts
+            Version = application.Version + 1,
+            Parts = applicationParts
         };
 
         using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))

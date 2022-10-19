@@ -1,12 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using Confix.Authoring.Store;
 using Confix.Common.Exceptions;
-using HotChocolate;
-using HotChocolate.Types;
-using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring.GraphQL.Applications;
 
@@ -14,7 +7,7 @@ namespace Confix.Authoring.GraphQL.Applications;
 public sealed class ApplicationMutations
 {
     /// <summary>
-    /// Creates a new application configuration.
+    ///     Creates a new application configuration.
     /// </summary>
     [Error(typeof(ApplicationNameTaken))]
     [Error(typeof(UnauthorizedOperationException))]
@@ -24,10 +17,12 @@ public sealed class ApplicationMutations
         string @namespace,
         IReadOnlyList<string>? parts = null,
         CancellationToken cancellationToken = default)
-        => await applicationService.CreateAsync(name, @namespace, parts, cancellationToken);
+    {
+        return await applicationService.CreateAsync(name, @namespace, parts, cancellationToken);
+    }
 
     /// <summary>
-    /// Renames an application configuration.
+    ///     Renames an application configuration.
     /// </summary>
     [Error(typeof(ApplicationIdInvalid))]
     [Error(typeof(ApplicationNameTaken))]
@@ -37,10 +32,12 @@ public sealed class ApplicationMutations
         [ID(nameof(Application))] Guid id,
         string name,
         CancellationToken cancellationToken)
-        => await applicationService.RenameAsync(id, name, cancellationToken);
+    {
+        return await applicationService.RenameAsync(id, name, cancellationToken);
+    }
 
     /// <summary>
-    /// Renames an application part of an application configuration.
+    ///     Renames an application part of an application configuration.
     /// </summary>
     [Error(typeof(ApplicationIdInvalid))]
     [Error(typeof(ApplicationPartIdInvalid))]
@@ -51,10 +48,12 @@ public sealed class ApplicationMutations
         [ID(nameof(ApplicationPart))] Guid applicationPartId,
         string name,
         CancellationToken cancellationToken)
-        => await applicationService.RenamePartAsync(applicationPartId, name, cancellationToken);
+    {
+        return await applicationService.RenamePartAsync(applicationPartId, name, cancellationToken);
+    }
 
     /// <summary>
-    /// Adds a component to an application part.
+    ///     Adds a component to an application part.
     /// </summary>
     [Error(typeof(ApplicationPartIdInvalid))]
     [Error(typeof(UnauthorizedOperationException))]
@@ -63,11 +62,13 @@ public sealed class ApplicationMutations
         [ID(nameof(ApplicationPart))] Guid applicationPartId,
         [ID(nameof(Component))] IReadOnlyList<Guid> componentIds,
         CancellationToken cancellationToken)
-        => await applicationService
+    {
+        return await applicationService
             .AddComponentsToPartAsync(applicationPartId, componentIds, cancellationToken);
+    }
 
     /// <summary>
-    /// Adds a component to an application part.
+    ///     Adds a component to an application part.
     /// </summary>
     [Error(typeof(ApplicationNotFoundError))]
     [Error(typeof(ApplicationPartNameTaken))]
@@ -77,11 +78,13 @@ public sealed class ApplicationMutations
         string partName,
         [ID(nameof(Application))] Guid applicationId,
         CancellationToken cancellationToken)
-        => await applicationService
+    {
+        return await applicationService
             .AddPartToApplicationAsync(applicationId, partName, cancellationToken);
+    }
 
     /// <summary>
-    /// Adds a component to an application part.
+    ///     Adds a component to an application part.
     /// </summary>
     [Error(typeof(ApplicationPartNotFoundError))]
     [Error(typeof(UnauthorizedOperationException))]
@@ -89,10 +92,12 @@ public sealed class ApplicationMutations
         [Service] IApplicationService applicationService,
         [ID(nameof(ApplicationPart))] Guid applicationPartId,
         CancellationToken cancellationToken)
-        => await applicationService.RemovePartAsync(applicationPartId, cancellationToken);
+    {
+        return await applicationService.RemovePartAsync(applicationPartId, cancellationToken);
+    }
 
     /// <summary>
-    /// Adds a component to an application part.
+    ///     Adds a component to an application part.
     /// </summary>
     [Error(typeof(ApplicationPartNotFoundError))]
     [Error(typeof(UnauthorizedOperationException))]
@@ -100,11 +105,13 @@ public sealed class ApplicationMutations
         [Service] IApplicationService applicationService,
         [ID(nameof(ApplicationPartComponent))] Guid partComponentId,
         CancellationToken cancellationToken)
-        => await applicationService
+    {
+        return await applicationService
             .RemoveComponentFromApplicationPartAsync(partComponentId, cancellationToken);
+    }
 
     /// <summary>
-    /// Adds a component to an application part.
+    ///     Adds a component to an application part.
     /// </summary>
     [Error(typeof(ApplicationPartComponentNotFoundError))]
     [Error(typeof(ComponentNotFoundError))]
@@ -115,6 +122,8 @@ public sealed class ApplicationMutations
         [ID(nameof(ApplicationPartComponent))] Guid partComponentId,
         [GraphQLType(typeof(AnyType))] IDictionary<string, object?> values,
         CancellationToken cancellationToken)
-        => await applicationService
+    {
+        return await applicationService
             .SetApplicationPartComponentValues(partComponentId, values, cancellationToken);
+    }
 }

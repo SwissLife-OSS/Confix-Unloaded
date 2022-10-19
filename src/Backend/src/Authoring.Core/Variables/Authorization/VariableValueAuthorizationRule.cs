@@ -5,8 +5,8 @@ namespace Confix.Authoring.Variables;
 
 internal sealed class VariableValueAuthorizationRule : AuthorizationRule<VariableValue>
 {
-    private readonly IVariableDataLoader _variableById;
     private readonly IAuthorizationService _authorizationService;
+    private readonly IVariableDataLoader _variableById;
 
     public VariableValueAuthorizationRule(
         ISessionAccessor accessor,

@@ -1,10 +1,5 @@
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using Confix.Authoring.Publishing;
 using Confix.Authoring.Store;
-using HotChocolate;
-using HotChocolate.Types;
 
 namespace Confix.Authoring.GraphQL.Publishing;
 
@@ -16,6 +11,7 @@ public sealed class ApplicationPartPublishingExtensions
         [Service] IPublishingService service,
         [Parent] ApplicationPart part,
         CancellationToken cancellationToken)
-        => await service.GetPublishedByPartId(part.Id, cancellationToken);
-
+    {
+        return await service.GetPublishedByPartId(part.Id, cancellationToken);
+    }
 }

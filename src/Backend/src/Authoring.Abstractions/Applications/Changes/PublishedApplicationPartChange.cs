@@ -1,4 +1,3 @@
-using System;
 using HotChocolate;
 using HotChocolate.Types;
 
@@ -18,7 +17,7 @@ public sealed record PublishedApplicationPartChange : IApplicationPartChange
         PartVersion = partVersion;
     }
 
-    public string Kind => nameof(PublishedApplicationPartChange );
+    public string Kind => nameof(PublishedApplicationPartChange);
 
     [GraphQLName("application")]
     [UseDataLoader(typeof(IApplicationDataLoader))]

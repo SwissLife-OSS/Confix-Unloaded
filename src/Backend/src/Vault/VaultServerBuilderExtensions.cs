@@ -10,6 +10,7 @@ public static class VaultServerBuilderExtensions
         Action<ICryptoProviderDescriptor> configure)
     {
         configure(new CryptoProviderDescriptor(builder.Services));
+
         return builder;
     }
 }

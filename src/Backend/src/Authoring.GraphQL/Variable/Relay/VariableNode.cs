@@ -1,10 +1,3 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Confix.Authoring.Store;
-using HotChocolate.Types;
-using HotChocolate.Types.Relay;
-
 namespace Confix.Authoring.GraphQL;
 
 [Node]
@@ -16,5 +9,7 @@ public sealed class VariableNode
         [Service] IVariableService service,
         Guid id,
         CancellationToken cancellationToken)
-        => service.GetByIdAsync(id, cancellationToken);
+    {
+        return service.GetByIdAsync(id, cancellationToken);
+    }
 }

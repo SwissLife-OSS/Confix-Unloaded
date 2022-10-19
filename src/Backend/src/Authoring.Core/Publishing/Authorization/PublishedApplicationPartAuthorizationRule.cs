@@ -3,10 +3,11 @@ using Confix.Authoring.Store;
 
 namespace Confix.Authoring.Publishing.Authorization;
 
-internal sealed class PublishedApplicationPartAuthorizationRule : AuthorizationRule<PublishedApplicationPart>
+internal sealed class PublishedApplicationPartAuthorizationRule
+    : AuthorizationRule<PublishedApplicationPart>
 {
-    private readonly IAuthorizationService _authorizationService;
     private readonly IApplicationByPartIdDataLoader _applicationByPartId;
+    private readonly IAuthorizationService _authorizationService;
 
     public PublishedApplicationPartAuthorizationRule(
         ISessionAccessor accessor,

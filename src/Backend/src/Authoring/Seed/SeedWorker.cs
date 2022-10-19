@@ -7,11 +7,11 @@ namespace Confix.Authoring;
 
 internal sealed class SeedWorker : BackgroundService
 {
-    private readonly Guid _adminRoleId = Guid.Parse("D64EF313-CF5A-46CC-94CA-F5B677B25128");
     private readonly Guid _adminGroupId = Guid.Parse("66F0A60D-EDFD-4265-9AC4-6864ADC010FB");
+    private readonly Guid _adminRoleId = Guid.Parse("D64EF313-CF5A-46CC-94CA-F5B677B25128");
+    private readonly IGroupStore _group;
     private readonly IOptions<SeedOptions> _options;
     private readonly IRoleStore _role;
-    private readonly IGroupStore _group;
 
     public SeedWorker(IOptions<SeedOptions> options, IRoleStore role, IGroupStore group)
     {
@@ -23,6 +23,7 @@ internal sealed class SeedWorker : BackgroundService
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         var adminRequirement = _options.Value.AdminRequirement;
+
         if (await _role.GetByIdAsync(_adminRoleId, stoppingToken) is null)
         {
             var role = new Role(
@@ -42,10 +43,10 @@ internal sealed class SeedWorker : BackgroundService
             var group = new Group(_adminGroupId,
                 "Admin",
                 ImmutableHashSet
-                    .Create<Requirement>()
+                .Create<Requirement>()
                     .Add(new ClaimRequirement(adminRequirement.Type, adminRequirement.Value)),
                 ImmutableHashSet.Create<RoleScope>()
-                    .Add(new(WellKnownNamespaces.Global, new[] { _adminRoleId })));
+                    .Add(new RoleScope(WellKnownNamespaces.Global, new[] { _adminRoleId })));
 
             await _group.UpsertAsync(group, stoppingToken);
         }
