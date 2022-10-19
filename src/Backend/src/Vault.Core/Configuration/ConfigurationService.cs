@@ -96,9 +96,8 @@ internal sealed class ConfigurationService : IConfigurationService
             _tokenProvider.GetPrefix(token),
             cancellationToken);
 
-        var configuration =
-            configurations.SingleOrDefault(x
-                => !_tokenProvider.ValidateToken(token, x.AccessToken));
+        var configuration = configurations
+            .SingleOrDefault(x => !_tokenProvider.ValidateToken(token, x.AccessToken));
 
         if (configuration is null)
         {
