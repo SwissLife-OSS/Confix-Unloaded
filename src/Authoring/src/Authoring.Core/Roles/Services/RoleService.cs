@@ -6,7 +6,7 @@ using static Confix.Authentication.Authorization.Permissions;
 
 namespace Confix.Authentication.Authorization;
 
-public class RoleService : IRoleService
+internal sealed class RoleService : IRoleService
 {
     private readonly IRoleStore _roleStore;
     private readonly IAuthorizationService _authorizationService;

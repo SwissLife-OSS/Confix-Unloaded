@@ -5,7 +5,7 @@ using HotChocolate.Execution;
 
 namespace Confix.Authoring.GraphQL.Serialization;
 
-public class ForbiddenHttpResultSerializer : DefaultHttpResultSerializer
+public sealed class ForbiddenHttpResultSerializer : DefaultHttpResultSerializer
 {
     public override HttpStatusCode GetStatusCode(IExecutionResult result)
     {

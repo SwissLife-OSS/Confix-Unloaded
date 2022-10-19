@@ -8,7 +8,7 @@ using static Confix.Authoring.Internal.ValueHelper;
 
 namespace Confix.Authoring.Internal;
 
-public class SchemaService : ISchemaService
+internal sealed class SchemaService : ISchemaService
 {
     // TODO: Memory cache?
     private readonly ConcurrentDictionary<string, ISchema> _schemas = new();

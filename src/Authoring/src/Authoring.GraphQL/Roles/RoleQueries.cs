@@ -3,7 +3,7 @@ using Confix.Authentication.Authorization;
 namespace Confix.Authoring.GraphQL;
 
 [ExtendObjectType(OperationTypeNames.Query)]
-public class RoleQueries
+public sealed class RoleQueries
 {
     [UsePaging]
     public Task<IQueryable<Role>> SearchRoles(

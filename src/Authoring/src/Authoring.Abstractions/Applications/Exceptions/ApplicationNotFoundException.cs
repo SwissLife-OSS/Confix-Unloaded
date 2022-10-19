@@ -1,8 +1,6 @@
-using System;
-
 namespace Confix.Authoring;
 
-public class ApplicationNotFoundException : Exception
+public sealed class ApplicationNotFoundException : Exception
 {
     public ApplicationNotFoundException(Guid applicationId)
     {

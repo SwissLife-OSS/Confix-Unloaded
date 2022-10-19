@@ -5,11 +5,10 @@ using static MongoDB.Driver.Builders<Confix.Vault.Abstractions.Configuration>;
 
 namespace Confix.Vault.Store.Mongo;
 
-internal class ConfigurationCollectionConfiguration :
-    IMongoCollectionConfiguration<Configuration>
+internal sealed class ConfigurationCollectionConfiguration
+    : IMongoCollectionConfiguration<Configuration>
 {
-    public void OnConfiguring(
-        IMongoCollectionBuilder<Configuration> builder)
+    public void OnConfiguring(IMongoCollectionBuilder<Configuration> builder)
     {
         builder
             .WithCollectionName("configurations")
@@ -30,10 +29,9 @@ internal class ConfigurationCollectionConfiguration :
                             IndexKeys.Ascending(x => x.EnvironmentName),
                             IndexKeys.Ascending(x => x.ApplicationPartName)
                         ),
-                       new() { Name = "AppPartEnvLookup_Asc" })
+                        new() { Name = "AppPartEnvLookup_Asc" })
                 };
                 collection.Indexes.CreateMany(indicies);
-
             });
     }
 }

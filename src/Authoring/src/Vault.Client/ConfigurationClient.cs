@@ -1,29 +1,20 @@
-using System;
-using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
 using Confix.Vault.Abstractions;
 using Microsoft.AspNetCore.Http.Extensions;
-using Microsoft.Extensions.Options;
 using Vault.Host.Configuration.Transport;
 
 namespace Confix.Vault.Client;
 
-public class VaultClient : IVaultClient
+public sealed class VaultClient : IVaultClient
 {
     public static string HttpClientName = "configuration_client";
 
     private readonly IHttpClientFactory _clientFactory;
-    private readonly IOptionsMonitor<VaultClientOptions> _options;
 
-    public VaultClient(
-        IHttpClientFactory clientFactory,
-        IOptionsMonitor<VaultClientOptions> options)
+    public VaultClient(IHttpClientFactory clientFactory)
     {
         _clientFactory = clientFactory;
-        _options = options;
     }
 
     public async Task<TokenPair> CreateAsync(
@@ -33,22 +24,27 @@ public class VaultClient : IVaultClient
         string configuration,
         CancellationToken cancellationToken)
     {
-        UriBuilder uriBuilder = new(_options.CurrentValue.RequestUri) {Path = "Configuration",};
+        using var client = _clientFactory.CreateClient(HttpClientName);
 
-        PutConfigurationRequest payload =
-            new(applicationName, applicationPartName, environmentName, configuration);
+        var uriBuilder = new UriBuilder(client.BaseAddress!) { Path = "Configuration", };
 
-        HttpRequestMessage request = new()
+        var payload = new PutConfigurationRequest(
+            applicationName,
+            applicationPartName,
+            environmentName,
+            configuration);
+
+        var request = new HttpRequestMessage
         {
             Method = HttpMethod.Put,
             RequestUri = uriBuilder.Uri,
             Content = JsonContent.Create(payload)
         };
 
-        PutConfigurationResponse repsonse =
-            await RequestAsync<PutConfigurationResponse>(request, cancellationToken);
+        var response =
+            await RequestAsync<PutConfigurationResponse>(client, request, cancellationToken);
 
-        return new(repsonse.Token, repsonse.RefreshToken);
+        return new TokenPair(response.Token, response.RefreshToken);
     }
 
     public async Task RefreshAsync(
@@ -59,7 +55,8 @@ public class VaultClient : IVaultClient
         string refreshToken,
         CancellationToken cancellationToken)
     {
-        UriBuilder uriBuilder = new(_options.CurrentValue.RequestUri) {Path = "Configuration",};
+        using HttpClient client = _clientFactory.CreateClient(HttpClientName);
+        UriBuilder uriBuilder = new(client.BaseAddress!) { Path = "Configuration", };
 
         RefreshConfigurationRequest payload =
             new(applicationName, applicationPartName, environmentName, configuration, refreshToken);
@@ -71,7 +68,7 @@ public class VaultClient : IVaultClient
             Content = JsonContent.Create(payload)
         };
 
-        await RequestAsync<RefreshConfigurationResponse>(request, cancellationToken);
+        await RequestAsync<RefreshConfigurationResponse>(client, request, cancellationToken);
     }
 
     public async Task<JsonDocument?> GetAsync(
@@ -81,7 +78,9 @@ public class VaultClient : IVaultClient
         string token,
         CancellationToken cancellationToken)
     {
-        UriBuilder uriBuilder = new(_options.CurrentValue.RequestUri)
+        using HttpClient client = _clientFactory.CreateClient(HttpClientName);
+
+        UriBuilder uriBuilder = new(client.BaseAddress!)
         {
             Path = "Configuration",
             Query = new QueryBuilder()
@@ -93,21 +92,24 @@ public class VaultClient : IVaultClient
                 .Value
         };
 
-        HttpRequestMessage request = new() {Method = HttpMethod.Get, RequestUri = uriBuilder.Uri,};
+        HttpRequestMessage request =
+            new() { Method = HttpMethod.Get, RequestUri = uriBuilder.Uri, };
 
-        GetConfigurationResponse repsonse =
-            await RequestAsync<GetConfigurationResponse>(request, cancellationToken);
+        var repsonse =
+            await RequestAsync<GetConfigurationResponse>(client, request, cancellationToken);
 
         return repsonse.Configuration;
     }
 
-    private async Task<T> RequestAsync<T>(
+    private static async Task<T> RequestAsync<T>(
+        HttpMessageInvoker client,
         HttpRequestMessage request,
         CancellationToken cancellationToken)
     {
-        using HttpClient client = _clientFactory.CreateClient(HttpClientName);
-        HttpResponseMessage response = await client.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
+
         response.EnsureSuccessStatusCode();
+
         return await response.Content.ReadFromJsonAsync<T>(cancellationToken: cancellationToken)
             ?? throw new HttpRequestException(
                 $"Could not deserialize result into {typeof(T).Name}");

@@ -6,12 +6,8 @@ using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring.Store;
 
-public record RemovePartFromApplicationChange : IApplicationPartChange
+public sealed record RemovePartFromApplicationChange : IApplicationPartChange
 {
-    public RemovePartFromApplicationChange()
-    {
-    }
-
     public RemovePartFromApplicationChange(Guid applicationId, ApplicationPart removedPart, int applicationVersion, Guid partId, int partVersion)
     {
         ApplicationId = applicationId;

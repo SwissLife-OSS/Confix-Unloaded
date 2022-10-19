@@ -13,9 +13,7 @@ namespace Confix.Authoring;
 
 public static class AuthoringServiceCollectionExtensions
 {
-    public static IServiceCollection AddAuthoringCore(
-        this IServiceCollection services,
-        IConfiguration configuration)
+    public static IServiceCollection AddAuthoringCore(this IServiceCollection services)
     {
         services.AddApplications();
         services.AddChangeLog();
@@ -26,7 +24,7 @@ public static class AuthoringServiceCollectionExtensions
         services.AddVariables();
         services.AddSchemas();
         services.AddPublishing();
-        services.AddVaultClient(configuration);
+        services.AddVaultClient();
         return services;
     }
 }

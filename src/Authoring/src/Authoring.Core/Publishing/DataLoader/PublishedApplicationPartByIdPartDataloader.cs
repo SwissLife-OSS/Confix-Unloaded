@@ -3,7 +3,7 @@ using GreenDonut;
 
 namespace Confix.Authoring.Publishing;
 
-public class PublishedApplicationPartsByPartByIdPartDataloader
+internal sealed class PublishedApplicationPartsByPartByIdPartDataloader
     : GroupedDataLoader<Guid, PublishedApplicationPart>
     , IPublishedApplicationPartsByPartIdDataloader
 {

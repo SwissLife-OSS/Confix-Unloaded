@@ -3,7 +3,7 @@ using GreenDonut;
 
 namespace Confix.Authoring.DataLoaders;
 
-public class VariableByIdDataLoader : BatchDataLoader<Guid, Variable?>, IVariableDataLoader
+internal sealed class VariableByIdDataLoader : BatchDataLoader<Guid, Variable?>, IVariableDataLoader
 {
     private readonly IVariableStore _variableStore;
 

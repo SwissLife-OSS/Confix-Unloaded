@@ -4,7 +4,7 @@ using static Confix.Authentication.Authorization.WellKnownNamespaces;
 
 namespace Confix.Authoring.Groups.Authorization;
 
-public class GroupAuthorizationRule : AuthorizationRule<Group>
+internal sealed class GroupAuthorizationRule : AuthorizationRule<Group>
 {
     public GroupAuthorizationRule(ISessionAccessor accessor) : base(accessor)
     {

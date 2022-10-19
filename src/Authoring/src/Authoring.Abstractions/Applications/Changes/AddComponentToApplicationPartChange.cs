@@ -3,7 +3,7 @@ using HotChocolate.Types;
 
 namespace Confix.Authoring.Store;
 
-public record AddComponentToApplicationPartChange
+public sealed record AddComponentToApplicationPartChange
     : IApplicationPartComponentChange
 {
     public AddComponentToApplicationPartChange(

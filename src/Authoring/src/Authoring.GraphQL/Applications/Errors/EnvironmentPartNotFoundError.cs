@@ -2,7 +2,7 @@ using System;
 
 namespace Confix.Authoring.GraphQL.Applications;
 
-public class EnvironmentNotFoundError : UserError
+public sealed class EnvironmentNotFoundError : UserError
 {
     public EnvironmentNotFoundError(Guid envId)
         : base($"The environment with id `{envId:N}` not found.")

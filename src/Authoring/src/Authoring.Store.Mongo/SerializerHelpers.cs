@@ -3,7 +3,7 @@ using MongoDB.Bson.Serialization;
 
 namespace Confix.Authoring.Store.Mongo;
 
-public class SerializerHelpers
+internal static class SerializerHelpers
 {
     public static void RegisterSerializers()
     {

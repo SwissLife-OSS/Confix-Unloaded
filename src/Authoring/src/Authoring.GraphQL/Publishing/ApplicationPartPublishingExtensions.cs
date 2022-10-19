@@ -9,7 +9,7 @@ using HotChocolate.Types;
 namespace Confix.Authoring.GraphQL.Publishing;
 
 [ExtendObjectType(typeof(ApplicationPart))]
-public class ApplicationPartPublishingExtensions
+public sealed class ApplicationPartPublishingExtensions
 {
     [UsePaging]
     public async Task<IReadOnlyList<PublishedApplicationPart>> PublishApplicationPartByIdAsync(

@@ -1,6 +1,6 @@
 namespace Confix.Authoring.GraphQL.Applications;
 
-public class ApplicationNameTaken : UserError
+public sealed class ApplicationNameTaken : UserError
 {
     public ApplicationNameTaken(string applicationName)
         : base($"The application name `{applicationName}` is already taken.")

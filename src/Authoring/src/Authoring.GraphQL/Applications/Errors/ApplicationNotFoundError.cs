@@ -3,7 +3,7 @@ using Confix.Authoring.Store;
 
 namespace Confix.Authoring.GraphQL.Applications;
 
-public class ApplicationNotFoundError : UserError
+public sealed class ApplicationNotFoundError : UserError
 {
     public ApplicationNotFoundError(Guid applicationId)
         : base($"The application with id `{applicationId:N}` not found.")

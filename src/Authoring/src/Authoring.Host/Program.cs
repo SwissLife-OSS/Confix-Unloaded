@@ -1,19 +1,33 @@
-namespace Confix.Authoring;
+using Confix.Authoring;
+using Confix.Authoring.Authentication;
+using Confix.Authoring.Store.Mongo;
+using Confix.CryptoProviders.AzureKeyVault;
 
-public class Program
+var builder = WebApplication.CreateBuilder(args);
+builder.Configuration.AddJsonFile("appsettings.json");
+
+builder.Services.AddConfixAuthoringServer()
+    .UseMongoDbStores()
+    .AddVaultHttpClient()
+    .ConfigureEncryption(descriptor
+        => descriptor.UseAzureKeyVaultKeyEncryptionKeys().UseMongoDbDataEncryptionKeys())
+    .UseOpenIdConnect();
+
+builder.Services
+    .AddReverseProxy()
+    .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
+
+builder.Services.AddCors(options =>
+    options.AddDefaultPolicy(
+        builder => builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()));
+
+var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
 {
-    public static void Main(string[] args)
-    {
-        CreateHostBuilder(args).Build().Run();
-    }
-
-    public static IHostBuilder CreateHostBuilder(string[] args) =>
-        Host.CreateDefaultBuilder(args)
-            .ConfigureWebHostDefaults(webBuilder =>
-            {
-                webBuilder.ConfigureAppConfiguration(x => x
-                    .AddJsonFile("appsettings.json")
-                    .AddJsonFile("appsettings.user.json", true));
-                webBuilder.UseStartup<Startup>();
-            });
+    app.UseDeveloperExceptionPage();
 }
+
+app.UseAuthoringServer();
+
+app.Run();

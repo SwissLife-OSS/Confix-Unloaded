@@ -9,12 +9,12 @@ using static MongoDB.Driver.Builders<Confix.Authoring.Store.ChangeLog>;
 
 namespace Confix.Authoring.Store.Mongo;
 
-public class ChangeLogStore
+internal sealed class ChangeLogStore
     : IChangeLogStore
 {
-    private readonly IConfixAuthorDbContext _dbContext;
+    private readonly IAuthoringDbContext _dbContext;
 
-    public ChangeLogStore(IConfixAuthorDbContext dbContext)
+    public ChangeLogStore(IAuthoringDbContext dbContext)
     {
         _dbContext = dbContext;
     }
@@ -49,7 +49,7 @@ public class ChangeLogStore
     }
 
     public async Task<IReadOnlyList<ChangeLog>> GetByIdsAsync(
-        IReadOnlyList<Guid> applicationIds,
+        IEnumerable<Guid> applicationIds,
         CancellationToken cancellationToken)
     {
         FilterDefinition<ChangeLog> filter = Filter.In(x => x.Id, applicationIds);
@@ -59,7 +59,7 @@ public class ChangeLogStore
     }
 
     public async Task<IReadOnlyList<ChangeLog>> GetByApplicationIdsAsync(
-        IReadOnlyList<Guid> applicationIds,
+        IEnumerable<Guid> applicationIds,
         CancellationToken cancellationToken)
     {
         FilterDefinition<ChangeLog> filter =
@@ -70,7 +70,7 @@ public class ChangeLogStore
     }
 
     public async Task<IReadOnlyList<ChangeLog>> GetByApplicationPartIdAsync(
-        IReadOnlyList<Guid> partIds,
+        IEnumerable<Guid> partIds,
         CancellationToken cancellationToken)
     {
         FilterDefinition<ChangeLog> filter =
@@ -81,7 +81,7 @@ public class ChangeLogStore
     }
 
     public async Task<IReadOnlyList<ChangeLog>> GetByPartComponentIdAsync(
-        IReadOnlyList<Guid> partComponentIds,
+        IEnumerable<Guid> partComponentIds,
         CancellationToken cancellationToken)
     {
         FilterDefinition<ChangeLog> filter =
@@ -92,7 +92,7 @@ public class ChangeLogStore
     }
 
     public async Task<IReadOnlyList<ChangeLog>> GetByComponentIdAsync(
-        IReadOnlyList<Guid> componentIds,
+        IEnumerable<Guid> componentIds,
         CancellationToken cancellationToken)
     {
         FilterDefinition<ChangeLog> filter =
@@ -103,7 +103,7 @@ public class ChangeLogStore
     }
 
     public async Task<IReadOnlyList<ChangeLog>> GetByVariableIdAsync(
-        IReadOnlyList<Guid> variableIds,
+        IEnumerable<Guid> variableIds,
         CancellationToken cancellationToken)
     {
         FilterDefinition<ChangeLog> filter =

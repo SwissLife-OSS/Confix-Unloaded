@@ -3,7 +3,7 @@ using Confix.Authoring.Store;
 namespace Confix.Authoring.GraphQL;
 
 [ExtendObjectType(OperationTypeNames.Query)]
-public class VariableQueries
+public sealed class VariableQueries
 {
     public async Task<IEnumerable<Variable>> GetVariablesAsync(
         [Service] IVariableService variableService,

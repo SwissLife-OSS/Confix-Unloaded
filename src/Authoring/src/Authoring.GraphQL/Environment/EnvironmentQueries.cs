@@ -10,7 +10,7 @@ using HotChocolate.Types.Relay;
 namespace Confix.Authoring.GraphQL;
 
 [ExtendObjectType(OperationTypeNames.Query)]
-public class EnvironmentQueries
+public sealed class EnvironmentQueries
 {
     [UsePaging]
     public Task<IQueryable<Environment>> SearchEnvironments(

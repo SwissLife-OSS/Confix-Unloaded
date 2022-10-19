@@ -10,7 +10,7 @@ using HotChocolate.Types.Relay;
 namespace Confix.Authoring.GraphQL;
 
 [ExtendObjectType(OperationTypeNames.Mutation)]
-public class EnvironmentMutations
+public sealed class EnvironmentMutations
 {
     [Error(typeof(EnvironmentNameCollisionError))]
     [Error(typeof(UnauthorizedOperationException))]

@@ -5,7 +5,7 @@ using static MongoDB.Driver.Builders<Confix.Authoring.Publishing.PublishedApplic
 
 namespace Confix.Authoring.Store.Mongo.Configuration;
 
-internal class PublishedApplicationPartCollectionConfiguration
+internal sealed class PublishedApplicationPartCollectionConfiguration
     : IMongoCollectionConfiguration<PublishedApplicationPart>
 {
     public void OnConfiguring(IMongoCollectionBuilder<PublishedApplicationPart> builder)

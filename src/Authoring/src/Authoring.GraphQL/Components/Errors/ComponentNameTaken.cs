@@ -3,7 +3,7 @@ using Confix.Authoring.GraphQL.Applications;
 
 namespace Confix.Authoring.GraphQL.Components;
 
-public class ComponentNameTaken : UserError
+public sealed class ComponentNameTaken : UserError
 {
     public ComponentNameTaken(string componentName)
         : base("The component name is already used by a different component.")

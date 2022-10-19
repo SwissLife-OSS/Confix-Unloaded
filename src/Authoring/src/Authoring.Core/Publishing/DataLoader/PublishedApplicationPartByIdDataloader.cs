@@ -3,7 +3,7 @@ using GreenDonut;
 
 namespace Confix.Authoring.Publishing;
 
-public class PublishedApplicationPartByByIdDataloader
+internal sealed class PublishedApplicationPartByByIdDataloader
     : BatchDataLoader<Guid, PublishedApplicationPart>
     , IPublishedApplicationPartByIdDataloader
 {

@@ -3,7 +3,7 @@ using MongoDB.Bson.Serialization.Serializers;
 
 namespace Confix.Authoring.Store.Mongo;
 
-public class ImmutableHashSetSerializer<TValue>
+internal sealed class ImmutableHashSetSerializer<TValue>
     : EnumerableInterfaceImplementerSerializerBase<ImmutableHashSet<TValue>, TValue>
 {
     protected override object CreateAccumulator() =>

@@ -5,7 +5,7 @@ using HotChocolate.Types;
 
 namespace Confix.Authoring.Changes;
 
-public class ComponentSchemaChange : IComponentChange
+public sealed class ComponentSchemaChange : IComponentChange
 {
     public ComponentSchemaChange(Guid componentId, int componentVersion, string schema)
     {

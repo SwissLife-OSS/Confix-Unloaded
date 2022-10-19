@@ -3,7 +3,7 @@ using Confix.Authoring.Store;
 namespace Confix.Authoring.GraphQL;
 
 [ExtendObjectType(typeof(ApplicationPartComponent))]
-public class ApplicationPartComponentChangeLogExtensions
+public sealed class ApplicationPartComponentChangeLogExtensions
 {
     public async Task<IEnumerable<ChangeLog>> GetChangeLogAsync(
         [Service] IChangeLogService service,

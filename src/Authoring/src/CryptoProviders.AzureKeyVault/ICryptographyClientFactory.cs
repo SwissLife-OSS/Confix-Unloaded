@@ -3,7 +3,7 @@ using Azure.Security.KeyVault.Keys.Cryptography;
 
 namespace Confix.CryptoProviders.AzureKeyVault;
 
-public interface ICryptographyClientFactory
+internal interface ICryptographyClientFactory
 {
     CryptographyClient CreateCryptoClient(string keyId);
 

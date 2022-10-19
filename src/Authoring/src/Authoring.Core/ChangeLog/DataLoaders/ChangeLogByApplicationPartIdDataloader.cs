@@ -8,7 +8,7 @@ using GreenDonut;
 
 namespace Confix.Authoring;
 
-public class ChangeLogByApplicationPartIdDataloader : GroupedDataLoader<Guid, ChangeLog?>
+internal sealed class ChangeLogByApplicationPartIdDataloader : GroupedDataLoader<Guid, ChangeLog?>
 {
     private readonly IChangeLogStore _store;
 

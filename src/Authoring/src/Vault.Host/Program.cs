@@ -1,24 +1,19 @@
 using Confix.Authoring.Store.Mongo;
 using Confix.CryptoProviders.AzureKeyVault;
-using Confix.Vault.Core;
-using Confix.Vault.Host;
 using Confix.Vault.Store.Mongo;
-using Microsoft.AspNetCore.Identity;
 
-WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddJsonFile("appsettings.json");
-builder.Configuration.AddJsonFile("appsettings.user.json", true);
-builder.Services.AddMongoStore(builder.Configuration);
-builder.Services.AddKeyVaultSecrets(builder.Configuration);
-builder.Services.AddMongoSecrets(builder.Configuration);
-builder.Services.AddSingleton<ITokenProivder, TokenProvider>();
-builder.Services.AddSingleton<IPasswordHasher<object>, PasswordHasher<object>>();
-builder.Services.AddVaultCore();
-builder.Services.AddControllers();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddConfixVaultServer()
+    .UseMongoDbStores()
+    .ConfigureEncryption(x => x
+        .UseMongoDbDataEncryptionKeys()
+        .UseAzureKeyVaultKeyEncryptionKeys());
 
-WebApplication app = builder.Build();
+var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
@@ -27,10 +22,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
+app.UseConfixVault();
 
 app.Run();

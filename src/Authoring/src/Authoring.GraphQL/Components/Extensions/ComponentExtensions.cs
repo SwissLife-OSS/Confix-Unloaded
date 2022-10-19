@@ -13,7 +13,7 @@ using HotChocolate.Types;
 namespace Confix.Authoring.GraphQL;
 
 [ExtendObjectType(typeof(Component))]
-public class ComponentExtensions
+public sealed class ComponentExtensions
 {
     public async Task<IEnumerable<ChangeLog>> GetChangeLogAsync(
         [Service] IChangeLogService service,

@@ -3,7 +3,7 @@ using GreenDonut;
 
 namespace Confix.Authoring.DataLoaders;
 
-public class ComponentByIdDataLoader : BatchDataLoader<Guid, Component?>, IComponentDataLoader
+internal sealed class ComponentByIdDataLoader : BatchDataLoader<Guid, Component?>, IComponentDataLoader
 {
     private readonly IComponentStore _componentStore;
 

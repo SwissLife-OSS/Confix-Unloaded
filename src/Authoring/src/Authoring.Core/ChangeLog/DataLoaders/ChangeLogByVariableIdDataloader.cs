@@ -9,7 +9,7 @@ using GreenDonut;
 
 namespace Confix.Authoring;
 
-public class ChangeLogByVariableIdDataloader : GroupedDataLoader<Guid, ChangeLog?>
+internal sealed class ChangeLogByVariableIdDataloader : GroupedDataLoader<Guid, ChangeLog?>
 {
     private readonly IChangeLogStore _store;
 

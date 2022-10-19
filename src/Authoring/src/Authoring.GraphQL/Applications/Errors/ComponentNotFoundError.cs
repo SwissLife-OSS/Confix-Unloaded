@@ -2,7 +2,7 @@ using System;
 
 namespace Confix.Authoring.GraphQL.Applications;
 
-public class ComponentNotFoundError : UserError
+public sealed class ComponentNotFoundError : UserError
 {
     public ComponentNotFoundError(Guid componentId)
         : base($"The component with id `{componentId:N}` was not found.")

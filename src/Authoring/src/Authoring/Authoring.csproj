@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>Confix.Authoring</AssemblyName>
+    <RootNamespace>Confix.Authoring</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Authoring.Authentication\Authoring.Authentication.csproj" />
+    <ProjectReference Include="..\Authoring.Core\Authoring.Core.csproj" />
+    <ProjectReference Include="..\Authoring.GraphQL\Authoring.GraphQL.csproj" />
+    <ProjectReference Include="..\CryptoProviders.Abstractions\CryptoProviders.Abstractions.csproj" />
+  </ItemGroup>
+
+</Project>

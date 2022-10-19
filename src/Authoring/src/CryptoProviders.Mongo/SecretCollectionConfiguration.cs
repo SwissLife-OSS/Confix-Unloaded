@@ -4,7 +4,7 @@ using MongoDB.Extensions.Context;
 
 namespace Confix.CryptoProviders.Mongo;
 
-internal class SecretCollectionConfiguration :
+internal sealed class SecretCollectionConfiguration :
     IMongoCollectionConfiguration<Secret>
 {
     public void OnConfiguring(IMongoCollectionBuilder<Secret> builder)

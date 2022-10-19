@@ -6,7 +6,7 @@ using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring.Store;
 
-public record RenameApplicationPartChange : IApplicationPartChange
+public sealed record RenameApplicationPartChange : IApplicationPartChange
 {
     public RenameApplicationPartChange(
         Guid applicationId,

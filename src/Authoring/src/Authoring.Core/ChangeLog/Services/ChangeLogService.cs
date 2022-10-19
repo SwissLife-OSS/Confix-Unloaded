@@ -11,7 +11,7 @@ using static Confix.Authentication.Authorization.Permissions;
 
 namespace Confix.Authoring;
 
-public class ChangeLogService : IChangeLogService
+internal sealed class ChangeLogService : IChangeLogService
 {
     private readonly IChangeLogStore _changeLogStore;
     private readonly ISessionAccessor _sessionAccessor;

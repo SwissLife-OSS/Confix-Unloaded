@@ -5,7 +5,7 @@ using Confix.Authoring.Variables.Changes;
 
 namespace Confix.Authoring;
 
-public class ChangeLogAuthorizationRule : AuthorizationRule<ChangeLog>
+internal sealed class ChangeLogAuthorizationRule : AuthorizationRule<ChangeLog>
 {
     private readonly IApplicationDataLoader _applicationById;
     private readonly IComponentDataLoader _componentById;

@@ -6,7 +6,7 @@ using static Confix.Authentication.Authorization.Permissions;
 
 namespace Confix.Authentication.Authorization;
 
-public class GroupService : IGroupService
+internal sealed class GroupService : IGroupService
 {
     private readonly IGroupStore _groupStore;
     private readonly IAuthorizationService _authorizationService;

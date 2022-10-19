@@ -21,14 +21,14 @@ public static class TestContext
         return config;
     }
 
-    public static IConfixServerBuilder GetBuilder()
+    public static IAuthoringServerBuilder GetBuilder()
     {
-        return new TestConfixServerBuilder(BuildConfig());
+        return new TestAuthoringServerBuilder(BuildConfig());
     }
 
-    public class TestConfixServerBuilder : IConfixServerBuilder
+    public class TestAuthoringServerBuilder : IAuthoringServerBuilder
     {
-        public TestConfixServerBuilder(IConfiguration configuration)
+        public TestAuthoringServerBuilder(IConfiguration configuration)
         {
             Configuration = configuration;
             Services = new ServiceCollection();

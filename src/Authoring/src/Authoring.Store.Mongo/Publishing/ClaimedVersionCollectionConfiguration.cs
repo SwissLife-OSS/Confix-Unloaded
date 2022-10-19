@@ -4,7 +4,7 @@ using MongoDB.Extensions.Context;
 
 namespace Confix.Authoring.Store.Mongo.Configuration;
 
-internal class ClaimedVersionCollectionConfiguration
+internal sealed class ClaimedVersionCollectionConfiguration
     : IMongoCollectionConfiguration<ClaimedVersion>
 {
     public void OnConfiguring(IMongoCollectionBuilder<ClaimedVersion> builder)

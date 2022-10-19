@@ -12,19 +12,19 @@ public interface IChangeLogStore
     Task AddAsync(IEnumerable<ChangeLog> changeLogs, CancellationToken cancellationToken);
 
     Task<IReadOnlyList<ChangeLog>> GetByIdsAsync(
-        IReadOnlyList<Guid> applicationIds,
+        IEnumerable<Guid> applicationIds,
         CancellationToken cancellationToken);
 
     Task<IReadOnlyList<ChangeLog>> GetByApplicationIdsAsync(
-        IReadOnlyList<Guid> applicationIds,
+        IEnumerable<Guid> applicationIds,
         CancellationToken cancellationToken);
 
     Task<IReadOnlyList<ChangeLog>> GetByApplicationPartIdAsync(
-        IReadOnlyList<Guid> partIds,
+        IEnumerable<Guid> partIds,
         CancellationToken cancellationToken);
 
     Task<IReadOnlyList<ChangeLog>> GetByPartComponentIdAsync(
-        IReadOnlyList<Guid> partComponentIds,
+        IEnumerable<Guid> partComponentIds,
         CancellationToken cancellationToken);
 
     Task<ChangeLog?> GetByApplicationPartComponentIdAndVersionAsync(
@@ -33,10 +33,10 @@ public interface IChangeLogStore
         CancellationToken cancellationToken);
 
     Task<IReadOnlyList<ChangeLog>> GetByComponentIdAsync(
-        IReadOnlyList<Guid> componentIds,
+        IEnumerable<Guid> componentIds,
         CancellationToken cancellationToken);
 
     Task<IReadOnlyList<ChangeLog>> GetByVariableIdAsync(
-        IReadOnlyList<Guid> variableIds,
+        IEnumerable<Guid> variableIds,
         CancellationToken cancellationToken);
 }

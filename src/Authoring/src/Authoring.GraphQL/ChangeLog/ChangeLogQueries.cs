@@ -9,7 +9,7 @@ using HotChocolate.Types.Relay;
 namespace Confix.Authoring.GraphQL.Applications;
 
 [ExtendObjectType(OperationTypeNames.Query)]
-public class ChangeLogQueries
+public sealed class ChangeLogQueries
 {
     public Task<ChangeLog?> GetChangeLogByIdAsync(
         [Service] IChangeLogService changeLogService,

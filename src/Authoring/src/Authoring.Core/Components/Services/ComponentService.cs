@@ -12,7 +12,7 @@ using static Confix.Authoring.Internal.ValueHelper;
 
 namespace Confix.Authoring;
 
-public sealed class ComponentService : IComponentService
+internal sealed class ComponentService : IComponentService
 {
     private readonly IComponentStore _componentStore;
     private readonly IDataLoader<Guid, Component?> _componentById;

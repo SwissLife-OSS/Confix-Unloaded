@@ -4,7 +4,7 @@ using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring.Store;
 
-public record ChangeLog
+public sealed record ChangeLog
 {
     public ChangeLog(Guid id, IChange change, UserInfo modifiedBy, DateTime modifiedAt)
     {

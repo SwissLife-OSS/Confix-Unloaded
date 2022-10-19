@@ -2,7 +2,7 @@ using System;
 
 namespace Confix.Authoring;
 
-public class EnvironmentNameCollisionException : Exception
+public sealed class EnvironmentNameCollisionException : Exception
 {
     public EnvironmentNameCollisionException(string name)
     {

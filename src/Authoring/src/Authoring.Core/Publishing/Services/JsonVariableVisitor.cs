@@ -2,9 +2,9 @@ using System.Text.Json.Nodes;
 
 namespace Confix.Authoring.Publishing;
 
-public class JsonVariableVisitor
+internal sealed class JsonVariableVisitor
 {
-    public virtual void Visit(JsonNode node, JsonVariableVisitorContext context)
+    public void Visit(JsonNode node, JsonVariableVisitorContext context)
     {
         switch (node)
         {
@@ -20,7 +20,7 @@ public class JsonVariableVisitor
         }
     }
 
-    protected virtual void Visit(JsonObject obj, JsonVariableVisitorContext context)
+    private void Visit(JsonObject obj, JsonVariableVisitorContext context)
     {
         foreach (var element in obj)
         {
@@ -33,7 +33,7 @@ public class JsonVariableVisitor
         }
     }
 
-    protected virtual void Visit(JsonArray arr, JsonVariableVisitorContext context)
+    private void Visit(JsonArray arr, JsonVariableVisitorContext context)
     {
         for (var i = 0; i < arr.Count; i++)
         {

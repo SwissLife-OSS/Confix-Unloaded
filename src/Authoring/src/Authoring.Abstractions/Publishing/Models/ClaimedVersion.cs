@@ -5,7 +5,7 @@ using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring.Publishing;
 
-public record ClaimedVersion
+public sealed record ClaimedVersion
 {
     public ClaimedVersion(
         Guid id,

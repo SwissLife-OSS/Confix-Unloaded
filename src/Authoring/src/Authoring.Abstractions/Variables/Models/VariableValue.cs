@@ -5,7 +5,7 @@ using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring;
 
-public record VariableValue
+public sealed record VariableValue
 {
     public VariableValue(
         Guid id,

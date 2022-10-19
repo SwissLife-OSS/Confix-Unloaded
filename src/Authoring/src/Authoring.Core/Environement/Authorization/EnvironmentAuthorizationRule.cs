@@ -2,7 +2,7 @@ using Confix.Authentication.Authorization;
 
 namespace Confix.Authoring.Environement.Authorization;
 
-public class EnvironmentAuthorizationRule : AuthorizationRule<Environment>
+internal sealed class EnvironmentAuthorizationRule : AuthorizationRule<Environment>
 {
     public EnvironmentAuthorizationRule(ISessionAccessor accessor) : base(accessor)
     {

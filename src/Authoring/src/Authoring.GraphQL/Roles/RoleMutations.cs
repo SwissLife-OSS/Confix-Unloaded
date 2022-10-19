@@ -5,7 +5,7 @@ using Confix.Common.Exceptions;
 namespace Confix.Authoring.GraphQL;
 
 [ExtendObjectType(OperationTypeNames.Mutation)]
-public class RoleMutations
+public sealed class RoleMutations
 {
     [Error(typeof(UnauthorizedOperationException))]
     public async Task<Role> CreateRoleAsync(

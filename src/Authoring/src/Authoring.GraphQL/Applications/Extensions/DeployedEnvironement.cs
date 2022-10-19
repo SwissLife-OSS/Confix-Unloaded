@@ -8,7 +8,7 @@ using HotChocolate.Types;
 
 namespace Confix.Authoring.GraphQL;
 
-public class DeployedEnvironment
+public sealed class DeployedEnvironment
 {
     private readonly Guid _environmentId;
     private readonly Guid _applicationPartId;

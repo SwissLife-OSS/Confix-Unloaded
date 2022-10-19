@@ -11,7 +11,7 @@ using HotChocolate.Types.Relay;
 namespace Confix.Authoring.GraphQL.Applications;
 
 [ExtendObjectType(OperationTypeNames.Mutation)]
-public class ApplicationMutations
+public sealed class ApplicationMutations
 {
     /// <summary>
     /// Creates a new application configuration.

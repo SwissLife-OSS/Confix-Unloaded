@@ -4,7 +4,7 @@ using Confix.Authoring.Store;
 
 namespace Confix.Authoring.Publishing;
 
-public static class ThrowHelper
+internal static class ThrowHelper
 {
     public static Exception PublishingFailedBecauseComponentWasNotFound(
         ApplicationPart part,

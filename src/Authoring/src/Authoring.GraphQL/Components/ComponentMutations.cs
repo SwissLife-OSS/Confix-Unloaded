@@ -3,7 +3,7 @@ using Confix.Common.Exceptions;
 namespace Confix.Authoring.GraphQL.Components;
 
 [ExtendObjectType(OperationTypeNames.Mutation)]
-public class ComponentMutations
+public sealed class ComponentMutations
 {
     [Error(typeof(ValueSchemaViolation))]
     [Error(typeof(UnauthorizedOperationException))]

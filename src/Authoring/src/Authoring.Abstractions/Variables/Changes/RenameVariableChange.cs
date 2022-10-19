@@ -5,7 +5,7 @@ using HotChocolate.Types;
 
 namespace Confix.Authoring.Variables.Changes;
 
-public class RenameVariableChange : IVariableChange
+public sealed class RenameVariableChange : IVariableChange
 {
     public RenameVariableChange(Guid variableId, int variableVersion, string name)
     {

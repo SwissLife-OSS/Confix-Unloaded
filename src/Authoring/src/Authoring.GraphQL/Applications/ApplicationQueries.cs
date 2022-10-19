@@ -13,7 +13,7 @@ using HotChocolate.Types.Relay;
 namespace Confix.Authoring.GraphQL.Applications;
 
 [ExtendObjectType(OperationTypeNames.Query)]
-public class ApplicationQueries
+public sealed class ApplicationQueries
 {
     /// <summary>
     /// Get all application configurations.

@@ -1,29 +1,26 @@
-using Microsoft.Extensions.Configuration;
+using Confix.Common;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Confix.CryptoProviders.AzureKeyVault;
 
 public static class AzureKeyVaultServiceCollectionExtensions
 {
-    public static IServiceCollection AddKeyVaultSecrets(
-        this IServiceCollection services,
-        IConfiguration configuration)
+    public static ICryptoProviderDescriptor UseAzureKeyVaultKeyEncryptionKeys(
+        this ICryptoProviderDescriptor services,
+        string pathToConfig = Settings.Confix.Encryption.KeyEncryptionKey.AzureKeyVault.Section)
     {
-        AzureKeyVaultOptions options = configuration
-            .GetSection("Confix:AzureKeyVault")
-            .Get<AzureKeyVaultOptions>();
+        services.Services
+            .AddOptions<AzureKeyVaultOptions>()
+            .BindConfiguration(pathToConfig);
 
-        services.Configure<AzureKeyVaultOptions>(x =>
-        {
-            x.Algorithm = options.Algorithm;
-            x.Url = options.Url;
-        });
-        services.AddSingleton<IKeyCache, KeyCache>();
-        services.AddSingleton<IKeyProvider, KeyVaultKeyProvider>();
-        services.AddSingleton<ICryptographyClientFactory, CryptographyClientFactory>();
-        services.AddSingleton<KeyVaultCryptoProvider>();
-        services.AddSingleton<IEncryptor>(sp => sp.GetRequiredService<KeyVaultCryptoProvider>());
-        services.AddSingleton<IDecryptor>(sp => sp.GetRequiredService<KeyVaultCryptoProvider>());
+        services.Services.AddSingleton<IKeyCache, KeyCache>();
+        services.Services.AddSingleton<IKeyProvider, KeyVaultKeyProvider>();
+        services.Services.AddSingleton<ICryptographyClientFactory, CryptographyClientFactory>();
+        services.Services.AddSingleton<KeyVaultCryptoProvider>();
+        services.Services
+            .AddSingleton<IEncryptor>(sp => sp.GetRequiredService<KeyVaultCryptoProvider>());
+        services.Services
+            .AddSingleton<IDecryptor>(sp => sp.GetRequiredService<KeyVaultCryptoProvider>());
 
         return services;
     }

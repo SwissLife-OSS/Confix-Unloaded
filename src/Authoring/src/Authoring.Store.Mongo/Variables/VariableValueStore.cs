@@ -11,11 +11,11 @@ using static MongoDB.Driver.Builders<Confix.Authoring.VariableValue>;
 
 namespace Confix.Authoring.Store.Mongo;
 
-public class VariableValueStore : IVariableValueStore
+internal sealed class VariableValueStore : IVariableValueStore
 {
-    private readonly IConfixAuthorDbContext _dbContext;
+    private readonly IAuthoringDbContext _dbContext;
 
-    public VariableValueStore(IConfixAuthorDbContext dbContext)
+    public VariableValueStore(IAuthoringDbContext dbContext)
     {
         _dbContext = dbContext;
     }

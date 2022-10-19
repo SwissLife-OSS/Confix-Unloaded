@@ -8,7 +8,7 @@ using GreenDonut;
 
 namespace Confix.Authoring;
 
-public class ChangeLogByIdDataloader : BatchDataLoader<Guid, ChangeLog?>
+internal sealed class ChangeLogByIdDataloader : BatchDataLoader<Guid, ChangeLog?>
 {
     private readonly IChangeLogStore _store;
 

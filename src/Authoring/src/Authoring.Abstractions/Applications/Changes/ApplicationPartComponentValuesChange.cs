@@ -6,7 +6,7 @@ using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring.Store;
 
-public record ApplicationPartComponentValuesChange : IApplicationPartComponentChange
+public sealed record ApplicationPartComponentValuesChange : IApplicationPartComponentChange
 {
     public ApplicationPartComponentValuesChange()
     {

@@ -9,12 +9,12 @@ namespace Confix.Authoring.GraphQL.Applications;
 
 [Node]
 [ExtendObjectType(typeof(ChangeLogNode))]
-public class ChangeLogNode
+public sealed class ChangeLogNode
 {
     [NodeResolver]
     public static Task<ChangeLog?> GetApplicationAsync(
         Guid id,
-        ChangeLogByIdDataloader applicationById,
+        [Service] IChangeLogService changeLogService,
         CancellationToken cancellationToken) =>
-        applicationById.LoadAsync(id, cancellationToken);
+        changeLogService.GetById(id, cancellationToken);
 }
