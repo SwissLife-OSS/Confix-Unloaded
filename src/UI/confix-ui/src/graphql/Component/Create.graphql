@@ -1,8 +1,0 @@
-#import "./Component.graphql"
-mutation createComponent($input: CreateComponentInput!) {
-  createComponent(input: $input) {
-    component {
-      ...Component
-    }
-  }
-}
