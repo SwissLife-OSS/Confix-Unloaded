@@ -2,9 +2,9 @@ using System;
 
 namespace Confix.CryptoProviders;
 
-public sealed class Secret
+public sealed class DataEncryptionKey
 {
-    public Secret(
+    public DataEncryptionKey(
         Guid id,
         DateTime updatedAt,
         string topic,

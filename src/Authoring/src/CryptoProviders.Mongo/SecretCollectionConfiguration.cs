@@ -4,14 +4,14 @@ using MongoDB.Extensions.Context;
 
 namespace Confix.CryptoProviders.Mongo;
 
-internal sealed class SecretCollectionConfiguration :
-    IMongoCollectionConfiguration<Secret>
+internal sealed class SecretCollectionConfiguration
+    : IMongoCollectionConfiguration<DataEncryptionKey>
 {
-    public void OnConfiguring(IMongoCollectionBuilder<Secret> builder)
+    public void OnConfiguring(IMongoCollectionBuilder<DataEncryptionKey> builder)
     {
         builder
-            .WithCollectionName("secrets")
-            .AddBsonClassMap<Secret>(cm =>
+            .WithCollectionName("data_encryption_keys")
+            .AddBsonClassMap<DataEncryptionKey>(cm =>
             {
                 cm.AutoMap();
                 cm.MapIdMember(c => c.Id);
@@ -21,13 +21,14 @@ internal sealed class SecretCollectionConfiguration :
             .WithCollectionConfiguration(collection =>
             {
                 collection.Indexes.CreateOne(
-                   new CreateIndexModel<Secret>(
-                       Builders<Secret>.IndexKeys.Ascending(project => project.Topic),
-                       new CreateIndexOptions
-                       {
-                           Collation = new Collation("en", strength: CollationStrength.Secondary),
-                           Unique = true
-                       }));
+                    new CreateIndexModel<DataEncryptionKey>(
+                        Builders<DataEncryptionKey>.IndexKeys.Ascending(project => project.Topic),
+                        new CreateIndexOptions
+                        {
+                            Collation =
+                                new Collation("en", strength: CollationStrength.Secondary),
+                            Unique = true
+                        }));
             });
     }
 }

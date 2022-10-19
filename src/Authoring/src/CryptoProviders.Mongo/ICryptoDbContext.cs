@@ -4,5 +4,5 @@ namespace Confix.CryptoProviders;
 
 public interface ICryptoDbContext
 {
-    IMongoCollection<Secret> Secrets { get; }
+    IMongoCollection<DataEncryptionKey> Secrets { get; }
 }
