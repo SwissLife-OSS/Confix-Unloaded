@@ -1,6 +1,6 @@
 namespace Confix.CryptoProviders;
 
-public interface IKeyProvider
+public interface IKeyEncryptionKeyProvider
 {
     ValueTask<byte[]> GetKeyAsync(string topic, CancellationToken cancellationToken);
 }

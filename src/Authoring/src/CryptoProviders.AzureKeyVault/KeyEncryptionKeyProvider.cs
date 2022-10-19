@@ -8,21 +8,21 @@ using static System.Transactions.TransactionScopeOption;
 
 namespace Confix.CryptoProviders.AzureKeyVault;
 
-internal sealed class KeyVaultKeyProvider : IKeyProvider
+internal sealed class KeyEncryptionKeyProvider : IKeyEncryptionKeyProvider
 {
-    private readonly IKeyCache _keyCache;
-    private readonly ISecretRepository _secrets;
+    private readonly IKeyEncryptionKeyCache _keyEncryptionKeyCache;
+    private readonly IDataEncryptionKeyRepository _dataEncryptionKeys;
     private readonly ICryptographyClientFactory _clientFactory;
     private readonly IOptionsMonitor<AzureKeyVaultOptions> _options;
 
-    public KeyVaultKeyProvider(
-        IKeyCache keyCache,
+    public KeyEncryptionKeyProvider(
+        IKeyEncryptionKeyCache keyEncryptionKeyCache,
         ICryptographyClientFactory clientFactory,
-        ISecretRepository secrets,
+        IDataEncryptionKeyRepository dataEncryptionKeys,
         IOptionsMonitor<AzureKeyVaultOptions> options)
     {
-        _keyCache = keyCache;
-        _secrets = secrets;
+        _keyEncryptionKeyCache = keyEncryptionKeyCache;
+        _dataEncryptionKeys = dataEncryptionKeys;
         _clientFactory = clientFactory;
         _options = options;
     }
@@ -31,7 +31,7 @@ internal sealed class KeyVaultKeyProvider : IKeyProvider
     {
         async Task<byte[]> CreateKey()
         {
-            Secret? secret = await _secrets.GetSecretByTopicAsync(topic, cancellationToken);
+            DataEncryptionKey? secret = await _dataEncryptionKeys.GetSecretByTopicAsync(topic, cancellationToken);
             if (secret is null)
             {
                 secret = await GetOrCreateSecretAsync(topic, cancellationToken);
@@ -40,7 +40,7 @@ internal sealed class KeyVaultKeyProvider : IKeyProvider
             return await DecryptSecretAsync(secret, cancellationToken);
         }
 
-        return _keyCache.GetOrCreateAsync(topic, CreateKey);
+        return _keyEncryptionKeyCache.GetOrCreateAsync(topic, CreateKey);
     }
 
     private async Task EnsureKeyAsync(
@@ -72,13 +72,13 @@ internal sealed class KeyVaultKeyProvider : IKeyProvider
     }
 
     private async Task<byte[]> DecryptSecretAsync(
-        Secret secret,
+        DataEncryptionKey dataEncryptionKey,
         CancellationToken cancellationToken)
     {
-        EncryptionAlgorithm algorithm = new(secret.EncryptionAlgorithm);
-        CryptographyClient encryptionClient = _clientFactory.CreateCryptoClient(secret.Topic);
+        EncryptionAlgorithm algorithm = new(dataEncryptionKey.EncryptionAlgorithm);
+        CryptographyClient encryptionClient = _clientFactory.CreateCryptoClient(dataEncryptionKey.Topic);
 
-        var decodedKey = Convert.FromBase64String(secret.Key);
+        var decodedKey = Convert.FromBase64String(dataEncryptionKey.Key);
 
         DecryptResult decryptedKey =
             await encryptionClient.DecryptAsync(algorithm, decodedKey, cancellationToken);
@@ -86,7 +86,7 @@ internal sealed class KeyVaultKeyProvider : IKeyProvider
         return decryptedKey.Plaintext;
     }
 
-    private async Task<Secret> GetOrCreateSecretAsync(
+    private async Task<DataEncryptionKey> GetOrCreateSecretAsync(
         string topic,
         CancellationToken cancellationToken)
     {
@@ -105,7 +105,7 @@ internal sealed class KeyVaultKeyProvider : IKeyProvider
 
             var encodedKey = Convert.ToBase64String(encryptedKey.Ciphertext);
 
-            Secret newSecret = new(
+            DataEncryptionKey newDataEncryptionKey = new(
                 Guid.NewGuid(),
                 DateTime.UtcNow,
                 topic,
@@ -114,9 +114,9 @@ internal sealed class KeyVaultKeyProvider : IKeyProvider
 
             // It could be that another service has already created a secret. This way
             // we ensure that we would receive this secret and throw away our secret
-            Secret secret = await _secrets.GetOrCreateByTopicAsync(newSecret, cancellationToken);
+            DataEncryptionKey dataEncryptionKey = await _dataEncryptionKeys.GetOrCreateByTopicAsync(newDataEncryptionKey, cancellationToken);
             scope.Complete();
-            return secret;
+            return dataEncryptionKey;
         }
     }
 }

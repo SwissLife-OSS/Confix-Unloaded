@@ -10,18 +10,19 @@ internal sealed class KeyVaultCryptoProvider
     : IEncryptor
     , IDecryptor
 {
-    private readonly IKeyProvider _keyProvider;
+    private readonly IKeyEncryptionKeyProvider _keyEncryptionKeyProvider;
 
-    public KeyVaultCryptoProvider(IKeyProvider keyProvider)
+    public KeyVaultCryptoProvider(IKeyEncryptionKeyProvider keyEncryptionKeyProvider)
     {
-        _keyProvider = keyProvider;
+        _keyEncryptionKeyProvider = keyEncryptionKeyProvider;
     }
 
     public async Task<string> DecryptAsync(
         EncryptedValue encryptedValue,
         CancellationToken cancellationToken)
     {
-        var key = await _keyProvider.GetKeyAsync(encryptedValue.Topic, cancellationToken);
+        var key = await _keyEncryptionKeyProvider.GetKeyAsync(encryptedValue.Topic,
+            cancellationToken);
         using var aes = Aes.Create();
         aes.Key = key;
         var iv = Convert.FromBase64String(encryptedValue.Iv);
@@ -35,7 +36,7 @@ internal sealed class KeyVaultCryptoProvider
         string value,
         CancellationToken cancellationToken)
     {
-        var key = await _keyProvider.GetKeyAsync(topic, cancellationToken);
+        var key = await _keyEncryptionKeyProvider.GetKeyAsync(topic, cancellationToken);
         using var aes = Aes.Create();
         aes.GenerateIV();
         aes.Key = key;

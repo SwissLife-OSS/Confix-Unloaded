@@ -21,6 +21,6 @@ internal sealed class CryptoDbContext : MongoDbContext, ICryptoDbContext
             .ConfigureCollection(new SecretCollectionConfiguration());
     }
 
-    public IMongoCollection<Secret> Secrets
-        => CreateCollection<Secret>().AsTransactionCollection();
+    public IMongoCollection<DataEncryptionKey> Secrets
+        => CreateCollection<DataEncryptionKey>().AsTransactionCollection();
 }

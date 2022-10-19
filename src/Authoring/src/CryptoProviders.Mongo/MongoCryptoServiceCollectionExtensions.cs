@@ -18,7 +18,7 @@ public static class MongoCryptStoreServiceCollectionExtensions
             .BindConfiguration(pathToConfig);
 
         services.Services.AddSingleton<ICryptoDbContext, CryptoDbContext>();
-        services.Services.AddSingleton<ISecretRepository, SecretRepository>();
+        services.Services.AddSingleton<IDataEncryptionKeyRepository, DataEncryptionKeyRepository>();
 
         return services;
     }

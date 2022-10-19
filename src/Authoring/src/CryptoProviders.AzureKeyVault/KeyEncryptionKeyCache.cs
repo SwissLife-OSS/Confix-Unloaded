@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Confix.CryptoProviders.AzureKeyVault;
 
-internal sealed class KeyCache : IKeyCache
+internal sealed class KeyEncryptionKeyCache : IKeyEncryptionKeyCache
 {
     private readonly ConcurrentDictionary<string, KeyHolder> _keys = new();
 
@@ -42,6 +42,7 @@ internal sealed class KeyCache : IKeyCache
             {
                 _key = await _loader;
             }
+
             return _key;
         }
     }
