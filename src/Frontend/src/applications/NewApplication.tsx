@@ -30,7 +30,7 @@ const newApplicationMutation = graphql`
         ...ApplicationsList_applicationsEdge
       }
       errors {
-        ... on IUserError {
+        ... on UserError {
           message
           code
         }

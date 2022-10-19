@@ -22,7 +22,7 @@ export const removeComponentFromApplicationPartDialog = graphql`
       }
       errors {
         __typename
-        ... on IUserError {
+        ... on UserError {
           message
           code
         }

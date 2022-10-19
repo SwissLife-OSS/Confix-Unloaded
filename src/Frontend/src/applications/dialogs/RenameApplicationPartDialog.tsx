@@ -26,7 +26,7 @@ const renameApplicationPartMutation = graphql`
         }
       }
       errors {
-        ... on IUserError {
+        ... on UserError {
           message
           code
         }

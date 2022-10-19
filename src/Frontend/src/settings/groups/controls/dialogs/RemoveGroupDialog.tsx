@@ -24,7 +24,7 @@ export const removeGroupDialog = graphql`
       }
       errors {
         __typename
-        ... on IUserError {
+        ... on UserError {
           message
           code
         }

@@ -29,7 +29,7 @@ const newComponentMutation = graphql`
         name
       }
       errors {
-        ... on IUserError {
+        ... on UserError {
           message
           code
         }

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8a4db48496b62f1ecf5505205f81ac43>>
+ * @generated SignedSource<<229582bfaa3584a68a4337fa6d3d75a4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -79,8 +79,8 @@ v4 = {
       "storageKey": null
     }
   ],
-  "type": "IUserError",
-  "abstractKey": "__isIUserError"
+  "type": "UserError",
+  "abstractKey": "__isUserError"
 },
 v5 = {
   "alias": null,
@@ -264,16 +264,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "46eda21838e722c8c6e823bd6ffdbb83",
+    "cacheID": "1cd4cfae4c7e99ff572a128211b03978",
     "id": null,
     "metadata": {},
     "name": "NewApplicationMutation",
     "operationKind": "mutation",
-    "text": "mutation NewApplicationMutation(\n  $input: CreateApplicationInput!\n) {\n  createApplication(input: $input) {\n    application {\n      id\n      ...ApplicationsList_applicationsEdge\n    }\n    errors {\n      __typename\n      ... on IUserError {\n        __isIUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment ApplicationsList_applicationsEdge on Application {\n  id\n  name\n  namespace\n  parts {\n    id\n    name\n    components {\n      id\n      definition {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": "mutation NewApplicationMutation(\n  $input: CreateApplicationInput!\n) {\n  createApplication(input: $input) {\n    application {\n      id\n      ...ApplicationsList_applicationsEdge\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment ApplicationsList_applicationsEdge on Application {\n  id\n  name\n  namespace\n  parts {\n    id\n    name\n    components {\n      id\n      definition {\n        id\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "d159c2764ba04fd8fb1de2abb6afd69e";
+(node as any).hash = "664da104b0c287ba4fdf2d5be195f7bd";
 
 export default node;

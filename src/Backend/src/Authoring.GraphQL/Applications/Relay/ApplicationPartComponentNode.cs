@@ -16,7 +16,7 @@ public sealed class ApplicationPartComponentNode
     [BindMember(nameof(ApplicationPartComponent.ComponentId))]
     public async Task<Component> GetDefinitionAsync(
         [Parent] ApplicationPartComponent applicationPartComponent,
-        IComponentService componentService,
+        [Service] IComponentService componentService,
         CancellationToken cancellationToken) =>
         (await componentService.GetByIdAsync(
             applicationPartComponent.ComponentId,

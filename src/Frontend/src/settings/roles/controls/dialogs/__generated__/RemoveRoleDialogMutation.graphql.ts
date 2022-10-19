@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cd8897b1ccfa3674025c18dd6ce4039a>>
+ * @generated SignedSource<<9a6df3ca1756af049daa3898e8fbbf6d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -93,8 +93,8 @@ v4 = {
           "storageKey": null
         }
       ],
-      "type": "IUserError",
-      "abstractKey": "__isIUserError"
+      "type": "UserError",
+      "abstractKey": "__isUserError"
     }
   ],
   "storageKey": null
@@ -202,16 +202,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "4dd5ecc8a52c0ae9bf5efc71bcf8a0f4",
+    "cacheID": "11ac965190e954f02ac75d699958e925",
     "id": null,
     "metadata": {},
     "name": "RemoveRoleDialogMutation",
     "operationKind": "mutation",
-    "text": "mutation RemoveRoleDialogMutation(\n  $input: RemoveRoleByIdInput!\n) {\n  removeRoleById(input: $input) {\n    role {\n      id\n      ...RolesList_RoleEdge\n    }\n    errors {\n      __typename\n      ... on IUserError {\n        __isIUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment RolesList_RoleEdge on Role {\n  id\n  name\n}\n"
+    "text": "mutation RemoveRoleDialogMutation(\n  $input: RemoveRoleByIdInput!\n) {\n  removeRoleById(input: $input) {\n    role {\n      id\n      ...RolesList_RoleEdge\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment RolesList_RoleEdge on Role {\n  id\n  name\n}\n"
   }
 };
 })();
 
-(node as any).hash = "c728b1b37765faabc1f2df6029429234";
+(node as any).hash = "fbe7ac048c95a5d87a865f30f8fdf7aa";
 
 export default node;

@@ -24,7 +24,7 @@ export const removeRoleDialog = graphql`
       }
       errors {
         __typename
-        ... on IUserError {
+        ... on UserError {
           message
           code
         }

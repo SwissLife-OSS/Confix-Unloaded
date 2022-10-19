@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7cf086d11c37fa5ea8339ae9bbd00e72>>
+ * @generated SignedSource<<c311e64ccc090dc20fb14f1f4a13a37f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -97,8 +97,8 @@ v4 = {
       "storageKey": null
     }
   ],
-  "type": "IUserError",
-  "abstractKey": "__isIUserError"
+  "type": "UserError",
+  "abstractKey": "__isUserError"
 };
 return {
   "fragment": {
@@ -202,16 +202,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "cf008540b3a14b21edca3f55a238d382",
+    "cacheID": "165c30db38f50235a280042f06b5708b",
     "id": null,
     "metadata": {},
     "name": "NewComponentMutation",
     "operationKind": "mutation",
-    "text": "mutation NewComponentMutation(\n  $input: CreateComponentInput!\n) {\n  createComponent(input: $input) {\n    component {\n      id\n      name\n    }\n    errors {\n      __typename\n      ... on IUserError {\n        __isIUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n"
+    "text": "mutation NewComponentMutation(\n  $input: CreateComponentInput!\n) {\n  createComponent(input: $input) {\n    component {\n      id\n      name\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "fa3380b3db6de90efd26d35e00f38e9f";
+(node as any).hash = "7934e5d47368728736c50a7375ee5706";
 
 export default node;

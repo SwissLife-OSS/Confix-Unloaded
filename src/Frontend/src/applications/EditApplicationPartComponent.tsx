@@ -97,7 +97,7 @@ const updateComponentValuesMutation = graphql`
         ...EditApplicationPartComponent_fragment
       }
       errors {
-        ... on IUserError {
+        ... on UserError {
           message
           code
         }

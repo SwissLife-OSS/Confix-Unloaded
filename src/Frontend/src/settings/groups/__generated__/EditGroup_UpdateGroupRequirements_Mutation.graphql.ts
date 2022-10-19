@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3ac86beebfa32c91d55f41fba522c802>>
+ * @generated SignedSource<<91e44045ff3d7949a44baa54263c9590>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -81,8 +81,8 @@ v3 = {
       "storageKey": null
     }
   ],
-  "type": "IUserError",
-  "abstractKey": "__isIUserError"
+  "type": "UserError",
+  "abstractKey": "__isUserError"
 },
 v4 = {
   "alias": null,
@@ -259,16 +259,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "e6e7f931057843c5b808348e105177af",
+    "cacheID": "af188f1b01a1dcc1aed4db285453ecde",
     "id": null,
     "metadata": {},
     "name": "EditGroup_UpdateGroupRequirements_Mutation",
     "operationKind": "mutation",
-    "text": "mutation EditGroup_UpdateGroupRequirements_Mutation(\n  $input: UpdateGroupRequirementsInput!\n) {\n  updateGroupRequirements(input: $input) {\n    group {\n      id\n      ...EditGroup_Group\n    }\n    errors {\n      __typename\n      ... on IUserError {\n        __isIUserError: __typename\n        code\n        message\n      }\n    }\n  }\n}\n\nfragment EditGroup_Group on Group {\n  id\n  name\n  requirements {\n    __typename\n    ... on ClaimRequirement {\n      __typename\n      type\n      value\n    }\n  }\n  roles {\n    namespace\n    roles {\n      id\n      name\n    }\n  }\n}\n"
+    "text": "mutation EditGroup_UpdateGroupRequirements_Mutation(\n  $input: UpdateGroupRequirementsInput!\n) {\n  updateGroupRequirements(input: $input) {\n    group {\n      id\n      ...EditGroup_Group\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        code\n        message\n      }\n    }\n  }\n}\n\nfragment EditGroup_Group on Group {\n  id\n  name\n  requirements {\n    __typename\n    ... on ClaimRequirement {\n      __typename\n      type\n      value\n    }\n  }\n  roles {\n    namespace\n    roles {\n      id\n      name\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "88fc5852b0193778b1f1bb93df5c68ed";
+(node as any).hash = "502463a1ca9cd1c3242bab64e18ef9d1";
 
 export default node;

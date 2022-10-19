@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ee87c3c7b6482e799cf0137a8f214067>>
+ * @generated SignedSource<<61ae88bf8afe6eac556c6b2e89cacbe8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -107,8 +107,8 @@ v4 = {
       "storageKey": null
     }
   ],
-  "type": "IUserError",
-  "abstractKey": "__isIUserError"
+  "type": "UserError",
+  "abstractKey": "__isUserError"
 };
 return {
   "fragment": {
@@ -212,16 +212,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "689ecc2f87a90b7f5078b793034bead7",
+    "cacheID": "c2f6adffaad5a135527b51a127b4222f",
     "id": null,
     "metadata": {},
     "name": "NewGroupMutation",
     "operationKind": "mutation",
-    "text": "mutation NewGroupMutation(\n  $input: CreateGroupInput!\n) {\n  createGroup(input: $input) {\n    group {\n      id\n      name\n    }\n    errors {\n      __typename\n      ... on IUserError {\n        __isIUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n"
+    "text": "mutation NewGroupMutation(\n  $input: CreateGroupInput!\n) {\n  createGroup(input: $input) {\n    group {\n      id\n      name\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "d956efe1c8b81addd781a4882a0d8d9a";
+(node as any).hash = "8e42551c331e16e346232dae711aad05";
 
 export default node;

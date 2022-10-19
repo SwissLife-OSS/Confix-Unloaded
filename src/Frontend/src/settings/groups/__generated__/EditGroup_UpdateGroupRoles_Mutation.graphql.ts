@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5a0d4388a2d6c198cb85d1956f7ede65>>
+ * @generated SignedSource<<81af4219df5506abb7c9cced06b5c5bd>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -78,8 +78,8 @@ v3 = {
       "storageKey": null
     }
   ],
-  "type": "IUserError",
-  "abstractKey": "__isIUserError"
+  "type": "UserError",
+  "abstractKey": "__isUserError"
 },
 v4 = {
   "alias": null,
@@ -256,16 +256,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "32715979315b69002ab54233c212bba3",
+    "cacheID": "054219bdab656fcc81a735d2cde4b60e",
     "id": null,
     "metadata": {},
     "name": "EditGroup_UpdateGroupRoles_Mutation",
     "operationKind": "mutation",
-    "text": "mutation EditGroup_UpdateGroupRoles_Mutation(\n  $input: UpdateGroupRolesInput!\n) {\n  updateGroupRoles(input: $input) {\n    group {\n      id\n      ...EditGroup_Group\n    }\n    errors {\n      __typename\n      ... on IUserError {\n        __isIUserError: __typename\n        code\n        message\n      }\n    }\n  }\n}\n\nfragment EditGroup_Group on Group {\n  id\n  name\n  requirements {\n    __typename\n    ... on ClaimRequirement {\n      __typename\n      type\n      value\n    }\n  }\n  roles {\n    namespace\n    roles {\n      id\n      name\n    }\n  }\n}\n"
+    "text": "mutation EditGroup_UpdateGroupRoles_Mutation(\n  $input: UpdateGroupRolesInput!\n) {\n  updateGroupRoles(input: $input) {\n    group {\n      id\n      ...EditGroup_Group\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        code\n        message\n      }\n    }\n  }\n}\n\nfragment EditGroup_Group on Group {\n  id\n  name\n  requirements {\n    __typename\n    ... on ClaimRequirement {\n      __typename\n      type\n      value\n    }\n  }\n  roles {\n    namespace\n    roles {\n      id\n      name\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "a2396ac3080d87462235236a1f061d04";
+(node as any).hash = "4618c5c845d6385a412ddfe8e93b659f";
 
 export default node;

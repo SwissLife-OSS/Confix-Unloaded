@@ -139,7 +139,7 @@ const RoleScopeSection: React.FC<{
             ...EditGroup_Group
           }
           errors {
-            ... on IUserError {
+            ... on UserError {
               code
               message
             }
@@ -324,7 +324,7 @@ const RequirementsSection: React.FC<{
             ...EditGroup_Group
           }
           errors {
-            ... on IUserError {
+            ... on UserError {
               code
               message
             }

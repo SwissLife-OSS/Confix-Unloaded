@@ -80,7 +80,7 @@ const EditRoleForm: React.FC<{
             ...EditRole_Role
           }
           errors {
-            ... on IUserError {
+            ... on UserError {
               message
               code
             }
