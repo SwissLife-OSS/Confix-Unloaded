@@ -12,7 +12,6 @@ public static class ChangeLogRequestExecutorBuilderExtensions
         // dataloaders
         builder.AddDataLoader<ChangeLogByIdDataloader>();
 
-
         // nodes
         builder.AddTypeExtension<ChangeLogNode>();
 
@@ -20,8 +19,7 @@ public static class ChangeLogRequestExecutorBuilderExtensions
         builder.AddTypeExtension<ChangeLogQueries>();
 
         // extensions
-        builder
-            .AddTypeExtension<ComponentExtensions>();
+        builder.AddTypeExtension<ComponentExtensions>();
 
         // change log
         builder.AddInterfaceType<IChange>(x => x.Name("Change"));

@@ -1,4 +1,3 @@
-using System;
 using Confix.CryptoProviders;
 
 namespace Confix.Vault.Abstractions;
@@ -45,5 +44,3 @@ public class Configuration
 
     public EncryptedValue EncryptedConfiguration { get; init; }
 }
-
-public record TokenPair(string AccessToken, string RefreshToken);

@@ -1,19 +1,21 @@
-using System;
-using GreenDonut;
 using HotChocolate;
 using HotChocolate.Types;
-using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring.Store;
 
 public sealed record CreateApplicationChange : IApplicationChange
 {
-    public CreateApplicationChange(Guid applicationId, int applicationVersion, Application application)
+    public CreateApplicationChange(
+        Guid applicationId,
+        int applicationVersion,
+        Application application)
     {
         ApplicationId = applicationId;
         ApplicationVersion = applicationVersion;
         Application = application;
     }
+
+    public Application Application { get; init; }
 
     public string Kind => nameof(CreateApplicationChange);
 
@@ -22,6 +24,4 @@ public sealed record CreateApplicationChange : IApplicationChange
     public Guid ApplicationId { get; init; }
 
     public int ApplicationVersion { get; init; }
-
-    public Application Application { get; init; }
 }

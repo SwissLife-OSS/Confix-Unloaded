@@ -4,18 +4,14 @@ namespace Confix.Authentication.Authorization;
 
 public class Session : ISession
 {
-    private readonly IReadOnlyDictionary<Guid, Role> _roleMap;
-
     private readonly ConcurrentDictionary<Grant, bool> _cache = new();
+    private readonly IReadOnlyDictionary<Guid, Role> _roleMap;
 
     private IReadOnlySet<string>? _namespaces;
 
     private UserInfo? _userInfo;
 
-    public Session(
-        string sub,
-        IReadOnlyList<Group> groups,
-        IReadOnlyDictionary<Guid, Role> roleMap)
+    public Session(string sub, IReadOnlyList<Group> groups, IReadOnlyDictionary<Guid, Role> roleMap)
     {
         Sub = sub;
         Groups = groups;
@@ -31,6 +27,7 @@ public class Session : ISession
         get
         {
             _userInfo = new UserInfo { Email = Sub };
+
             return _userInfo;
         }
     }
@@ -41,7 +38,11 @@ public class Session : ISession
     {
         get
         {
-            _namespaces ??= Groups.SelectMany(x => x.Roles).Select(x => x.Namespace).ToHashSet();
+            _namespaces ??= Groups
+                .SelectMany(x => x.Roles)
+                .Select(x => x.Namespace)
+                .ToHashSet();
+
             return _namespaces;
         }
     }
@@ -90,5 +91,5 @@ public class Session : ISession
         }
     }
 
-    private readonly record struct Grant(string @namespace, Scope scope, Permissions permission);
+    private readonly record struct Grant(string Namespace, Scope Scope, Permissions Permission);
 }

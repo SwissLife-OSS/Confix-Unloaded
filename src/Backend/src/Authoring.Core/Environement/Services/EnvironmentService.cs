@@ -1,16 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Confix.Authentication.Authorization;
-using Confix.Authoring.DataLoaders;
 using Confix.Authoring.Publishing;
 using Confix.Authoring.Store;
 using Confix.Common;
 using Confix.Common.Exceptions;
 using GreenDonut;
-using IdentityModel.Internal;
 using static Confix.Authentication.Authorization.Permissions;
 using static Confix.Authentication.Authorization.WellKnownNamespaces;
 
@@ -18,10 +11,10 @@ namespace Confix.Authoring;
 
 internal sealed class EnvironmentService : IEnvironmentService
 {
-    private readonly IEnvironmentStore _store;
-    private readonly ISessionAccessor _sessionAccessor;
     private readonly IAuthorizationService _authorizationService;
     private readonly IDataLoader<Guid, Environment?> _environmentByIdDataLoader;
+    private readonly ISessionAccessor _sessionAccessor;
+    private readonly IEnvironmentStore _store;
 
     public EnvironmentService(
         IEnvironmentStore store,
@@ -133,6 +126,7 @@ internal sealed class EnvironmentService : IEnvironmentService
         CancellationToken cancellationToken = default)
     {
         var session = await _sessionAccessor.GetSession(cancellationToken);
+
         if (session is null || !session.HasPermission(Global, Scope.Environment, Read))
         {
             return Array.Empty<Environment>().AsQueryable();
@@ -186,13 +180,11 @@ internal sealed class EnvironmentService : IEnvironmentService
     {
         HashSet<Guid> visited = new() { environment.Id, parent.Id };
         List<string> path = new() { environment.Name, parent.Name };
-        Environment? next = parent;
+        var next = parent;
 
-        while (next is { ParentId: { } nextParent } &&
-               !cancellationToken.IsCancellationRequested)
+        while (next is { ParentId: { } nextParent } && !cancellationToken.IsCancellationRequested)
         {
-            next = await _environmentByIdDataLoader
-                .LoadAsync(nextParent, cancellationToken);
+            next = await _environmentByIdDataLoader.LoadAsync(nextParent, cancellationToken);
 
             if (next is null)
             {

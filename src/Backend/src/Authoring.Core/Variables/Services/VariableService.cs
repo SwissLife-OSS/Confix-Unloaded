@@ -11,16 +11,16 @@ namespace Confix.Authoring;
 
 internal sealed class VariableService : IVariableService
 {
+    private readonly IApplicationDataLoader _applicationById;
+    private readonly IApplicationByPartIdDataLoader _applicationByPartId;
+    private readonly IAuthorizationService _authorizationService;
+    private readonly IChangeLogService _changeLogService;
+    private readonly IDecryptor _decryptor;
+    private readonly IEncryptor _encryptor;
+    private readonly ISessionAccessor _sessionAccessor;
+    private readonly IVariableDataLoader _variableById;
     private readonly IVariableStore _variableStore;
     private readonly IVariableValueStore _variableValueStore;
-    private readonly IVariableDataLoader _variableById;
-    private readonly IChangeLogService _changeLogService;
-    private readonly IAuthorizationService _authorizationService;
-    private readonly ISessionAccessor _sessionAccessor;
-    private readonly IApplicationByPartIdDataLoader _applicationByPartId;
-    private readonly IApplicationDataLoader _applicationById;
-    private readonly IEncryptor _encryptor;
-    private readonly IDecryptor _decryptor;
 
     public VariableService(
         IVariableStore variableStore,
@@ -86,13 +86,13 @@ internal sealed class VariableService : IVariableService
     public async Task<IEnumerable<Variable>> GetAllAsync(CancellationToken cancellationToken)
     {
         var session = await _sessionAccessor.GetSession(cancellationToken);
+
         if (session is null)
         {
             return Array.Empty<Variable>();
         }
 
-        return await _variableStore
-            .GetAllByNamespacesAsync(session.Namespaces, cancellationToken);
+        return await _variableStore.GetAllByNamespacesAsync(session.Namespaces, cancellationToken);
     }
 
     // TODO move this out of the service into some kind of provider
@@ -113,8 +113,7 @@ internal sealed class VariableService : IVariableService
     {
         ISet<string> distinctNames = variableNames.ToHashSet();
 
-        var variables =
-            await _variableStore.GetByNamesAsync(distinctNames, cancellationToken);
+        var variables = await _variableStore.GetByNamesAsync(distinctNames, cancellationToken);
 
         IDictionary<string, VariableValue> values = new Dictionary<string, VariableValue>();
 
@@ -146,8 +145,7 @@ internal sealed class VariableService : IVariableService
             }
         }
 
-        var globalValues =
-            await _variableStore.GetGlobalVariableValue(ids.Keys, cancellationToken);
+        var globalValues = await _variableStore.GetGlobalVariableValue(ids.Keys, cancellationToken);
 
         foreach (var value in globalValues)
         {
@@ -173,18 +171,17 @@ internal sealed class VariableService : IVariableService
 
         if (search is not null)
         {
-            queryable = queryable
-                .Where(x => x.Name.Contains(search) || (x.Namespace.Contains(search)));
+            queryable =
+                queryable.Where(x => x.Name.Contains(search) || x.Namespace.Contains(search));
         }
 
         return queryable;
     }
 
-    public async Task<Variable?> GetByIdAsync(
-        Guid id,
-        CancellationToken cancellationToken)
+    public async Task<Variable?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         var variable = await _variableStore.GetByIdAsync(id, cancellationToken);
+
         return await _authorizationService
             .RuleFor<Variable>()
             .AuthorizeOrNullAsync(variable, Read, cancellationToken);
@@ -238,8 +235,7 @@ internal sealed class VariableService : IVariableService
         Guid applicationPartId,
         CancellationToken cancellationToken)
     {
-        var applicationPart = _applicationByPartId
-            .LoadAsync(applicationPartId, cancellationToken);
+        var applicationPart = _applicationByPartId.LoadAsync(applicationPartId, cancellationToken);
 
         if (!await _authorizationService
                 .RuleFor<Variable>()
@@ -272,6 +268,7 @@ internal sealed class VariableService : IVariableService
         CancellationToken cancellationToken)
     {
         var session = await _sessionAccessor.GetSession(cancellationToken);
+
         if (session is null)
         {
             return Array.Empty<VariableValue>();
@@ -290,13 +287,15 @@ internal sealed class VariableService : IVariableService
             .Where(x => x.IsAuthorized)
             .Select(x => x.Variable)
             .Distinct()
-            .ToDictionaryAsync(x => x.Id, cancellationToken: cancellationToken);
+            .ToDictionaryAsync(x => x.Id, cancellationToken);
 
         return values.Where(x => variables.ContainsKey(x.Key.VariableId)).ToList();
 
         async ValueTask<(Variable Variable, bool IsAuthorized)> SelectVariableAndPermissions(
             Variable variable)
-            => (variable, await rule.IsAuthorizedFromAsync(variable, Read, cancellationToken));
+        {
+            return (variable, await rule.IsAuthorizedFromAsync(variable, Read, cancellationToken));
+        }
     }
 
     public async Task<IEnumerable<VariableValue>> GetValuesAsync(
@@ -348,11 +347,9 @@ internal sealed class VariableService : IVariableService
 
         variable = variable with { Version = variable.Version + 1 };
 
-        DeleteVariableValueChange log =
-            new(variable.Id, variable.Version, value, value.Key);
+        var log = new DeleteVariableValueChange(variable.Id, variable.Version, value, value.Key);
 
-        using (var transaction =
-               new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+        using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
         {
             await _changeLogService.CreateAsync(log, cancellationToken);
             await _variableStore.UpdateAsync(variable, cancellationToken);
@@ -403,6 +400,7 @@ internal sealed class VariableService : IVariableService
         CancellationToken cancellationToken = default)
     {
         VariableValue? variableValue = null;
+
         if (valueId is not null)
         {
             variableValue =
@@ -411,24 +409,18 @@ internal sealed class VariableService : IVariableService
 
         variableValue ??= new VariableValue(
             Guid.NewGuid(),
-            new VariableKey(
-                variable.Id,
-                applicationId,
-                partId,
-                environmentId
-            ),
+            new VariableKey(variable.Id, applicationId, partId, environmentId),
             string.Empty,
             null,
             0);
 
         if (variable.IsSecret)
         {
-            var encrypted =
-                await _encryptor.EncryptAsync(
-                    "variable",
-                    value,
-                    environmentId ?? Guid.Empty,
-                    cancellationToken);
+            var encrypted = await _encryptor.EncryptAsync(
+                "variable",
+                value,
+                environmentId ?? Guid.Empty,
+                cancellationToken);
 
             variableValue = variableValue with { EncryptedValue = encrypted };
         }
@@ -437,8 +429,7 @@ internal sealed class VariableService : IVariableService
             variableValue = variableValue with { Value = value };
         }
 
-        VariableValueChange log = new(
-            variable.Id,
+        var log = new VariableValueChange(variable.Id,
             variable.Version,
             variableValue.Key,
             variableValue.Value,

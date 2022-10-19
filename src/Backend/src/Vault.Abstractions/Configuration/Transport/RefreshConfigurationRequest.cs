@@ -6,3 +6,4 @@ public record RefreshConfigurationRequest(
     string EnvironmentName,
     string Configuration,
     string RefreshToken);
+

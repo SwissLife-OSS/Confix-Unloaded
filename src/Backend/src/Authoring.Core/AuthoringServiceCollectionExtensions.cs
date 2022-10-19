@@ -6,7 +6,6 @@ using Confix.Authoring.Environement;
 using Confix.Authoring.Internal;
 using Confix.Authoring.Publishing;
 using Confix.Vault.Client;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Confix.Authoring;
@@ -25,6 +24,7 @@ public static class AuthoringServiceCollectionExtensions
         services.AddSchemas();
         services.AddPublishing();
         services.AddVaultClient();
+
         return services;
     }
 }

@@ -10,6 +10,7 @@ public static class EnvironmentServiceCollectionExtensions
     {
         services.AddAuthorizationRule<Environment, EnvironmentAuthorizationRule>();
         services.AddScoped<IEnvironmentService, EnvironmentService>();
+
         return services;
     }
 }

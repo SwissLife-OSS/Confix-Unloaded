@@ -1,9 +1,7 @@
-using System;
 using Confix.Authoring.DataLoaders;
-using GreenDonut;
+using Confix.Authoring.GraphQL.Relay;
 using HotChocolate.Execution.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Confix.Authoring.GraphQL.Relay;
 
 namespace Confix.Authoring.GraphQL;
 

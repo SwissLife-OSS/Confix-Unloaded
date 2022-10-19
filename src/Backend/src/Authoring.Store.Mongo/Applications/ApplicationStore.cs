@@ -22,19 +22,16 @@ internal sealed class ApplicationStore : IApplicationStore
         return await _dbContext.Applications.Find(filter).FirstOrDefaultAsync(cancellationToken);
     }
 
-    public async Task<Application?> GetByIdAsync(
-        Guid id,
-        CancellationToken cancellationToken)
+    public async Task<Application?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         var filter = Filter.Eq(x => x.Id, id);
+
         return await _dbContext.Applications.Find(filter).SingleOrDefaultAsync(cancellationToken);
     }
 
-    public Task<Application?> GetByPartIdAsync(
-        Guid partId,
-        CancellationToken cancellationToken)
+    public Task<Application?> GetByPartIdAsync(Guid partId, CancellationToken cancellationToken)
     {
-        var filter =
+        var filter = 
             Filter.ElemMatch(x => x.Parts, Builders<ApplicationPart>.Filter.Eq(x => x.Id, partId));
 
         return _dbContext.Applications.Find(filter).FirstOrDefaultAsync(cancellationToken)!;
@@ -76,7 +73,8 @@ internal sealed class ApplicationStore : IApplicationStore
         Guid id,
         CancellationToken cancellationToken)
     {
-        Application? application = await GetByPartIdAsync(id, cancellationToken);
+        var application = await GetByPartIdAsync(id, cancellationToken);
+
         return application?.Parts.First(t => t.Id == id);
     }
 
@@ -89,27 +87,22 @@ internal sealed class ApplicationStore : IApplicationStore
         return await _dbContext.Applications.Find(filter).ToListAsync(cancellationToken);
     }
 
-    public IQueryable<Application> Query() =>
-        _dbContext.Applications.AsQueryable();
+    public IQueryable<Application> Query()
+    {
+        return _dbContext.Applications.AsQueryable();
+    }
 
-    public async Task AddAsync(
-        Application application,
-        CancellationToken cancellationToken)
+    public async Task AddAsync(Application application, CancellationToken cancellationToken)
     {
         if (application is null)
         {
             throw new ArgumentNullException(nameof(application));
         }
 
-        await _dbContext.Applications.InsertOneAsync(
-            application,
-            options: null,
-            cancellationToken);
+        await _dbContext.Applications.InsertOneAsync(application, null, cancellationToken);
     }
 
-    public async Task ReplaceAsync(
-        Application application,
-        CancellationToken cancellationToken)
+    public async Task ReplaceAsync(Application application, CancellationToken cancellationToken)
     {
         if (application is null)
         {

@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 
@@ -17,9 +12,7 @@ internal sealed class ComponentStore : IComponentStore
         _dbContext = dbContext;
     }
 
-    public async Task<Component> GetByIdAsync(
-        Guid id,
-        CancellationToken cancellationToken)
+    public async Task<Component> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         return await _dbContext.Components.AsQueryable()
             .Where(x => x.Id == id)
@@ -35,17 +28,14 @@ internal sealed class ComponentStore : IComponentStore
             .ToListAsync(cancellationToken);
     }
 
-    public IQueryable<Component> Query() =>
-        _dbContext.Components.AsQueryable();
-
-    public async Task<Component> AddAsync(
-        Component component,
-        CancellationToken cancellationToken)
+    public IQueryable<Component> Query()
     {
-        await _dbContext.Components.InsertOneAsync(
-            component,
-            options: null,
-            cancellationToken);
+        return _dbContext.Components.AsQueryable();
+    }
+
+    public async Task<Component> AddAsync(Component component, CancellationToken cancellationToken)
+    {
+        await _dbContext.Components.InsertOneAsync(component, null, cancellationToken);
 
         return component;
     }

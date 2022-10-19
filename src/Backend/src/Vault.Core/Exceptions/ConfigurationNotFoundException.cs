@@ -1,5 +1,3 @@
-using System;
-
 namespace Confix.Vault.Core;
 
 public sealed class ConfigurationNotFoundException : Exception

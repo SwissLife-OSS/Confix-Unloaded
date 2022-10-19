@@ -11,6 +11,7 @@ public static class AuthorizationRuleServiceCollectionExtensions
         services.TryAddScoped<IAuthorizationService, AuthorizationService>();
         services.AddScoped<TRule>();
         services.AddScoped<IAuthorizationRule<T>, TRule>(sp => sp.GetRequiredService<TRule>());
+
         return services;
     }
 }

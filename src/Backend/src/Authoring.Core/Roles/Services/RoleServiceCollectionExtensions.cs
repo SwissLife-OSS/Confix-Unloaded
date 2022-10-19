@@ -9,6 +9,7 @@ public static class RoleServiceCollectionExtensions
     {
         services.AddAuthorizationRule<Role, RoleAuthorizationRule>();
         services.AddScoped<IRoleService, RoleService>();
+
         return services;
     }
 }

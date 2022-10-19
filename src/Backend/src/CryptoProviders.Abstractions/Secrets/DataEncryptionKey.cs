@@ -1,5 +1,3 @@
-using System;
-
 namespace Confix.CryptoProviders;
 
 public sealed class DataEncryptionKey

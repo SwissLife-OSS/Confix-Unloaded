@@ -1,5 +1,4 @@
 using System.Security.Cryptography;
-using Confix.Vault.Abstractions;
 using Confix.Vault.Core;
 using Microsoft.AspNetCore.Identity;
 using static Microsoft.AspNetCore.Identity.PasswordVerificationResult;
@@ -36,16 +35,19 @@ internal sealed class TokenProvider : ITokenProvider
                 nameof(token));
         }
 
-        return token[0..PrefixLength];
+        return token[..PrefixLength];
     }
 
-    public bool ValidateToken(string token, string plainText) =>
-        _hasher.VerifyHashedPassword(default!, token, plainText) is Success or SuccessRehashNeeded;
+    public bool ValidateToken(string token, string plainText)
+    {
+        return _hasher
+            .VerifyHashedPassword(default!, token, plainText) is Success or SuccessRehashNeeded;
+    }
 
     private static string CreateToken()
     {
-        char[] token = new char[_tokenLength];
-        byte[] generated = RandomNumberGenerator.GetBytes(_tokenLength);
+        var token = new char[_tokenLength];
+        var generated = RandomNumberGenerator.GetBytes(_tokenLength);
 
         for (var i = 0; i < _tokenLength; i++)
         {

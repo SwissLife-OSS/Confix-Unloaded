@@ -1,6 +1,3 @@
-using System;
-using System.Threading.Tasks;
-
 namespace Confix.CryptoProviders.AzureKeyVault;
 
 internal interface IKeyEncryptionKeyCache

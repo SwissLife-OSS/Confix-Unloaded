@@ -1,12 +1,6 @@
-using System.Collections.Generic;
 using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
-using Confix.Authoring.DataLoaders;
 using Confix.Authoring.Internal;
 using Confix.Authoring.Store;
-using HotChocolate;
-using HotChocolate.Types;
 
 namespace Confix.Authoring.GraphQL.Applications;
 
@@ -14,14 +8,14 @@ namespace Confix.Authoring.GraphQL.Applications;
 public sealed class ApplicationPartComponentNode
 {
     [BindMember(nameof(ApplicationPartComponent.ComponentId))]
-    public async Task<Component> GetDefinitionAsync(
+    public Task<Component?> GetDefinitionAsync(
         [Parent] ApplicationPartComponent applicationPartComponent,
         [Service] IComponentService componentService,
-        CancellationToken cancellationToken) =>
-        (await componentService.GetByIdAsync(
-            applicationPartComponent.ComponentId,
-            cancellationToken))!;
-
+        CancellationToken cancellationToken)
+    {
+        return componentService
+            .GetByIdAsync(applicationPartComponent.ComponentId, cancellationToken);
+    }
 
     [GraphQLType(typeof(AnyType))]
     [BindMember(nameof(Component.Values))]
@@ -35,8 +29,7 @@ public sealed class ApplicationPartComponentNode
             return null;
         }
 
-        ISchema? schema = await componentService.GetSchemaByIdAsync(
-            applicationPartComponent.ComponentId,
+        var schema = await componentService.GetSchemaByIdAsync(applicationPartComponent.ComponentId,
             cancellationToken);
 
         if (schema is null)
@@ -45,6 +38,7 @@ public sealed class ApplicationPartComponentNode
         }
 
         var document = JsonDocument.Parse(applicationPartComponent.Values!);
+
         return ValueHelper.DeserializeDictionary(document.RootElement, schema.QueryType);
     }
 }

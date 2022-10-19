@@ -1,4 +1,3 @@
-using Confix.Authentication.Authorization;
 using Confix.Authoring.GraphQL.Viewer;
 using HotChocolate.Execution.Configuration;
 using Microsoft.Extensions.DependencyInjection;

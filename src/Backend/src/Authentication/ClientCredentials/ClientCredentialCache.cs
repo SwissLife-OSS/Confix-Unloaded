@@ -1,15 +1,11 @@
 using System.Security.Authentication;
-using IdentityModel;
 using IdentityModel.Client;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
-using Microsoft.Net.Http.Headers;
 
 namespace Confix.Authentication;
 
-public class ClientCredentialCache
-    : IClientCredentialCache
+public class ClientCredentialCache : IClientCredentialCache
 {
     internal const string ClientName = "ClientCredentials";
 
@@ -34,18 +30,19 @@ public class ClientCredentialCache
         string scopes,
         CancellationToken cancellationToken)
     {
-        string cacheKey = "access_token." + string.Join("-", authority, clientId, scopes);
+        var cacheKey = "access_token." + string.Join("-", authority, clientId, scopes);
 
         if (_cache.Get(cacheKey) is AuthenticationToken token &&
             token.ExpiresAt > DateTime.UtcNow.AddMinutes(1))
         {
             _logger.LogInformation("Retrieved token from cache {cacheKey}", cacheKey);
+
             return token.AccessToken;
         }
 
-        using HttpClient client = _clientFactory.CreateClient(ClientName);
+        using var client = _clientFactory.CreateClient(ClientName);
 
-        DiscoveryDocumentResponse discoveryDocument =
+        var discoveryDocument =
             await client.GetDiscoveryDocumentAsync(authority, cancellationToken);
 
         if (discoveryDocument.IsError)
@@ -53,7 +50,7 @@ public class ClientCredentialCache
             throw new AuthenticationException($"Could not get discovery document: {authority}");
         }
 
-        DateTime requestStartTime = DateTime.UtcNow;
+        var requestStartTime = DateTime.UtcNow;
         ClientCredentialsTokenRequest request = new()
         {
             Address = discoveryDocument.TokenEndpoint,
@@ -62,17 +59,18 @@ public class ClientCredentialCache
             Scope = scopes.ValueOrNull()
         };
 
-        TokenResponse? response = await client
-            .RequestClientCredentialsTokenAsync(request, cancellationToken);
+        var response = await client.RequestClientCredentialsTokenAsync(request, cancellationToken);
 
         if (response.IsError || string.IsNullOrEmpty(response.AccessToken))
         {
             throw new AuthenticationException($"Could not authenticate with client {clientId}");
         }
 
-        token = new(response.AccessToken, requestStartTime.AddSeconds(response.ExpiresIn));
+        token = new AuthenticationToken(response.AccessToken,
+            requestStartTime.AddSeconds(response.ExpiresIn));
         _cache.Set(cacheKey, token, token.ExpiresAt);
         _logger.LogInformation("Add token to cache with {cacheKey}", cacheKey);
+
         return token.AccessToken;
     }
 

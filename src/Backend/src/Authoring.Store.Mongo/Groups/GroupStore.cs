@@ -1,11 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Confix.Authentication.Authorization;
 using MongoDB.Driver;
-using MongoDB.Driver.Linq;
 
 namespace Confix.Authoring.Store.Mongo;
 
@@ -55,9 +49,11 @@ internal sealed class GroupStore : IGroupStore
     {
         var filter = Builders<Group>.Filter.Eq(x => x.Id, id);
 
-        return await _dbContext.Groups
-            .FindOneAndDeleteAsync(filter, default, cancellationToken);
+        return await _dbContext.Groups.FindOneAndDeleteAsync(filter, default, cancellationToken);
     }
 
-    public IQueryable<Group> Query() => _dbContext.Groups.AsQueryable();
+    public IQueryable<Group> Query()
+    {
+        return _dbContext.Groups.AsQueryable();
+    }
 }

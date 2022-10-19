@@ -5,13 +5,12 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace Confix.Authentication.Authorization;
 
-public class GroupProvider
-    : IGroupProvider
+public class GroupProvider : IGroupProvider
 {
-    private readonly TimeSpan _cacheExpiration = TimeSpan.FromMinutes(15);
     private readonly IMemoryCache _cache;
-    private readonly IGroupStore _groupStore;
+    private readonly TimeSpan _cacheExpiration = TimeSpan.FromMinutes(15);
     private readonly object _groupLock = new();
+    private readonly IGroupStore _groupStore;
     private readonly object _userLock = new();
 
     public GroupProvider(IMemoryCache cache, IGroupStore groupStore)
@@ -25,12 +24,13 @@ public class GroupProvider
         CancellationToken cancellationToken)
     {
         var sub = principal.FindFirstValue(JwtClaimTypes.Subject);
+
         if (sub is null)
         {
             throw new AuthenticationException("Sub was not provided");
         }
 
-        string cacheKey = $"group_service.groups_of_user.{sub}";
+        var cacheKey = $"group_service.groups_of_user.{sub}";
 
         if (!_cache.TryGetValue(cacheKey, out Func<IReadOnlyList<Group>> cachedGroups))
         {

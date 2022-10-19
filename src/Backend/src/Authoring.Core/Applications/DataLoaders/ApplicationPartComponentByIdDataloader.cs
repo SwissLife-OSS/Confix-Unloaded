@@ -1,15 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Confix.Authoring.Store;
 using GreenDonut;
 
 namespace Confix.Authoring.DataLoaders;
 
 internal sealed class ApplicationPartComponentByIdDataloader
-    : BatchDataLoader<Guid, ApplicationPartComponent?>, IApplicationPartComponentDataLoader
+    : BatchDataLoader<Guid, ApplicationPartComponent?>
+    , IApplicationPartComponentDataLoader
 {
     private readonly IApplicationStore _applicationStore;
 
@@ -22,9 +18,7 @@ internal sealed class ApplicationPartComponentByIdDataloader
     }
 
     protected override async Task<IReadOnlyDictionary<Guid, ApplicationPartComponent?>>
-        LoadBatchAsync(
-        IReadOnlyList<Guid> keys,
-        CancellationToken cancellationToken)
+        LoadBatchAsync(IReadOnlyList<Guid> keys, CancellationToken cancellationToken)
     {
         var idSet = keys.ToHashSet();
 

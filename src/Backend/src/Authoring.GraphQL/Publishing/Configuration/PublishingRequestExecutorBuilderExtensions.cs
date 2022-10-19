@@ -1,7 +1,5 @@
-using System;
 using Confix.Authoring.GraphQL.Publishing;
 using Confix.Authoring.Publishing;
-using GreenDonut;
 using HotChocolate.Execution.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

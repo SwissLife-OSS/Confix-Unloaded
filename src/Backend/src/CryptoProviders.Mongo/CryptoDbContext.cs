@@ -12,6 +12,9 @@ internal sealed class CryptoDbContext : MongoDbContext, ICryptoDbContext
     {
     }
 
+    public IMongoCollection<DataEncryptionKey> Secrets
+        => CreateCollection<DataEncryptionKey>().AsTransactionCollection();
+
     protected override void OnConfiguring(IMongoDatabaseBuilder builder)
     {
         builder
@@ -20,7 +23,4 @@ internal sealed class CryptoDbContext : MongoDbContext, ICryptoDbContext
             .ConfigureConnection(con => con.ReadPreference = ReadPreference.Primary)
             .ConfigureCollection(new SecretCollectionConfiguration());
     }
-
-    public IMongoCollection<DataEncryptionKey> Secrets
-        => CreateCollection<DataEncryptionKey>().AsTransactionCollection();
 }

@@ -3,16 +3,14 @@ using Microsoft.AspNetCore.Http;
 
 namespace Confix.Authentication.Authorization;
 
-public class SessionAccessor
-    : ISessionAccessor
+public class SessionAccessor : ISessionAccessor
 {
     private readonly IHttpContextAccessor _accessor;
     private readonly IGroupProvider _groupProvider;
-    private readonly IRoleProvider _roleProvider;
     private readonly object _lockObject = new();
+    private readonly IRoleProvider _roleProvider;
 
     private Holder? _session;
-
 
     public SessionAccessor(
         IHttpContextAccessor accessor,

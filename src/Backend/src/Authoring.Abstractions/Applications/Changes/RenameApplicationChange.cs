@@ -1,8 +1,5 @@
-using System;
-using GreenDonut;
 using HotChocolate;
 using HotChocolate.Types;
-using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring.Store;
 
@@ -15,6 +12,8 @@ public sealed record RenameApplicationChange : IApplicationChange
         Name = name;
     }
 
+    public string Name { get; init; }
+
     public string Kind => nameof(RenameApplicationChange);
 
     [GraphQLName("application")]
@@ -22,6 +21,4 @@ public sealed record RenameApplicationChange : IApplicationChange
     public Guid ApplicationId { get; init; }
 
     public int ApplicationVersion { get; init; }
-
-    public string Name { get; init; }
 }

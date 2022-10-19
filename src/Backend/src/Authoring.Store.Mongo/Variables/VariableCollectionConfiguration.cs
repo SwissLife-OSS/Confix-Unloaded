@@ -3,11 +3,9 @@ using MongoDB.Extensions.Context;
 
 namespace Confix.Authoring.Store.Mongo.Configuration;
 
-internal sealed class VariableCollectionConfiguration :
-    IMongoCollectionConfiguration<Variable>
+internal sealed class VariableCollectionConfiguration : IMongoCollectionConfiguration<Variable>
 {
-    public void OnConfiguring(
-        IMongoCollectionBuilder<Variable> builder)
+    public void OnConfiguring(IMongoCollectionBuilder<Variable> builder)
     {
         builder
             .WithCollectionName("variable")
@@ -20,7 +18,6 @@ internal sealed class VariableCollectionConfiguration :
             .WithCollectionSettings(s => s.ReadPreference = ReadPreference.Nearest)
             .WithCollectionConfiguration(collection =>
             {
-
             });
     }
 }

@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using Confix.CryptoProviders;
 using Confix.Vault.Abstractions;
 using MongoDB.Driver;
@@ -40,7 +36,7 @@ internal sealed class ConfigurationStore : IConfigurationStore
         string tokenPrefix,
         CancellationToken cancellationToken)
     {
-        FilterDefinition<Configuration> filter =
+        var filter =
             Builders<Configuration>.Filter.Eq(x => x.ApplicationName, applicationName) &
             Builders<Configuration>.Filter.Eq(x => x.ApplicationPartName, applicationPartName) &
             Builders<Configuration>.Filter.Eq(x => x.EnvironmentName, environmentName) &
@@ -54,10 +50,9 @@ internal sealed class ConfigurationStore : IConfigurationStore
         EncryptedValue encryptedConfiguration,
         CancellationToken cancellationToken)
     {
-        FilterDefinition<Configuration> filter = Builders<Configuration>.Filter.Eq(x => x.Id, id);
-        UpdateDefinition<Configuration> update =
-            Builders<Configuration>.Update.Set(x => x.EncryptedConfiguration,
-                encryptedConfiguration);
+        var filter = Builders<Configuration>.Filter.Eq(x => x.Id, id);
+        var update = Builders<Configuration>.Update
+            .Set(x => x.EncryptedConfiguration, encryptedConfiguration);
 
         FindOneAndUpdateOptions<Configuration> options = new() { IsUpsert = false };
 
@@ -70,6 +65,7 @@ internal sealed class ConfigurationStore : IConfigurationStore
         CancellationToken cancellationToken)
     {
         await _context.Configurations.InsertOneAsync(configuration, default, cancellationToken);
+
         return configuration;
     }
 }

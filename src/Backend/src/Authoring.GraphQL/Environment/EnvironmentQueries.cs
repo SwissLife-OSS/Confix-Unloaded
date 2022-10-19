@@ -1,12 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using HotChocolate;
-using HotChocolate.Types;
-using HotChocolate.Types.Relay;
-
 namespace Confix.Authoring.GraphQL;
 
 [ExtendObjectType(OperationTypeNames.Query)]

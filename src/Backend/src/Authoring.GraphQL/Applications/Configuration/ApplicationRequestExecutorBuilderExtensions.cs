@@ -11,8 +11,7 @@ public static class ApplicationRequestExecutorBuilderExtensions
     public static IRequestExecutorBuilder AddApplications(this IRequestExecutorBuilder builder)
     {
         // dataloaders
-        builder
-            .AddDataLoader<IApplicationDataLoader, ApplicationByIdDataLoader>()
+        builder.AddDataLoader<IApplicationDataLoader, ApplicationByIdDataLoader>()
             .AddDataLoader<IApplicationPartDataLoader, ApplicationPartByIdDataLoader>()
             .AddDataLoader<IApplicationByPartIdDataLoader, ApplicationByPartIdDataLoader>()
             .AddDataLoader<IApplicationByComponentIdDataLoader,
@@ -54,18 +53,14 @@ public static class ApplicationRequestExecutorBuilderExtensions
             .AddType<RemoveComponentFromApplicationPartChange>()
             .AddType<ApplicationPartComponentValuesChange>();
 
-
-        builder.AddInterfaceType<IApplicationPartChange>(
-            x => x.Name("ApplicationPartChange"));
-        builder.AddInterfaceType<IApplicationChange>(
-            x => x.Name("ApplicationChange"));
-        builder.AddInterfaceType<IApplicationPartComponentChange>(
-            x => x.Name("ApplicationPartComponentChange"));
+        builder.AddInterfaceType<IApplicationPartChange>(x => x.Name("ApplicationPartChange"));
+        builder.AddInterfaceType<IApplicationChange>(x => x.Name("ApplicationChange"));
+        builder.AddInterfaceType<IApplicationPartComponentChange>(x
+            => x.Name("ApplicationPartComponentChange"));
 
         // error types
 
-        builder
-            .AddType<SchemaViolationType>();
+        builder.AddType<SchemaViolationType>();
 
         return builder;
     }

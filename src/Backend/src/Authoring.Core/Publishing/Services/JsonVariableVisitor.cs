@@ -4,18 +4,23 @@ namespace Confix.Authoring.Publishing;
 
 internal sealed class JsonVariableVisitor
 {
+    public static readonly JsonVariableVisitor Default = new();
+
     public void Visit(JsonNode node, JsonVariableVisitorContext context)
     {
         switch (node)
         {
             case JsonObject ob:
                 Visit(ob, context);
+
                 break;
             case JsonValue val:
                 Visit(val, context);
+
                 break;
             case JsonArray arr:
                 Visit(arr, context);
+
                 break;
         }
     }
@@ -37,7 +42,8 @@ internal sealed class JsonVariableVisitor
     {
         for (var i = 0; i < arr.Count; i++)
         {
-            JsonNode? element = arr[i];
+            var element = arr[i];
+
             if (element is not null)
             {
                 var index = i;
@@ -53,15 +59,10 @@ internal sealed class JsonVariableVisitor
 
     protected void Visit(JsonValue value, JsonVariableVisitorContext context)
     {
-        if (value.TryGetValue(out string? str) &&
-            str.Length > 2 &&
-            str[0] == '{' &&
-            str[^1] == '}')
+        if (value.TryGetValue(out string? str) && str.Length > 2 && str[0] == '{' && str[^1] == '}')
         {
-            string variableName = str[1..^1];
+            var variableName = str[1..^1];
             context.Variables.Add(new VariableMatch(variableName, context.SetValue.Peek()));
         }
     }
-
-    public static readonly JsonVariableVisitor Default = new();
 }

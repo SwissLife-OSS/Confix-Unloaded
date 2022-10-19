@@ -1,4 +1,3 @@
-using HotChocolate;
 using HotChocolate.Execution;
 using Microsoft.Extensions.DependencyInjection;
 using Snapshooter.Xunit;
@@ -11,11 +10,10 @@ public class SchemaTests
     [Fact]
     public async Task PrintSchema()
     {
-        ISchema schema =
-            await new ServiceCollection()
-                .AddGraphQLServer()
-                .AddConfixSchema()
-                .BuildSchemaAsync();
+        var schema = await new ServiceCollection()
+            .AddGraphQLServer()
+            .AddConfixSchema()
+            .BuildSchemaAsync();
 
         schema.Print().MatchSnapshot();
     }

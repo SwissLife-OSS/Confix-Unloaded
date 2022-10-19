@@ -1,11 +1,5 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using Confix.Authoring.GraphQL.Applications;
 using Confix.Common.Exceptions;
-using HotChocolate;
-using HotChocolate.Types;
-using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring.GraphQL;
 
@@ -18,7 +12,9 @@ public sealed class EnvironmentMutations
         [Service] IEnvironmentService environmentService,
         string name,
         CancellationToken cancellationToken)
-        => await environmentService.CreateAsync(name, cancellationToken);
+    {
+        return await environmentService.CreateAsync(name, cancellationToken);
+    }
 
     [Error(typeof(EnvironmentNotFoundError))]
     [Error(typeof(EnvironmentNameCollisionError))]
@@ -28,7 +24,9 @@ public sealed class EnvironmentMutations
         [ID(nameof(Environment))] Guid id,
         string name,
         CancellationToken cancellationToken)
-        => await environmentService.RenameAsync(id, name, cancellationToken);
+    {
+        return await environmentService.RenameAsync(id, name, cancellationToken);
+    }
 
     [Error(typeof(EnvironmentNotFoundError))]
     [Error(typeof(UnauthorizedOperationException))]
@@ -36,7 +34,9 @@ public sealed class EnvironmentMutations
         [Service] IEnvironmentService environmentService,
         [ID(nameof(Environment))] Guid id,
         CancellationToken cancellationToken)
-        => await environmentService.DeleteById(id, cancellationToken);
+    {
+        return await environmentService.DeleteById(id, cancellationToken);
+    }
 
     [Error(typeof(EnvironmentNotFoundError))]
     [Error(typeof(EnvironmentCycleDetectedException))]
@@ -46,5 +46,7 @@ public sealed class EnvironmentMutations
         [ID(nameof(Environment))] Guid environmentId,
         [ID(nameof(Environment))] Guid parentId,
         CancellationToken cancellationToken)
-        => await environmentService.SetParent(environmentId, parentId, cancellationToken);
+    {
+        return await environmentService.SetParent(environmentId, parentId, cancellationToken);
+    }
 }

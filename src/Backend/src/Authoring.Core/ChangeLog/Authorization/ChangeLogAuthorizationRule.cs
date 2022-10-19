@@ -8,9 +8,9 @@ namespace Confix.Authoring;
 internal sealed class ChangeLogAuthorizationRule : AuthorizationRule<ChangeLog>
 {
     private readonly IApplicationDataLoader _applicationById;
+    private readonly IAuthorizationService _authorization;
     private readonly IComponentDataLoader _componentById;
     private readonly IVariableDataLoader _variableDataLoader;
-    private readonly IAuthorizationService _authorization;
 
     public ChangeLogAuthorizationRule(
         ISessionAccessor accessor,

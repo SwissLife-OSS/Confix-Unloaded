@@ -1,5 +1,6 @@
 using System.Security.Cryptography;
 using System.Transactions;
+using Azure;
 using Azure.Security.KeyVault.Keys;
 using Azure.Security.KeyVault.Keys.Cryptography;
 using Microsoft.Extensions.Options;
@@ -10,9 +11,9 @@ namespace Confix.CryptoProviders.AzureKeyVault;
 
 internal sealed class KeyEncryptionKeyProvider : IKeyEncryptionKeyProvider
 {
-    private readonly IKeyEncryptionKeyCache _keyEncryptionKeyCache;
-    private readonly IDataEncryptionKeyRepository _dataEncryptionKeys;
     private readonly ICryptographyClientFactory _clientFactory;
+    private readonly IDataEncryptionKeyRepository _dataEncryptionKeys;
+    private readonly IKeyEncryptionKeyCache _keyEncryptionKeyCache;
     private readonly IOptionsMonitor<AzureKeyVaultOptions> _options;
 
     public KeyEncryptionKeyProvider(
@@ -31,7 +32,8 @@ internal sealed class KeyEncryptionKeyProvider : IKeyEncryptionKeyProvider
     {
         async Task<byte[]> CreateKey()
         {
-            DataEncryptionKey? secret = await _dataEncryptionKeys.GetSecretByTopicAsync(topic, cancellationToken);
+            var secret = await _dataEncryptionKeys.GetSecretByTopicAsync(topic, cancellationToken);
+
             if (secret is null)
             {
                 secret = await GetOrCreateSecretAsync(topic, cancellationToken);
@@ -43,25 +45,26 @@ internal sealed class KeyEncryptionKeyProvider : IKeyEncryptionKeyProvider
         return _keyEncryptionKeyCache.GetOrCreateAsync(topic, CreateKey);
     }
 
-    private async Task EnsureKeyAsync(
-        string topic,
-        CancellationToken cancellationToken)
+    private async Task EnsureKeyAsync(string topic, CancellationToken cancellationToken)
     {
-        KeyClient keyClient = _clientFactory.CreateKeyClient(topic);
+        var keyClient = _clientFactory.CreateKeyClient(topic);
+
         try
         {
-            Azure.Response<KeyVaultKey> keyResponse =
+            var keyResponse =
                 await keyClient.GetKeyAsync(topic, cancellationToken: cancellationToken);
         }
-        catch (Azure.RequestFailedException ex)
+        catch (RequestFailedException ex)
         {
-            if (ex.Message
-                .Contains($"A key with (name/id) {topic} was not found in this key vault."))
+            if (ex.Message.Contains(
+                    $"A key with (name/id) {topic} was not found in this key vault."))
             {
-                await keyClient.CreateKeyAsync(
-                    topic,
+                await keyClient.CreateKeyAsync(topic,
                     KeyType.Rsa,
-                    new() { KeyOperations = { KeyOperation.Encrypt, KeyOperation.Decrypt } },
+                    new CreateKeyOptions
+                    {
+                        KeyOperations = { KeyOperation.Encrypt, KeyOperation.Decrypt }
+                    },
                     cancellationToken);
             }
             else
@@ -76,11 +79,11 @@ internal sealed class KeyEncryptionKeyProvider : IKeyEncryptionKeyProvider
         CancellationToken cancellationToken)
     {
         EncryptionAlgorithm algorithm = new(dataEncryptionKey.EncryptionAlgorithm);
-        CryptographyClient encryptionClient = _clientFactory.CreateCryptoClient(dataEncryptionKey.Topic);
+        var encryptionClient = _clientFactory.CreateCryptoClient(dataEncryptionKey.Topic);
 
         var decodedKey = Convert.FromBase64String(dataEncryptionKey.Key);
 
-        DecryptResult decryptedKey =
+        var decryptedKey =
             await encryptionClient.DecryptAsync(algorithm, decodedKey, cancellationToken);
 
         return decryptedKey.Plaintext;
@@ -98,15 +101,14 @@ internal sealed class KeyEncryptionKeyProvider : IKeyEncryptionKeyProvider
             aes.GenerateKey();
 
             EncryptionAlgorithm algorithm = new(_options.CurrentValue.Algorithm);
-            CryptographyClient encryptionClient = _clientFactory.CreateCryptoClient(topic);
+            var encryptionClient = _clientFactory.CreateCryptoClient(topic);
 
-            EncryptResult encryptedKey =
+            var encryptedKey =
                 await encryptionClient.EncryptAsync(algorithm, aes.Key, cancellationToken);
 
             var encodedKey = Convert.ToBase64String(encryptedKey.Ciphertext);
 
-            DataEncryptionKey newDataEncryptionKey = new(
-                Guid.NewGuid(),
+            DataEncryptionKey newDataEncryptionKey = new(Guid.NewGuid(),
                 DateTime.UtcNow,
                 topic,
                 encodedKey,
@@ -114,8 +116,11 @@ internal sealed class KeyEncryptionKeyProvider : IKeyEncryptionKeyProvider
 
             // It could be that another service has already created a secret. This way
             // we ensure that we would receive this secret and throw away our secret
-            DataEncryptionKey dataEncryptionKey = await _dataEncryptionKeys.GetOrCreateByTopicAsync(newDataEncryptionKey, cancellationToken);
+            var dataEncryptionKey = await _dataEncryptionKeys
+                .GetOrCreateByTopicAsync(newDataEncryptionKey, cancellationToken);
+
             scope.Complete();
+
             return dataEncryptionKey;
         }
     }

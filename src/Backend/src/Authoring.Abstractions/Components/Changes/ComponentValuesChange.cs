@@ -1,4 +1,3 @@
-using System;
 using Confix.Authoring.Store;
 using HotChocolate;
 using HotChocolate.Types;
@@ -14,6 +13,8 @@ public sealed class ComponentValuesChange : IComponentChange
         Values = values;
     }
 
+    public string Values { get; init; }
+
     public string Kind => nameof(ComponentValuesChange);
 
     [GraphQLName("component")]
@@ -21,6 +22,4 @@ public sealed class ComponentValuesChange : IComponentChange
     public Guid ComponentId { get; init; }
 
     public int ComponentVersion { get; init; }
-
-    public string Values { get; init; }
 }

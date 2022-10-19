@@ -1,7 +1,4 @@
-using System.Threading.Tasks;
 using Confix.Authoring.Store;
-using HotChocolate;
-using HotChocolate.Types;
 
 namespace Confix.Authoring.GraphQL.Applications;
 

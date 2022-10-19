@@ -1,9 +1,4 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using Confix.Authoring.Publishing;
-using HotChocolate.Types;
-using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring.GraphQL.Publishing;
 
@@ -15,6 +10,8 @@ public sealed class PublishedApplicationPartNode
     public static async Task<PublishedApplicationPart?> GetApplicationAsync(
         Guid id,
         IPublishingService publishingService,
-        CancellationToken cancellationToken) =>
-        await publishingService.GetPublishedById(id, cancellationToken);
+        CancellationToken cancellationToken)
+    {
+        return await publishingService.GetPublishedById(id, cancellationToken);
+    }
 }

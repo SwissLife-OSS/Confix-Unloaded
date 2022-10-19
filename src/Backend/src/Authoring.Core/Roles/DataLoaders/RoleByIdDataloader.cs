@@ -10,8 +10,7 @@ internal sealed class RoleByIdDataLoader : BatchDataLoader<Guid, Role>, IRoleByI
     public RoleByIdDataLoader(
         IBatchScheduler batchScheduler,
         IRoleStore store,
-        DataLoaderOptions? options = null) :
-        base(batchScheduler, options)
+        DataLoaderOptions? options = null) : base(batchScheduler, options)
     {
         _store = store;
     }
@@ -21,6 +20,7 @@ internal sealed class RoleByIdDataLoader : BatchDataLoader<Guid, Role>, IRoleByI
         CancellationToken cancellationToken)
     {
         var roles = await _store.GetByIdsAsync(keys, cancellationToken);
+
         return roles.ToDictionary(x => x.Id);
     }
 }

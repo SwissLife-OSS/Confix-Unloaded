@@ -2,7 +2,7 @@ namespace Confix.Authoring.Store;
 
 // <summary>
 /// <summary>
-/// Represents the application store abstraction.
+///     Represents the application store abstraction.
 /// </summary>
 public interface IApplicationStore
 {
@@ -11,108 +11,98 @@ public interface IApplicationStore
         CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Gets the application by its <paramref name="id"/>.
+    ///     Gets the application by its <paramref name="id" />.
     /// </summary>
     /// <param name="id">
-    /// The application ID.
+    ///     The application ID.
     /// </param>
     /// <param name="cancellationToken">
-    /// The cancellation token.
+    ///     The cancellation token.
     /// </param>
     /// <returns>
-    /// Returns an <see cref="Application"/> if one is found matching the specified
-    /// <paramref name="id"/>; otherwise, null will be returned.
+    ///     Returns an <see cref="Application" /> if one is found matching the specified
+    ///     <paramref name="id" />; otherwise, null will be returned.
     /// </returns>
-    Task<Application?> GetByIdAsync(
-        Guid id,
-        CancellationToken cancellationToken);
+    Task<Application?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Gets the application the id of one of its application parts.
+    ///     Gets the application the id of one of its application parts.
     /// </summary>
     /// <param name="partId">
-    /// The application part ID.
+    ///     The application part ID.
     /// </param>
     /// <param name="cancellationToken">
-    /// The cancellation token.
+    ///     The cancellation token.
     /// </param>
     /// <returns>
-    /// Returns an <see cref="Application"/> if one is found matching the specified
-    /// <paramref name="partId"/>; otherwise, null will be returned.
+    ///     Returns an <see cref="Application" /> if one is found matching the specified
+    ///     <paramref name="partId" />; otherwise, null will be returned.
     /// </returns>
-    Task<Application?> GetByPartIdAsync(
-        Guid partId,
-        CancellationToken cancellationToken);
+    Task<Application?> GetByPartIdAsync(Guid partId, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Gets the application part by its <paramref name="id"/>.
+    ///     Gets the application part by its <paramref name="id" />.
     /// </summary>
     /// <param name="id">
-    /// The application part ID.
+    ///     The application part ID.
     /// </param>
     /// <param name="cancellationToken">
-    /// The cancellation token.
+    ///     The cancellation token.
     /// </param>
     /// <returns>
-    /// Returns an <see cref="ApplicationPart"/> if one is found matching the specified
-    /// <paramref name="id"/>; otherwise, null will be returned.
+    ///     Returns an <see cref="ApplicationPart" /> if one is found matching the specified
+    ///     <paramref name="id" />; otherwise, null will be returned.
     /// </returns>
-    Task<ApplicationPart?> GetPartByIdAsync(
-        Guid id,
-        CancellationToken cancellationToken);
+    Task<ApplicationPart?> GetPartByIdAsync(Guid id, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Gets multiple applications by their <paramref name="ids"/>.
+    ///     Gets multiple applications by their <paramref name="ids" />.
     /// </summary>
     /// <param name="ids">
-    /// The application ids.
+    ///     The application ids.
     /// </param>
     /// <param name="cancellationToken">
-    /// The cancellation token.
+    ///     The cancellation token.
     /// </param>
     /// <returns>
-    /// Returns a list of applications that matched the <paramref name="ids"/>.
+    ///     Returns a list of applications that matched the <paramref name="ids" />.
     /// </returns>
     Task<IReadOnlyCollection<Application>> GetManyByIdAsync(
         IEnumerable<Guid> ids,
         CancellationToken cancellationToken);
 
     /// <summary>
-    /// Allows to query the application store.
+    ///     Allows to query the application store.
     /// </summary>
     IQueryable<Application> Query();
 
     /// <summary>
-    /// Adds a new application to the application store.
+    ///     Adds a new application to the application store.
     /// </summary>
     /// <param name="application">
-    /// The new application that shall be added.
+    ///     The new application that shall be added.
     /// </param>
     /// <param name="cancellationToken">
-    /// The cancellation token.
+    ///     The cancellation token.
     /// </param>
     /// <exception cref="ArgumentNullException">
-    /// <paramref name="application"/> is <c>null</c>.
+    ///     <paramref name="application" /> is <c>null</c>.
     /// </exception>
-    Task AddAsync(
-        Application application,
-        CancellationToken cancellationToken);
+    Task AddAsync(Application application, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Replaces an application object with the new <paramref name="application"/>.
+    ///     Replaces an application object with the new <paramref name="application" />.
     /// </summary>
     /// <param name="application">
-    /// The updated application that shall replace the one in the store.
+    ///     The updated application that shall replace the one in the store.
     /// </param>
     /// <param name="cancellationToken">
-    /// The cancellation token.
+    ///     The cancellation token.
     /// </param>
     /// <exception cref="ArgumentNullException">
-    /// <paramref name="application"/> is <c>null</c>.
+    ///     <paramref name="application" /> is <c>null</c>.
     /// </exception>
-    Task ReplaceAsync(
-        Application application,
-        CancellationToken cancellationToken);
+    Task ReplaceAsync(Application application, CancellationToken cancellationToken);
 
     Task<Application?> GetByComponentPartIdAsync(
         Guid componentPartId,

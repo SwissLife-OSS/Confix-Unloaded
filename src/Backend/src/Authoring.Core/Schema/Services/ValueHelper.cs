@@ -12,7 +12,7 @@ internal static class ValueHelper
         var obj = new Dictionary<string, object?>();
         var objectType = (ObjectType)type.NamedType();
 
-        foreach (ObjectField? field in objectType.Fields)
+        foreach (var field in objectType.Fields)
         {
             if (field.IsIntrospectionField)
             {
@@ -70,8 +70,10 @@ internal static class ValueHelper
         return null;
     }
 
-    private static List<object?> CreateDefaultListValue(ISchema schema, IType type) =>
-        new() { CreateDefaultValue(schema, type.ElementType()) };
+    private static List<object?> CreateDefaultListValue(ISchema schema, IType type)
+    {
+        return new List<object?> { CreateDefaultValue(schema, type.ElementType()) };
+    }
 
     public static List<SchemaViolation> ValidateDictionary(
         ISchema schema,
@@ -80,6 +82,7 @@ internal static class ValueHelper
     {
         List<SchemaViolation> schemaViolations = new();
         ValidateDictionary(schema, value, type, Path.Root, schemaViolations);
+
         return schemaViolations;
     }
 
@@ -93,9 +96,9 @@ internal static class ValueHelper
         if (type.IsAbstractType())
         {
             ValidateAbstractType(schema, value, type, path, schemaViolations);
+
             return;
         }
-
 
         if (!type.IsObjectType())
         {
@@ -104,7 +107,7 @@ internal static class ValueHelper
 
         var objectType = (ObjectType)type.NamedType();
 
-        foreach (ObjectField? field in objectType.Fields)
+        foreach (var field in objectType.Fields)
         {
             if (field.IsIntrospectionField)
             {
@@ -117,9 +120,8 @@ internal static class ValueHelper
             }
             else if (field.Type.IsNonNullType())
             {
-                schemaViolations.Add(new SchemaViolation(
-                    path.Append(field.Name).ToList(),
-                    "NON_NULL"));
+                schemaViolations.Add(
+                    new SchemaViolation(path.Append(field.Name).ToList(), "NON_NULL"));
             }
         }
 
@@ -127,9 +129,8 @@ internal static class ValueHelper
         {
             if (!objectType.Fields.ContainsField(fieldName))
             {
-                schemaViolations.Add(new SchemaViolation(
-                    path.Append(fieldName).ToList(),
-                    "UNKNOWN_FIELD"));
+                schemaViolations.Add(
+                    new SchemaViolation(path.Append(fieldName).ToList(), "UNKNOWN_FIELD"));
             }
         }
     }
@@ -141,12 +142,14 @@ internal static class ValueHelper
         Path path,
         List<SchemaViolation> schemaViolations)
     {
-        IReadOnlyList<ObjectType> possibleTypes = schema.GetPossibleTypes(type.NamedType());
+        var possibleTypes = schema.GetPossibleTypes(type.NamedType());
         List<SchemaViolation> nestedViolations = new();
+
         foreach (var possibleType in possibleTypes)
         {
             nestedViolations.Clear();
             ValidateDictionary(schema, value, possibleType, path, nestedViolations);
+
             if (nestedViolations.Count == 0)
             {
                 return;
@@ -167,10 +170,12 @@ internal static class ValueHelper
         {
             case Dictionary<string, object?> dict:
                 ValidateDictionary(schema, dict, type, path, schemaViolations);
+
                 break;
 
             case List<object?> list:
                 ValidateList(schema, list, type, path, schemaViolations);
+
                 break;
 
             case string when type.IsScalarType():
@@ -189,6 +194,7 @@ internal static class ValueHelper
                 break;
             case string:
                 schemaViolations.Add(new SchemaViolation(path.ToList(), "INVALID_TYPE"));
+
                 break;
 
             case int:
@@ -225,6 +231,7 @@ internal static class ValueHelper
 
             default:
                 schemaViolations.Add(new SchemaViolation(path.ToList(), "UNKNOWN_TYPE"));
+
                 break;
         }
     }
@@ -236,16 +243,12 @@ internal static class ValueHelper
         Path path,
         List<SchemaViolation> schemaViolations)
     {
-        IType elementType = type.ElementType();
+        var elementType = type.ElementType();
         var i = 0;
+
         foreach (var element in value)
         {
-            Validate(
-                schema,
-                element,
-                elementType,
-                path.Append(i++),
-                schemaViolations);
+            Validate(schema, element, elementType, path.Append(i++), schemaViolations);
         }
     }
 
@@ -254,7 +257,7 @@ internal static class ValueHelper
         var dictionary = new Dictionary<string, object?>();
         var objectType = (ObjectType)type.NamedType();
 
-        foreach (JsonProperty property in element.EnumerateObject())
+        foreach (var property in element.EnumerateObject())
         {
             IType fieldType = objectType.Fields[property.Name].Type;
             dictionary[property.Name] = Deserialize(property.Value, fieldType);
@@ -298,9 +301,9 @@ internal static class ValueHelper
     private static List<object?> DeserializeList(JsonElement array, IType type)
     {
         var list = new List<object?>();
-        IType elementType = type.ElementType();
+        var elementType = type.ElementType();
 
-        foreach (JsonElement element in array.EnumerateArray())
+        foreach (var element in array.EnumerateArray())
         {
             list.Add(Deserialize(element, elementType));
         }

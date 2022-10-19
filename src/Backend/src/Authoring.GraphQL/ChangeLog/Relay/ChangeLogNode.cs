@@ -1,9 +1,4 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using Confix.Authoring.Store;
-using HotChocolate.Types;
-using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring.GraphQL.Applications;
 
@@ -15,6 +10,8 @@ public sealed class ChangeLogNode
     public static Task<ChangeLog?> GetApplicationAsync(
         Guid id,
         [Service] IChangeLogService changeLogService,
-        CancellationToken cancellationToken) =>
-        changeLogService.GetById(id, cancellationToken);
+        CancellationToken cancellationToken)
+    {
+        return changeLogService.GetById(id, cancellationToken);
+    }
 }

@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using HotChocolate.Types.Relay;
 
@@ -24,6 +22,5 @@ public sealed record Application
 
     public int Version { get; init; }
 
-    public ICollection<ApplicationPart> Parts { get; init; } =
-        new List<ApplicationPart>();
+    public ICollection<ApplicationPart> Parts { get; init; } = new List<ApplicationPart>();
 }

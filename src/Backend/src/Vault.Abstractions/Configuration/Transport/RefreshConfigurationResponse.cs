@@ -1,3 +1,4 @@
 namespace Vault.Host.Configuration.Transport;
 
-public record RefreshConfigurationResponse();
+public record RefreshConfigurationResponse;
+

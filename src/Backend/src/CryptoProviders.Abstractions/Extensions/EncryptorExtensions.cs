@@ -1,7 +1,3 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-
 namespace Confix.CryptoProviders;
 
 public static class EncryptorExtensions
@@ -12,5 +8,7 @@ public static class EncryptorExtensions
         string value,
         Guid environmentId,
         CancellationToken cancellationToken)
-        => encryptor.EncryptAsync($"{topic}-{environmentId:N}", value, cancellationToken);
+    {
+        return encryptor.EncryptAsync($"{topic}-{environmentId:N}", value, cancellationToken);
+    }
 }

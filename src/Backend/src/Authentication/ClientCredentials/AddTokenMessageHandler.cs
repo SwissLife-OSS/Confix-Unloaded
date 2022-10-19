@@ -6,9 +6,9 @@ namespace Confix.Authentication;
 
 internal class AddTokenMessageHandler : DelegatingHandler
 {
-    private readonly IOptionsMonitor<ClientCredentialsClientOptions> _options;
-    private readonly string _name;
     private readonly IClientCredentialCache _cache;
+    private readonly string _name;
+    private readonly IOptionsMonitor<ClientCredentialsClientOptions> _options;
 
     public AddTokenMessageHandler(
         IClientCredentialCache cache,
@@ -34,7 +34,9 @@ internal class AddTokenMessageHandler : DelegatingHandler
             cancellationToken);
 
         request.Headers.Authorization =
-            new AuthenticationHeaderValue(OidcConstants.AuthenticationSchemes.AuthorizationHeaderBearer, token);
+            new AuthenticationHeaderValue(
+                OidcConstants.AuthenticationSchemes.AuthorizationHeaderBearer,
+                token);
 
         return await base.SendAsync(request, cancellationToken);
     }

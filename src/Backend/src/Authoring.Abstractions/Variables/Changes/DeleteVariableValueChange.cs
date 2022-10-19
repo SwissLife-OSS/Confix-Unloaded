@@ -1,4 +1,3 @@
-using System;
 using Confix.Authoring.Store;
 using HotChocolate;
 using HotChocolate.Types;
@@ -19,15 +18,15 @@ public sealed class DeleteVariableValueChange : IVariableChange
         Key = key;
     }
 
+    public VariableKey Key { get; init; }
+
+    public VariableValue VariableValue { get; init; }
+
     [GraphQLName("variable")]
     [UseDataLoader(typeof(IVariableDataLoader))]
     public Guid VariableId { get; init; }
 
     public int VariableVersion { get; init; }
-
-    public VariableKey Key { get; init; }
-
-    public VariableValue VariableValue { get; init; }
 
     public string Kind => nameof(DeleteVariableValueChange);
 }

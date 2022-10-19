@@ -11,6 +11,7 @@ public static class VariableServiceCollectionExtensions
         services.AddAuthorizationRule<Variable, VariableAuthorizationRule>();
         services.AddAuthorizationRule<VariableValue, VariableValueAuthorizationRule>();
         services.AddScoped<IVariableService, VariableService>();
+
         return services;
     }
 }

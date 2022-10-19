@@ -1,9 +1,3 @@
-using System.Threading;
-using System.Threading.Tasks;
-using Confix.Authoring;
-using Confix.CryptoProviders;
-using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 namespace ConfiX;

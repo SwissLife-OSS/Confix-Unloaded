@@ -23,8 +23,7 @@ internal sealed class ClaimedVersionCollectionConfiguration
                 CreateIndexModel<ClaimedVersion>[] indexes =
                 {
                     new(Builders<ClaimedVersion>.IndexKeys.Ascending(project => project.GitVersion),
-                        new CreateIndexOptions { Name = "GitVersion_ASC" }
-                    )
+                        new CreateIndexOptions { Name = "GitVersion_ASC" })
                 };
                 collection.Indexes.CreateMany(indexes);
             });

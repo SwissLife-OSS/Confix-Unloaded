@@ -12,6 +12,7 @@ public static class AuthoringServerBuilderExtensions
         Action<ICryptoProviderDescriptor> configure)
     {
         configure(new CryptoProviderDescriptor(builder.Services));
+
         return builder;
     }
 

@@ -1,5 +1,3 @@
-using HotChocolate.Types;
-
 namespace Confix.Authoring.GraphQL;
 
 [InterfaceType("UserError")]

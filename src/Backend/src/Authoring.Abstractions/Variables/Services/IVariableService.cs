@@ -1,10 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using HotChocolate;
-
 namespace Confix.Authoring;
 
 public interface IVariableService
@@ -22,13 +15,9 @@ public interface IVariableService
         IEnumerable<string> names,
         CancellationToken cancellationToken);
 
-    Task<IQueryable<Variable>> SearchVariables(
-        string? search,
-        CancellationToken cancellationToken);
+    Task<IQueryable<Variable>> SearchVariables(string? search, CancellationToken cancellationToken);
 
-    Task<Variable?> GetByIdAsync(
-        Guid id,
-        CancellationToken cancellationToken);
+    Task<Variable?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
 
     Task<VariableValue> SaveValueAsync(
         Guid variableId,
@@ -62,10 +51,7 @@ public interface IVariableService
 
     Task<VariableValue> DeleteValueAsync(Guid id, CancellationToken cancellationToken);
 
-    Task<Variable?> RenameAsync(
-        Guid id,
-        string name,
-        CancellationToken cancellationToken);
+    Task<Variable?> RenameAsync(Guid id, string name, CancellationToken cancellationToken);
 
     Task<IDictionary<string, VariableValue>> GetBestMatchingValuesAsync(
         IEnumerable<string> variableNames,
@@ -73,15 +59,4 @@ public interface IVariableService
         Guid applicationPartId,
         Guid environmentId,
         CancellationToken cancellationToken);
-}
-
-public record ValueEncryptionResult(VariableEncryptionInfo EncryptionInfo, string CipherValue);
-
-public record VariableValueFilter(Guid Id)
-{
-    public Optional<Guid?> EnvironmentId { get; init; }
-
-    public Optional<Guid?> ApplicationId { get; init; }
-
-    public Optional<Guid?> PartId { get; init; }
 }

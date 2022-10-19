@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
 using Confix.Authoring;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,11 +8,10 @@ public static class TestContext
 {
     public static IConfiguration BuildConfig()
     {
-        IConfigurationRoot config = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-             .AddJsonFile("appsettings.json", optional: true)
-             .AddUserSecrets<KeyVaultVariableCryptoProviderTests>(optional: true)
-             .Build();
+        var config = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json", true)
+            .AddUserSecrets<KeyVaultVariableCryptoProviderTests>(true)
+            .Build();
 
         return config;
     }
@@ -34,8 +29,8 @@ public static class TestContext
             Services = new ServiceCollection();
         }
 
-        public IServiceCollection Services { get; }
-
         public IConfiguration Configuration { get; }
+
+        public IServiceCollection Services { get; }
     }
 }

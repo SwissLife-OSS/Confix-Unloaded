@@ -14,12 +14,12 @@ namespace Confix.Authoring;
 
 internal sealed class ComponentService : IComponentService
 {
-    private readonly IComponentStore _componentStore;
-    private readonly IDataLoader<Guid, Component?> _componentById;
-    private readonly ISchemaService _schemaService;
-    private readonly IChangeLogService _changeLogService;
-    private readonly IAuthorizationService _authorizationService;
     private readonly ISessionAccessor _accessor;
+    private readonly IAuthorizationService _authorizationService;
+    private readonly IChangeLogService _changeLogService;
+    private readonly IDataLoader<Guid, Component?> _componentById;
+    private readonly IComponentStore _componentStore;
+    private readonly ISchemaService _schemaService;
 
     public ComponentService(
         IComponentStore componentStore,
@@ -55,8 +55,7 @@ internal sealed class ComponentService : IComponentService
     {
         var component = await GetByIdAsync(id, cancellationToken);
 
-        if (component?.Schema is null ||
-            !await _authorizationService
+        if (component?.Schema is null || !await _authorizationService
                 .RuleFor<Component>()
                 .IsAuthorizedAsync(component, Read, cancellationToken))
         {
@@ -69,12 +68,15 @@ internal sealed class ComponentService : IComponentService
     public async Task<IQueryable<Component>> Query(CancellationToken cancellationToken)
     {
         var session = await _accessor.GetSession(cancellationToken);
+
         if (session is null)
         {
-            return Array.Empty<Component>().AsQueryable();
+            return Array.Empty<Component>()
+                .AsQueryable();
         }
 
-        return _componentStore.Query().Where(x => session.Namespaces.Contains(x.Namespace));
+        return _componentStore.Query()
+            .Where(x => session.Namespaces.Contains(x.Namespace));
     }
 
     public async Task<Component> CreateAsync(
@@ -90,9 +92,10 @@ internal sealed class ComponentService : IComponentService
         }
 
         string? serializedValues = null;
+
         if (schemaSdl is not null)
         {
-            ISchema schema = _schemaService.CreateSchema(schemaSdl);
+            var schema = _schemaService.CreateSchema(schemaSdl);
 
             if (values is not null)
             {
@@ -100,8 +103,7 @@ internal sealed class ComponentService : IComponentService
             }
         }
 
-        Component component = new(
-            Guid.NewGuid(),
+        Component component = new(Guid.NewGuid(),
             name,
             schemaSdl,
             serializedValues,
@@ -232,8 +234,7 @@ internal sealed class ComponentService : IComponentService
             throw new InvalidOperationException("There is no schema.");
         }
 
-        string serializedValues =
-            _schemaService.CreateValuesForSchema(component.Schema, values);
+        var serializedValues = _schemaService.CreateValuesForSchema(component.Schema, values);
 
         component = component with { Values = serializedValues, Version = component.Version + 1 };
 
@@ -271,8 +272,7 @@ internal sealed class ComponentService : IComponentService
 
         var schema = _schemaService.CreateSchema(component.Schema);
 
-        var dictionary = DeserializeDictionary(
-            JsonSerializer.Deserialize<JsonElement>(values),
+        var dictionary = DeserializeDictionary(JsonSerializer.Deserialize<JsonElement>(values),
             schema.QueryType);
 
         return ValidateDictionary(schema, dictionary, schema.QueryType);
@@ -322,6 +322,7 @@ internal sealed class ComponentService : IComponentService
         }
 
         var schema = _schemaService.CreateSchema(component.Schema);
+
         return CreateDefaultObjectValue(schema, schema.QueryType);
     }
 }

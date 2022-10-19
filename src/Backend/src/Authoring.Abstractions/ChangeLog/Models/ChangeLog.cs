@@ -1,4 +1,3 @@
-using System;
 using Confix.Authentication.Authorization;
 using HotChocolate.Types.Relay;
 

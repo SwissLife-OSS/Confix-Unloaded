@@ -1,6 +1,4 @@
-using System;
 using HotChocolate;
-using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring.Store;
 

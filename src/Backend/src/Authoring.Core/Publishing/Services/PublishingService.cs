@@ -13,21 +13,21 @@ namespace Confix.Authoring.Publishing;
 
 internal sealed class PublishingService : IPublishingService
 {
-    private readonly IDataLoader<Guid, PublishedApplicationPart?> _publishedById;
+    private readonly IApplicationByPartIdDataLoader _applicationByPartId;
+    private readonly IApplicationService _applicationService;
+    private readonly IAuthorizationService _authorizationService;
+    private readonly IComponentDataLoader _componentDataLoader;
+    private readonly IComponentService _componentService;
+    private readonly IEncryptor _encryptor;
+    private readonly IEnvironmentService _environmentService;
+    private readonly IPublishedApplicationPartByIdDataloader _publishedApplicationPartById;
     private readonly IPublishedApplicationPartsByPartIdDataloader
         _publishedApplicationPartsByPartId;
-    private readonly IPublishedApplicationPartByIdDataloader _publishedApplicationPartById;
-    private readonly IApplicationService _applicationService;
-    private readonly IEnvironmentService _environmentService;
-    private readonly IComponentDataLoader _componentDataLoader;
-    private readonly ISessionAccessor _sessionAccessor;
+    private readonly IDataLoader<Guid, PublishedApplicationPart?> _publishedById;
     private readonly IPublishingStore _publishingStore;
-    private readonly IAuthorizationService _authorizationService;
+    private readonly ISessionAccessor _sessionAccessor;
     private readonly IVariableService _variableService;
-    private readonly IComponentService _componentService;
     private readonly IVaultClient _vaultClient;
-    private readonly IEncryptor _encryptor;
-    private readonly IApplicationByPartIdDataLoader _applicationByPartId;
 
     public PublishingService(
         IDataLoader<Guid, PublishedApplicationPart?> publishedById,
@@ -90,18 +90,19 @@ internal sealed class PublishingService : IPublishingService
 
         using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
         {
-            application = await _applicationService
-                .PublishApplicationPartAsync(applicationPart.Id, cancellationToken);
+            application =
+                await _applicationService.PublishApplicationPartAsync(applicationPart.Id,
+                    cancellationToken);
 
             applicationPart = application.Parts.Single(x => x.Id == applicationPart.Id);
 
-            PublishedApplicationPart published =
-                new(Guid.NewGuid(),
-                    applicationPart.Version,
-                    applicationPart,
-                    configuration,
-                    DateTime.UtcNow,
-                    userInfo);
+            var published = new PublishedApplicationPart(
+                Guid.NewGuid(),
+                applicationPart.Version,
+                applicationPart,
+                configuration,
+                DateTime.UtcNow,
+                userInfo);
 
             await _publishingStore.CreateAsync(published, cancellationToken);
             scope.Complete();
@@ -115,6 +116,7 @@ internal sealed class PublishingService : IPublishingService
         CancellationToken cancellationToken)
     {
         var part = _applicationByPartId.LoadAsync(partId, cancellationToken);
+
         if (!await _authorizationService
                 .RuleFor<PublishedApplicationPart>()
                 .IsAuthorizedFromAsync(part, Read, cancellationToken))
@@ -122,8 +124,8 @@ internal sealed class PublishingService : IPublishingService
             return Array.Empty<PublishedApplicationPart>();
         }
 
-        return await _publishedApplicationPartsByPartId.LoadAsync(partId, cancellationToken)
-            ?? Array.Empty<PublishedApplicationPart>();
+        return await _publishedApplicationPartsByPartId.LoadAsync(partId, cancellationToken) ??
+            Array.Empty<PublishedApplicationPart>();
     }
 
     public async Task<IReadOnlyList<Environment>> GetDeployedEnvironmentByPartIdAsync(
@@ -139,8 +141,8 @@ internal sealed class PublishingService : IPublishingService
             return Array.Empty<Environment>();
         }
 
-        var environmentIds = await _publishingStore
-            .GetDeployedEnvironmentsByPartIdAsync(partId, cancellationToken);
+        var environmentIds =
+            await _publishingStore.GetDeployedEnvironmentsByPartIdAsync(partId, cancellationToken);
 
         return await _environmentService.GetByIdsAsync(environmentIds, cancellationToken);
     }
@@ -245,10 +247,11 @@ internal sealed class PublishingService : IPublishingService
             .GetClaimedVersionByGitVersionAsync(gitVersion, app.Id, part.Id, cancellationToken);
 
         PublishedApplicationPart? publishedApplicationPart = null;
+
         if (claimedVersion?.PublishingId is { } publishingId)
         {
-            publishedApplicationPart = await _publishingStore
-                .GetPublishedPartByIdAsync(publishingId, cancellationToken);
+            publishedApplicationPart =
+                await _publishingStore.GetPublishedPartByIdAsync(publishingId, cancellationToken);
         }
         else
         {
@@ -269,13 +272,12 @@ internal sealed class PublishingService : IPublishingService
 
         if (version is null)
         {
-            string variableReplaced = await ReplaceVariableValuesAsync(
+            var variableReplaced = await ReplaceVariableValuesAsync(
                 app,
                 part,
                 env,
                 publishedApplicationPart.Configuration,
-                cancellationToken
-            );
+                cancellationToken);
 
             var token = await _vaultClient.CreateAsync(
                 app.Name!,
@@ -313,14 +315,13 @@ internal sealed class PublishingService : IPublishingService
         ApplicationPart part,
         CancellationToken cancellationToken)
     {
-        ComponentLookup componentLookup = await LoadComponentsAsync(part, cancellationToken);
-        JsonObject document = new JsonObject();
+        var componentLookup = await LoadComponentsAsync(part, cancellationToken);
+        var document = new JsonObject();
 
-        foreach (ApplicationPartComponent partComponent in part.Components)
+        foreach (var partComponent in part.Components)
         {
-            Component component = componentLookup.GetComponent(partComponent.ComponentId);
-            JsonObject serializedValues = await BuildComponentValuesAsync(
-                app,
+            var component = componentLookup.GetComponent(partComponent.ComponentId);
+            var serializedValues = await BuildComponentValuesAsync(app,
                 part,
                 component,
                 partComponent.Values,
@@ -349,21 +350,21 @@ internal sealed class PublishingService : IPublishingService
 
         var variableNames = context.Variables.Select(x => x.VariableName).ToArray();
 
-        IDictionary<string, VariableValue> resolvesValues = await _variableService
-            .GetBestMatchingValuesAsync(variableNames,
-                app.Id,
-                part.Id,
-                environment.Id,
-                cancellationToken);
+        var resolvesValues = await _variableService.GetBestMatchingValuesAsync(
+            variableNames,
+            app.Id,
+            part.Id,
+            environment.Id,
+            cancellationToken);
 
-        foreach (VariableMatch variable in context.Variables)
+        foreach (var variable in context.Variables)
         {
-            if (!resolvesValues.TryGetValue(variable.VariableName, out VariableValue? value))
+            if (!resolvesValues.TryGetValue(variable.VariableName, out var value))
             {
-                throw ThrowHelper
-                    .ClaimFailedBecauseVariableValueWasNotPresent(part,
-                        environment.Name,
-                        variable.VariableName);
+                throw ThrowHelper.ClaimFailedBecauseVariableValueWasNotPresent(
+                    part,
+                    environment.Name,
+                    variable.VariableName);
             }
 
             variable.SetValue(JsonValue.Create(value.Value)!);
@@ -384,7 +385,7 @@ internal sealed class PublishingService : IPublishingService
             throw ThrowHelper.PublishingFailedBecauseComponentValuesWereNotPresent(part, component);
         }
 
-        IReadOnlyList<SchemaViolation> violations = await _componentService
+        var violations = await _componentService
             .GetSchemaViolationsAsync(component.Id, values, cancellationToken);
 
         if (violations.Count > 0)
@@ -397,35 +398,29 @@ internal sealed class PublishingService : IPublishingService
         JsonVariableVisitor.Default.Visit(jsonObject, context);
 
         var variableNames = context.Variables.Select(x => x.VariableName).ToArray();
-        IEnumerable<Variable?> variables =
-            await _variableService.GetByNamesAsync(variableNames, cancellationToken);
+        var variables = await _variableService.GetByNamesAsync(variableNames, cancellationToken);
 
-        Dictionary<string, Variable> variableLookup =
-            variables.DistinctBy(x => x.Name).ToDictionary(x => x.Name);
+        Dictionary<string, Variable> variableLookup = variables.DistinctBy(x => x.Name).ToDictionary(x => x.Name);
 
-        foreach (VariableMatch variable in context.Variables)
+        foreach (var variable in context.Variables)
         {
-            if (!variableLookup.TryGetValue(variable.VariableName, out Variable? value))
+            if (!variableLookup.TryGetValue(variable.VariableName, out var value))
             {
                 throw ThrowHelper
-                    .PublishingFailedBecauseVariableValueWasNotPresent(
-                        part,
-                        component,
-                        variable.VariableName);
+                    .PublishingFailedBecauseVariableValueWasNotPresent(part, component, variable.VariableName);
             }
         }
 
         return jsonObject;
     }
 
-
     private async Task<ComponentLookup> LoadComponentsAsync(
         ApplicationPart part,
         CancellationToken cancellationToken)
     {
-        Guid[] componentIds = part.Components.Select(x => x.ComponentId).ToArray();
-        IReadOnlyList<Component?> components = await _componentDataLoader
-            .LoadAsync(componentIds, cancellationToken);
+        var componentIds = part.Components.Select(x => x.ComponentId).ToArray();
+        var components = await _componentDataLoader.LoadAsync(componentIds, cancellationToken);
+
         return new ComponentLookup(components, part);
     }
 
@@ -441,8 +436,10 @@ internal sealed class PublishingService : IPublishingService
         }
 
         public Component GetComponent(Guid componentId)
-            => _components.TryGetValue(componentId, out Component? component)
+        {
+            return _components.TryGetValue(componentId, out var component)
                 ? component
                 : throw ThrowHelper.PublishingFailedBecauseComponentWasNotFound(_part, componentId);
+        }
     }
 }

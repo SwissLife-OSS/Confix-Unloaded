@@ -1,8 +1,4 @@
-using System.Threading.Tasks;
-using Confix.Authoring;
-using HotChocolate;
 using HotChocolate.Resolvers;
-using HotChocolate.Types;
 
 namespace Confix.Authoring;
 

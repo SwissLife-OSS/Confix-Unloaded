@@ -1,6 +1,4 @@
-using Confix.Authentication;
 using Confix.Common;
-using Confix.Vault.Client;
 using IdentityModel;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;

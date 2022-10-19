@@ -3,7 +3,7 @@
   <PropertyGroup>
     <PropsAbove>$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))</PropsAbove>
   </PropertyGroup>
-  <Import Project="$(PropsAbove)" Condition="Exists($(PropsAbove))" />
+  <Import Condition="Exists($(PropsAbove))" Project="$(PropsAbove)" />
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>

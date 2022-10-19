@@ -21,15 +21,12 @@ internal sealed class ConfigurationCollectionConfiguration
             .WithCollectionSettings(s => s.ReadPreference = ReadPreference.Nearest)
             .WithCollectionConfiguration(collection =>
             {
-                CreateIndexModel<Configuration>[] indicies = new[]
+                CreateIndexModel<Configuration>[] indicies =
                 {
-                    new CreateIndexModel<Configuration>(
-                        IndexKeys.Combine(
-                            IndexKeys.Ascending(x => x.ApplicationName),
+                    new(IndexKeys.Combine(IndexKeys.Ascending(x => x.ApplicationName),
                             IndexKeys.Ascending(x => x.EnvironmentName),
-                            IndexKeys.Ascending(x => x.ApplicationPartName)
-                        ),
-                        new() { Name = "AppPartEnvLookup_Asc" })
+                            IndexKeys.Ascending(x => x.ApplicationPartName)),
+                        new CreateIndexOptions { Name = "AppPartEnvLookup_Asc" })
                 };
                 collection.Indexes.CreateMany(indicies);
             });

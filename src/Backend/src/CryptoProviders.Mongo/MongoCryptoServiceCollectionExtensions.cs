@@ -1,7 +1,6 @@
 using Confix.Common;
 using Confix.CryptoProviders;
 using Confix.CryptoProviders.Mongo;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Extensions.Context;
 

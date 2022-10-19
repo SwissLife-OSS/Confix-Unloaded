@@ -109,7 +109,8 @@ internal sealed class PublishingStore : IPublishingStore
 
         FindOneAndUpdateOptions<ClaimedVersion> options = new()
         {
-            IsUpsert = true, ReturnDocument = ReturnDocument.After
+            IsUpsert = true,
+            ReturnDocument = ReturnDocument.After
         };
 
         return await _dbContext.ClaimedVersions

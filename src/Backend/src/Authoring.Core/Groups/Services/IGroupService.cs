@@ -1,5 +1,3 @@
-using System.Collections.Immutable;
-
 namespace Confix.Authentication.Authorization;
 
 public interface IGroupService
@@ -10,10 +8,7 @@ public interface IGroupService
         IEnumerable<RoleScope> roles,
         CancellationToken cancellationToken);
 
-    Task<Group> RenameGroupAsync(
-        Guid id,
-        string name,
-        CancellationToken cancellationToken);
+    Task<Group> RenameGroupAsync(Guid id, string name, CancellationToken cancellationToken);
 
     Task<Group> UpdateGroupRequirementsAsync(
         Guid id,
@@ -27,9 +22,7 @@ public interface IGroupService
 
     Task<Group?> DeleteByIdAsync(Guid id, CancellationToken cancellationToken);
 
-    Task<IQueryable<Group>> SearchGroupAsync(
-        string? name,
-        CancellationToken cancellationToken);
+    Task<IQueryable<Group>> SearchGroupAsync(string? name, CancellationToken cancellationToken);
 
     Task<Group?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
 }

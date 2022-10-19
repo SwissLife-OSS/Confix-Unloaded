@@ -4,7 +4,8 @@ using static Confix.Authentication.Authorization.Permissions;
 
 namespace Confix.Authoring;
 
-internal sealed class ApplicationPartComponentAuthorizationRule : AuthorizationRule<ApplicationPartComponent>
+internal sealed class ApplicationPartComponentAuthorizationRule
+    : AuthorizationRule<ApplicationPartComponent>
 {
     private readonly IApplicationByComponentIdDataLoader _appByComponentId;
 
@@ -22,6 +23,7 @@ internal sealed class ApplicationPartComponentAuthorizationRule : AuthorizationR
         CancellationToken cancellationToken)
     {
         var application = await _appByComponentId.LoadAsync(resource.Id, cancellationToken);
+
         if (application is null)
         {
             return false;

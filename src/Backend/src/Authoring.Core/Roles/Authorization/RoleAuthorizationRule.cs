@@ -21,8 +21,7 @@ internal sealed class RoleAuthorizationRule : AuthorizationRule<Role>
             return new ValueTask<bool>(false);
         }
 
-        return new ValueTask<bool>(
-            session.HasPermission(Global, Scope.Identity, permissions));
+        return new ValueTask<bool>(session.HasPermission(Global, Scope.Identity, permissions));
     }
 
     protected override ValueTask<bool> IsAuthorizedFromAsync<TOther>(

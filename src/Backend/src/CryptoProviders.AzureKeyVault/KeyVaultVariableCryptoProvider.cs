@@ -1,14 +1,9 @@
-using System;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Confix.CryptoProviders.AzureKeyVault;
 
-internal sealed class KeyVaultCryptoProvider
-    : IEncryptor
-    , IDecryptor
+internal sealed class KeyVaultCryptoProvider : IEncryptor, IDecryptor
 {
     private readonly IKeyEncryptionKeyProvider _keyEncryptionKeyProvider;
 
@@ -28,6 +23,7 @@ internal sealed class KeyVaultCryptoProvider
         var iv = Convert.FromBase64String(encryptedValue.Iv);
         var cypher = Convert.FromBase64String(encryptedValue.Value);
         var plainText = aes.DecryptCfb(cypher, iv, PaddingMode.PKCS7);
+
         return Encoding.UTF8.GetString(plainText);
     }
 
@@ -44,6 +40,7 @@ internal sealed class KeyVaultCryptoProvider
         var cypher = aes.EncryptCfb(plainText, aes.IV, PaddingMode.PKCS7);
         var cypherText = Convert.ToBase64String(cypher);
         var iv = Convert.ToBase64String(aes.IV);
+
         return new EncryptedValue(cypherText, iv, topic);
     }
 }

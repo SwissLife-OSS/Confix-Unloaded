@@ -10,10 +10,13 @@ namespace Confix.Vault.Store.Mongo;
 
 internal sealed class VaultDbContext : MongoDbContext, IVaultDbContext
 {
-    public VaultDbContext(IOptionsMonitor<MongoOptions> mongoOptions)
-        : base(mongoOptions.Get(nameof(VaultDbContext)))
+    public VaultDbContext(IOptionsMonitor<MongoOptions> mongoOptions) : base(
+        mongoOptions.Get(nameof(VaultDbContext)))
     {
     }
+
+    public IMongoCollection<Configuration> Configurations
+        => CreateCollection<Configuration>().AsTransactionCollection();
 
     protected override void OnConfiguring(IMongoDatabaseBuilder builder)
     {
@@ -24,7 +27,4 @@ internal sealed class VaultDbContext : MongoDbContext, IVaultDbContext
             .ConfigureConnection(con => con.ReadPreference = ReadPreference.Primary)
             .ConfigureCollection(new ConfigurationCollectionConfiguration());
     }
-
-    public IMongoCollection<Configuration> Configurations
-        => CreateCollection<Configuration>().AsTransactionCollection();
 }

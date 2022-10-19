@@ -1,7 +1,6 @@
 using MongoDB.Driver;
 using MongoDB.Extensions.Context;
 
-
 namespace Confix.CryptoProviders.Mongo;
 
 internal sealed class SecretCollectionConfiguration
@@ -20,15 +19,13 @@ internal sealed class SecretCollectionConfiguration
             .WithCollectionSettings(s => s.ReadPreference = ReadPreference.Nearest)
             .WithCollectionConfiguration(collection =>
             {
-                collection.Indexes.CreateOne(
-                    new CreateIndexModel<DataEncryptionKey>(
-                        Builders<DataEncryptionKey>.IndexKeys.Ascending(project => project.Topic),
-                        new CreateIndexOptions
-                        {
-                            Collation =
-                                new Collation("en", strength: CollationStrength.Secondary),
-                            Unique = true
-                        }));
+                collection.Indexes.CreateOne(new CreateIndexModel<DataEncryptionKey>(
+                    Builders<DataEncryptionKey>.IndexKeys.Ascending(project => project.Topic),
+                    new CreateIndexOptions
+                    {
+                        Collation = new Collation("en", strength: CollationStrength.Secondary),
+                        Unique = true
+                    }));
             });
     }
 }

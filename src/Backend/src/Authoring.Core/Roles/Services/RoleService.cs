@@ -1,5 +1,4 @@
 using Confix.Common;
-using System.Linq;
 using Confix.Common.Exceptions;
 using GreenDonut;
 using static Confix.Authentication.Authorization.Permissions;
@@ -8,10 +7,10 @@ namespace Confix.Authentication.Authorization;
 
 internal sealed class RoleService : IRoleService
 {
-    private readonly IRoleStore _roleStore;
     private readonly IAuthorizationService _authorizationService;
-    private readonly ISessionAccessor _sessionAccessor;
     private readonly IDataLoader<Guid, Role?> _roleById;
+    private readonly IRoleStore _roleStore;
+    private readonly ISessionAccessor _sessionAccessor;
 
     public RoleService(
         IRoleStore roleStore,
@@ -97,6 +96,7 @@ internal sealed class RoleService : IRoleService
         using (var scope = Transactions.Create())
         {
             var role = await _roleStore.DeleteByIdAsync(id, cancellationToken);
+
             if (!await _authorizationService
                     .RuleFor<Role>()
                     .IsAuthorizedAsync(role, Write, cancellationToken))
@@ -113,6 +113,7 @@ internal sealed class RoleService : IRoleService
     public async Task<Role?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         var role = await _roleById.LoadAsync(id, cancellationToken);
+
         return await _authorizationService
             .RuleFor<Role>()
             .AuthorizeOrNullAsync(role, Read, cancellationToken);
@@ -124,8 +125,7 @@ internal sealed class RoleService : IRoleService
     {
         return await _authorizationService
             .RuleFor<Role>()
-            .AuthorizeAndFilterAsync(
-                await _roleById.LoadAsync(ids.ToArray(), cancellationToken),
+            .AuthorizeAndFilterAsync(await _roleById.LoadAsync(ids.ToArray(), cancellationToken),
                 Read,
                 cancellationToken)
             .ToListAsync(cancellationToken);
@@ -136,6 +136,7 @@ internal sealed class RoleService : IRoleService
         CancellationToken cancellationToken)
     {
         var session = await _sessionAccessor.GetSession(cancellationToken);
+
         if (session is null ||
             !session.HasPermission(WellKnownNamespaces.Global, Scope.Identity, Read))
         {
@@ -143,6 +144,7 @@ internal sealed class RoleService : IRoleService
         }
 
         var queryable = _roleStore.Query();
+
         if (name is { })
         {
             queryable = queryable.Where(x => x.Name.Contains(name));

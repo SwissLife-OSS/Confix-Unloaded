@@ -1,12 +1,8 @@
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using Confix.Tooling;
 using McMaster.Extensions.CommandLineUtils;
-using StrawberryShake;
 
-[Command(
-    Name = "claim",
+[Command(Name = "claim",
     Description = "Claims a version for a particular tag",
     ResponseFileHandling = ResponseFileHandling.ParseArgsAsLineSeparated)]
 public sealed class ClaimCommand : CommandBase
@@ -53,7 +49,6 @@ public sealed class ClaimCommand : CommandBase
         Description = "The tag")]
     public string Tag { get; } = string.Empty;
 
-
     public override async Task<int> ExecuteAsync(CancellationToken cancellationToken)
     {
         ClaimVersionInput input = new()
@@ -64,10 +59,9 @@ public sealed class ClaimCommand : CommandBase
             GitVersion = Tag
         };
 
-        IOperationResult<IClaimApplicationPartResult> result =
-            await _client.ClaimApplicationPart.ExecuteAsync(input, cancellationToken);
+        var result = await _client.ClaimApplicationPart.ExecuteAsync(input, cancellationToken);
 
-        if (result.Errors is {Count: > 0})
+        if (result.Errors is { Count: > 0 })
         {
             return await _console.ReportErrors(result);
         }
@@ -75,12 +69,13 @@ public sealed class ClaimCommand : CommandBase
         if (result.Data?.ClaimVersion is not { } mutationResult)
         {
             await _console.WriteErrorAsync("There was an unexpected error");
+
             return ExitCodes.Error;
         }
 
-        if (mutationResult.Errors is {Count: > 0})
+        if (mutationResult.Errors is { Count: > 0 })
         {
-            foreach (IError error in mutationResult.Errors.OfType<IError>())
+            foreach (var error in mutationResult.Errors.OfType<IError>())
             {
                 await _console.ReportError(error);
             }
@@ -91,6 +86,7 @@ public sealed class ClaimCommand : CommandBase
         if (mutationResult.ClaimedVersion is not { } claimedVersion)
         {
             await _console.WriteErrorAsync("There was an unexpected error");
+
             return ExitCodes.Error;
         }
 
@@ -102,7 +98,6 @@ public sealed class ClaimCommand : CommandBase
         return ExitCodes.Success;
     }
 }
-
 public class ExitCodes
 {
     public const int Success = 0;

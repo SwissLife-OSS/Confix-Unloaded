@@ -4,13 +4,9 @@ namespace Confix.Authoring;
 
 public interface IComponentService
 {
-    Task<Component?> GetByIdAsync(
-        Guid id,
-        CancellationToken cancellationToken = default);
+    Task<Component?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
-    Task<ISchema?> GetSchemaByIdAsync(
-        Guid id,
-        CancellationToken cancellationToken = default);
+    Task<ISchema?> GetSchemaByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
     Task<IQueryable<Component>> Query(CancellationToken cancellationToken);
 
@@ -21,15 +17,9 @@ public interface IComponentService
         IDictionary<string, object?>? values,
         CancellationToken cancellationToken);
 
-    Task<Component> RenameAsync(
-        Guid id,
-        string name,
-        CancellationToken cancellationToken);
+    Task<Component> RenameAsync(Guid id, string name, CancellationToken cancellationToken);
 
-    Task<Component> SetSchemaAsync(
-        Guid id,
-        string schemaSdl,
-        CancellationToken cancellationToken);
+    Task<Component> SetSchemaAsync(Guid id, string schemaSdl, CancellationToken cancellationToken);
 
     Task<Component> SetValuesAsync(
         Guid id,
