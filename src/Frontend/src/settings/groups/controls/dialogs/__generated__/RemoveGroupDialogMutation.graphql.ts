@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c4d0fc69f7c1699056aa6dec61cdebd5>>
+ * @generated SignedSource<<fbbe7da2ad7bac9c210f92f7b9723f2d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -93,8 +93,8 @@ v4 = {
           "storageKey": null
         }
       ],
-      "type": "IUserError",
-      "abstractKey": "__isIUserError"
+      "type": "UserError",
+      "abstractKey": "__isUserError"
     }
   ],
   "storageKey": null
@@ -202,16 +202,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "fff9e4bf93eea0117f880ec5d49fe5dd",
+    "cacheID": "857ce48f695006cc32be903dedb9d7a3",
     "id": null,
     "metadata": {},
     "name": "RemoveGroupDialogMutation",
     "operationKind": "mutation",
-    "text": "mutation RemoveGroupDialogMutation(\n  $input: RemoveGroupByIdInput!\n) {\n  removeGroupById(input: $input) {\n    group {\n      id\n      ...GroupsList_GroupEdge\n    }\n    errors {\n      __typename\n      ... on IUserError {\n        __isIUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment GroupsList_GroupEdge on Group {\n  id\n  name\n}\n"
+    "text": "mutation RemoveGroupDialogMutation(\n  $input: RemoveGroupByIdInput!\n) {\n  removeGroupById(input: $input) {\n    group {\n      id\n      ...GroupsList_GroupEdge\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment GroupsList_GroupEdge on Group {\n  id\n  name\n}\n"
   }
 };
 })();
 
-(node as any).hash = "74f4a21ccdf0b1c7986923bf1b3acbfb";
+(node as any).hash = "70c4fb036db9837baefb89ce68e6efc2";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8999fdd9aed5af17f458482aaf06326a>>
+ * @generated SignedSource<<c245fb7c65f12e69b19077269e8e5063>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -93,8 +93,8 @@ v4 = {
           "storageKey": null
         }
       ],
-      "type": "IUserError",
-      "abstractKey": "__isIUserError"
+      "type": "UserError",
+      "abstractKey": "__isUserError"
     }
   ],
   "storageKey": null
@@ -202,16 +202,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "467b59ba18f6c97a442dc795aef3e580",
+    "cacheID": "e852dd4365a4ae55efdf9be922c2dd56",
     "id": null,
     "metadata": {},
     "name": "RemoveEnvironmentDialogMutation",
     "operationKind": "mutation",
-    "text": "mutation RemoveEnvironmentDialogMutation(\n  $input: RemoveEnvironmentByIdInput!\n) {\n  removeEnvironmentById(input: $input) {\n    environment {\n      id\n      ...EnvironmentsList_EnvironmentEdge\n    }\n    errors {\n      __typename\n      ... on IUserError {\n        __isIUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment EnvironmentsList_EnvironmentEdge on Environment {\n  id\n  name\n}\n"
+    "text": "mutation RemoveEnvironmentDialogMutation(\n  $input: RemoveEnvironmentByIdInput!\n) {\n  removeEnvironmentById(input: $input) {\n    environment {\n      id\n      ...EnvironmentsList_EnvironmentEdge\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment EnvironmentsList_EnvironmentEdge on Environment {\n  id\n  name\n}\n"
   }
 };
 })();
 
-(node as any).hash = "b07061a0412ec56378d174371e170163";
+(node as any).hash = "4d5f4978f5e62d9817e75059feecc165";
 
 export default node;

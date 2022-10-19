@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<73a0db0de36bb3355fb5b2f6a4c0b573>>
+ * @generated SignedSource<<da76779b8b2b634483daf601e42f5900>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -74,8 +74,8 @@ v3 = {
       "storageKey": null
     }
   ],
-  "type": "IUserError",
-  "abstractKey": "__isIUserError"
+  "type": "UserError",
+  "abstractKey": "__isUserError"
 },
 v4 = {
   "alias": null,
@@ -232,16 +232,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "0893af4677884e91c2a21ff9137cf5d6",
+    "cacheID": "a79f721380e8196df1886518e9689e42",
     "id": null,
     "metadata": {},
     "name": "RenameApplicationDialogMutation",
     "operationKind": "mutation",
-    "text": "mutation RenameApplicationDialogMutation(\n  $input: RenameApplicationInput!\n) {\n  renameApplication(input: $input) {\n    application {\n      id\n      ...ApplicationsList_applicationsEdge\n    }\n    errors {\n      __typename\n      ... on IUserError {\n        __isIUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment ApplicationsList_applicationsEdge on Application {\n  id\n  name\n  namespace\n  parts {\n    id\n    name\n    components {\n      id\n      definition {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": "mutation RenameApplicationDialogMutation(\n  $input: RenameApplicationInput!\n) {\n  renameApplication(input: $input) {\n    application {\n      id\n      ...ApplicationsList_applicationsEdge\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment ApplicationsList_applicationsEdge on Application {\n  id\n  name\n  namespace\n  parts {\n    id\n    name\n    components {\n      id\n      definition {\n        id\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "b6814a34c2a6be233cd42fdeb1fdfc8c";
+(node as any).hash = "36641c8d332fd70f858614c14ce43eba";
 
 export default node;

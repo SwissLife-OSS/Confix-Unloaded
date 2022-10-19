@@ -24,7 +24,7 @@ export const removeEnvironmentDialog = graphql`
       }
       errors {
         __typename
-        ... on IUserError {
+        ... on UserError {
           message
           code
         }

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2a855ff6b666b6ee5c183b5e1bb6dd65>>
+ * @generated SignedSource<<4d473ffe0d0fc153bf07b094ba8cc26f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -114,8 +114,8 @@ v1 = [
                 "storageKey": null
               }
             ],
-            "type": "IUserError",
-            "abstractKey": "__isIUserError"
+            "type": "UserError",
+            "abstractKey": "__isUserError"
           }
         ],
         "storageKey": null
@@ -142,16 +142,16 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "c8fd9eb74a6ed015fa0e4f4f54036faf",
+    "cacheID": "e5577e1f6bd787d665f4f37ab4f29bcf",
     "id": null,
     "metadata": {},
     "name": "PublishApplicationPartDialogMutation",
     "operationKind": "mutation",
-    "text": "mutation PublishApplicationPartDialogMutation(\n  $input: PublishApplicationPartByIdInput!\n) {\n  publishApplicationPartById(input: $input) {\n    publishedApplicationPart {\n      id\n      version\n    }\n    errors {\n      __typename\n      ... on IUserError {\n        __isIUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n"
+    "text": "mutation PublishApplicationPartDialogMutation(\n  $input: PublishApplicationPartByIdInput!\n) {\n  publishApplicationPartById(input: $input) {\n    publishedApplicationPart {\n      id\n      version\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "31e92c4467c3775a88e41dece18c522e";
+(node as any).hash = "488def53c17799a8c21008264ce3ef1f";
 
 export default node;

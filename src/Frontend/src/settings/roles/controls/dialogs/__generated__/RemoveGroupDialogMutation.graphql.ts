@@ -93,8 +93,8 @@ v4 = {
           "storageKey": null
         }
       ],
-      "type": "IUserError",
-      "abstractKey": "__isIUserError"
+      "type": "UserError",
+      "abstractKey": "__isUserError"
     }
   ],
   "storageKey": null
@@ -207,7 +207,7 @@ return {
     "metadata": {},
     "name": "RemoveGroupDialogMutation",
     "operationKind": "mutation",
-    "text": "mutation RemoveGroupDialogMutation(\n  $input: RemoveGroupByIdInput!\n) {\n  removeGroupById(input: $input) {\n    group {\n      id\n      ...GroupsList_GroupEdge\n    }\n    errors {\n      __typename\n      ... on IUserError {\n        __isIUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment GroupsList_GroupEdge on Group {\n  id\n  name\n}\n"
+    "text": "mutation RemoveGroupDialogMutation(\n  $input: RemoveGroupByIdInput!\n) {\n  removeGroupById(input: $input) {\n    group {\n      id\n      ...GroupsList_GroupEdge\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment GroupsList_GroupEdge on Group {\n  id\n  name\n}\n"
   }
 };
 })();

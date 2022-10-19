@@ -23,7 +23,7 @@ const newGroupMutation = graphql`
         name
       }
       errors {
-        ... on IUserError {
+        ... on UserError {
           message
           code
         }

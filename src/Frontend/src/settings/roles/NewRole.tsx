@@ -28,7 +28,7 @@ const newRoleMutation = graphql`
         ...RolesList_RoleEdge
       }
       errors {
-        ... on IUserError {
+        ... on UserError {
           message
           code
         }

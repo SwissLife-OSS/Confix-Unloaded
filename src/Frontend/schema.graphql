@@ -37,7 +37,7 @@ interface ComponentChange implements Change {
   kind: String!
 }
 
-interface IUserError {
+interface UserError {
   code: String!
   message: String!
 }
@@ -95,19 +95,19 @@ type Application implements Node {
   changeLog: [ChangeLog!]!
 }
 
-type ApplicationIdInvalid implements IUserError {
+type ApplicationIdInvalid implements UserError {
   code: String!
   message: String!
   applicationId: ID!
 }
 
-type ApplicationNameTaken implements IUserError {
+type ApplicationNameTaken implements UserError {
   applicationName: String!
   code: String!
   message: String!
 }
 
-type ApplicationNotFoundError implements IUserError {
+type ApplicationNotFoundError implements UserError {
   applicationId: ID!
   code: String!
   message: String!
@@ -135,7 +135,7 @@ type ApplicationPartComponent {
   changeLog: [ChangeLog!]!
 }
 
-type ApplicationPartComponentNotFoundError implements IUserError {
+type ApplicationPartComponentNotFoundError implements UserError {
   componentPartId: ID!
   code: String!
   message: String!
@@ -152,19 +152,19 @@ type ApplicationPartComponentValuesChange implements ApplicationPartComponentCha
   values: String
 }
 
-type ApplicationPartIdInvalid implements IUserError {
+type ApplicationPartIdInvalid implements UserError {
   code: String!
   message: String!
   applicationPartId: ID!
 }
 
-type ApplicationPartNameTaken implements IUserError {
+type ApplicationPartNameTaken implements UserError {
   applicationName: String!
   code: String!
   message: String!
 }
 
-type ApplicationPartNotFoundError implements IUserError {
+type ApplicationPartNotFoundError implements UserError {
   applicationPartId: ID!
   code: String!
   message: String!
@@ -206,7 +206,7 @@ type ClaimRequirement {
   value: String!
 }
 
-type ClaimVersionFailedError implements IUserError {
+type ClaimVersionFailedError implements UserError {
   message: String!
   code: String!
 }
@@ -260,7 +260,7 @@ type Component implements Node {
   schemaViolations: [SchemaViolation!]!
 }
 
-type ComponentNotFoundError implements IUserError {
+type ComponentNotFoundError implements UserError {
   componentId: ID!
   code: String!
   message: String!
@@ -402,19 +402,19 @@ type Environment implements Node {
   parent: Environment
 }
 
-type EnvironmentCycleDetectedError implements IUserError {
+type EnvironmentCycleDetectedError implements UserError {
   message: String!
   path: [String!]!
   code: String!
 }
 
-type EnvironmentNameCollisionError implements IUserError {
+type EnvironmentNameCollisionError implements UserError {
   name: String!
   code: String!
   message: String!
 }
 
-type EnvironmentNotFoundError implements IUserError {
+type EnvironmentNotFoundError implements UserError {
   environmentId: ID!
   code: String!
   message: String!
@@ -553,7 +553,7 @@ type PublishedVersionsEdge {
   node: PublishedApplicationPart!
 }
 
-type PublishingError implements IUserError {
+type PublishingError implements UserError {
   message: String!
   code: String!
 }
@@ -814,7 +814,7 @@ type SetParentOfEnvironmentPayload {
   query: Query!
 }
 
-type UnauthorizedOperationError implements IUserError {
+type UnauthorizedOperationError implements UserError {
   message: String!
   code: String!
 }
@@ -853,7 +853,7 @@ type UserInfo {
   email: String
 }
 
-type ValueSchemaViolation implements IUserError {
+type ValueSchemaViolation implements UserError {
   violations: [SchemaViolation!]!
   code: String!
   message: String!

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a8e20ab929040d38fc232d367b2d1530>>
+ * @generated SignedSource<<6059f1d99102d9bca8db48ec8101166f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -86,8 +86,8 @@ v3 = {
       "storageKey": null
     }
   ],
-  "type": "IUserError",
-  "abstractKey": "__isIUserError"
+  "type": "UserError",
+  "abstractKey": "__isUserError"
 };
 return {
   "fragment": {
@@ -262,16 +262,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "6cb70a8a8f737c4e305ca5f930ca96e1",
+    "cacheID": "602d55f174b0e4c3f91669003ffebf1b",
     "id": null,
     "metadata": {},
     "name": "EditRoleForm_ChangeRolePermissions_Mutation",
     "operationKind": "mutation",
-    "text": "mutation EditRoleForm_ChangeRolePermissions_Mutation(\n  $input: ChangeRolePermissionsInput!\n) {\n  changeRolePermissions(input: $input) {\n    role {\n      id\n      ...EditRole_Role\n    }\n    errors {\n      __typename\n      ... on IUserError {\n        __isIUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment EditRole_Role on Role {\n  id\n  name\n  permissions {\n    scope\n    permissions {\n      isRead\n      isWrite\n      isClaim\n      isPublish\n      isDecrypt\n    }\n  }\n}\n"
+    "text": "mutation EditRoleForm_ChangeRolePermissions_Mutation(\n  $input: ChangeRolePermissionsInput!\n) {\n  changeRolePermissions(input: $input) {\n    role {\n      id\n      ...EditRole_Role\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment EditRole_Role on Role {\n  id\n  name\n  permissions {\n    scope\n    permissions {\n      isRead\n      isWrite\n      isClaim\n      isPublish\n      isDecrypt\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "70e9e69cb82af6962d804dfef0327f9b";
+(node as any).hash = "f5b0b9d93a8003cf33ce714d44268421";
 
 export default node;

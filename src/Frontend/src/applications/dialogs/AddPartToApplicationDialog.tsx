@@ -25,7 +25,7 @@ export const addPartToApplicationMutation = graphql`
       }
       errors {
         __typename
-        ... on IUserError {
+        ... on UserError {
           message
           code
         }

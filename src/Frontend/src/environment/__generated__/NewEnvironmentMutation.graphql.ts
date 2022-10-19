@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a9e867b258cae7e0b3238277c091d462>>
+ * @generated SignedSource<<cd436e3c3fd463adc846ee821a2b7eca>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -94,8 +94,8 @@ v4 = {
       "storageKey": null
     }
   ],
-  "type": "IUserError",
-  "abstractKey": "__isIUserError"
+  "type": "UserError",
+  "abstractKey": "__isUserError"
 };
 return {
   "fragment": {
@@ -199,16 +199,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "69dae0304ba357db69b07edd0ab66be1",
+    "cacheID": "8bac2ea914ba0a1cd027bc9a7852e6ce",
     "id": null,
     "metadata": {},
     "name": "NewEnvironmentMutation",
     "operationKind": "mutation",
-    "text": "mutation NewEnvironmentMutation(\n  $input: CreateEnvironmentInput!\n) {\n  createEnvironment(input: $input) {\n    environment {\n      id\n      name\n    }\n    errors {\n      __typename\n      ... on IUserError {\n        __isIUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n"
+    "text": "mutation NewEnvironmentMutation(\n  $input: CreateEnvironmentInput!\n) {\n  createEnvironment(input: $input) {\n    environment {\n      id\n      name\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "7f1284330da4e4272858750746cc0a93";
+(node as any).hash = "3d352b3f8adba4c4fcdd4ba05030aae4";
 
 export default node;
