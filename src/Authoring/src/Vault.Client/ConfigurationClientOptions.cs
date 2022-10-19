@@ -1,6 +1,6 @@
 namespace Confix.Vault.Client;
 
-public class VaultClientOptions
+public sealed class VaultClientOptions
 {
-    public string RequestUri { get; set; } = string.Empty;
+    public string Url { get; set; } = string.Empty;
 }

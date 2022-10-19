@@ -11,7 +11,7 @@ using static Confix.Authentication.Authorization.Permissions;
 
 namespace Confix.Authoring.Publishing;
 
-public class PublishingService : IPublishingService
+internal sealed class PublishingService : IPublishingService
 {
     private readonly IDataLoader<Guid, PublishedApplicationPart?> _publishedById;
     private readonly IPublishedApplicationPartsByPartIdDataloader

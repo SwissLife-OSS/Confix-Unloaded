@@ -1,7 +1,4 @@
-using System;
 using System.Security.Cryptography;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Transactions;
 using Azure.Security.KeyVault.Keys;
 using Azure.Security.KeyVault.Keys.Cryptography;
@@ -11,7 +8,7 @@ using static System.Transactions.TransactionScopeOption;
 
 namespace Confix.CryptoProviders.AzureKeyVault;
 
-internal class KeyVaultKeyProvider : IKeyProvider
+internal sealed class KeyVaultKeyProvider : IKeyProvider
 {
     private readonly IKeyCache _keyCache;
     private readonly ISecretRepository _secrets;

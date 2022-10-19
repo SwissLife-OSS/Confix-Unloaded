@@ -7,7 +7,7 @@ using HotChocolate.Types;
 namespace Confix.Authoring;
 
 [ExtendObjectType(typeof(Environment))]
-public class EnvironmentExtensions
+public sealed class EnvironmentExtensions
 {
     [BindMember(nameof(Environment.ParentId))]
     public async Task<Environment?> GetParentAsync(

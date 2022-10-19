@@ -10,7 +10,7 @@ namespace Confix.Authoring.GraphQL.Applications;
 
 [Node]
 [ExtendObjectType(typeof(ApplicationPart))]
-public class ApplicationPartNode
+public sealed class ApplicationPartNode
 {
     [NodeResolver]
     public static Task<ApplicationPart?> GetApplicationPartAsync(

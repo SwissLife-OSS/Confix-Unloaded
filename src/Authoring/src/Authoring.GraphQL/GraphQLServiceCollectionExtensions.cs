@@ -1,25 +1,22 @@
 using Confix.Authoring.GraphQL.Serialization;
-using HotChocolate.AspNetCore.Authorization;
 using HotChocolate.Execution.Configuration;
-using HotChocolate.Resolvers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Confix.Authoring.GraphQL;
 
-public static class GraphQLServiceCollectionExtensions
+public static class GraphQlServiceCollectionExtensions
 {
-    public static IConfixServerBuilder AddGraphQLServer(this IConfixServerBuilder builder)
+    public static IServiceCollection AddAuthoringGraphQL(this IServiceCollection services)
     {
-        builder.Services.AddGraphQLServer().AddConfixSchema();
-
-        return builder;
+        services.AddGraphQLServer().AddConfixSchema();
+        return services;
     }
 
     public static IRequestExecutorBuilder AddConfixSchema(this IRequestExecutorBuilder builder)
     {
         builder
             // types
-            .AddCoreTypes()
+            .AddSharedTypes()
             .AddApplications()
             .AddComponents()
             .AddEnvironments()
@@ -50,7 +47,7 @@ public static class GraphQLServiceCollectionExtensions
         return builder;
     }
 
-    private static IRequestExecutorBuilder AddCoreTypes(this IRequestExecutorBuilder builder)
+    private static IRequestExecutorBuilder AddSharedTypes(this IRequestExecutorBuilder builder)
     {
         builder.AddQueryType();
         builder.AddMutationType();

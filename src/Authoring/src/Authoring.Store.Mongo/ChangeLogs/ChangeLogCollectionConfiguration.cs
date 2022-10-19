@@ -6,7 +6,7 @@ using static MongoDB.Driver.Builders<Confix.Authoring.Store.ChangeLog>;
 
 namespace Confix.Authoring.Store.Mongo.Configuration;
 
-internal class ChangeLogCollectionConfiguration : IMongoCollectionConfiguration<ChangeLog>
+internal sealed class ChangeLogCollectionConfiguration : IMongoCollectionConfiguration<ChangeLog>
 {
     public void OnConfiguring(IMongoCollectionBuilder<ChangeLog> builder)
     {

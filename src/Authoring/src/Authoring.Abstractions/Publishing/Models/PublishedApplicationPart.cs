@@ -4,7 +4,7 @@ using Confix.Authoring.Store;
 
 namespace Confix.Authoring.Publishing;
 
-public class PublishedApplicationPart
+public sealed class PublishedApplicationPart
 {
     public PublishedApplicationPart(
         Guid id,

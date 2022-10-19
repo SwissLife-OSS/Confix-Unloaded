@@ -7,7 +7,7 @@ using Confix.Common.Exceptions;
 namespace Confix.Authoring.GraphQL;
 
 [ExtendObjectType(OperationTypeNames.Mutation)]
-public class GroupMutations
+public sealed class GroupMutations
 {
     [Error(typeof(UnauthorizedOperationException))]
     public async Task<Group> CreateGroupAsync(

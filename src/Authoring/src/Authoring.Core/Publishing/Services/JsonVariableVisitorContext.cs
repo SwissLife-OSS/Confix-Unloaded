@@ -4,7 +4,7 @@ using System.Text.Json.Nodes;
 
 namespace Confix.Authoring.Publishing;
 
-public class JsonVariableVisitorContext
+internal sealed class JsonVariableVisitorContext
 {
     public Stack<Action<JsonValue>> SetValue { get; } = new();
 

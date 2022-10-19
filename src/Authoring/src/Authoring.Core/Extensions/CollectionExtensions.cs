@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Confix.Authoring.Extensions;
 
-public static class CollectionExtensions
+internal static class CollectionExtensions
 {
     public static ICollection<T> Replace<T>(this ICollection<T> collection, T item, Func<T> factory)
         where T : class =>

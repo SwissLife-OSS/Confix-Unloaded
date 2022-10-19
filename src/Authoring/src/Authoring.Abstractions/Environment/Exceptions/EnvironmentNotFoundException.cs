@@ -2,7 +2,7 @@ using System;
 
 namespace Confix.Authoring;
 
-public class EnvironmentNotFoundException : Exception
+public sealed class EnvironmentNotFoundException : Exception
 {
     public EnvironmentNotFoundException(Guid environmentId)
     {

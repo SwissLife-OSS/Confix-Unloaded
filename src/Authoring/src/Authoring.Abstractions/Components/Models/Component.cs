@@ -4,7 +4,7 @@ using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring;
 
-public record Component
+public sealed record Component
 {
     public Component(
         Guid id,

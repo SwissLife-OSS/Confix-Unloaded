@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Confix.Authoring.Store;
 
 namespace Confix.Authoring;
@@ -38,7 +33,7 @@ public interface IApplicationService
     Task<Application> CreateAsync(
         string name,
         string @namespace,
-        IReadOnlyList<string>? parts = null,
+        IEnumerable<string>? parts = null,
         CancellationToken cancellationToken = default);
 
     Task<Application> RenameAsync(
@@ -53,7 +48,7 @@ public interface IApplicationService
 
     Task<ApplicationPart> AddComponentsToPartAsync(
         Guid applicationPartId,
-        IReadOnlyList<Guid> componentIds,
+        IEnumerable<Guid> componentIds,
         CancellationToken cancellationToken = default);
 
     /// <summary>

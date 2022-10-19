@@ -3,11 +3,11 @@ using MongoDB.Driver;
 
 namespace Confix.Authoring.Store.Mongo;
 
-public class RoleStore : IRoleStore
+internal sealed class RoleStore : IRoleStore
 {
-    private readonly IConfixAuthorDbContext _dbContext;
+    private readonly IAuthoringDbContext _dbContext;
 
-    public RoleStore(IConfixAuthorDbContext dbContext)
+    public RoleStore(IAuthoringDbContext dbContext)
     {
         _dbContext = dbContext;
     }

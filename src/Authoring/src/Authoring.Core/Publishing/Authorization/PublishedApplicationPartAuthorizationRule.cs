@@ -3,7 +3,7 @@ using Confix.Authoring.Store;
 
 namespace Confix.Authoring.Publishing.Authorization;
 
-public class PublishedApplicationPartAuthorizationRule : AuthorizationRule<PublishedApplicationPart>
+internal sealed class PublishedApplicationPartAuthorizationRule : AuthorizationRule<PublishedApplicationPart>
 {
     private readonly IAuthorizationService _authorizationService;
     private readonly IApplicationByPartIdDataLoader _applicationByPartId;

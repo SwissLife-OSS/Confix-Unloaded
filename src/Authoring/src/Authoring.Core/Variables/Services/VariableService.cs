@@ -9,7 +9,7 @@ using static Confix.Authentication.Authorization.Permissions;
 
 namespace Confix.Authoring;
 
-public class VariableService : IVariableService
+internal sealed class VariableService : IVariableService
 {
     private readonly IVariableStore _variableStore;
     private readonly IVariableValueStore _variableValueStore;

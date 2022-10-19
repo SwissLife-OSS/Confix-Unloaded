@@ -3,6 +3,7 @@
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using Confix.Common;
 using Confix.Vault.Client;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -19,7 +20,7 @@ Console.CancelKeyPress += (sender, eventArgs) =>
 };
 
 IVaultClient client = new ServiceCollection()
-    .AddVaultClient(vaultUrl)
+    .AddVaultClient()
     .BuildServiceProvider()
     .GetRequiredService<IVaultClient>();
 

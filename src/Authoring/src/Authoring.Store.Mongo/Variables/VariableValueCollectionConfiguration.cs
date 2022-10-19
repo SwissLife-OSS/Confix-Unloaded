@@ -3,7 +3,7 @@ using MongoDB.Extensions.Context;
 
 namespace Confix.Authoring.Store.Mongo.Configuration;
 
-internal class VariableValueCollectionConfiguration :
+internal sealed class VariableValueCollectionConfiguration :
     IMongoCollectionConfiguration<VariableValue>
 {
     public void OnConfiguring(

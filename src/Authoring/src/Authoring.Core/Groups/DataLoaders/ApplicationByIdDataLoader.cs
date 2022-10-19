@@ -4,7 +4,7 @@ using GreenDonut;
 
 namespace Confix.Authoring.DataLoaders;
 
-public class GroupByIdDataLoader
+internal sealed class GroupByIdDataLoader
     : BatchDataLoader<Guid, Group?>
     , IGroupByIdDataLoader
 {

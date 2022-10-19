@@ -1,5 +1,3 @@
-using System.Threading;
-using System.Threading.Tasks;
 using Confix.CryptoProviders;
 using MongoDB.Driver;
 
@@ -7,9 +5,9 @@ namespace Confix.Authoring.Store.Mongo;
 
 internal class SecretRepository : ISecretRepository
 {
-    private readonly IConfixCryptoDbContext _dbContext;
+    private readonly ICryptoDbContext _dbContext;
 
-    public SecretRepository(IConfixCryptoDbContext dbContext)
+    public SecretRepository(ICryptoDbContext dbContext)
     {
         _dbContext = dbContext;
     }
@@ -18,18 +16,17 @@ internal class SecretRepository : ISecretRepository
         Secret secret,
         CancellationToken cancellationToken)
     {
-        FilterDefinition<Secret> filter = Builders<Secret>.Filter.Eq(x => x.Topic, secret.Topic);
+        var filter = Builders<Secret>.Filter.Eq(x => x.Topic, secret.Topic);
 
-        UpdateDefinition<Secret> update = Builders<Secret>.Update
+        var update = Builders<Secret>.Update
             .SetOnInsert(x => x.Id, secret.Id)
             .SetOnInsert(x => x.EncryptionAlgorithm, secret.EncryptionAlgorithm)
             .SetOnInsert(x => x.Key, secret.Key)
             .SetOnInsert(x => x.UpdatedAt, secret.UpdatedAt);
 
-        FindOneAndUpdateOptions<Secret> options = new()
+        var options = new FindOneAndUpdateOptions<Secret>
         {
-            IsUpsert = true,
-            ReturnDocument = ReturnDocument.After
+            IsUpsert = true, ReturnDocument = ReturnDocument.After
         };
 
         return await _dbContext.Secrets
@@ -40,7 +37,7 @@ internal class SecretRepository : ISecretRepository
         string topic,
         CancellationToken cancellationToken)
     {
-        FilterDefinition<Secret> filter = Builders<Secret>.Filter.Eq(x => x.Topic, topic);
+        var filter = Builders<Secret>.Filter.Eq(x => x.Topic, topic);
 
         return await _dbContext.Secrets.Find(filter).FirstOrDefaultAsync(cancellationToken);
     }

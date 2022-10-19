@@ -6,7 +6,7 @@ using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring.Changes;
 
-public class RemoveComponentChange : IComponentChange
+public sealed class RemoveComponentChange : IComponentChange
 {
     public RemoveComponentChange(Guid componentId, int componentVersion, Component component)
     {

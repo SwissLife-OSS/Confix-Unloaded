@@ -2,7 +2,7 @@ using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring;
 
-public record Environment
+public sealed record Environment
 {
     public Environment(Guid id, string? name = null!)
     {

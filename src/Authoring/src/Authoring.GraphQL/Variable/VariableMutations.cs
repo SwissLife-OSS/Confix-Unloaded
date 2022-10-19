@@ -10,7 +10,7 @@ using HotChocolate.Types.Relay;
 namespace Confix.Authoring.GraphQL;
 
 [ExtendObjectType(OperationTypeNames.Mutation)]
-public class VariableMutations
+public sealed class VariableMutations
 {
     [Error(typeof(UnauthorizedOperationException))]
     public async Task<Variable?> CreateVariableAsync(

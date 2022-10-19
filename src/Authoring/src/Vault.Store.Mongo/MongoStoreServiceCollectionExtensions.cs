@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Configuration;
+using Confix.Common;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Extensions.Context;
 
@@ -6,15 +6,16 @@ namespace Confix.Vault.Store.Mongo;
 
 public static class MongoStoreServiceCollectionExtensions
 {
-    public static IServiceCollection AddMongoStore(
-        this IServiceCollection services,
-        IConfiguration configuration)
+    public static IVaultServerBuilder UseMongoDbStores(
+        this IVaultServerBuilder builder,
+        string pathToConfig = Settings.Confix.Vault.Database.Mongo.Section)
     {
-        MongoOptions options =
-            configuration.GetSection("Vault:Storage:Database").Get<MongoOptions>();
+        builder.Services
+            .AddOptions<MongoOptions>(nameof(VaultDbContext))
+            .BindConfiguration(pathToConfig);
 
-        services.AddSingleton<IConfixVaultDbContext>(new ConfixVaultDbContext(options));
-        services.AddSingleton<IConfigurationStore, ConfigurationStore>();
-        return services;
+        builder.Services.AddSingleton<IVaultDbContext, VaultDbContext>();
+        builder.Services.AddSingleton<IConfigurationStore, ConfigurationStore>();
+        return builder;
     }
 }

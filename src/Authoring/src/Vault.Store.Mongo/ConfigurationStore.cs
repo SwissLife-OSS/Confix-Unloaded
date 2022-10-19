@@ -8,11 +8,11 @@ using MongoDB.Driver;
 
 namespace Confix.Vault.Store.Mongo;
 
-public class ConfigurationStore : IConfigurationStore
+internal sealed class ConfigurationStore : IConfigurationStore
 {
-    private readonly IConfixVaultDbContext _context;
+    private readonly IVaultDbContext _context;
 
-    public ConfigurationStore(IConfixVaultDbContext context)
+    public ConfigurationStore(IVaultDbContext context)
     {
         _context = context;
     }
@@ -24,7 +24,7 @@ public class ConfigurationStore : IConfigurationStore
         string keyPrefix,
         CancellationToken cancellationToken)
     {
-        FilterDefinition<Configuration> filter =
+        var filter =
             Builders<Configuration>.Filter.Eq(x => x.ApplicationName, applicationName) &
             Builders<Configuration>.Filter.Eq(x => x.ApplicationPartName, applicationPartName) &
             Builders<Configuration>.Filter.Eq(x => x.EnvironmentName, environmentName) &
@@ -59,7 +59,7 @@ public class ConfigurationStore : IConfigurationStore
             Builders<Configuration>.Update.Set(x => x.EncryptedConfiguration,
                 encryptedConfiguration);
 
-        FindOneAndUpdateOptions<Configuration> options = new() {IsUpsert = false};
+        FindOneAndUpdateOptions<Configuration> options = new() { IsUpsert = false };
 
         return await _context.Configurations
             .FindOneAndUpdateAsync(filter, update, options, cancellationToken);

@@ -5,7 +5,7 @@ using HotChocolate.Types;
 
 namespace Confix.Authoring.Changes;
 
-public class RenameComponentChange : IComponentChange
+public sealed class RenameComponentChange : IComponentChange
 {
     public RenameComponentChange(Guid componentId, int componentVersion, string name)
     {

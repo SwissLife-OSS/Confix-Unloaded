@@ -26,7 +26,7 @@
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Http" Version="6.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Options" Version="6.0.0" />
-
+    <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="6.0.0" />
     <PackageVersion Include="MongoDB.Extensions.Context" Version="1.2.0" />
     <PackageVersion Include="MongoDB.Extensions.Transactions" Version="1.2.0" />
     <PackageVersion Include="StrawberryShake.CodeGeneration.CSharp.Analyzers" Version="12.12.1" />

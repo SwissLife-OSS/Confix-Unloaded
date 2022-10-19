@@ -2,7 +2,7 @@ using HotChocolate.Data.Filters;
 
 namespace Confix.Authoring.GraphQL.Components;
 
-public class ComponentFilterInputType : FilterInputType<Component>
+public sealed class ComponentFilterInputType : FilterInputType<Component>
 {
     protected override void Configure(IFilterInputTypeDescriptor<Component> descriptor)
     {

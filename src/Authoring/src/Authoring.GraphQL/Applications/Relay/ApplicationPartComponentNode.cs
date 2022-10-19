@@ -11,14 +11,14 @@ using HotChocolate.Types;
 namespace Confix.Authoring.GraphQL.Applications;
 
 [ExtendObjectType(typeof(ApplicationPartComponent))]
-public class ApplicationPartComponentNode
+public sealed class ApplicationPartComponentNode
 {
     [BindMember(nameof(ApplicationPartComponent.ComponentId))]
     public async Task<Component> GetDefinitionAsync(
         [Parent] ApplicationPartComponent applicationPartComponent,
-        ComponentByIdDataLoader componentById,
+        IComponentService componentService,
         CancellationToken cancellationToken) =>
-        (await componentById.LoadAsync(
+        (await componentService.GetByIdAsync(
             applicationPartComponent.ComponentId,
             cancellationToken))!;
 

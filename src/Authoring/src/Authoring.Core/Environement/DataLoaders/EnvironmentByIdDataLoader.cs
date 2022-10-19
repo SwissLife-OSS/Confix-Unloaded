@@ -8,7 +8,7 @@ using GreenDonut;
 
 namespace Confix.Authoring.DataLoaders;
 
-public class EnvironmentByIdDataLoader : BatchDataLoader<Guid, Environment?>
+internal sealed class EnvironmentByIdDataLoader : BatchDataLoader<Guid, Environment?>
 {
     private readonly IEnvironmentStore _applicationStore;
 

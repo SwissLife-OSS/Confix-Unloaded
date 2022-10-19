@@ -1,6 +1,6 @@
 namespace Confix.Authoring.GraphQL.Applications;
 
-public class EnvironmentNameCollisionError : UserError
+public sealed class EnvironmentNameCollisionError : UserError
 {
     public EnvironmentNameCollisionError(string name)
         : base($"There is already a environment with name `{name}`")

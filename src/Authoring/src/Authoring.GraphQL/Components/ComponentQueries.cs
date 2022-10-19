@@ -11,7 +11,7 @@ using HotChocolate.Types.Relay;
 namespace Confix.Authoring.GraphQL.Components;
 
 [ExtendObjectType(OperationTypeNames.Query)]
-public class ComponentQueries
+public sealed class ComponentQueries
 {
     [UsePaging]
     [UseFiltering(typeof(ComponentFilterInputType))]
@@ -22,7 +22,7 @@ public class ComponentQueries
 
     public Task<Component?> GetComponentByIdAsync(
         [ID(nameof(Component))] Guid id,
-        ComponentByIdDataLoader componentById,
+        [Service] IComponentService componentService,
         CancellationToken cancellationToken) =>
-        componentById.LoadAsync(id, cancellationToken);
+        componentService.GetByIdAsync(id, cancellationToken);
 }

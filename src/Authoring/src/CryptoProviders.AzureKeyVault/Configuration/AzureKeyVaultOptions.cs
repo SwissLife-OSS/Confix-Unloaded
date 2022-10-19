@@ -1,6 +1,6 @@
 namespace Confix.CryptoProviders.AzureKeyVault;
 
-public class AzureKeyVaultOptions
+public sealed class AzureKeyVaultOptions
 {
     public string Url { get; set; } = default!;
 

@@ -3,7 +3,7 @@ using Confix.Authoring.GraphQL.Applications;
 
 namespace Confix.Authoring.GraphQL.Components;
 
-public class ValueSchemaViolation : UserError
+public sealed class ValueSchemaViolation : UserError
 {
     public ValueSchemaViolation(SchemaViolationException exception)
         : base(exception.Message)

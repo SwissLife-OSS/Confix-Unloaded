@@ -2,7 +2,7 @@ using System;
 
 namespace Confix.CryptoProviders;
 
-public class Secret
+public sealed class Secret
 {
     public Secret(
         Guid id,

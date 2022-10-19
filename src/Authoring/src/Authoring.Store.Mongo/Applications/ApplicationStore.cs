@@ -3,11 +3,11 @@ using static MongoDB.Driver.Builders<Confix.Authoring.Store.Application>;
 
 namespace Confix.Authoring.Store.Mongo;
 
-public class ApplicationStore : IApplicationStore
+internal sealed class ApplicationStore : IApplicationStore
 {
-    private readonly IConfixAuthorDbContext _dbContext;
+    private readonly IAuthoringDbContext _dbContext;
 
-    public ApplicationStore(IConfixAuthorDbContext dbContext)
+    public ApplicationStore(IAuthoringDbContext dbContext)
     {
         _dbContext = dbContext;
     }

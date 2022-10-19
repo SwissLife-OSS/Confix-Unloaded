@@ -10,7 +10,7 @@ using HotChocolate.Types;
 
 namespace Confix.Authoring.GraphQL;
 [ExtendObjectType(typeof(ApplicationPart))]
-public class ApplicationPartExtensions
+public sealed class ApplicationPartExtensions
 {
     public async Task<IEnumerable<VariableValue>> GetVariableValuesAsync(
         [Service] IVariableService service,

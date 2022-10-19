@@ -9,7 +9,7 @@ using HotChocolate.Types;
 namespace Confix.Authoring.GraphQL;
 
 [ExtendObjectType(typeof(PublishedApplicationPart))]
-public class PublishedApplicationPartExtensions
+public sealed class PublishedApplicationPartExtensions
 {
     public Task<IReadOnlyList<ClaimedVersion>> GetClaimsVersions(
         [Service] IPublishingService service,

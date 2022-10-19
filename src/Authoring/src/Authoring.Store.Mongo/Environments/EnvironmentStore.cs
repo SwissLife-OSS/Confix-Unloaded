@@ -8,11 +8,11 @@ using MongoDB.Driver.Linq;
 
 namespace Confix.Authoring.Store.Mongo;
 
-public class EnvironmentStore : IEnvironmentStore
+internal sealed class EnvironmentStore : IEnvironmentStore
 {
-    private readonly IConfixAuthorDbContext _dbContext;
+    private readonly IAuthoringDbContext _dbContext;
 
-    public EnvironmentStore(IConfixAuthorDbContext dbContext)
+    public EnvironmentStore(IAuthoringDbContext dbContext)
     {
         _dbContext = dbContext;
     }

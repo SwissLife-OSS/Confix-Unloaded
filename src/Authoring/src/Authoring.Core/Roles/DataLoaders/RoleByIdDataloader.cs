@@ -3,7 +3,7 @@ using GreenDonut;
 
 namespace Confix.Authoring.Roles;
 
-public class RoleByIdDataLoader : BatchDataLoader<Guid, Role>, IRoleByIdDataLoader
+internal sealed class RoleByIdDataLoader : BatchDataLoader<Guid, Role>, IRoleByIdDataLoader
 {
     private readonly IRoleStore _store;
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Confix.CryptoProviders.AzureKeyVault;
 
-public class KeyVaultCryptoProvider
+internal sealed class KeyVaultCryptoProvider
     : IEncryptor
     , IDecryptor
 {

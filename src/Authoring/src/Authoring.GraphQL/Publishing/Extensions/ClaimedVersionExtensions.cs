@@ -9,7 +9,7 @@ using HotChocolate.Types;
 namespace Confix.Authoring.GraphQL;
 
 [ExtendObjectType(typeof(ClaimedVersion))]
-public class ClaimedVersionExtensions
+public sealed class ClaimedVersionExtensions
 {
     [BindMember(nameof(ClaimedVersion.ApplicationId))]
     public async Task<Application?> GetApplicationAsync(

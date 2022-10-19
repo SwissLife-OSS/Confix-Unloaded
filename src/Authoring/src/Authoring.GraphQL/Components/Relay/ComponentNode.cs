@@ -9,12 +9,12 @@ namespace Confix.Authoring.GraphQL.Components;
 
 [Node]
 [ExtendObjectType(typeof(Component))]
-public class ComponentNode
+public sealed class ComponentNode
 {
     [NodeResolver]
     public static async Task<Component?> GetComponentAsync(
         Guid id,
-        ComponentByIdDataLoader componentById,
+        [Service] IComponentService service,
         CancellationToken cancellationToken) =>
-        await componentById.LoadAsync(id, cancellationToken);
+        await service.GetByIdAsync(id, cancellationToken);
 }

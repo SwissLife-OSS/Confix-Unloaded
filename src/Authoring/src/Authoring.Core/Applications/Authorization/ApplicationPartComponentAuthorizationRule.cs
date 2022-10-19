@@ -4,7 +4,7 @@ using static Confix.Authentication.Authorization.Permissions;
 
 namespace Confix.Authoring;
 
-public class ApplicationPartComponentAuthorizationRule : AuthorizationRule<ApplicationPartComponent>
+internal sealed class ApplicationPartComponentAuthorizationRule : AuthorizationRule<ApplicationPartComponent>
 {
     private readonly IApplicationByComponentIdDataLoader _appByComponentId;
 

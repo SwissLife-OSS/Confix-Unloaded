@@ -3,7 +3,7 @@ using Confix.Authentication.Authorization;
 namespace Confix.Authoring.GraphQL;
 
 [ExtendObjectType(OperationTypeNames.Query)]
-public class GroupQueries
+public sealed class GroupQueries
 {
     [UsePaging]
     public Task<IQueryable<Group>> SearchGroups(

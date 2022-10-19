@@ -9,7 +9,7 @@ using StrawberryShake;
     Name = "claim",
     Description = "Claims a version for a particular tag",
     ResponseFileHandling = ResponseFileHandling.ParseArgsAsLineSeparated)]
-public class ClaimCommand : CommandBase
+public sealed class ClaimCommand : CommandBase
 {
     private readonly IConfixClient _client;
     private readonly IConsole _console;

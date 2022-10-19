@@ -9,7 +9,7 @@ using static Confix.Authentication.Authorization.Permissions;
 
 namespace Confix.Authoring;
 
-public class ApplicationService : IApplicationService
+internal sealed class ApplicationService : IApplicationService
 {
     private readonly IApplicationStore _appStore;
     private readonly IChangeLogService _changeLogService;
@@ -119,7 +119,7 @@ public class ApplicationService : IApplicationService
     public async Task<Application> CreateAsync(
         string name,
         string @namespace,
-        IReadOnlyList<string>? parts = null,
+        IEnumerable<string>? parts = null,
         CancellationToken cancellationToken = default)
     {
         Application application = new(Guid.NewGuid(), name, @namespace);
@@ -259,7 +259,7 @@ public class ApplicationService : IApplicationService
 
     public async Task<ApplicationPart> AddComponentsToPartAsync(
         Guid applicationPartId,
-        IReadOnlyList<Guid> componentIds,
+        IEnumerable<Guid> componentIds,
         CancellationToken cancellationToken = default)
     {
         Application? application =

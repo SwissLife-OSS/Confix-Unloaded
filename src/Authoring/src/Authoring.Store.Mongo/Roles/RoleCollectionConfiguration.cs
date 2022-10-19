@@ -5,7 +5,7 @@ using MongoDB.Extensions.Context;
 
 namespace Confix.Authoring.Store.Mongo.Configuration;
 
-internal class RoleCollectionConfiguration : IMongoCollectionConfiguration<Role>
+internal sealed class RoleCollectionConfiguration : IMongoCollectionConfiguration<Role>
 {
     public void OnConfiguring(IMongoCollectionBuilder<Role> builder)
     {

@@ -9,12 +9,12 @@ namespace Confix.Authoring.GraphQL;
 
 [Node]
 [ExtendObjectType(typeof(Variable))]
-public class VariableNode
+public sealed class VariableNode
 {
     [NodeResolver]
     public static Task<Variable?> GetVariableAsync(
+        [Service] IVariableService service,
         Guid id,
-        IVariableDataLoader variableById,
         CancellationToken cancellationToken)
-        => variableById.LoadAsync(id, cancellationToken);
+        => service.GetByIdAsync(id, cancellationToken);
 }

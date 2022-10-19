@@ -12,7 +12,7 @@ using HotChocolate.Types.Relay;
 namespace Confix.Authoring.GraphQL.Publishing;
 
 [ExtendObjectType(OperationTypeNames.Mutation)]
-public class PublishingMutations
+public sealed class PublishingMutations
 {
     [Error(typeof(PublishingException))]
     [Error(typeof(UnauthorizedOperationException))]

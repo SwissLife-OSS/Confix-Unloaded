@@ -8,7 +8,7 @@ using HotChocolate.Types;
 namespace Confix.Authoring.GraphQL.Applications;
 
 [ExtendObjectType(typeof(ApplicationPartComponent))]
-public class ApplicationPartComponentExtensions
+public sealed class ApplicationPartComponentExtensions
 {
     public async Task<ApplicationPart?> GetApplicationPartAsync(
         [Service] IApplicationStore store,

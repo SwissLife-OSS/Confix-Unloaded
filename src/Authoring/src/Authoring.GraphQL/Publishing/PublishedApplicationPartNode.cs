@@ -9,7 +9,7 @@ namespace Confix.Authoring.GraphQL.Publishing;
 
 [Node]
 [ExtendObjectType(typeof(PublishedApplicationPart))]
-public class PublishedApplicationPartNode
+public sealed class PublishedApplicationPartNode
 {
     [NodeResolver]
     public static async Task<PublishedApplicationPart?> GetApplicationAsync(

@@ -9,11 +9,11 @@ using MongoDB.Driver.Linq;
 
 namespace Confix.Authoring.Store.Mongo;
 
-public class GroupStore : IGroupStore
+internal sealed class GroupStore : IGroupStore
 {
-    private readonly IConfixAuthorDbContext _dbContext;
+    private readonly IAuthoringDbContext _dbContext;
 
-    public GroupStore(IConfixAuthorDbContext dbContext)
+    public GroupStore(IAuthoringDbContext dbContext)
     {
         _dbContext = dbContext;
     }

@@ -6,7 +6,7 @@ using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring.Store;
 
-public record CreateApplicationChange : IApplicationChange
+public sealed record CreateApplicationChange : IApplicationChange
 {
     public CreateApplicationChange(Guid applicationId, int applicationVersion, Application application)
     {

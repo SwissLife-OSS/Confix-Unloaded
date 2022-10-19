@@ -16,7 +16,7 @@ using static Confix.Authentication.Authorization.WellKnownNamespaces;
 
 namespace Confix.Authoring;
 
-public class EnvironmentService : IEnvironmentService
+internal sealed class EnvironmentService : IEnvironmentService
 {
     private readonly IEnvironmentStore _store;
     private readonly ISessionAccessor _sessionAccessor;

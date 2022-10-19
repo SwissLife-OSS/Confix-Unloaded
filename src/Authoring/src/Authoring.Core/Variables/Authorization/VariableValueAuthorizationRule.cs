@@ -3,7 +3,7 @@ using Confix.Authoring.Store;
 
 namespace Confix.Authoring.Variables;
 
-public class VariableValueAuthorizationRule : AuthorizationRule<VariableValue>
+internal sealed class VariableValueAuthorizationRule : AuthorizationRule<VariableValue>
 {
     private readonly IVariableDataLoader _variableById;
     private readonly IAuthorizationService _authorizationService;

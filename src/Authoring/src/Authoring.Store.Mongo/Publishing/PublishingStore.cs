@@ -6,11 +6,11 @@ using Claimed = MongoDB.Driver.Builders<Confix.Authoring.Publishing.ClaimedVersi
 
 namespace Confix.Authoring.Store.Mongo;
 
-public class PublishingStore : IPublishingStore
+internal sealed class PublishingStore : IPublishingStore
 {
-    private readonly IConfixAuthorDbContext _dbContext;
+    private readonly IAuthoringDbContext _dbContext;
 
-    public PublishingStore(IConfixAuthorDbContext dbContext)
+    public PublishingStore(IAuthoringDbContext dbContext)
     {
         _dbContext = dbContext;
     }

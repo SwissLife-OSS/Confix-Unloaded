@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Confix.Authoring;
 
-public class SchemaViolation
+public sealed class SchemaViolation
 {
     public SchemaViolation(IReadOnlyList<object> path, string? code)
     {

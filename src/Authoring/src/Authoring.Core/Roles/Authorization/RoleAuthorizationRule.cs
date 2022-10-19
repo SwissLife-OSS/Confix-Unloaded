@@ -4,7 +4,7 @@ using static Confix.Authentication.Authorization.WellKnownNamespaces;
 
 namespace Confix.Authoring.Roles.Authorization;
 
-public class RoleAuthorizationRule : AuthorizationRule<Role>
+internal sealed class RoleAuthorizationRule : AuthorizationRule<Role>
 {
     public RoleAuthorizationRule(ISessionAccessor accessor) : base(accessor)
     {

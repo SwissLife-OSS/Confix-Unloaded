@@ -2,7 +2,7 @@ using Confix.Authentication.Authorization;
 
 namespace Confix.Authoring.Components.Authorization;
 
-public class ComponentAuthorizationRule : AuthorizationRule<Component>
+internal sealed class ComponentAuthorizationRule : AuthorizationRule<Component>
 {
     public ComponentAuthorizationRule(ISessionAccessor accessor) : base(accessor)
     {

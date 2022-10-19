@@ -8,11 +8,13 @@
   <ItemGroup>
     <PackageReference Include="MongoDB.Extensions.Context" />
     <PackageReference Include="MongoDB.Extensions.Transactions" />
+    <PackageReference Include="Microsoft.Extensions.Options" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj" />
     <ProjectReference Include="..\CryptoProviders.Abstractions\CryptoProviders.Abstractions.csproj" />
-    <ProjectReference Include="..\Authoring.Abstractions\Authoring.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

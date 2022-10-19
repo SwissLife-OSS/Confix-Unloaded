@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 
 namespace Confix.CryptoProviders.AzureKeyVault;
 
-public class CryptographyClientFactory : ICryptographyClientFactory
+internal sealed class CryptographyClientFactory : ICryptographyClientFactory
 {
     private readonly IOptionsMonitor<AzureKeyVaultOptions> _options;
 

@@ -5,7 +5,7 @@ using HotChocolate.Types;
 
 namespace Confix.Authoring.Variables.Changes;
 
-public class DeleteVariableValueChange : IVariableChange
+public sealed class DeleteVariableValueChange : IVariableChange
 {
     public DeleteVariableValueChange(
         Guid variableId,

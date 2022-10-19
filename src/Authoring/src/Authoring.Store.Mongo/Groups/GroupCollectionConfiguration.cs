@@ -4,7 +4,7 @@ using MongoDB.Extensions.Context;
 
 namespace Confix.Authoring.Store.Mongo.Configuration;
 
-internal class GroupCollectionConfiguration : IMongoCollectionConfiguration<Group>
+internal sealed class GroupCollectionConfiguration : IMongoCollectionConfiguration<Group>
 {
     public void OnConfiguring(IMongoCollectionBuilder<Group> builder)
     {

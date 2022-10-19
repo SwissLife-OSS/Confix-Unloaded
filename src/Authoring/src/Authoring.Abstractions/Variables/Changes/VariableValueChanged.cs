@@ -6,7 +6,7 @@ using HotChocolate.Types;
 
 namespace Confix.Authoring.Variables.Changes;
 
-public class VariableValueChange : IVariableChange
+public sealed class VariableValueChange : IVariableChange
 {
     public VariableValueChange(
         Guid variableId,

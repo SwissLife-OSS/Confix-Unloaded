@@ -5,7 +5,7 @@ using Path = HotChocolate.Path;
 
 namespace Confix.Authoring.Internal;
 
-public static class ValueHelper
+internal static class ValueHelper
 {
     public static Dictionary<string, object?> CreateDefaultObjectValue(ISchema schema, IType type)
     {

@@ -3,7 +3,7 @@ using Confix.Authoring.Store;
 
 namespace Confix.Authoring.GraphQL.Applications;
 
-public class ApplicationPartNotFoundError : UserError
+public sealed class ApplicationPartNotFoundError : UserError
 {
     public ApplicationPartNotFoundError(Guid applicationId)
         : base($"The application part with id `{applicationId:N}` not found.")

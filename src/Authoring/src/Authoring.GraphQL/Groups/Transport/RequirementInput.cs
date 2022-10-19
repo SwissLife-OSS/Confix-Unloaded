@@ -3,7 +3,7 @@ using Confix.Authentication.Authorization;
 namespace Confix.Authoring.GraphQL.Transport;
 
 [OneOf]
-public record RequirementInput(ClaimRequirementInput? ClaimRequirement) : IRequirementInput
+public sealed record RequirementInput(ClaimRequirementInput? ClaimRequirement) : IRequirementInput
 {
     public Requirement Get()
     {

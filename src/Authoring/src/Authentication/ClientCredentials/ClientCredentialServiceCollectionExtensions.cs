@@ -19,11 +19,21 @@ public static class ClientCredentialServiceCollectionExtensions
             .AddOptions<ClientCredentialsClientOptions>(name)
             .BindConfiguration(configSectionPath)
             .Validate(x => !string.IsNullOrWhiteSpace(x.Authority), "Authority was not provided.")
-            .Validate(x => !string.IsNullOrWhiteSpace(x.ClientId), "ClientId was not provided.");
+            .Validate(x => !string.IsNullOrWhiteSpace(x.ClientId), "ClientId was not provided.")
+            .Validate(x =>
+                    !Uri.TryCreate(x.Url, UriKind.RelativeOrAbsolute, out _),
+                "Provided string was not a valid url");
 
         collection
             .AddHttpClient(name)
+            .ConfigureHttpClient(ConfigureClient)
             .AddHttpMessageHandler(ConfigureHandler);
+
+        void ConfigureClient(IServiceProvider sp, HttpClient client)
+        {
+            var options = sp.GetRequiredService<IOptionsMonitor<ClientCredentialsClientOptions>>();
+            client.BaseAddress = new Uri(options.CurrentValue.Url);
+        }
 
         DelegatingHandler ConfigureHandler(IServiceProvider sp)
         {

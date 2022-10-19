@@ -1,7 +1,6 @@
 using Confix.Authentication.Authorization;
 using Confix.Authoring.Publishing.Stores;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
+using Confix.Common;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Extensions.Context;
 
@@ -9,33 +8,27 @@ namespace Confix.Authoring.Store.Mongo;
 
 public static class MongoStoreServiceCollectionExtensions
 {
-    public static IConfixServerBuilder AddMongoStore(this IConfixServerBuilder builder)
+    public static IAuthoringServerBuilder UseMongoDbStores(
+        this IAuthoringServerBuilder builder,
+        string pathToConfig = Settings.Confix.Authoring.Database.Mongo.Section)
     {
-        builder.Services.AddMongoStore(builder.Configuration);
+        builder.Services
+            .AddOptions<MongoOptions>(nameof(AuthoringDbContext))
+            .BindConfiguration(pathToConfig);
+
+        builder.Services.AddSingleton<IAuthoringDbContext, AuthoringDbContext>();
+        builder.Services.AddSingleton<IApplicationStore, ApplicationStore>();
+        builder.Services.AddSingleton<IChangeLogStore, ChangeLogStore>();
+        builder.Services.AddSingleton<IEnvironmentStore, EnvironmentStore>();
+        builder.Services.AddSingleton<IComponentStore, ComponentStore>();
+        builder.Services.AddSingleton<IVariableStore, VariableStore>();
+        builder.Services.AddSingleton<IVariableValueStore, VariableValueStore>();
+        builder.Services.AddSingleton<IPublishingStore, PublishingStore>();
+        builder.Services.AddSingleton<IRoleStore, RoleStore>();
+        builder.Services.AddSingleton<IGroupStore, GroupStore>();
+
+        SerializerHelpers.RegisterSerializers();
 
         return builder;
     }
-
-    public static IServiceCollection AddMongoStore(
-        this IServiceCollection services,
-        IConfiguration configuration)
-    {
-        MongoOptions options = configuration.GetSection("Confix:Storage:Database")
-            .Get<MongoOptions>();
-
-        services.AddSingleton<IConfixAuthorDbContext>(new ConfixAuthorDbContext(options));
-        services.AddSingleton<IApplicationStore, ApplicationStore>();
-        services.AddSingleton<IChangeLogStore, ChangeLogStore>();
-        services.AddSingleton<IEnvironmentStore, EnvironmentStore>();
-        services.AddSingleton<IComponentStore, ComponentStore>();
-        services.AddSingleton<IVariableStore, VariableStore>();
-        services.AddSingleton<IVariableValueStore, VariableValueStore>();
-        services.AddSingleton<IPublishingStore, PublishingStore>();
-        services.AddSingleton<IRoleStore, RoleStore>();
-        services.AddSingleton<IGroupStore, GroupStore>();
-        SerializerHelpers.RegisterSerializers();
-
-        return services;
-    }
-
 }

@@ -4,7 +4,7 @@ using HotChocolate.Types;
 
 namespace Confix.Authoring.Store;
 
-public record PublishedApplicationPartChange : IApplicationPartChange
+public sealed record PublishedApplicationPartChange : IApplicationPartChange
 {
     public PublishedApplicationPartChange(
         Guid applicationId,
