@@ -13,10 +13,10 @@ internal sealed class VaultDbContext : MongoDbContext, IVaultDbContext
     public VaultDbContext(IOptionsMonitor<MongoOptions> mongoOptions) : base(
         mongoOptions.Get(nameof(VaultDbContext)))
     {
+        Configurations = CreateCollection<Configuration>().AsTransactionCollection();
     }
 
-    public IMongoCollection<Configuration> Configurations
-        => CreateCollection<Configuration>().AsTransactionCollection();
+    public IMongoCollection<Configuration> Configurations { get; }
 
     protected override void OnConfiguring(IMongoDatabaseBuilder builder)
     {

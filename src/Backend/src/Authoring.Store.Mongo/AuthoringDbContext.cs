@@ -15,47 +15,38 @@ internal sealed class AuthoringDbContext : MongoDbContext, IAuthoringDbContext
     public AuthoringDbContext(IOptionsMonitor<MongoOptions> mongoOptions) : base(
         mongoOptions.Get(nameof(AuthoringDbContext)))
     {
+        Applications = CreateCollection<Application>().AsTransactionCollection();
+        ChangeLogs = CreateCollection<ChangeLog>().AsTransactionCollection();
+        Environments = CreateCollection<Environment>().AsTransactionCollection();
+        Components = CreateCollection<Component>().AsTransactionCollection();
+        Variables = CreateCollection<Variable>().AsTransactionCollection();
+        VariableValues = CreateCollection<VariableValue>().AsTransactionCollection();
+        PublishedApplicationParts =
+            CreateCollection<PublishedApplicationPart>().AsTransactionCollection();
+        ClaimedVersions = CreateCollection<ClaimedVersion>().AsTransactionCollection();
+        Roles = CreateCollection<Role>().AsTransactionCollection();
+        Groups = CreateCollection<Group>().AsTransactionCollection();
     }
 
-    public IMongoCollection<Application> Applications
-        => CreateCollection<Application>()
-            .AsTransactionCollection();
+    public IMongoCollection<Application> Applications { get; }
 
-    public IMongoCollection<ChangeLog> ChangeLogs
-        => CreateCollection<ChangeLog>()
-            .AsTransactionCollection();
+    public IMongoCollection<ChangeLog> ChangeLogs { get; }
 
-    public IMongoCollection<Environment> Environments
-        => CreateCollection<Environment>()
-            .AsTransactionCollection();
+    public IMongoCollection<Environment> Environments { get; }
 
-    public IMongoCollection<Component> Components
-        => CreateCollection<Component>()
-            .AsTransactionCollection();
+    public IMongoCollection<Component> Components { get; }
 
-    public IMongoCollection<Variable> Variables
-        => CreateCollection<Variable>()
-            .AsTransactionCollection();
+    public IMongoCollection<Variable> Variables { get; }
 
-    public IMongoCollection<VariableValue> VariableValues
-        => CreateCollection<VariableValue>()
-            .AsTransactionCollection();
+    public IMongoCollection<VariableValue> VariableValues { get; }
 
-    public IMongoCollection<PublishedApplicationPart> PublishedApplicationParts
-        => CreateCollection<PublishedApplicationPart>()
-            .AsTransactionCollection();
+    public IMongoCollection<PublishedApplicationPart> PublishedApplicationParts { get; }
 
-    public IMongoCollection<ClaimedVersion> ClaimedVersions
-        => CreateCollection<ClaimedVersion>()
-            .AsTransactionCollection();
+    public IMongoCollection<ClaimedVersion> ClaimedVersions { get; }
 
-    public IMongoCollection<Role> Roles
-        => CreateCollection<Role>()
-            .AsTransactionCollection();
+    public IMongoCollection<Role> Roles { get; }
 
-    public IMongoCollection<Group> Groups
-        => CreateCollection<Group>()
-            .AsTransactionCollection();
+    public IMongoCollection<Group> Groups { get; }
 
     protected override void OnConfiguring(IMongoDatabaseBuilder builder)
     {
