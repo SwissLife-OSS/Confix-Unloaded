@@ -10,10 +10,10 @@ internal sealed class CryptoDbContext : MongoDbContext, ICryptoDbContext
     public CryptoDbContext(IOptionsMonitor<MongoOptions> mongoOptions)
         : base(mongoOptions.Get(nameof(CryptoDbContext)))
     {
+        Secrets = CreateCollection<DataEncryptionKey>().AsTransactionCollection();
     }
 
-    public IMongoCollection<DataEncryptionKey> Secrets
-        => CreateCollection<DataEncryptionKey>().AsTransactionCollection();
+    public IMongoCollection<DataEncryptionKey> Secrets { get; }
 
     protected override void OnConfiguring(IMongoDatabaseBuilder builder)
     {
