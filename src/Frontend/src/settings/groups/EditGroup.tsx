@@ -1,16 +1,5 @@
 import { useFragment, useLazyLoadQuery, useMutation } from "react-relay";
-import {
-  Button,
-  Card,
-  Col,
-  Grid,
-  List,
-  Modal,
-  Row,
-  Select,
-  Table,
-  Tag,
-} from "antd";
+import { Button, Card, Col, List, Modal, Row, Select, Table } from "antd";
 import { DetailView } from "../../shared/DetailView";
 import { graphql } from "babel-plugin-relay/macro";
 import { EditGroupQuery } from "./__generated__/EditGroupQuery.graphql";
@@ -24,7 +13,7 @@ import { useParams } from "react-router";
 import Column from "antd/lib/table/Column";
 import { RoleOption, RolesSelect } from "../roles/controls/RolesSelect";
 import { useHandler } from "../../shared/useHandler";
-import { FieldGroup, FieldInput, FormActions } from "../../shared/FormField";
+import { FieldInput, FormActions } from "../../shared/FormField";
 import { EditGroup_UpdateGroupRoles_Mutation } from "./__generated__/EditGroup_UpdateGroupRoles_Mutation.graphql";
 import { EditGroup_UpdateGroupRequirements_Mutation } from "./__generated__/EditGroup_UpdateGroupRequirements_Mutation.graphql";
 import { id } from "../../shared/id";
@@ -33,7 +22,6 @@ import { SectionHeader } from "../../shared/SectionHeader";
 import {
   pipeCommitFn,
   withErrorNotifications,
-  withOnSuccess,
   withSuccessMessage,
 } from "../../shared/pipeCommitFn";
 

@@ -1,10 +1,9 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useMemo } from "react";
 import { useLazyLoadQuery } from "react-relay";
 import { graphql } from "babel-plugin-relay/macro";
 import { generatePath, useNavigate, useParams } from "react-router";
 import { CompareApplicationPartComponentVersions_Query } from "./__generated__/CompareApplicationPartComponentVersions_Query.graphql";
-import { Pagination, Select } from "antd";
-import { css } from "@emotion/react";
+import { Select } from "antd";
 import { ComponentDiffEditor } from "./components/ComponentDiffEditor";
 import { useSearchQuery } from "../shared/useQuery";
 import { useHandler } from "../shared/useHandler";
@@ -87,21 +86,28 @@ export const CompareApplicationPartComponentVersions: React.FC<{
     handlePaginationChange(from, to)
   );
 
-  if (!data.applicationPartComponentById) {
-    return <div>Application part component was not found</div>;
-  }
-
-  const { fromValues, toValues, changeLog } = data.applicationPartComponentById;
   const versions = useMemo(() => {
+    if (!data.applicationPartComponentById) {
+      return [];
+    }
+
     return Array.from(
       new Set(
         [
-          ...changeLog.map((x) => x.change?.partComponentVersion),
-          data.applicationPartComponentById?.version,
+          ...data.applicationPartComponentById.changeLog.map(
+            (x) => x.change?.partComponentVersion
+          ),
+          data.applicationPartComponentById.version,
         ].filter((x) => x !== undefined && x !== null) as number[]
       )
     ).sort();
   }, [data.applicationPartComponentById]);
+
+  if (!data.applicationPartComponentById) {
+    return <div>Application part component was not found</div>;
+  }
+
+  const { fromValues, toValues } = data.applicationPartComponentById;
 
   return (
     <>

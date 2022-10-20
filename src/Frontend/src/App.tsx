@@ -6,7 +6,6 @@ import { Content } from "antd/lib/layout/layout";
 import { css } from "@emotion/react";
 import { navigation } from "./routes";
 import { UserOutlined } from "@ant-design/icons";
-import { Avatar } from "antd";
 import { Colors } from "./shared/colors";
 import styled from "@emotion/styled";
 import { Namespaces, useUser } from "./shared/useUser";
