@@ -54,6 +54,7 @@ interface VariableChange implements Change {
 }
 
 type AddComponentToApplicationPartChange implements ApplicationPartComponentChange & ApplicationPartChange & ApplicationChange & Change {
+  addedComponent: ApplicationPartComponent!
   kind: String!
   application: Application
   applicationVersion: Int!
@@ -61,7 +62,6 @@ type AddComponentToApplicationPartChange implements ApplicationPartComponentChan
   partVersion: Int!
   partComponent: ApplicationPartComponent
   partComponentVersion: Int!
-  addedComponent: ApplicationPartComponent!
 }
 
 type AddComponentsToApplicationPartPayload {
@@ -71,12 +71,12 @@ type AddComponentsToApplicationPartPayload {
 }
 
 type AddPartToApplicationChange implements ApplicationPartChange & ApplicationChange & Change {
+  addedPart: ApplicationPart!
   kind: String!
   application: Application
   applicationVersion: Int!
   part: ApplicationPart
   partVersion: Int!
-  addedPart: ApplicationPart!
 }
 
 type AddPartToApplicationPayload {
@@ -96,9 +96,9 @@ type Application implements Node {
 }
 
 type ApplicationIdInvalid implements UserError {
+  applicationId: ID!
   code: String!
   message: String!
-  applicationId: ID!
 }
 
 type ApplicationNameTaken implements UserError {
@@ -129,7 +129,7 @@ type ApplicationPart implements Node {
 type ApplicationPartComponent {
   id: ID!
   version: Int!
-  definition: Component!
+  definition: Component
   applicationPart: ApplicationPart
   values(version: Int): String
   changeLog: [ChangeLog!]!
@@ -142,6 +142,7 @@ type ApplicationPartComponentNotFoundError implements UserError {
 }
 
 type ApplicationPartComponentValuesChange implements ApplicationPartComponentChange & ApplicationPartChange & ApplicationChange & Change {
+  values: String
   kind: String!
   application: Application
   applicationVersion: Int!
@@ -149,7 +150,6 @@ type ApplicationPartComponentValuesChange implements ApplicationPartComponentCha
   partVersion: Int!
   partComponent: ApplicationPartComponent
   partComponentVersion: Int!
-  values: String
 }
 
 type ApplicationPartIdInvalid implements UserError {
@@ -267,17 +267,17 @@ type ComponentNotFoundError implements UserError {
 }
 
 type ComponentSchemaChange implements ComponentChange & Change {
+  schema: String!
   kind: String!
   component: Component
   componentVersion: Int!
-  schema: String!
 }
 
 type ComponentValuesChange implements ComponentChange & Change {
+  values: String!
   kind: String!
   component: Component
   componentVersion: Int!
-  values: String!
 }
 
 "A connection to a list of items."
@@ -299,8 +299,8 @@ type ComponentsEdge {
 }
 
 type CreateApplicationChange implements ApplicationChange & Change {
+  application: Application!
   kind: String!
-  application: Application
   applicationVersion: Int!
 }
 
@@ -341,9 +341,9 @@ type CreateRolePayload {
 }
 
 type CreateVariableChange implements VariableChange & Change {
+  value: Variable
   variable: Variable
   variableVersion: Int!
-  value: Variable
   kind: String!
 }
 
@@ -354,10 +354,10 @@ type CreateVariablePayload {
 }
 
 type DeleteVariableValueChange implements VariableChange & Change {
-  variable: Variable
-  variableVersion: Int!
   key: VariableKey!
   variableValue: VariableValue!
+  variable: Variable
+  variableVersion: Int!
   kind: String!
 }
 
@@ -599,6 +599,7 @@ type RemoveComponentChange implements ComponentChange & Change {
 }
 
 type RemoveComponentFromApplicationPartChange implements ApplicationPartComponentChange & ApplicationPartChange & ApplicationChange & Change {
+  removedComponent: ApplicationPartComponent!
   kind: String!
   application: Application
   applicationVersion: Int!
@@ -606,7 +607,6 @@ type RemoveComponentFromApplicationPartChange implements ApplicationPartComponen
   partVersion: Int!
   partComponent: ApplicationPartComponent
   partComponentVersion: Int!
-  removedComponent: ApplicationPartComponent!
 }
 
 type RemoveComponentFromApplicationPartPayload {
@@ -628,9 +628,9 @@ type RemoveGroupByIdPayload {
 }
 
 type RemovePartFromApplicationChange implements ApplicationPartChange & ApplicationChange & Change {
+  removedPart: ApplicationPart!
   kind: String!
   application: Application
-  removedPart: ApplicationPart!
   applicationVersion: Int!
   part: ApplicationPart
   partVersion: Int!
@@ -643,19 +643,19 @@ type RemoveRoleByIdPayload {
 }
 
 type RenameApplicationChange implements ApplicationChange & Change {
+  name: String!
   kind: String!
   application: Application
   applicationVersion: Int!
-  name: String!
 }
 
 type RenameApplicationPartChange implements ApplicationPartChange & ApplicationChange & Change {
+  name: String!
   kind: String!
   application: Application
   applicationVersion: Int!
   part: ApplicationPart
   partVersion: Int!
-  name: String!
 }
 
 type RenameApplicationPartPayload {
@@ -671,10 +671,10 @@ type RenameApplicationPayload {
 }
 
 type RenameComponentChange implements ComponentChange & Change {
+  name: String!
   kind: String!
   component: Component
   componentVersion: Int!
-  name: String!
 }
 
 type RenameComponentPayload {
@@ -702,9 +702,9 @@ type RenameRolePayload {
 }
 
 type RenameVariableChange implements VariableChange & Change {
+  name: String!
   variable: Variable
   variableVersion: Int!
-  name: String!
   kind: String!
 }
 
@@ -889,11 +889,11 @@ type VariableValue {
 }
 
 type VariableValueChange implements VariableChange & Change {
-  variable: Variable
-  variableVersion: Int!
   key: VariableKey!
   value: String
   encryptedValue: EncryptedValue
+  variable: Variable
+  variableVersion: Int!
   kind: String!
 }
 
