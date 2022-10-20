@@ -8,10 +8,10 @@ public sealed class ApplicationPartNode
 {
     [NodeResolver]
     public static Task<ApplicationPart?> GetApplicationPartAsync(
+        [Service] IApplicationService service,
         Guid id,
-        IApplicationPartDataLoader applicationPartById,
         CancellationToken cancellationToken)
     {
-        return applicationPartById.LoadAsync(id, cancellationToken);
+        return service.GetPartByIdAsync(id, cancellationToken);
     }
 }
