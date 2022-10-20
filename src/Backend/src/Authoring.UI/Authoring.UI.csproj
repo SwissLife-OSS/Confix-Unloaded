@@ -5,6 +5,7 @@
     <RootNamespace>Confix.Authoring.UI</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
     <NoWarn>$(NoWarn);1591</NoWarn>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>

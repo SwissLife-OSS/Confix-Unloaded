@@ -3,6 +3,7 @@
   <PropertyGroup>
     <AssemblyName>Confix.Authoring.Store.Mongo</AssemblyName>
     <RootNamespace>Confix.Authoring.Store.Mongo</RootNamespace>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>

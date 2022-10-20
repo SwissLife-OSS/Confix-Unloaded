@@ -10,15 +10,13 @@ internal sealed class EnvironmentCollectionConfiguration
     {
         builder
             .WithCollectionName("environment")
-            .AddBsonClassMap<Environment>(cm =>
-            {
-                cm.AutoMap();
-                cm.MapIdMember(c => c.Id);
-            })
+            .AddBsonClassMap<Environment>(
+                cm =>
+                {
+                    cm.AutoMap();
+                    cm.MapIdMember(c => c.Id);
+                })
             .WithCollectionSettings(s => s.ReadConcern = ReadConcern.Majority)
-            .WithCollectionSettings(s => s.ReadPreference = ReadPreference.Nearest)
-            .WithCollectionConfiguration(collection =>
-            {
-            });
+            .WithCollectionSettings(s => s.ReadPreference = ReadPreference.Nearest);
     }
 }

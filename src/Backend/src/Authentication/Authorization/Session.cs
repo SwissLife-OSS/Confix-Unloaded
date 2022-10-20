@@ -91,5 +91,6 @@ public class Session : ISession
         }
     }
 
+    // ReSharper disable file NotAccessedPositionalProperty.Local
     private readonly record struct Grant(string Namespace, Scope Scope, Permissions Permission);
 }

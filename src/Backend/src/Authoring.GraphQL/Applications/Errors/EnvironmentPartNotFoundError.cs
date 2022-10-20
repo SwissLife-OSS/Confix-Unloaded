@@ -1,5 +1,3 @@
-using System;
-
 namespace Confix.Authoring.GraphQL.Applications;
 
 public sealed class EnvironmentNotFoundError : UserError

@@ -21,6 +21,6 @@ internal sealed class VariableByIdDataLoader : BatchDataLoader<Guid, Variable?>,
     {
         var variables = await _variableStore.GetManyAsync(keys, cancellationToken);
 
-        return variables.ToDictionary(x => x.Id)!;
+        return variables.ToDictionary(x => x!.Id);
     }
 }

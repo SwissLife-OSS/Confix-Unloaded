@@ -3,6 +3,7 @@
   <PropertyGroup>
     <AssemblyName>Confix.Vault.Authentication</AssemblyName>
     <RootNamespace>Confix.Vault.Authentication</RootNamespace>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>

@@ -3,6 +3,7 @@
   <PropertyGroup>
     <AssemblyName>Confix.CryptoProvider.Mongo</AssemblyName>
     <RootNamespace>Confix.CryptoProvider.Mongo</RootNamespace>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>

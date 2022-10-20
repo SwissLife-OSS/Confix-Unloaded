@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace Confix.Authentication.Authorization;
 
 public interface IAuthorizationRule<in T>
@@ -8,7 +10,7 @@ public interface IAuthorizationRule<in T>
         CancellationToken cancellationToken);
 
     ValueTask<bool> IsAuthorizedAsync(
-        T? resource,
+        [NotNullWhen(true)]T? resource,
         Permissions permissions,
         CancellationToken cancellationToken);
 }

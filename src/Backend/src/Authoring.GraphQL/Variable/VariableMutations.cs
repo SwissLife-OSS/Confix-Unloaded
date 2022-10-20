@@ -11,16 +11,12 @@ public sealed class VariableMutations
         [Service] IVariableService variableService,
         string name,
         bool isSecret,
-        string? @namespace,
+        string @namespace,
         string? defaultValue,
         CancellationToken cancellationToken)
     {
-        return await variableService.CreateAsync(
-            name,
-            @namespace,
-            isSecret,
-            defaultValue,
-            cancellationToken);
+        return await variableService
+            .CreateAsync(name, @namespace, isSecret, defaultValue, cancellationToken);
     }
 
     [Error(typeof(UnauthorizedOperationException))]

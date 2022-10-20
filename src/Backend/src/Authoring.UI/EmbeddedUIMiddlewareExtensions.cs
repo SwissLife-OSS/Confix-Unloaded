@@ -2,9 +2,9 @@ using Microsoft.AspNetCore.Builder;
 
 namespace Confix.Authoring.UI;
 
-public static class EmbeddedUIMiddlewareExtensions
+public static class EmbeddedUiMiddlewareExtensions
 {
-    public static IApplicationBuilder UseConfixUI(this IApplicationBuilder builder)
+    public static IApplicationBuilder UseConfixUi(this IApplicationBuilder builder)
     {
         return builder.UseMiddleware<EmbeddedUiMiddleware>();
     }

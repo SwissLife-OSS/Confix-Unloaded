@@ -9,15 +9,13 @@ internal sealed class VariableCollectionConfiguration : IMongoCollectionConfigur
     {
         builder
             .WithCollectionName("variable")
-            .AddBsonClassMap<Variable>(cm =>
-            {
-                cm.AutoMap();
-                cm.MapIdMember(c => c.Id);
-            })
+            .AddBsonClassMap<Variable>(
+                cm =>
+                {
+                    cm.AutoMap();
+                    cm.MapIdMember(c => c.Id);
+                })
             .WithCollectionSettings(s => s.ReadConcern = ReadConcern.Majority)
-            .WithCollectionSettings(s => s.ReadPreference = ReadPreference.Nearest)
-            .WithCollectionConfiguration(collection =>
-            {
-            });
+            .WithCollectionSettings(s => s.ReadPreference = ReadPreference.Nearest);
     }
 }

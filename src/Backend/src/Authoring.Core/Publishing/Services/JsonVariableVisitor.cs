@@ -57,7 +57,7 @@ internal sealed class JsonVariableVisitor
         }
     }
 
-    protected void Visit(JsonValue value, JsonVariableVisitorContext context)
+    private static void Visit(JsonValue value, JsonVariableVisitorContext context)
     {
         if (value.TryGetValue(out string? str) && str.Length > 2 && str[0] == '{' && str[^1] == '}')
         {

@@ -86,7 +86,7 @@ internal sealed class RoleService : IRoleService
             throw new Exception($"role with id ({id}) was not found.");
         }
 
-        role = role with { Name = name ?? role.Name };
+        role = role with { Name = name };
 
         return await _roleStore.UpsertAsync(role, cancellationToken);
     }

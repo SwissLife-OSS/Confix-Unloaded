@@ -21,7 +21,7 @@ internal sealed class ApplicationByPartIdDataLoader
         IReadOnlyList<Guid> keys,
         CancellationToken cancellationToken)
     {
-        IEnumerable<Application>? parts =
+        IEnumerable<Application> parts =
             await _applicationStore.GetApplicationsByPartIdsAsync(keys, cancellationToken);
 
         return parts

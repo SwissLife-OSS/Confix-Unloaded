@@ -229,7 +229,7 @@ internal sealed class ComponentService : IComponentService
             throw new ComponentNotFoundException(id);
         }
 
-        if (component?.Schema is null)
+        if (component.Schema is null)
         {
             throw new InvalidOperationException("There is no schema.");
         }

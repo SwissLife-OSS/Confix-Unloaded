@@ -25,6 +25,6 @@ public static class AuthorizationPolicyExtensions
 
     private static void ConfigurePolicies(AuthorizationOptions options)
     {
-        options.AddPolicy(Policies.Names.VaultManage, Policies.VaultManage);
+        options.AddPolicy(Policies.Names.VaultManage, Policies.VaultManagePolicy);
     }
 }

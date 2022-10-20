@@ -6,7 +6,7 @@ namespace Confix.Authoring.GraphQL;
 
 public static class GraphQlServiceCollectionExtensions
 {
-    public static IServiceCollection AddAuthoringGraphQL(this IServiceCollection services)
+    public static IServiceCollection AddAuthoringGraphQl(this IServiceCollection services)
     {
         services.AddGraphQLServer().AddConfixSchema();
 

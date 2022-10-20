@@ -4,12 +4,10 @@ using System.Text.Json;
 using Confix.Vault.Client;
 using Microsoft.Extensions.DependencyInjection;
 
-const string vaultUrl = "http://localhost:5003";
-
 CancellationTokenSource cancellationTokenSource = new();
 var cancellationToken = cancellationTokenSource.Token;
 
-Console.CancelKeyPress += (sender, eventArgs) =>
+Console.CancelKeyPress += (_, eventArgs) =>
 {
     Console.WriteLine("Cancel event triggered");
     cancellationTokenSource.Cancel();

@@ -59,7 +59,7 @@ public class SessionAccessor : ISessionAccessor
 
     private struct Holder
     {
-        private Task<ISession>? _task;
+        private Task<ISession?>? _task;
 
         private ISession? _result;
 

@@ -3,6 +3,7 @@
   <PropertyGroup>
     <AssemblyName>Confix.CryptoProvider.Abstractions</AssemblyName>
     <RootNamespace>Confix.CryptoProvider.Abstractions</RootNamespace>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>

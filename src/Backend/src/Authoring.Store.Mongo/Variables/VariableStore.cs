@@ -95,7 +95,7 @@ internal sealed class VariableStore : IVariableStore
     }
 
     public async Task<Variable?> CreateAsync(
-        Variable? variable,
+        Variable variable,
         CancellationToken cancellationToken)
     {
         await _dbContext.Variables.InsertOneAsync(variable, null, cancellationToken);
@@ -104,7 +104,7 @@ internal sealed class VariableStore : IVariableStore
     }
 
     public async Task<Variable?> UpdateAsync(
-        Variable? variable,
+        Variable variable,
         CancellationToken cancellationToken)
     {
         ReplaceOptions options = new() { IsUpsert = false };

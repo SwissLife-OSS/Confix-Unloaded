@@ -38,7 +38,7 @@ internal sealed class SchemaService : ISchemaService
                 .FirstOrDefault()?.Name.Value ?? "Component";
 
         return _schemas.GetOrAdd(schema,
-            s =>
+            _ =>
                 SchemaBuilder.New()
                     .AddDocument(schemaDoc)
                     .Use(next => next)
