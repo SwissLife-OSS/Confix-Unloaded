@@ -2,7 +2,7 @@ namespace Confix.Authoring.Store;
 
 public interface IVariableStore
 {
-    Task<Variable?> CreateAsync(Variable? variable, CancellationToken cancellationToken);
+    Task<Variable?> CreateAsync(Variable variable, CancellationToken cancellationToken);
 
     Task<IEnumerable<Variable>> GetAllByNamespacesAsync(
         IEnumerable<string> namespaces,
@@ -42,7 +42,7 @@ public interface IVariableStore
         IEnumerable<Guid> ids,
         CancellationToken cancellationToken);
 
-    Task<Variable?> UpdateAsync(Variable? variable, CancellationToken cancellationToken);
+    Task<Variable?> UpdateAsync(Variable variable, CancellationToken cancellationToken);
 
     IQueryable<Variable> Query();
 }

@@ -1,6 +1,4 @@
-using System;
 using Confix.Authoring.Store;
-using HotChocolate.Types.Relay;
 using HotChocolate.Utilities;
 
 namespace Confix.Authoring.GraphQL.Applications;

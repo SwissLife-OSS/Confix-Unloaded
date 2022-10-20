@@ -26,7 +26,7 @@ internal sealed class GroupStore : IGroupStore
         return await _dbContext.Groups.Find(filter).FirstOrDefaultAsync(cancellationToken);
     }
 
-    public async Task<IReadOnlyList<Group>?> GetByIdsAsync(
+    public async Task<IReadOnlyList<Group>> GetByIdsAsync(
         IEnumerable<Guid> ids,
         CancellationToken cancellationToken)
     {

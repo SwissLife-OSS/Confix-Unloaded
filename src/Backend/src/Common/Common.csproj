@@ -3,6 +3,7 @@
   <PropertyGroup>
     <AssemblyName>Confix.Common</AssemblyName>
     <RootNamespace>Confix.Common</RootNamespace>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
 </Project>

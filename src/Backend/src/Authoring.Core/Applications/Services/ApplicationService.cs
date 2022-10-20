@@ -572,7 +572,7 @@ internal sealed class ApplicationService : IApplicationService
             application.Id,
             applicationPart.Id,
             applicationPartComponent.Id,
-            applicationPartComponent.Values,
+            applicationPartComponent.Values ?? "",
             application.Version,
             applicationPart.Version,
             applicationPartComponent.Version);

@@ -24,7 +24,7 @@ public sealed class ComponentExtensions
     }
 
     [GraphQLType(typeof(AnyType))]
-    public List<object?> GetSchema([Parent] Component component)
+    public List<object> GetSchema([Parent] Component component)
     {
         //TODO:  Couldn't we just runn introspection here? What is this even used for
 

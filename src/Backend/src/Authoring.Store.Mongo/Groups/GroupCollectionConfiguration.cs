@@ -10,15 +10,13 @@ internal sealed class GroupCollectionConfiguration : IMongoCollectionConfigurati
     {
         builder
             .WithCollectionName("groups")
-            .AddBsonClassMap<Group>(cm =>
-            {
-                cm.AutoMap();
-                cm.MapIdMember(c => c.Id);
-            })
+            .AddBsonClassMap<Group>(
+                cm =>
+                {
+                    cm.AutoMap();
+                    cm.MapIdMember(c => c.Id);
+                })
             .WithCollectionSettings(s => s.ReadConcern = ReadConcern.Majority)
-            .WithCollectionSettings(s => s.ReadPreference = ReadPreference.Nearest)
-            .WithCollectionConfiguration(collection =>
-            {
-            });
+            .WithCollectionSettings(s => s.ReadPreference = ReadPreference.Nearest);
     }
 }

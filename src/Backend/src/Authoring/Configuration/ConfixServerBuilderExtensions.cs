@@ -11,7 +11,7 @@ public static class ConfixAuthoringServerBuilderExtensions
         services.AddMemoryCache();
 
         services.AddSeedWorker();
-        services.AddAuthoringGraphQL();
+        services.AddAuthoringGraphQl();
         services.AddSessionAccessor();
         services.AddAuthorizationAndPolicies();
         services.AddAuthoringCore();

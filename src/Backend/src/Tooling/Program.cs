@@ -15,7 +15,7 @@ services
 
 IServiceProvider sp = services.BuildServiceProvider();
 
-IConfixClient client = sp.GetRequiredService<IConfixClient>();
+sp.GetRequiredService<IConfixClient>();
 
 using var root = new CommandLineApplication<App>();
 root.Conventions
@@ -26,6 +26,7 @@ root.Description = "Confix Tooling";
 
 root.OnExecute(() =>
 {
+    // ReSharper disable once AccessToDisposedClosure
     root.ShowHelp();
     return 1;
 });

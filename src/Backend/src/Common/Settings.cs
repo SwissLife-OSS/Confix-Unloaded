@@ -1,3 +1,4 @@
+// ReSharper disable file MemberHidesStaticFromOuterClass
 namespace Confix.Common;
 
 public static class Settings

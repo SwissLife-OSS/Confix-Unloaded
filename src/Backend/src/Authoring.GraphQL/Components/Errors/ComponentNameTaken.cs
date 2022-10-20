@@ -12,7 +12,7 @@ public sealed class ComponentNameTaken : UserError
 
     public string ComponentName { get; }
 
-    public static ComponentNameTaken? CreateErrorFrom(Exception exception)
+    public static ComponentNameTaken CreateErrorFrom(Exception exception)
     {
         throw new Exception();
     }

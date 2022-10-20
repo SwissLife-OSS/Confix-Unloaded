@@ -117,7 +117,7 @@ internal sealed class VariableService : IVariableService
 
         IDictionary<string, VariableValue> values = new Dictionary<string, VariableValue>();
 
-        IDictionary<Guid, Variable> ids = variables.ToDictionary(x => x.Id);
+        IDictionary<Guid, Variable> ids = variables.OfType<Variable>().ToDictionary(x => x.Id);
 
         var partValues = await _variableStore
             .GetByApplicationPartIdAsync(applicationPartId, ids.Keys, cancellationToken);
@@ -165,6 +165,11 @@ internal sealed class VariableService : IVariableService
         CancellationToken cancellationToken)
     {
         var session = await _sessionAccessor.GetSession(cancellationToken);
+        if (session is null)
+        {
+            return Array.Empty<Variable>().AsQueryable();
+        }
+
         var queryable = _variableStore
             .Query()
             .Where(x => session.Namespaces.Contains(x.Namespace));
@@ -205,7 +210,8 @@ internal sealed class VariableService : IVariableService
             throw new UnauthorizedOperationException();
         }
 
-        return await SaveVariableValueAsync(variable,
+        return await SaveVariableValueAsync(
+            variable,
             value,
             valueId,
             applicationId,
@@ -244,7 +250,8 @@ internal sealed class VariableService : IVariableService
             return Array.Empty<VariableValue>();
         }
 
-        return await _variableStore.GetByApplicationPartIdAsync(applicationPartId,
+        return await _variableStore.GetByApplicationPartIdAsync(
+            applicationPartId,
             cancellationToken);
     }
 
@@ -267,6 +274,7 @@ internal sealed class VariableService : IVariableService
     public async Task<IEnumerable<VariableValue>> GetGlobalValues(
         CancellationToken cancellationToken)
     {
+        // ReSharper disable method PossibleMultipleEnumeration
         var session = await _sessionAccessor.GetSession(cancellationToken);
 
         if (session is null)
@@ -321,11 +329,13 @@ internal sealed class VariableService : IVariableService
         {
             values = await values
                 .ToAsyncEnumerable()
-                .SelectAwait(async value => value with
-                {
-                    Value = await _decryptor.DecryptAsync(value.EncryptedValue!,
-                        cancellationToken)
-                })
+                .SelectAwait(
+                    async value => value with
+                    {
+                        Value = await _decryptor.DecryptAsync(
+                            value.EncryptedValue!,
+                            cancellationToken)
+                    })
                 .ToArrayAsync(cancellationToken);
         }
 
@@ -345,7 +355,7 @@ internal sealed class VariableService : IVariableService
             throw new UnauthorizedOperationException();
         }
 
-        variable = variable with { Version = variable.Version + 1 };
+        variable = variable! with { Version = variable.Version + 1 };
 
         var log = new DeleteVariableValueChange(variable.Id, variable.Version, value, value.Key);
 
@@ -375,7 +385,7 @@ internal sealed class VariableService : IVariableService
             throw new UnauthorizedOperationException();
         }
 
-        variable = variable with { Name = name, Version = variable.Version + 1 };
+        variable = variable! with { Name = name, Version = variable.Version + 1 };
 
         RenameVariableChange log = new(variable.Id, variable.Version, name);
 
@@ -409,12 +419,12 @@ internal sealed class VariableService : IVariableService
 
         variableValue ??= new VariableValue(
             Guid.NewGuid(),
-            new VariableKey(variable.Id, applicationId, partId, environmentId),
+            new VariableKey(variable!.Id, applicationId, partId, environmentId),
             string.Empty,
             null,
             0);
 
-        if (variable.IsSecret)
+        if (variable!.IsSecret)
         {
             var encrypted = await _encryptor.EncryptAsync(
                 "variable",
@@ -429,7 +439,8 @@ internal sealed class VariableService : IVariableService
             variableValue = variableValue with { Value = value };
         }
 
-        var log = new VariableValueChange(variable.Id,
+        var log = new VariableValueChange(
+            variable.Id,
             variable.Version,
             variableValue.Key,
             variableValue.Value,

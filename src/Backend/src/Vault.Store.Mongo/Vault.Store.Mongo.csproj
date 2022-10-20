@@ -3,6 +3,7 @@
   <PropertyGroup>
     <AssemblyName>Confix.Vault.Store.Mongo</AssemblyName>
     <RootNamespace>Confix.Vault.Store.Mongo</RootNamespace>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>

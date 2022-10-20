@@ -3,6 +3,7 @@
   <PropertyGroup>
     <AssemblyName>Confix.Vault.Client</AssemblyName>
     <RootNamespace>Confix.Vault</RootNamespace>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>

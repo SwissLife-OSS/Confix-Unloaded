@@ -8,7 +8,7 @@ internal sealed class KeyEncryptionKeyCache : IKeyEncryptionKeyCache
 
     public async ValueTask<byte[]> GetOrCreateAsync(string topic, Func<Task<byte[]>> fetchKey)
     {
-        var holder = _keys.GetOrAdd(topic, id => new KeyHolder(fetchKey()));
+        var holder = _keys.GetOrAdd(topic, _ => new KeyHolder(fetchKey()));
 
         try
         {

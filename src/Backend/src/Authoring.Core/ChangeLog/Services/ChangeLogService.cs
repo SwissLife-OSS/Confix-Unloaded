@@ -33,7 +33,6 @@ internal sealed class ChangeLogService : IChangeLogService
         ChangeLogByComponentIdDataloader changesByComponentId,
         IApplicationDataLoader applicationById,
         IApplicationPartDataLoader applicationPartById,
-        IApplicationPartComponentDataLoader componentDataLoader,
         IAuthorizationService authorizationService,
         IApplicationPartComponentDataLoader applicationPartComponentById,
         IComponentDataLoader componentById,

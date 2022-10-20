@@ -23,6 +23,10 @@ internal sealed class SeedWorker : BackgroundService
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         var adminRequirement = _options.Value.AdminRequirement;
+        if (adminRequirement is null)
+        {
+            return;
+        }
 
         if (await _role.GetByIdAsync(_adminRoleId, stoppingToken) is null)
         {
@@ -40,10 +44,11 @@ internal sealed class SeedWorker : BackgroundService
 
         if (await _group.GetByIdAsync(_adminGroupId, stoppingToken) is null)
         {
-            var group = new Group(_adminGroupId,
+            var group = new Group(
+                _adminGroupId,
                 "Admin",
                 ImmutableHashSet
-                .Create<Requirement>()
+                    .Create<Requirement>()
                     .Add(new ClaimRequirement(adminRequirement.Type, adminRequirement.Value)),
                 ImmutableHashSet.Create<RoleScope>()
                     .Add(new RoleScope(WellKnownNamespaces.Global, new[] { _adminRoleId })));

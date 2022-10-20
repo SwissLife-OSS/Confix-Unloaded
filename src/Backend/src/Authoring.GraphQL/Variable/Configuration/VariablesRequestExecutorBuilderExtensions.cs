@@ -1,7 +1,6 @@
 using Confix.Authoring.DataLoaders;
 using Confix.Authoring.Store;
 using Confix.Authoring.Variables.Changes;
-using HotChocolate.Execution;
 using HotChocolate.Execution.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -24,7 +23,6 @@ public static class VariablesRequestExecutorBuilderExtensions
         builder
             .AddTypeExtension<VariableQueries>()
             .AddTypeExtension<VariableMutations>();
-        IRequestExecutor a;
 
         // extensions
         builder

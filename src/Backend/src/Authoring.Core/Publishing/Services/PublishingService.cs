@@ -84,14 +84,15 @@ internal sealed class PublishingService : IPublishingService
         }
 
         var configuration =
-            await BuildConfigurationForPartAsync(application, applicationPart, cancellationToken);
+            await BuildConfigurationForPartAsync(applicationPart, cancellationToken);
 
         var userInfo = session.UserInfo;
 
         using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
         {
             application =
-                await _applicationService.PublishApplicationPartAsync(applicationPart.Id,
+                await _applicationService.PublishApplicationPartAsync(
+                    applicationPart.Id,
                     cancellationToken);
 
             applicationPart = application.Parts.Single(x => x.Id == applicationPart.Id);
@@ -293,11 +294,13 @@ internal sealed class PublishingService : IPublishingService
                 part.Id,
                 env.Id,
                 publishedApplicationPart.Id,
-                await _encryptor.EncryptAsync("token",
+                await _encryptor.EncryptAsync(
+                    "token",
                     token.AccessToken,
                     env.Id,
                     cancellationToken),
-                await _encryptor.EncryptAsync("refreshToken",
+                await _encryptor.EncryptAsync(
+                    "refreshToken",
                     token.RefreshToken,
                     env.Id,
                     cancellationToken),
@@ -311,7 +314,6 @@ internal sealed class PublishingService : IPublishingService
     }
 
     private async Task<string> BuildConfigurationForPartAsync(
-        Application app,
         ApplicationPart part,
         CancellationToken cancellationToken)
     {
@@ -321,7 +323,7 @@ internal sealed class PublishingService : IPublishingService
         foreach (var partComponent in part.Components)
         {
             var component = componentLookup.GetComponent(partComponent.ComponentId);
-            var serializedValues = await BuildComponentValuesAsync(app,
+            var serializedValues = await BuildComponentValuesAsync(
                 part,
                 component,
                 partComponent.Values,
@@ -374,7 +376,6 @@ internal sealed class PublishingService : IPublishingService
     }
 
     private async Task<JsonObject> BuildComponentValuesAsync(
-        Application app,
         ApplicationPart part,
         Component component,
         string? values,
@@ -400,14 +401,20 @@ internal sealed class PublishingService : IPublishingService
         var variableNames = context.Variables.Select(x => x.VariableName).ToArray();
         var variables = await _variableService.GetByNamesAsync(variableNames, cancellationToken);
 
-        Dictionary<string, Variable> variableLookup = variables.DistinctBy(x => x.Name).ToDictionary(x => x.Name);
+        var variableLookup = variables
+            .Where(x => x is not null)
+            .DistinctBy(x => x!.Name)
+            .ToDictionary(x => x!.Name);
 
         foreach (var variable in context.Variables)
         {
-            if (!variableLookup.TryGetValue(variable.VariableName, out var value))
+            if (!variableLookup.TryGetValue(variable.VariableName, out _))
             {
                 throw ThrowHelper
-                    .PublishingFailedBecauseVariableValueWasNotPresent(part, component, variable.VariableName);
+                    .PublishingFailedBecauseVariableValueWasNotPresent(
+                        part,
+                        component,
+                        variable.VariableName);
             }
         }
 

@@ -1,5 +1,3 @@
-using System;
-
 namespace Confix.Authoring;
 
 public class ComponentNotFoundException : Exception

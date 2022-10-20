@@ -3,6 +3,7 @@
   <PropertyGroup>
     <AssemblyName>Confix.CryptoProvider.AzureKeyVault</AssemblyName>
     <RootNamespace>Confix.CryptoProvider.AzureKeyVault</RootNamespace>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
