@@ -1,10 +1,12 @@
 using Confix.Authentication.Authorization;
 using Confix.Authoring.Publishing.Stores;
+using Confix.Authoring.Store;
+using Confix.Authoring.Store.Mongo;
 using Confix.Common;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Extensions.Context;
 
-namespace Confix.Authoring.Store.Mongo;
+namespace Confix.Authoring;
 
 public static class MongoStoreServiceCollectionExtensions
 {

@@ -1,6 +1,5 @@
-using Confix.Authoring.Store.Mongo;
-using Confix.CryptoProviders.AzureKeyVault;
-using Confix.Vault.Store.Mongo;
+using Confix.CryptoProviders;
+using Confix.Vault;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddJsonFile("appsettings.json");

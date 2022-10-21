@@ -1,7 +1,7 @@
 using Confix.CryptoProviders;
 using MongoDB.Driver;
 
-namespace Confix.Authoring.Store.Mongo;
+namespace Confix.CryptoProviders.Mongo;
 
 internal class DataEncryptionKeyRepository : IDataEncryptionKeyRepository
 {

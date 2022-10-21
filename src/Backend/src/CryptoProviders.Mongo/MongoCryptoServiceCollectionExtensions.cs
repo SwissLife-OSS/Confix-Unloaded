@@ -1,10 +1,9 @@
 using Confix.Common;
-using Confix.CryptoProviders;
 using Confix.CryptoProviders.Mongo;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Extensions.Context;
 
-namespace Confix.Authoring.Store.Mongo;
+namespace Confix.CryptoProviders;
 
 public static class MongoCryptStoreServiceCollectionExtensions
 {

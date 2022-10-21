@@ -1,8 +1,10 @@
 using Confix.Common;
+using Confix.Vault.Store;
+using Confix.Vault.Store.Mongo;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Extensions.Context;
 
-namespace Confix.Vault.Store.Mongo;
+namespace Confix.Vault;
 
 public static class MongoStoreServiceCollectionExtensions
 {

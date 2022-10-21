@@ -1,3 +1,4 @@
+using Confix.CryptoProviders.Mongo;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using MongoDB.Extensions.Context;

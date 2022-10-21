@@ -1,17 +1,17 @@
 using Confix.Authoring;
-using Confix.Authoring.Authentication;
-using Confix.Authoring.Store.Mongo;
-using Confix.CryptoProviders.AzureKeyVault;
+using Confix.CryptoProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddJsonFile("appsettings.json");
 
-builder.Services.AddConfixAuthoringServer()
+builder.Services
+    .AddConfixAuthoringServer()
     .UseMongoDbStores()
     .AddVaultHttpClient()
     .ConfigureEncryption(
-        descriptor
-            => descriptor.UseAzureKeyVaultKeyEncryptionKeys().UseMongoDbDataEncryptionKeys())
+        descriptor => descriptor
+            .UseAzureKeyVaultKeyEncryptionKeys()
+            .UseMongoDbDataEncryptionKeys())
     .UseOpenIdConnect();
 
 builder.Services
