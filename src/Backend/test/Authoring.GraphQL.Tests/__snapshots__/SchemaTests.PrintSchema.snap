@@ -1038,7 +1038,7 @@ input CreateRoleInput {
 input CreateVariableInput {
   name: String!
   isSecret: Boolean!
-  namespace: String
+  namespace: String!
   defaultValue: String
 }
 
