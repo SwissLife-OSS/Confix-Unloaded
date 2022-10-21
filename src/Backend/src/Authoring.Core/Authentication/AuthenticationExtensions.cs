@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Confix.Authoring.Authentication;
+namespace Confix.Authoring;
 
 public static class AuthenticationExtensions
 {

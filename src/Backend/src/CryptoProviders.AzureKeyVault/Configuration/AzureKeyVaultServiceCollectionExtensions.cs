@@ -1,7 +1,8 @@
 using Confix.Common;
+using Confix.CryptoProviders.AzureKeyVault;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Confix.CryptoProviders.AzureKeyVault;
+namespace Confix.CryptoProviders;
 
 public static class AzureKeyVaultServiceCollectionExtensions
 {

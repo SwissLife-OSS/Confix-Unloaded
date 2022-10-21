@@ -1,6 +1,6 @@
 using MongoDB.Driver;
 
-namespace Confix.CryptoProviders;
+namespace Confix.CryptoProviders.Mongo;
 
 public interface ICryptoDbContext
 {
