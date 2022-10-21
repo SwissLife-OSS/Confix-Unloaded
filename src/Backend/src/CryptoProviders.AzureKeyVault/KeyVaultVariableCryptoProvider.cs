@@ -5,18 +5,18 @@ namespace Confix.CryptoProviders.AzureKeyVault;
 
 internal sealed class KeyVaultCryptoProvider : IEncryptor, IDecryptor
 {
-    private readonly IKeyEncryptionKeyProvider _keyEncryptionKeyProvider;
+    private readonly IEncryptionKeyProvider _encryptionKeyProvider;
 
-    public KeyVaultCryptoProvider(IKeyEncryptionKeyProvider keyEncryptionKeyProvider)
+    public KeyVaultCryptoProvider(IEncryptionKeyProvider encryptionKeyProvider)
     {
-        _keyEncryptionKeyProvider = keyEncryptionKeyProvider;
+        _encryptionKeyProvider = encryptionKeyProvider;
     }
 
     public async Task<string> DecryptAsync(
         EncryptedValue encryptedValue,
         CancellationToken cancellationToken)
     {
-        var key = await _keyEncryptionKeyProvider.GetKeyAsync(encryptedValue.Topic,
+        var key = await _encryptionKeyProvider.GetKeyAsync(encryptedValue.Topic,
             cancellationToken);
         using var aes = Aes.Create();
         aes.Key = key;
@@ -32,7 +32,7 @@ internal sealed class KeyVaultCryptoProvider : IEncryptor, IDecryptor
         string value,
         CancellationToken cancellationToken)
     {
-        var key = await _keyEncryptionKeyProvider.GetKeyAsync(topic, cancellationToken);
+        var key = await _encryptionKeyProvider.GetKeyAsync(topic, cancellationToken);
         using var aes = Aes.Create();
         aes.GenerateIV();
         aes.Key = key;

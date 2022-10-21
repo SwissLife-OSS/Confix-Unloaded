@@ -15,7 +15,7 @@ public static class AzureKeyVaultServiceCollectionExtensions
             .BindConfiguration(pathToConfig);
 
         services.Services.AddSingleton<IKeyEncryptionKeyCache, KeyEncryptionKeyCache>();
-        services.Services.AddSingleton<IKeyEncryptionKeyProvider, KeyEncryptionKeyProvider>();
+        services.Services.AddSingleton<IEncryptionKeyProvider, EncryptionKeyProvider>();
         services.Services.AddSingleton<ICryptographyClientFactory, CryptographyClientFactory>();
         services.Services.AddSingleton<KeyVaultCryptoProvider>();
         services.Services

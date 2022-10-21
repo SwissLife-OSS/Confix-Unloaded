@@ -26,7 +26,8 @@ internal class DataEncryptionKeyRepository : IDataEncryptionKeyRepository
 
         var options = new FindOneAndUpdateOptions<DataEncryptionKey>
         {
-            IsUpsert = true, ReturnDocument = ReturnDocument.After
+            IsUpsert = true,
+            ReturnDocument = ReturnDocument.After
         };
 
         return await _dbContext.Secrets.FindOneAndUpdateAsync(
@@ -36,7 +37,7 @@ internal class DataEncryptionKeyRepository : IDataEncryptionKeyRepository
             cancellationToken);
     }
 
-    public async Task<DataEncryptionKey> GetSecretByTopicAsync(
+    public async Task<DataEncryptionKey?> GetSecretByTopicAsync(
         string topic,
         CancellationToken cancellationToken)
     {

@@ -14,7 +14,10 @@ internal sealed class CryptographyClientFactory : ICryptographyClientFactory
         _options = options;
     }
 
-    private DefaultAzureCredential Credentials => new();
+    private ClientSecretCredential Credentials => new(
+        _options.CurrentValue.TenantId,
+        _options.CurrentValue.ClientId,
+        _options.CurrentValue.ClientSecret);
 
     public CryptographyClient CreateCryptoClient(string keyId)
     {
