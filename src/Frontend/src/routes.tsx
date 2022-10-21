@@ -1,5 +1,4 @@
 import Icon from "@ant-design/icons";
-import { IconComponentProps } from "@ant-design/icons/lib/components/Icon";
 import { NonIndexRouteObject } from "react-router-dom";
 import { Applications } from "./applications/Applications";
 import { Components } from "./components/Components";
@@ -12,7 +11,6 @@ import {
   ExplorerIcon,
   SettingsIcon,
   VariablesIcon,
-  VaultIcon,
 } from "./icons/icons";
 import { Settings } from "./settings/Settings";
 import { Permission } from "./shared/useUser";

@@ -1,4 +1,4 @@
-import React, { Children, ReactNode, Suspense } from "react";
+import React, { ReactNode, Suspense } from "react";
 import { RelayEnvironmentProvider } from "react-relay";
 import RelayEnvironment from "../RelayEnvironment";
 import { BrowserRouter } from "react-router-dom";
@@ -59,12 +59,15 @@ export class RootErrorBoundary extends React.Component<
     super(props);
     this.state = { kind: "clear" };
   }
+
   static getDerivedStateFromError(error: Error): RootErrorBoundaryState {
+    const { message } = error;
+
     if (isNotLoggedInError(error)) {
       return { kind: "requires-sign-in" };
     }
 
-    return { kind: "error", error: { message: error.message } };
+    return { kind: "error", error: { message } };
   }
   render() {
     switch (this.state.kind) {

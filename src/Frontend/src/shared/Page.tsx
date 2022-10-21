@@ -14,7 +14,7 @@ export const Page: React.FC<{
       <PageHeader
         title={title}
         subTitle={subTitle}
-        extra={<img src={logo} height="32" />}
+        extra={<img src={logo} height="32" alt="logo" />}
       />
       <div
         css={css`

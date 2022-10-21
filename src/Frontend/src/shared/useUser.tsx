@@ -1,6 +1,6 @@
 import { graphql } from "babel-plugin-relay/macro";
-import { useCallback, useMemo } from "react";
-import { useLazyLoadQuery, useQueryLoader } from "react-relay";
+import { useMemo } from "react";
+import { useLazyLoadQuery } from "react-relay";
 import {
   useUser_Me_Query,
   Scope as QueryScope,
