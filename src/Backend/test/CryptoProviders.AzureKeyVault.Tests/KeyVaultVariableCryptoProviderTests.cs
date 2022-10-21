@@ -5,8 +5,9 @@ namespace ConfiX;
 public class KeyVaultVariableCryptoProviderTests
 {
     [Fact(Skip = "Needs an actual KeyVault in Azure to run")]
-    public async Task EncryptAndDecrypt_WithDefaultKeyId_DecryptedValueEqualsPlainTextValue()
+    public Task EncryptAndDecrypt_WithDefaultKeyId_DecryptedValueEqualsPlainTextValue()
     {
+        return Task.CompletedTask;
         /*// Arrange
         IConfixServerBuilder? builder = TestContext.GetBuilder();
         builder.AddAzureKeyvaultCrypto();
