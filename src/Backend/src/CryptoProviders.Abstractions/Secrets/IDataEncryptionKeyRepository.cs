@@ -2,7 +2,7 @@ namespace Confix.CryptoProviders;
 
 public interface IDataEncryptionKeyRepository
 {
-    Task<DataEncryptionKey> GetSecretByTopicAsync(
+    Task<DataEncryptionKey?> GetSecretByTopicAsync(
         string topic,
         CancellationToken cancellationToken);
 
