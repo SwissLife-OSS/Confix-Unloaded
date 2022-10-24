@@ -1,4 +1,5 @@
 // ReSharper disable file MemberHidesStaticFromOuterClass
+
 namespace Confix.Common;
 
 public static class Settings
@@ -28,7 +29,7 @@ public static class Settings
 
             public static class Authentication
             {
-                public const string Section = $"{Confix.Section}:{nameof(Authentication)}";
+                public const string Section = $"{Authoring.Section}:{nameof(Authentication)}";
 
                 public static class OpenIdConnect
                 {
