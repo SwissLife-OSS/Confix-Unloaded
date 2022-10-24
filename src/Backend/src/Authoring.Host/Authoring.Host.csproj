@@ -4,9 +4,11 @@
     <AssemblyName>Confix.Authoring.Host</AssemblyName>
     <RootNamespace>Confix.Authoring</RootNamespace>
     <IsPackable>false</IsPackable>
+    <UserSecretsId>3f64ff45-7830-4fc6-b77d-eee879a369d9</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Authoring.UI\Authoring.UI.csproj" />
     <ProjectReference Include="..\Authoring\Authoring.csproj" />
     <ProjectReference Include="..\Authoring.Store.Mongo\Authoring.Store.Mongo.csproj" />
     <ProjectReference Include="..\CryptoProviders.AzureKeyVault\CryptoProviders.AzureKeyVault.csproj" />
