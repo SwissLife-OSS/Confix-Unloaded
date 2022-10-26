@@ -1,3 +1,4 @@
+using Confix.Authentication.Authorization;
 using Confix.Common;
 using Confix.Vault;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -12,7 +13,7 @@ public static class AuthenticationExtensions
         string pathToConfig = Settings.Confix.Vault.Authentication.JwtBearer.Section)
     {
         builder.Services
-            .AddAuthentication()
+            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer();
 
         builder.Services

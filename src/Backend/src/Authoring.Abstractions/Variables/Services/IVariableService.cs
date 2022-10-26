@@ -52,11 +52,4 @@ public interface IVariableService
     Task<VariableValue> DeleteValueAsync(Guid id, CancellationToken cancellationToken);
 
     Task<Variable?> RenameAsync(Guid id, string name, CancellationToken cancellationToken);
-
-    Task<IDictionary<string, VariableValue>> GetBestMatchingValuesAsync(
-        IEnumerable<string> variableNames,
-        Guid applicationId,
-        Guid applicationPartId,
-        Guid environmentId,
-        CancellationToken cancellationToken);
 }

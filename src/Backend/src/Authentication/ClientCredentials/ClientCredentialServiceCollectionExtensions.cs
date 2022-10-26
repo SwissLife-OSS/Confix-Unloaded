@@ -21,7 +21,7 @@ public static class ClientCredentialServiceCollectionExtensions
             .Validate(x => !string.IsNullOrWhiteSpace(x.Authority), "Authority was not provided.")
             .Validate(x => !string.IsNullOrWhiteSpace(x.ClientId), "ClientId was not provided.")
             .Validate(x =>
-                    !Uri.TryCreate(x.Url, UriKind.RelativeOrAbsolute, out _),
+                    Uri.TryCreate(x.Url, UriKind.RelativeOrAbsolute, out _),
                 "Provided string was not a valid url");
 
         collection
@@ -32,7 +32,7 @@ public static class ClientCredentialServiceCollectionExtensions
         void ConfigureClient(IServiceProvider sp, HttpClient client)
         {
             var options = sp.GetRequiredService<IOptionsMonitor<ClientCredentialsClientOptions>>();
-            client.BaseAddress = new Uri(options.CurrentValue.Url);
+            client.BaseAddress = new Uri(options.Get(name).Url);
         }
 
         DelegatingHandler ConfigureHandler(IServiceProvider sp)

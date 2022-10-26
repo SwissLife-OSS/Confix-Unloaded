@@ -56,7 +56,7 @@ public sealed class ClaimCommand : CommandBase
             ApplicationName = ApplicationName,
             ApplicationPartName = ApplicationPartName,
             EnvironmentName = EnvironmentName,
-            GitVersion = Tag
+            Tag = Tag
         };
 
         var result = await _client.ClaimApplicationPart.ExecuteAsync(input, cancellationToken);
@@ -98,6 +98,7 @@ public sealed class ClaimCommand : CommandBase
         return ExitCodes.Success;
     }
 }
+
 public class ExitCodes
 {
     public const int Success = 0;

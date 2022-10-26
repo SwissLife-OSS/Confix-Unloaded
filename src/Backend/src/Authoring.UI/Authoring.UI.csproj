@@ -6,6 +6,7 @@
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
     <NoWarn>$(NoWarn);1591</NoWarn>
     <IsPackable>true</IsPackable>
+    <UserSecretsId>7f119445-764d-4a74-8955-7cbfc802d0ab</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

@@ -21,14 +21,14 @@ public sealed class PublishingMutations
     [Error(typeof(UnauthorizedOperationException))]
     public async Task<ClaimedVersion> ClaimVersionAsync(
         [Service] IPublishingService service,
-        string gitVersion,
+        string tag,
         string applicationName,
         string applicationPartName,
         string environmentName,
         CancellationToken cancellationToken)
     {
         return await service.ClaimVersionAsync(
-                gitVersion,
+                tag,
                 applicationName,
                 applicationPartName,
                 environmentName,

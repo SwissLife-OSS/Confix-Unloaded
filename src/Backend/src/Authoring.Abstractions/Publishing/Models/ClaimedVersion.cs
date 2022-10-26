@@ -8,7 +8,7 @@ public sealed record ClaimedVersion
 {
     public ClaimedVersion(
         Guid id,
-        string gitVersion,
+        string tag,
         Guid applicationId,
         Guid applicationPartId,
         Guid environmentId,
@@ -18,7 +18,7 @@ public sealed record ClaimedVersion
         DateTime claimedAt)
     {
         Id = id;
-        GitVersion = gitVersion;
+        Tag = tag;
         ApplicationId = applicationId;
         ApplicationPartId = applicationPartId;
         EnvironmentId = environmentId;
@@ -31,7 +31,7 @@ public sealed record ClaimedVersion
     [ID]
     public Guid Id { get; init; }
 
-    public string GitVersion { get; init; }
+    public string Tag { get; init; }
 
     public Guid ApplicationId { get; init; }
 
