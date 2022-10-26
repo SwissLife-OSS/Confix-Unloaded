@@ -1,3 +1,4 @@
+using Confix.Authentication.Authorization;
 using Confix.Vault.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,7 +18,7 @@ public sealed class ConfigurationController : ControllerBase
     }
 
     [HttpPut]
-    [Authorize]
+    [Authorize(Policy = Policies.Names.VaultManage)]
     public async Task<PutConfigurationResponse> Put(
         [FromBody] PutConfigurationRequest request,
         CancellationToken cancellationToken)
@@ -33,7 +34,7 @@ public sealed class ConfigurationController : ControllerBase
     }
 
     [HttpPatch]
-    [Authorize]
+    [Authorize(Policy = Policies.Names.VaultManage)]
     public async Task<RefreshConfigurationResponse> Patch(
         [FromBody] RefreshConfigurationRequest request,
         CancellationToken cancellationToken)

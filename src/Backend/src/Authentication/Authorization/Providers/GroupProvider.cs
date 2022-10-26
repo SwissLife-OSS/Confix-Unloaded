@@ -23,14 +23,15 @@ public class GroupProvider : IGroupProvider
         ClaimsPrincipal principal,
         CancellationToken cancellationToken)
     {
-        var sub = principal.FindFirstValue(JwtClaimTypes.Subject);
+        var identifier = principal.FindFirstValue(JwtClaimTypes.Subject) ??
+            principal.FindFirstValue(JwtClaimTypes.JwtId);
 
-        if (sub is null)
+        if (identifier is null)
         {
             throw new AuthenticationException("Sub was not provided");
         }
 
-        var cacheKey = $"group_service.groups_of_user.{sub}";
+        var cacheKey = $"group_service.groups_of_user.{identifier}";
 
         if (!_cache.TryGetValue(cacheKey, out Func<IReadOnlyList<Group>> cachedGroups))
         {

@@ -59,7 +59,8 @@ public class Session : ISession
             {
                 foreach (var roleScope in group.Roles)
                 {
-                    if (roleScope.Namespace != @namespace)
+                    if (roleScope.Namespace != @namespace &&
+                        roleScope.Namespace is not WellKnownNamespaces.Global)
                     {
                         continue;
                     }

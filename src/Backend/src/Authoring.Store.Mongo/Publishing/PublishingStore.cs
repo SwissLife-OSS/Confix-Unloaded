@@ -94,14 +94,14 @@ internal sealed class PublishingStore : IPublishingStore
             Claimed.Filter.Eq(x => x.ApplicationId, version.ApplicationId) &
             Claimed.Filter.Eq(x => x.ApplicationPartId, version.ApplicationPartId) &
             Claimed.Filter.Eq(x => x.EnvironmentId, version.EnvironmentId) &
-            Claimed.Filter.Eq(x => x.GitVersion, version.GitVersion) &
+            Claimed.Filter.Eq(x => x.Tag, version.Tag) &
             Claimed.Filter.Eq(x => x.PublishingId, version.PublishingId);
 
         var update = Claimed.Update
             .SetOnInsert(x => x.ApplicationId, version.ApplicationId)
             .SetOnInsert(x => x.ApplicationPartId, version.ApplicationPartId)
             .SetOnInsert(x => x.EnvironmentId, version.EnvironmentId)
-            .SetOnInsert(x => x.GitVersion, version.GitVersion)
+            .SetOnInsert(x => x.Tag, version.Tag)
             .SetOnInsert(x => x.PublishingId, version.PublishingId)
             .SetOnInsert(x => x.Token, version.Token)
             .SetOnInsert(x => x.ClaimedAt, version.ClaimedAt)
@@ -126,7 +126,7 @@ internal sealed class PublishingStore : IPublishingStore
         var filter =
             Claimed.Filter.Eq(x => x.ApplicationId, applicationId) &
             Claimed.Filter.Eq(x => x.ApplicationPartId, applicationPartId) &
-            Claimed.Filter.Eq(x => x.GitVersion, gitVersion);
+            Claimed.Filter.Eq(x => x.Tag, gitVersion);
 
         var sort = Claimed.Sort.Descending(x => x.ClaimedAt);
 
@@ -145,7 +145,7 @@ internal sealed class PublishingStore : IPublishingStore
         var filter =
             Claimed.Filter.Eq(x => x.ApplicationPartId, partId) &
             Claimed.Filter.Eq(x => x.EnvironmentId, environmentId) &
-            Claimed.Filter.Eq(x => x.GitVersion, gitVersion);
+            Claimed.Filter.Eq(x => x.Tag, gitVersion);
 
         var sort = Claimed.Sort.Descending(x => x.ClaimedAt);
 

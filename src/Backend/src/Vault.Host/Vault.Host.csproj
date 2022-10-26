@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <IsPackable>false</IsPackable>
+    <UserSecretsId>1c8699f1-4dc8-4cbf-9c09-e21e2332576a</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,6 +18,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Vault.Authentication\Vault.Authentication.csproj" />
     <ProjectReference Include="..\Vault\Vault.csproj" />
   </ItemGroup>
 

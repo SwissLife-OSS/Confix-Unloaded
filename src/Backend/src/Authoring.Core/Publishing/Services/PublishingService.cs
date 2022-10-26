@@ -1,6 +1,7 @@
 using System.Text.Json.Nodes;
 using System.Transactions;
 using Confix.Authentication.Authorization;
+using Confix.Authoring.Extensions;
 using Confix.Authoring.Publishing.Stores;
 using Confix.Authoring.Store;
 using Confix.Common.Exceptions;
@@ -11,15 +12,21 @@ using static Confix.Authentication.Authorization.Permissions;
 
 namespace Confix.Authoring.Publishing;
 
+// TODO cleanup this service. Most of the service depenencies here are wrong
+// the publishing service should go directly to the DL or stores and only use
+// helpers like the ISchemaService (also, this "service" should have a different name)
 internal sealed class PublishingService : IPublishingService
 {
     private readonly IApplicationByPartIdDataLoader _applicationByPartId;
-    private readonly IApplicationService _applicationService;
+    private readonly IApplicationStore _applicationStore;
     private readonly IAuthorizationService _authorizationService;
     private readonly IComponentDataLoader _componentDataLoader;
+    private readonly IVariableStore _variableStore;
     private readonly IComponentService _componentService;
+    private readonly IChangeLogService _changeLogService;
     private readonly IEncryptor _encryptor;
-    private readonly IEnvironmentService _environmentService;
+    private readonly IDataLoader<Guid, Environment> _environmentById;
+    private readonly IEnvironmentStore _environmentStore;
     private readonly IPublishedApplicationPartByIdDataloader _publishedApplicationPartById;
     private readonly IPublishedApplicationPartsByPartIdDataloader
         _publishedApplicationPartsByPartId;
@@ -32,8 +39,8 @@ internal sealed class PublishingService : IPublishingService
     public PublishingService(
         IDataLoader<Guid, PublishedApplicationPart?> publishedById,
         IPublishedApplicationPartsByPartIdDataloader publishedApplicationPartsByPartId,
-        IApplicationService applicationService,
-        IEnvironmentService environmentService,
+        IApplicationStore applicationStore,
+        IDataLoader<Guid, Environment> environmentById,
         IComponentDataLoader componentDataLoader,
         ISessionAccessor sessionAccessor,
         IPublishingStore publishingStore,
@@ -43,12 +50,15 @@ internal sealed class PublishingService : IPublishingService
         IComponentService componentService,
         IAuthorizationService authorizationService,
         IApplicationByPartIdDataLoader applicationByPartId,
-        IPublishedApplicationPartByIdDataloader publishedApplicationPartById)
+        IPublishedApplicationPartByIdDataloader publishedApplicationPartById,
+        IChangeLogService changeLogService,
+        IEnvironmentStore environmentStore,
+        IVariableStore variableStore)
     {
         _publishedById = publishedById;
         _publishedApplicationPartsByPartId = publishedApplicationPartsByPartId;
-        _applicationService = applicationService;
-        _environmentService = environmentService;
+        _applicationStore = applicationStore;
+        _environmentById = environmentById;
         _componentDataLoader = componentDataLoader;
         _sessionAccessor = sessionAccessor;
         _publishingStore = publishingStore;
@@ -57,6 +67,9 @@ internal sealed class PublishingService : IPublishingService
         _authorizationService = authorizationService;
         _applicationByPartId = applicationByPartId;
         _publishedApplicationPartById = publishedApplicationPartById;
+        _changeLogService = changeLogService;
+        _environmentStore = environmentStore;
+        _variableStore = variableStore;
         _vaultClient = vaultClient;
         _encryptor = encryptor;
     }
@@ -67,7 +80,7 @@ internal sealed class PublishingService : IPublishingService
     {
         var session = await _authorizationService.EnsureAuthenticated(cancellationToken);
 
-        var application = await _applicationService.GetByPartIdAsync(partId, cancellationToken);
+        var application = await _applicationStore.GetByPartIdAsync(partId, cancellationToken);
 
         var applicationPart = application?.Parts.FirstOrDefault(x => x.Id == partId);
 
@@ -91,9 +104,7 @@ internal sealed class PublishingService : IPublishingService
         using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
         {
             application =
-                await _applicationService.PublishApplicationPartAsync(
-                    applicationPart.Id,
-                    cancellationToken);
+                await PublishApplicationPartAsync(applicationPart.Id, cancellationToken);
 
             applicationPart = application.Parts.Single(x => x.Id == applicationPart.Id);
 
@@ -145,7 +156,7 @@ internal sealed class PublishingService : IPublishingService
         var environmentIds =
             await _publishingStore.GetDeployedEnvironmentsByPartIdAsync(partId, cancellationToken);
 
-        return await _environmentService.GetByIdsAsync(environmentIds, cancellationToken);
+        return await _environmentById.LoadAsync(environmentIds.ToArray(), cancellationToken);
     }
 
     public async Task<IReadOnlyList<ClaimedVersion>> GetClaimedVersionByPublishedPartIdAsync(
@@ -203,7 +214,7 @@ internal sealed class PublishingService : IPublishingService
         CancellationToken cancellationToken)
     {
         var session = await _sessionAccessor.GetSession(cancellationToken);
-        var env = await _environmentService.GetByNameAsync(environmentName, cancellationToken);
+        var env = await _environmentStore.GetByNameAsync(environmentName, cancellationToken);
 
         if (session is null)
         {
@@ -212,13 +223,12 @@ internal sealed class PublishingService : IPublishingService
 
         if (env is null)
         {
-            throw ThrowHelper.ClaimFailedBecauseEnvWasNotFound(
-                applicationName,
+            throw ThrowHelper.ClaimFailedBecauseEnvWasNotFound(applicationName,
                 applicationPartName,
                 environmentName);
         }
 
-        var app = await _applicationService
+        var app = await _applicationStore
             .FindByApplicationNameAsync(applicationName, cancellationToken);
 
         if (app is null)
@@ -239,9 +249,8 @@ internal sealed class PublishingService : IPublishingService
 
         if (part is null)
         {
-            throw ThrowHelper.ClaimFailedBecauseApplicationPartWasNotFound(
-                applicationName,
-                applicationPartName);
+            throw ThrowHelper
+                .ClaimFailedBecauseApplicationPartWasNotFound(applicationName, applicationPartName);
         }
 
         var claimedVersion = await _publishingStore
@@ -352,7 +361,7 @@ internal sealed class PublishingService : IPublishingService
 
         var variableNames = context.Variables.Select(x => x.VariableName).ToArray();
 
-        var resolvesValues = await _variableService.GetBestMatchingValuesAsync(
+        var resolvesValues = await GetBestMatchingValuesAsync(
             variableNames,
             app.Id,
             part.Id,
@@ -448,5 +457,107 @@ internal sealed class PublishingService : IPublishingService
                 ? component
                 : throw ThrowHelper.PublishingFailedBecauseComponentWasNotFound(_part, componentId);
         }
+    }
+
+    private async Task<Application> PublishApplicationPartAsync(
+        Guid applicationPartId,
+        CancellationToken cancellationToken = default)
+    {
+        var application =
+            await _applicationStore.GetByPartIdAsync(applicationPartId, cancellationToken);
+
+        if (!await _authorizationService
+                .RuleFor<ApplicationPart>()
+                .IsAuthorizedFromAsync(application, Publish, cancellationToken))
+        {
+            throw new ApplicationPartNotFoundException(applicationPartId);
+        }
+
+        var applicationPart = application?.Parts.FirstOrDefault(x => x.Id == applicationPartId);
+
+        if (application is null || applicationPart is null)
+        {
+            throw new ApplicationPartNotFoundException(applicationPartId);
+        }
+
+        var updatedApplicationPart = applicationPart with { Version = applicationPart.Version + 1 };
+
+        application = application with
+        {
+            Version = application.Version + 1,
+            Parts = application.Parts.Replace(applicationPart, () => updatedApplicationPart)
+        };
+
+        PublishedApplicationPartChange log = new(
+            application.Id,
+            application.Version,
+            updatedApplicationPart.Id,
+            updatedApplicationPart.Version);
+
+        using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+        {
+            await _changeLogService.CreateAsync(log, cancellationToken);
+            await _applicationStore.ReplaceAsync(application, cancellationToken);
+
+            transaction.Complete();
+        }
+
+        return application;
+    }
+
+    private async Task<IDictionary<string, VariableValue>> GetBestMatchingValuesAsync(
+        IEnumerable<string> variableNames,
+        Guid applicationId,
+        Guid applicationPartId,
+        Guid environmentId,
+        CancellationToken cancellationToken)
+    {
+        ISet<string> distinctNames = variableNames.ToHashSet();
+
+        var variables = await _variableStore.GetByNamesAsync(distinctNames, cancellationToken);
+
+        IDictionary<string, VariableValue> values = new Dictionary<string, VariableValue>();
+
+        IDictionary<Guid, Variable> ids = variables.OfType<Variable>().ToDictionary(x => x.Id);
+
+        var partValues = await _variableStore
+            .GetByApplicationPartIdAsync(applicationPartId, ids.Keys, cancellationToken);
+
+        foreach (var value in partValues)
+        {
+            if (ids.TryGetValue(value.Key.VariableId, out var variable) &&
+                value.Key.EnvironmentId == environmentId)
+            {
+                values[variable.Name] = value;
+                ids.Remove(value.Key.VariableId);
+            }
+        }
+
+        var appValues = await _variableStore
+            .GetByApplicationIdAsync(applicationId, ids.Keys, cancellationToken);
+
+        foreach (var value in appValues)
+        {
+            if (ids.TryGetValue(value.Key.VariableId, out var variable) &&
+                value.Key.EnvironmentId == environmentId)
+            {
+                values[variable.Name] = value;
+                ids.Remove(value.Key.VariableId);
+            }
+        }
+
+        var globalValues = await _variableStore.GetGlobalVariableValue(ids.Keys, cancellationToken);
+
+        foreach (var value in globalValues)
+        {
+            if (ids.TryGetValue(value.Key.VariableId, out var variable) &&
+                value.Key.EnvironmentId == environmentId)
+            {
+                values[variable.Name] = value;
+                ids.Remove(value.Key.VariableId);
+            }
+        }
+
+        return values;
     }
 }

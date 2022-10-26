@@ -36,11 +36,16 @@ public static class Settings
                     public const string Section =
                         $"{Authentication.Section}:{nameof(OpenIdConnect)}";
                 }
+
+                public static class JwtBearer
+                {
+                    public const string Section = $"{Authentication.Section}:{nameof(JwtBearer)}";
+                }
             }
 
             public static class Vault
             {
-                public const string Section = $"{Authentication.Section}:{nameof(Vault)}";
+                public const string Section = $"{Authoring.Section}:{nameof(Vault)}";
 
                 public static class HttpClient
                 {
@@ -65,7 +70,7 @@ public static class Settings
 
             public static class Authentication
             {
-                public const string Section = $"{Confix.Section}:{nameof(Authentication)}";
+                public const string Section = $"{Vault.Section}:{nameof(Authentication)}";
 
                 public static class JwtBearer
                 {

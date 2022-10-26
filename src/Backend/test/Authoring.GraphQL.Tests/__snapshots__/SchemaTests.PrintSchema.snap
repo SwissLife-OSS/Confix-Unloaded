@@ -219,7 +219,7 @@ type ClaimVersionPayload {
 
 type ClaimedVersion {
   id: ID!
-  gitVersion: String!
+  tag: String!
   claimedAt: DateTime!
   application: Application
   applicationPart: ApplicationPart

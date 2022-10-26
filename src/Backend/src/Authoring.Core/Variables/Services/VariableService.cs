@@ -103,63 +103,6 @@ internal sealed class VariableService : IVariableService
         return await _variableStore.GetByNamesAsync(names, cancellationToken);
     }
 
-    // TODO move this out of the service into some kind of provider
-    public async Task<IDictionary<string, VariableValue>> GetBestMatchingValuesAsync(
-        IEnumerable<string> variableNames,
-        Guid applicationId,
-        Guid applicationPartId,
-        Guid environmentId,
-        CancellationToken cancellationToken)
-    {
-        ISet<string> distinctNames = variableNames.ToHashSet();
-
-        var variables = await _variableStore.GetByNamesAsync(distinctNames, cancellationToken);
-
-        IDictionary<string, VariableValue> values = new Dictionary<string, VariableValue>();
-
-        IDictionary<Guid, Variable> ids = variables.OfType<Variable>().ToDictionary(x => x.Id);
-
-        var partValues = await _variableStore
-            .GetByApplicationPartIdAsync(applicationPartId, ids.Keys, cancellationToken);
-
-        foreach (var value in partValues)
-        {
-            if (ids.TryGetValue(value.Key.VariableId, out var variable) &&
-                value.Key.EnvironmentId == environmentId)
-            {
-                values[variable.Name] = value;
-                ids.Remove(value.Key.VariableId);
-            }
-        }
-
-        var appValues = await _variableStore
-            .GetByApplicationIdAsync(applicationId, ids.Keys, cancellationToken);
-
-        foreach (var value in appValues)
-        {
-            if (ids.TryGetValue(value.Key.VariableId, out var variable) &&
-                value.Key.EnvironmentId == environmentId)
-            {
-                values[variable.Name] = value;
-                ids.Remove(value.Key.VariableId);
-            }
-        }
-
-        var globalValues = await _variableStore.GetGlobalVariableValue(ids.Keys, cancellationToken);
-
-        foreach (var value in globalValues)
-        {
-            if (ids.TryGetValue(value.Key.VariableId, out var variable) &&
-                value.Key.EnvironmentId == environmentId)
-            {
-                values[variable.Name] = value;
-                ids.Remove(value.Key.VariableId);
-            }
-        }
-
-        return values;
-    }
-
     public async Task<IQueryable<Variable>> SearchVariables(
         string? search,
         CancellationToken cancellationToken)

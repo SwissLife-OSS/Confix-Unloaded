@@ -602,7 +602,7 @@ type ClaimedVersionsConnection {
 
 type ClaimedVersion {
   id: ID!
-  gitVersion: String!
+  tag: String!
   claimedAt: DateTime!
   application: Application
   applicationPart: ApplicationPart
@@ -927,7 +927,7 @@ type PublishApplicationPartByIdPayload {
 }
 
 input ClaimVersionInput {
-  gitVersion: String!
+  tag: String!
   applicationName: String!
   applicationPartName: String!
   environmentName: String!

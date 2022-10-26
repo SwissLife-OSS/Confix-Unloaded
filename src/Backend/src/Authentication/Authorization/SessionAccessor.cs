@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using IdentityModel;
 using Microsoft.AspNetCore.Http;
 
 namespace Confix.Authentication.Authorization;
@@ -42,7 +43,7 @@ public class SessionAccessor : ISessionAccessor
     {
         var context = _accessor.HttpContext;
 
-        if (context?.User is null)
+        if (context?.User.Identity?.IsAuthenticated is not true)
         {
             return null;
         }
@@ -52,7 +53,7 @@ public class SessionAccessor : ISessionAccessor
 
         // apply defaults
 
-        var sub = context.User.FindFirstValue("sub");
+        var sub = context.User.FindFirstValue(JwtClaimTypes.Subject) ?? "Token";
 
         return new Session(sub, groups, roleMap);
     }

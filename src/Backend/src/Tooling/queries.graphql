@@ -11,7 +11,7 @@ mutation ClaimApplicationPart($input: ClaimVersionInput!) {
 
 fragment ClaimedVersion on ClaimedVersion {
   id
-  gitVersion
+  tag
   claimedAt
   publishedApplicationPart {
     version
