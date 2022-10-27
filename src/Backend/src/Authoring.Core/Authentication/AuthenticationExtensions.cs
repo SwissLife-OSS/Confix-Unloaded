@@ -91,7 +91,7 @@ public static class AuthenticationExtensions
     private static void ConfigureAuthentication(AuthenticationOptions x)
     {
         x.DefaultScheme = JwtOrCookieDefault.AuthenticationScheme;
-        x.DefaultChallengeScheme = JwtOrCookieDefault.AuthenticationScheme;
+        x.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
     }
 
     private static void ConfigureCookies(CookieAuthenticationOptions x)

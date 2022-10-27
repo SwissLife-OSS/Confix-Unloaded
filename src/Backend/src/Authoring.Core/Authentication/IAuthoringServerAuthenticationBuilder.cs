@@ -12,3 +12,4 @@ public interface IAuthoringServerAuthenticationBuilder
 
     IAuthoringServerAuthenticationBuilder ConfigureBuilder(Action<AuthenticationBuilder> configure);
 }
+
