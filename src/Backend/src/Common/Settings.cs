@@ -25,6 +25,11 @@ public static class Settings
             public static class Seed
             {
                 public const string Section = $"{Authoring.Section}:{nameof(Seed)}";
+
+                public static class AdminRequirement
+                {
+                    public const string Section = $"{Seed.Section}:{nameof(AdminRequirement)}";
+                }
             }
 
             public static class Authentication
