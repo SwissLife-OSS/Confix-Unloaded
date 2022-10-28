@@ -7,11 +7,9 @@ public static class SeedExtensions
 {
     public static IServiceCollection AddSeedWorker(
         this IServiceCollection services,
-        string pathToConfig = Settings.Confix.Authoring.Seed.AdminRequirement.Section)
+        string pathToConfig = Settings.Confix.Authoring.Seed.Section)
     {
-        services
-            .AddOptions<AdminRequirementOptions>()
-            .BindConfiguration(pathToConfig);
+        services.AddOptions<SeedOptions>().BindConfiguration(pathToConfig);
 
         services.AddHostedService<SeedWorker>();
 
