@@ -9,9 +9,7 @@ public static class SeedExtensions
         this IServiceCollection services,
         string pathToConfig = Settings.Confix.Authoring.Seed.AdminRequirement.Section)
     {
-        services
-            .AddOptions<AdminRequirementOptions>()
-            .BindConfiguration(pathToConfig);
+        services.AddOptions<SeedOptions>().BindConfiguration(pathToConfig);
 
         services.AddHostedService<SeedWorker>();
 
