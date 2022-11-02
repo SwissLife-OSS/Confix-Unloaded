@@ -35,6 +35,7 @@ public static class GraphQlServiceCollectionExtensions
             .AddErrorInterfaceType<IUserError>()
             .AddFiltering()
             .AddSorting()
+            .AddInstrumentation()
             .ModifyOptions(x =>
             {
                 x.EnableFlagEnums = true;

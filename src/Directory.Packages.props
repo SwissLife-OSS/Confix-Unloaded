@@ -10,6 +10,7 @@
     <PackageVersion Include="HotChocolate.AspNetCore" Version="12.15.0" />
     <PackageVersion Include="HotChocolate.AspNetCore.Authorization" Version="12.15.0" />
     <PackageVersion Include="HotChocolate.Data" Version="12.15.0" />
+    <PackageVersion Include="HotChocolate.Diagnostics" Version="12.15.0" />
     <PackageVersion Include="McMaster.Extensions.CommandLineUtils" Version="4.0.1" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />

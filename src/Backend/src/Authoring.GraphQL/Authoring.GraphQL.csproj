@@ -12,6 +12,7 @@
     <PackageReference Include="HotChocolate.AspNetCore" />
     <PackageReference Include="HotChocolate.AspNetCore.Authorization" />
     <PackageReference Include="HotChocolate.Data" />
+    <PackageReference Include="HotChocolate.Diagnostics" />
   </ItemGroup>
 
   <ItemGroup>

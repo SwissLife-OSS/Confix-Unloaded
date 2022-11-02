@@ -19,6 +19,7 @@ internal sealed class CryptoDbContext : MongoDbContext, ICryptoDbContext
     protected override void OnConfiguring(IMongoDatabaseBuilder builder)
     {
         builder
+            .AddInstrumentation()
             .ConfigureConnection(con => con.ReadConcern = ReadConcern.Majority)
             .ConfigureConnection(con => con.WriteConcern = WriteConcern.WMajority)
             .ConfigureConnection(con => con.ReadPreference = ReadPreference.Primary)

@@ -50,7 +50,9 @@ internal sealed class AuthoringDbContext : MongoDbContext, IAuthoringDbContext
 
     protected override void OnConfiguring(IMongoDatabaseBuilder builder)
     {
-        builder.RegisterSerializer(new DateTimeOffsetSerializer(BsonType.String))
+        builder
+            .AddInstrumentation()
+            .RegisterSerializer(new DateTimeOffsetSerializer(BsonType.String))
             .ConfigureConnection(con => con.ReadConcern = ReadConcern.Majority)
             .ConfigureConnection(con => con.WriteConcern = WriteConcern.WMajority)
             .ConfigureConnection(con => con.ReadPreference = ReadPreference.Primary)
