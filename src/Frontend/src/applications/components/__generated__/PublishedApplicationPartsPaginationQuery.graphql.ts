@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8e0e239237b57b00ed7df87a98ec4b46>>
+ * @generated SignedSource<<6110d4a219d2f6ac1ccc1a9dbaca94c8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -222,7 +222,7 @@ return {
                                 "alias": null,
                                 "args": null,
                                 "kind": "ScalarField",
-                                "name": "gitVersion",
+                                "name": "tag",
                                 "storageKey": null
                               },
                               {
@@ -300,16 +300,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "eb9f27b6decf0b311f1dc842aeb7a082",
+    "cacheID": "4f60bab3829e9606097193a374929d66",
     "id": null,
     "metadata": {},
     "name": "PublishedApplicationPartsPaginationQuery",
     "operationKind": "query",
-    "text": "query PublishedApplicationPartsPaginationQuery(\n  $count: Int = 20\n  $cursor: String\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...PublishedApplicationPartsFragment_1G22uz\n    id\n  }\n}\n\nfragment PublishedApplicationPartsFragment_1G22uz on ApplicationPart {\n  publishedVersions(first: $count, after: $cursor) {\n    edges {\n      node {\n        id\n        publishedAt\n        part {\n          name\n          id\n        }\n        publishedBy {\n          email\n        }\n        version\n        claimsVersions {\n          gitVersion\n          environment {\n            name\n            id\n          }\n          id\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  id\n}\n"
+    "text": "query PublishedApplicationPartsPaginationQuery(\n  $count: Int = 20\n  $cursor: String\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...PublishedApplicationPartsFragment_1G22uz\n    id\n  }\n}\n\nfragment PublishedApplicationPartsFragment_1G22uz on ApplicationPart {\n  publishedVersions(first: $count, after: $cursor) {\n    edges {\n      node {\n        id\n        publishedAt\n        part {\n          name\n          id\n        }\n        publishedBy {\n          email\n        }\n        version\n        claimsVersions {\n          tag\n          environment {\n            name\n            id\n          }\n          id\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  id\n}\n"
   }
 };
 })();
 
-(node as any).hash = "caedcb107c67258ae33719f146bc9daf";
+(node as any).hash = "da9539faba65545e10299fd93c67f5d9";
 
 export default node;

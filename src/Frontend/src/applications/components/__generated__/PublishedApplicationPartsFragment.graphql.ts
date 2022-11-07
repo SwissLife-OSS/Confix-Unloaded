@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2e7beb6165c4e5a2fcc59b9ebe7d1236>>
+ * @generated SignedSource<<6ad7983e383cad8174ace8cefce4d9ec>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,7 +19,7 @@ export type PublishedApplicationPartsFragment$data = {
           readonly environment: {
             readonly name: string;
           } | null;
-          readonly gitVersion: string;
+          readonly tag: string;
         }>;
         readonly id: string;
         readonly part: {
@@ -180,7 +180,7 @@ return {
                       "alias": null,
                       "args": null,
                       "kind": "ScalarField",
-                      "name": "gitVersion",
+                      "name": "tag",
                       "storageKey": null
                     },
                     {
@@ -251,6 +251,6 @@ return {
 };
 })();
 
-(node as any).hash = "caedcb107c67258ae33719f146bc9daf";
+(node as any).hash = "da9539faba65545e10299fd93c67f5d9";
 
 export default node;

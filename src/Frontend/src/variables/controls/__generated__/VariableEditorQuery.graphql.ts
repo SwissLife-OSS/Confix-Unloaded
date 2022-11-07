@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<69db0d056fc2887e264f50f8d74fe214>>
+ * @generated SignedSource<<5ca4b0da3ff27281d4e4a5f9ecb282f9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -32,6 +32,7 @@ export type VariableEditorQuery$data = {
     readonly value: string | null;
     readonly variable: {
       readonly id: string;
+      readonly isSecret: boolean;
       readonly name: string;
     } | null;
   }>;
@@ -64,17 +65,18 @@ v3 = {
   "name": "id",
   "storageKey": null
 },
-v4 = [
-  (v3/*: any*/),
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "name",
-    "storageKey": null
-  }
-],
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
 v5 = [
+  (v3/*: any*/),
+  (v4/*: any*/)
+],
+v6 = [
   {
     "alias": null,
     "args": [
@@ -107,7 +109,7 @@ v5 = [
         "kind": "LinkedField",
         "name": "application",
         "plural": false,
-        "selections": (v4/*: any*/),
+        "selections": (v5/*: any*/),
         "storageKey": null
       },
       {
@@ -117,7 +119,17 @@ v5 = [
         "kind": "LinkedField",
         "name": "variable",
         "plural": false,
-        "selections": (v4/*: any*/),
+        "selections": [
+          (v3/*: any*/),
+          (v4/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "isSecret",
+            "storageKey": null
+          }
+        ],
         "storageKey": null
       },
       {
@@ -127,7 +139,7 @@ v5 = [
         "kind": "LinkedField",
         "name": "environment",
         "plural": false,
-        "selections": (v4/*: any*/),
+        "selections": (v5/*: any*/),
         "storageKey": null
       },
       {
@@ -137,7 +149,7 @@ v5 = [
         "kind": "LinkedField",
         "name": "applicationPart",
         "plural": false,
-        "selections": (v4/*: any*/),
+        "selections": (v5/*: any*/),
         "storageKey": null
       },
       {
@@ -161,7 +173,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "VariableEditorQuery",
-    "selections": (v5/*: any*/),
+    "selections": (v6/*: any*/),
     "type": "Query",
     "abstractKey": null
   },
@@ -174,19 +186,19 @@ return {
     ],
     "kind": "Operation",
     "name": "VariableEditorQuery",
-    "selections": (v5/*: any*/)
+    "selections": (v6/*: any*/)
   },
   "params": {
-    "cacheID": "ea87c34b0a17d70e730b02fd5cb6d6c4",
+    "cacheID": "2bbedf50a6e60c2a51178d70a22a8e4e",
     "id": null,
     "metadata": {},
     "name": "VariableEditorQuery",
     "operationKind": "query",
-    "text": "query VariableEditorQuery(\n  $variableId: ID!\n  $applicationId: ID\n  $applicationPartId: ID\n) {\n  variableValues(variableId: $variableId, applicationId: $applicationId, applicationPartId: $applicationPartId) {\n    id\n    application {\n      id\n      name\n    }\n    variable {\n      id\n      name\n    }\n    environment {\n      id\n      name\n    }\n    applicationPart {\n      id\n      name\n    }\n    value\n  }\n}\n"
+    "text": "query VariableEditorQuery(\n  $variableId: ID!\n  $applicationId: ID\n  $applicationPartId: ID\n) {\n  variableValues(variableId: $variableId, applicationId: $applicationId, applicationPartId: $applicationPartId) {\n    id\n    application {\n      id\n      name\n    }\n    variable {\n      id\n      name\n      isSecret\n    }\n    environment {\n      id\n      name\n    }\n    applicationPart {\n      id\n      name\n    }\n    value\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "7c5bf1dde420921d86e403d04241d12b";
+(node as any).hash = "51bdd991981e37cbafeef1b870868e20";
 
 export default node;

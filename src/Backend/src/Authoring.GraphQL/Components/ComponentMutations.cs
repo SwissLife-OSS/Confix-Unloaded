@@ -29,6 +29,7 @@ public sealed class ComponentMutations
     }
 
     [Error(typeof(UnauthorizedOperationException))]
+    [Error(typeof(SchemaInvalidError))]
     public async Task<Component> UpdateComponentSchemaAsync(
         [Service] IComponentService service,
         [ID(nameof(Component))] Guid id,

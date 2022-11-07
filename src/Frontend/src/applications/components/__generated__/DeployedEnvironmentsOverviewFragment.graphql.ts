@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ce8afe42284e74671edcbadfc317f738>>
+ * @generated SignedSource<<87514d15e4e502a783de36efa782be2a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,12 +22,12 @@ export type DeployedEnvironmentsOverviewFragment$data = ReadonlyArray<{
       readonly environment: {
         readonly name: string;
       } | null;
-      readonly gitVersion: string;
       readonly publishedApplicationPart: {
         readonly id: string;
         readonly publishedAt: any;
         readonly version: number;
       } | null;
+      readonly tag: string;
     }> | null;
   } | null;
   readonly environment: {
@@ -117,7 +117,7 @@ return {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
-              "name": "gitVersion",
+              "name": "tag",
               "storageKey": null
             },
             {
@@ -188,6 +188,6 @@ return {
 };
 })();
 
-(node as any).hash = "7c890dae78848db2691f1b2ed9768452";
+(node as any).hash = "0c292b0670c7bdb94fec8026a157517e";
 
 export default node;

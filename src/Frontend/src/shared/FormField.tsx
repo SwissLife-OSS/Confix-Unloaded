@@ -90,15 +90,33 @@ export const FieldInputGroup: React.FC<
     isError?: boolean;
     compact?: boolean;
   } & InputProps
-> = ({ name, label, isError = false, compact, children, ...inputProps }) => (
+> = ({
+  name,
+  label,
+  type,
+  isError = false,
+  compact,
+  children,
+  ...inputProps
+}) => (
   <FieldGroup name={name} label={label} isError={isError} compact={compact}>
-    <Input
-      name={name ?? label}
-      {...inputProps}
-      style={{
-        flex: "1",
-      }}
-    />
+    {type === "password" ? (
+      <Input.Password
+        name={name ?? label}
+        {...inputProps}
+        style={{
+          flex: "1",
+        }}
+      />
+    ) : (
+      <Input
+        name={name ?? label}
+        {...inputProps}
+        style={{
+          flex: "1",
+        }}
+      />
+    )}
     {children}
   </FieldGroup>
 );

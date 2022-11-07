@@ -35,7 +35,7 @@ const publishedPartsConnection = graphql`
           }
           version
           claimsVersions {
-            gitVersion
+            tag
             environment {
               name
             }
@@ -96,7 +96,7 @@ const columns = [
     render: (_: unknown, value: Value) => (
       <>
         {distinct(
-          value.node.claimsVersions.map((x) => x.gitVersion).filter((x) => !!x)
+          value.node.claimsVersions.map((x) => x.tag).filter((x) => !!x)
         ).map((x) => (
           <Tag>#{x}</Tag>
         ))}

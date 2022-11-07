@@ -37,6 +37,7 @@ const variableEditorQuery = graphql`
       variable {
         id
         name
+        isSecret
       }
       environment {
         id
@@ -105,6 +106,7 @@ export const VariableEditor: React.FC<{
             environment={x}
             value={valueByEnv[x.id]?.value ?? ""}
             valueId={valueByEnv[x.id]?.id}
+            isSecret={valueByEnv[x.id].variable?.isSecret ?? true}
             applicationId={applicationId}
             applicationPartId={applicationPartId}
             variableId={variableId}
@@ -227,6 +229,7 @@ const EnvironementVariableValue: React.FC<{
   variableId: string;
   applicationId?: string;
   applicationPartId?: string;
+  isSecret: boolean;
   value: string | undefined;
   valueId: string | undefined;
   refresh: () => void;
@@ -234,6 +237,7 @@ const EnvironementVariableValue: React.FC<{
   variableId,
   applicationId,
   applicationPartId,
+  isSecret,
   value: defaultValue,
   valueId,
   environment,
@@ -264,6 +268,7 @@ const EnvironementVariableValue: React.FC<{
     <FieldInputGroup
       label={environment.name}
       value={value}
+      type={isSecret ? "password" : "text"}
       onChange={handleChange}
       allowClear
     >

@@ -1,6 +1,12 @@
+using Confix.Authentication.Authorization;
 using Confix.Authoring;
 using Confix.Authoring.UI;
 using Confix.CryptoProviders;
+using IdentityModel;
+using Microsoft.AspNetCore.Authentication.OAuth.Claims;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.Extensions.Configuration.UserSecrets;
+using static IdentityModel.JwtClaimTypes;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +25,18 @@ builder.Services
     .AddReverseProxy()
     .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
 
+builder.Services
+    .PostConfigure(
+        OpenIdConnectDefaults.AuthenticationScheme,
+        (OpenIdConnectOptions options) =>
+        {
+            options.ClaimActions.Add(
+                new JsonKeyClaimAction(
+                    JwtClaimTypes.Role,
+                    JwtClaimTypes.Role,
+                    JwtClaimTypes.Role));
+        });
+
 builder.Services.AddCors(
     options =>
         options.AddDefaultPolicy(
@@ -32,6 +50,13 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseAuthoringServer();
-app.UseConfixUi();
+if (app.Environment.IsDevelopment())
+{
+    app.UseEndpoints(x => x.MapReverseProxy());
+}
+else
+{
+    app.UseConfixUi();
+}
 
 app.Run();

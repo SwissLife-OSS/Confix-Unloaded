@@ -1,3 +1,4 @@
+using Confix.Authentication.Authorization;
 using Confix.Authoring.Store;
 
 namespace Confix.Authoring.GraphQL;
@@ -41,7 +42,7 @@ public sealed class VariableQueries
             ApplicationId = applicationId, PartId = applicationPartId
         };
 
-        return await variableService.GetValuesAsync(filter, false, cancellationToken);
+        return await variableService.GetValuesAsync(filter, true, cancellationToken);
     }
 
     public async Task<IEnumerable<VariableValue>> GetGlobalVariableValuesAsync(

@@ -47,6 +47,6 @@ export const Components: React.FC = (props) => {
 export const ComponentRoutes: React.VFC = () => (
   <Routes>
     <Route path={"new"} element={<NewComponent />} />
-    <Route path={":id/*"} element={<EditComponent />} />
+    <Route path={":id/:tab"} element={<EditComponent />} />
   </Routes>
 );

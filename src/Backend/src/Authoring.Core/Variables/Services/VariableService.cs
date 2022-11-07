@@ -264,22 +264,28 @@ internal sealed class VariableService : IVariableService
 
         var values = await _variableValueStore.GetByFilterAsync(filter, cancellationToken);
 
-        if (variable.IsSecret &&
-            decrypt &&
-            await _authorizationService
-                .RuleFor<Variable>()
-                .IsAuthorizedAsync(variable, Decrypt, cancellationToken))
+        if (variable.IsSecret)
         {
-            values = await values
-                .ToAsyncEnumerable()
-                .SelectAwait(
-                    async value => value with
-                    {
-                        Value = await _decryptor.DecryptAsync(
-                            value.EncryptedValue!,
-                            cancellationToken)
-                    })
-                .ToArrayAsync(cancellationToken);
+            if (decrypt &&
+                await _authorizationService
+                    .RuleFor<Variable>()
+                    .IsAuthorizedAsync(variable, Decrypt, cancellationToken))
+            {
+                values = await values
+                    .ToAsyncEnumerable()
+                    .SelectAwait(
+                        async value => value with
+                        {
+                            Value = await _decryptor.DecryptAsync(
+                                value.EncryptedValue!,
+                                cancellationToken)
+                        })
+                    .ToArrayAsync(cancellationToken);
+            }
+            else
+            {
+                values = values.Select(x => x with { Value = "[redacted]" });
+            }
         }
 
         return values;

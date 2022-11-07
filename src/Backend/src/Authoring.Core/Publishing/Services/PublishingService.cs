@@ -127,7 +127,7 @@ internal sealed class PublishingService : IPublishingService
         Guid partId,
         CancellationToken cancellationToken)
     {
-        var part = _applicationByPartId.LoadAsync(partId, cancellationToken);
+        var part = await _applicationByPartId.LoadAsync(partId, cancellationToken);
 
         if (!await _authorizationService
                 .RuleFor<PublishedApplicationPart>()
@@ -144,7 +144,7 @@ internal sealed class PublishingService : IPublishingService
         Guid partId,
         CancellationToken cancellationToken)
     {
-        var part = _applicationByPartId.LoadAsync(partId, cancellationToken);
+        var part = await _applicationByPartId.LoadAsync(partId, cancellationToken);
 
         if (!await _authorizationService
                 .RuleFor<Environment>()
@@ -193,7 +193,7 @@ internal sealed class PublishingService : IPublishingService
         Guid environmentId,
         CancellationToken cancellationToken)
     {
-        var part = _applicationByPartId.LoadAsync(partId, cancellationToken);
+        var part = await _applicationByPartId.LoadAsync(partId, cancellationToken);
 
         if (!await _authorizationService
                 .RuleFor<PublishedApplicationPart>()

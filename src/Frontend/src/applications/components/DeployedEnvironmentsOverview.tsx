@@ -18,7 +18,7 @@ const deployedEnvironmentsOverview = graphql`
     }
     claimedVersions {
       nodes {
-        gitVersion
+        tag
         application {
           name
         }
@@ -113,7 +113,7 @@ export const DeployedEnvironmentsOverview: React.FC<{
                     {mostRecentVersion?.publishedApplicationPart?.version}
                   </>
                 }
-                description={`#${mostRecentVersion?.gitVersion}`}
+                description={`#${mostRecentVersion?.tag}`}
               />
             );
           })}

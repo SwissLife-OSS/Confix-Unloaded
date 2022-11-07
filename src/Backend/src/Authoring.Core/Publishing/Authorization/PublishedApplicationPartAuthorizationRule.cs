@@ -24,7 +24,7 @@ internal sealed class PublishedApplicationPartAuthorizationRule
         Permissions permissions,
         CancellationToken cancellationToken)
     {
-        if ((permissions & Permissions.Read) != 0)
+        if ((permissions & Permissions.Read) == 0)
         {
             return false;
         }
@@ -42,13 +42,17 @@ internal sealed class PublishedApplicationPartAuthorizationRule
         Permissions permissions,
         CancellationToken cancellationToken)
     {
-        if ((permissions & Permissions.Read) != 0)
+        if ((permissions & Permissions.Read) == 0)
         {
             return false;
         }
 
         return resource switch
         {
+            Application r => await _authorizationService
+                .RuleFor<Application>()
+                .IsAuthorizedAsync(r, permissions, cancellationToken),
+
             ApplicationPart r => await _authorizationService
                 .RuleFor<ApplicationPart>()
                 .IsAuthorizedAsync(r, permissions, cancellationToken),

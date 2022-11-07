@@ -15,10 +15,7 @@ export const pipeCommitFn = <T extends MutationParameters>(
   };
 };
 
-export const withErrorNotifications = <
-  T extends MutationParameters & { variables: { input: TInput } },
-  TInput
->(
+export const withErrorNotifications = <T extends MutationParameters>(
   errorSelector?: (result: T["response"]) => CommitErrors
 ): ((config: UseMutationConfig<T>) => Partial<UseMutationConfig<T>>) => {
   return (config: UseMutationConfig<T>) => {

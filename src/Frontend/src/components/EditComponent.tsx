@@ -3,7 +3,11 @@ import { Button, Col, Row, Tabs } from "antd";
 import { DetailView } from "../shared/DetailView";
 import { graphql } from "babel-plugin-relay/macro";
 import { EditComponentQuery } from "./__generated__/EditComponentQuery.graphql";
-import { pipeCommitFn, withSuccessMessage } from "../shared/pipeCommitFn";
+import {
+  pipeCommitFn,
+  withErrorNotifications,
+  withSuccessMessage,
+} from "../shared/pipeCommitFn";
 import { EditableBreadcrumbHeader } from "../shared/EditablePageHeader";
 import { useToggle } from "../shared/useToggle";
 import { RenameComponentDialog } from "./controls/dialogs/RenameComponentDialog";
@@ -62,11 +66,23 @@ const editComponentMutation = graphql`
         id
         ...EditComponent_component
       }
+      errors {
+        ... on UserError {
+          message
+          code
+        }
+      }
     }
     updateComponentValues(input: $valuesInput) {
       component {
         id
         ...EditComponent_component
+      }
+      errors {
+        ... on UserError {
+          message
+          code
+        }
       }
     }
   }
@@ -158,7 +174,13 @@ const EditComponentForm: React.FC<{
       !!r.updateComponentSchema.component?.id &&
       !!r.updateComponentValues.component?.id;
 
-    pipeCommitFn(commit, [withSuccessMessage(isSuccess, "Updated Component")])({
+    pipeCommitFn(commit, [
+      withSuccessMessage(isSuccess, "Updated Component"),
+      withErrorNotifications((r) => [
+        ...(r.updateComponentSchema.errors ?? []),
+        ...(r.updateComponentValues.errors ?? []),
+      ]),
+    ])({
       variables: {
         schemaInput: { id, schema: schema ?? "" },
         valuesInput: { id, values },

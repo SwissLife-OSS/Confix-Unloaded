@@ -259,8 +259,11 @@ internal static class ValueHelper
 
         foreach (var property in element.EnumerateObject())
         {
-            IType fieldType = objectType.Fields[property.Name].Type;
-            dictionary[property.Name] = Deserialize(property.Value, fieldType);
+            if (objectType.Fields.TryGetField(property.Name, out var field))
+            {
+                IType fieldType = objectType.Fields[property.Name].Type;
+                dictionary[property.Name] = Deserialize(property.Value, fieldType);
+            }
         }
 
         return dictionary;
