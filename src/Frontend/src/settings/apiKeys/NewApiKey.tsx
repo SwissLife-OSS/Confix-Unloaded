@@ -3,11 +3,10 @@ import { Button, Col, Input, message, Row, Tooltip } from "antd";
 import { useMutation } from "react-relay";
 import { graphql } from "babel-plugin-relay/macro";
 import { DetailView } from "../../shared/DetailView";
-import { FormField, FormActions, Field } from "../../shared/FormField";
+import { FormActions, Field } from "../../shared/FormField";
 import {
   withErrorNotifications,
   withOnSuccess,
-  withSuccessMessage,
 } from "../../shared/pipeCommitFn";
 import { useCommitForm } from "../../shared/useCommitForm";
 import { useConnectionId } from "../../shared/useConnectionId";
