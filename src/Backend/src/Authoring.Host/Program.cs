@@ -1,12 +1,9 @@
-using Confix.Authentication.Authorization;
 using Confix.Authoring;
 using Confix.Authoring.UI;
 using Confix.CryptoProviders;
 using IdentityModel;
 using Microsoft.AspNetCore.Authentication.OAuth.Claims;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.Extensions.Configuration.UserSecrets;
-using static IdentityModel.JwtClaimTypes;
 
 var builder = WebApplication.CreateBuilder(args);
 

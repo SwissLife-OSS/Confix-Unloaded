@@ -1,4 +1,6 @@
+using System.Collections.Immutable;
 using System.Security.Claims;
+using Confix.Authentication.ApiKey;
 using IdentityModel;
 using Microsoft.AspNetCore.Http;
 
@@ -8,6 +10,7 @@ public class SessionAccessor : ISessionAccessor
 {
     private readonly IHttpContextAccessor _accessor;
     private readonly IGroupProvider _groupProvider;
+    private readonly IApiKeyProvider _apiKeyProvider;
     private readonly object _lockObject = new();
     private readonly IRoleProvider _roleProvider;
 
@@ -16,10 +19,12 @@ public class SessionAccessor : ISessionAccessor
     public SessionAccessor(
         IHttpContextAccessor accessor,
         IGroupProvider groupProvider,
+        IApiKeyProvider apiKeyProvider,
         IRoleProvider roleProvider)
     {
         _accessor = accessor;
         _groupProvider = groupProvider;
+        _apiKeyProvider = apiKeyProvider;
         _roleProvider = roleProvider;
     }
 
@@ -43,12 +48,36 @@ public class SessionAccessor : ISessionAccessor
     {
         var context = _accessor.HttpContext;
 
-        if (context?.User.Identity?.IsAuthenticated is not true)
+        if (context?.User is not { Identity.IsAuthenticated: true } user)
         {
             return null;
         }
 
-        var groups = await _groupProvider.GetGroupsOfUserAsync(context.User, cancellationToken);
+        IReadOnlyList<Group> groups = Array.Empty<Group>();
+        if (user.Claims.FirstOrDefault(x => x.Type == ApiKeyDefaults.ApiKeyClaim) is
+            { } apiKeyClaim)
+        {
+            var apiKey = await _apiKeyProvider
+                .GetByIdAsync(Guid.Parse(apiKeyClaim.Value), cancellationToken);
+
+            if (apiKey is null)
+            {
+                return null;
+            }
+
+            groups = new[]
+            {
+                new Group(Guid.Empty,
+                    "Api Key Auth",
+                    ImmutableHashSet<Requirement>.Empty,
+                    apiKey.Roles)
+            };
+        }
+        else
+        {
+            groups = await _groupProvider.GetGroupsOfUserAsync(context.User, cancellationToken);
+        }
+
         var roleMap = await _roleProvider.GetRoleMapAsync(cancellationToken);
 
         // apply defaults

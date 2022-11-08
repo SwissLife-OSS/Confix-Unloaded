@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e2d86424df889ad083337b4e94d5f526>>
+ * @generated SignedSource<<f51abacf9e33536956f27a39b2272b11>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,7 @@ export type ChangeLog_RemoveComponentFromApplicationPartChange$data = {
   readonly removedComponent: {
     readonly definition: {
       readonly name: string;
-    };
+    } | null;
   };
   readonly " $fragmentType": "ChangeLog_RemoveComponentFromApplicationPartChange";
 };

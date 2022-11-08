@@ -1,3 +1,4 @@
+using Confix.Authentication.ApiKey;
 using Confix.Common;
 using IdentityModel;
 using Microsoft.AspNetCore.Authentication;
@@ -41,6 +42,11 @@ public static class AuthenticationExtensions
 
         string ForwardDefaultSelector(HttpContext context)
         {
+            if (context.Request.Headers.ContainsKey(ApiKeyDefaults.HeaderName))
+            {
+                return ApiKeyDefaults.AuthenticationScheme;
+            }
+
             string authorization = context.Request.Headers[HeaderNames.Authorization];
             if (!string.IsNullOrEmpty(authorization) && authorization.StartsWith("Bearer "))
             {

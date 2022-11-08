@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Confix.Common.Token;
 using Confix.CryptoProviders;
 using Confix.Vault.Abstractions;
 using Confix.Vault.Store;

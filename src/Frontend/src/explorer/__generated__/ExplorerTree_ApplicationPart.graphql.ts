@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<28c24678e653a9684e663dce40715fd4>>
+ * @generated SignedSource<<e12a20c71ff81c4fada14e96272d1370>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,7 @@ export type ExplorerTree_ApplicationPart$data = {
     readonly definition: {
       readonly id: string;
       readonly name: string;
-    };
+    } | null;
     readonly id: string;
   }>;
   readonly id: string;

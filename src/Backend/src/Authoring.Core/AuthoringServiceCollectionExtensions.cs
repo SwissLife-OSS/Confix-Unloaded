@@ -1,4 +1,5 @@
 using Confix.Authentication.Authorization;
+using Confix.Authoring.ApiKeys;
 using Confix.Authoring.Applications;
 using Confix.Authoring.ChangeLogs;
 using Confix.Authoring.Components;
@@ -14,6 +15,7 @@ public static class AuthoringServiceCollectionExtensions
 {
     public static IServiceCollection AddAuthoringCore(this IServiceCollection services)
     {
+        services.AddApiKeys();
         services.AddApplications();
         services.AddChangeLog();
         services.AddComponents();

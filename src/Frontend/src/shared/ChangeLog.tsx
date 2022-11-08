@@ -283,7 +283,7 @@ const ChangeLogAddComponentToApplicationPartChange: React.FC<{
   return (
     <>
       Added components{" "}
-      {changelog.addedComponent.definition.name ?? "Definition Removed"}
+      {changelog.addedComponent?.definition?.name ?? "Definition Removed"}
     </>
   );
 };

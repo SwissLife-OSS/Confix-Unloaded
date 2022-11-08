@@ -18,6 +18,7 @@ public static class GraphQlServiceCollectionExtensions
         builder
             // types
             .AddSharedTypes()
+            .AddApiKeys()
             .AddApplications()
             .AddComponents()
             .AddEnvironments()

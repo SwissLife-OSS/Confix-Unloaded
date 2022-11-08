@@ -1,7 +1,9 @@
 using Confix.Authentication.Authorization;
+using Confix.Authoring.ApiKeys;
 using Confix.Authoring.Publishing.Stores;
 using Confix.Authoring.Store;
 using Confix.Authoring.Store.Mongo;
+using Confix.Authoring.Store.Mongo.ApiKeys;
 using Confix.Common;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Extensions.Context;
@@ -20,6 +22,7 @@ public static class MongoStoreServiceCollectionExtensions
 
         builder.Services.AddSingleton<IAuthoringDbContext, AuthoringDbContext>();
         builder.Services.AddSingleton<IApplicationStore, ApplicationStore>();
+        builder.Services.AddSingleton<IApiKeyStore, ApiKeyStore>();
         builder.Services.AddSingleton<IChangeLogStore, ChangeLogStore>();
         builder.Services.AddSingleton<IEnvironmentStore, EnvironmentStore>();
         builder.Services.AddSingleton<IComponentStore, ComponentStore>();

@@ -1,5 +1,7 @@
+using Confix.Authentication.ApiKey;
 using Confix.Authentication.Authorization;
 using Confix.Authoring.Publishing;
+using Confix.Authoring.Store.Mongo.ApiKeys;
 using Confix.Authoring.Store.Mongo.Configuration;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson;
@@ -26,6 +28,7 @@ internal sealed class AuthoringDbContext : MongoDbContext, IAuthoringDbContext
         ClaimedVersions = CreateCollection<ClaimedVersion>().AsTransactionCollection();
         Roles = CreateCollection<Role>().AsTransactionCollection();
         Groups = CreateCollection<Group>().AsTransactionCollection();
+        ApiKeys = CreateCollection<ApiKey>().AsTransactionCollection();
     }
 
     public IMongoCollection<Application> Applications { get; }
@@ -45,6 +48,7 @@ internal sealed class AuthoringDbContext : MongoDbContext, IAuthoringDbContext
     public IMongoCollection<ClaimedVersion> ClaimedVersions { get; }
 
     public IMongoCollection<Role> Roles { get; }
+    public IMongoCollection<ApiKey> ApiKeys { get; }
 
     public IMongoCollection<Group> Groups { get; }
 
@@ -65,6 +69,7 @@ internal sealed class AuthoringDbContext : MongoDbContext, IAuthoringDbContext
             .ConfigureCollection(new VariableValueCollectionConfiguration())
             .ConfigureCollection(new ComponentCollectionConfiguration())
             .ConfigureCollection(new GroupCollectionConfiguration())
-            .ConfigureCollection(new RoleCollectionConfiguration());
+            .ConfigureCollection(new RoleCollectionConfiguration())
+            .ConfigureCollection(new ApiKeyCollectionConfiguration());
     }
 }

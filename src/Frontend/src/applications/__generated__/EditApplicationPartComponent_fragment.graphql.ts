@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c118b296cd9992be6305601c48bf4bae>>
+ * @generated SignedSource<<49088b0b9ef1777d672e567d453c09dc>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -41,7 +41,7 @@ export type EditApplicationPartComponent_fragment$data = {
     }>;
     readonly state: ComponentState;
     readonly values: any | null;
-  };
+  } | null;
   readonly values: string | null;
   readonly version: number;
   readonly " $fragmentSpreads": FragmentRefs<"EditApplicationPartComponent_ChangeLog_Fragment">;

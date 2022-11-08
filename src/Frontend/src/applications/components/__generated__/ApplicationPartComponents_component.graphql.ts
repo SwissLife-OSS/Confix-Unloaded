@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5093829d2c3d7d01964ebe3f1bd7d4f4>>
+ * @generated SignedSource<<1de50ee78145dde332619438d2c5b443>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,7 @@ export type ApplicationPartComponents_component$data = {
     readonly id: string;
     readonly name: string;
     readonly state: ComponentState;
-  };
+  } | null;
   readonly id: string;
   readonly " $fragmentType": "ApplicationPartComponents_component";
 };

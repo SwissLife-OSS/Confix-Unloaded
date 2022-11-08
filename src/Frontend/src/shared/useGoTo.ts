@@ -7,7 +7,9 @@ export const useGoTo = <
   cb: T,
   options: NavigateOptions | undefined = undefined,
   params: Record<string, string> | undefined = undefined
-): (() => void) => {
+): T extends (...args: any[]) => string | undefined
+  ? (...args: Parameters<T>) => void
+  : () => void => {
   const navigate = useNavigate();
   const handleAdd = useCallback(
     (...args: any) => {
@@ -27,5 +29,5 @@ export const useGoTo = <
     [navigate, cb, options, params]
   );
 
-  return handleAdd as () => void;
+  return handleAdd as any;
 };

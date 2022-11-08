@@ -1,9 +1,8 @@
 using System.Security.Cryptography;
-using Confix.Vault.Core;
 using Microsoft.AspNetCore.Identity;
 using static Microsoft.AspNetCore.Identity.PasswordVerificationResult;
 
-namespace Confix.Vault.Host;
+namespace Confix.Common.Token;
 
 internal sealed class TokenProvider : ITokenProvider
 {

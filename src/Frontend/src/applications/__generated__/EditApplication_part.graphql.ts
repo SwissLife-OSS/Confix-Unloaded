@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f88dce9e6e2f0131c163b8c1a55a66f7>>
+ * @generated SignedSource<<967a039361cb1bd5eb352c451e9426e1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,7 +17,7 @@ export type EditApplication_part$data = {
       readonly id: string;
       readonly name: string;
       readonly state: ComponentState;
-    };
+    } | null;
   }>;
   readonly id: string;
   readonly name: string;

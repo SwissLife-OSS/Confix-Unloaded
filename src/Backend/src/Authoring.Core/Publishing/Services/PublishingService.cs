@@ -242,7 +242,7 @@ internal sealed class PublishingService : IPublishingService
                 .RuleFor<Application>()
                 .IsAuthorizedAsync(app, Claim, cancellationToken))
         {
-            throw new OperationCanceledException();
+            throw new UnauthorizedOperationException();
         }
 
         var part = app.Parts.FirstOrDefault(x => x.Name == applicationPartName);
