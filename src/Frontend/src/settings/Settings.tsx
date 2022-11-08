@@ -8,6 +8,7 @@ import { useTabSwitcher } from "../shared/useTabSwitcher";
 import { css } from "@emotion/react";
 import { Groups } from "./groups/Groups";
 import { Roles } from "./roles/Roles";
+import { ApiKeys } from "./apiKeys/ApiKeys";
 
 export const Settings: React.FC = (props) => {
   return (
@@ -53,6 +54,15 @@ const SettingsTabs: React.FC = (props) => {
           children: (
             <DefaultSuspense>
               <Roles />
+            </DefaultSuspense>
+          ),
+        },
+        {
+          key: "apikeys",
+          label: "Api Keys",
+          children: (
+            <DefaultSuspense>
+              <ApiKeys />
             </DefaultSuspense>
           ),
         },

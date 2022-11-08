@@ -1,3 +1,4 @@
+using Confix.Authentication.ApiKey;
 using Confix.Authentication.Authorization;
 using Confix.Authoring.Publishing;
 using MongoDB.Driver;
@@ -25,4 +26,5 @@ internal interface IAuthoringDbContext
     IMongoCollection<Group> Groups { get; }
 
     IMongoCollection<Role> Roles { get; }
+    IMongoCollection<ApiKey> ApiKeys { get; }
 }

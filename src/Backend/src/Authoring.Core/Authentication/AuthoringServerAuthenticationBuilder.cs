@@ -1,3 +1,4 @@
+using Confix.Authentication.ApiKey;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -12,6 +13,7 @@ internal class AuthoringServerAuthenticationBuilder : IAuthoringServerAuthentica
     {
         Services = services;
         _builder = services.AddAuthentication(ConfigureAuthentication);
+        _builder.AddApiKey();
     }
 
     public IServiceCollection Services { get; }

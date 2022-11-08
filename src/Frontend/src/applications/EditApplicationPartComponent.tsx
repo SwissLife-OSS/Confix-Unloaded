@@ -152,13 +152,15 @@ export const EditApplicationPartComponent = () => {
             applicationName={applicationName}
             namespace={namespace ?? ""}
             applicationPartName={applicationPartName}
-            componentName={definition.name}
+            componentName={definition?.name ?? ""}
           />
         </Col>
       </Row>
       <Row>
         <Col xs={24}>
-          <SectionHeader title={`Component ${definition.name}`}></SectionHeader>
+          <SectionHeader
+            title={`Component ${definition?.name}`}
+          ></SectionHeader>
         </Col>
       </Row>
       <TabRow>
@@ -262,10 +264,10 @@ export const EditConfiguration: React.FC<{
   return (
     <>
       <SchemaComponentEditor
-        key={definition.id}
+        key={definition?.id}
         onValuesChanged={setComponentValues}
         values={values ?? ""}
-        schema={definition.schemaSdl ?? ""}
+        schema={definition?.schemaSdl ?? ""}
         variables={variables}
       />
       <ButtonBar>

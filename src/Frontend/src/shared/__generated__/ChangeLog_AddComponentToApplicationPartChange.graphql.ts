@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1f09b5ba6ba5c249717f04fec73f7853>>
+ * @generated SignedSource<<4259367aa23146bedfa315633f6a2503>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,7 @@ export type ChangeLog_AddComponentToApplicationPartChange$data = {
   readonly addedComponent: {
     readonly definition: {
       readonly name: string;
-    };
+    } | null;
   };
   readonly " $fragmentType": "ChangeLog_AddComponentToApplicationPartChange";
 };

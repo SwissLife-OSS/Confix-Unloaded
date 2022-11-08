@@ -280,8 +280,8 @@ const ApplicationPartsDisplay: React.FC<{
             dataSource={components.map((x) => ({ ...x }))}
             renderItem={(item) => (
               <ComponentListItem
-                name={item.definition.name}
-                id={item.definition.id}
+                name={item.definition?.name ?? ""}
+                id={item.definition?.id ?? ""}
               />
             )}
           />

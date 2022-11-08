@@ -218,7 +218,7 @@ const ApplicationPart: React.FC<{
       {components.map((y) => (
         <Component
           applicationId={applicationId}
-          key={y.definition.id}
+          key={y.definition?.id ?? "-"}
           data={y}
         />
       ))}
@@ -241,13 +241,7 @@ const ApplicationPart: React.FC<{
 const Component: React.FC<{
   applicationId: string;
   data: ApplicationsList_applicationsEdge$data["parts"][0]["components"][0];
-}> = ({
-  applicationId,
-  data: {
-    id: partComponentId,
-    definition: { name },
-  },
-}) => {
+}> = ({ applicationId, data: { id: partComponentId, definition } }) => {
   const [isRemoveDialogShown, , enableRemoveDialog, disableRemoveDialog] =
     useToggle();
   const goToComponent = useGoTo(
@@ -257,7 +251,7 @@ const Component: React.FC<{
   );
   return (
     <SubItem indent={2} onClick={goToComponent}>
-      <SubItemTitle>{name}</SubItemTitle>
+      <SubItemTitle>{definition?.name}</SubItemTitle>
       <SubItemButton
         type="text"
         icon={<DeleteIcon />}
@@ -265,7 +259,7 @@ const Component: React.FC<{
       />
       <RemoveComponentFromApplicationPartDialog
         partComponentId={partComponentId}
-        componentName={name}
+        componentName={definition?.name ?? ""}
         open={isRemoveDialogShown}
         onClose={disableRemoveDialog}
       />

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b5922a93205710dc00ff2dd3f054e8f5>>
+ * @generated SignedSource<<fcfdc79a194fbfe9d2a1628b0a4e16b3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,7 +19,7 @@ export type EditApplicationPart_fragment$data = {
   readonly components: ReadonlyArray<{
     readonly definition: {
       readonly id: string;
-    };
+    } | null;
     readonly id: string;
     readonly " $fragmentSpreads": FragmentRefs<"ApplicationPartComponents_component">;
   }>;

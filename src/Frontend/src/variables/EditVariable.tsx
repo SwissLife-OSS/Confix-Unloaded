@@ -363,8 +363,8 @@ const ApplicationPartSelector: React.FC<{
         value: x.id,
         components: x.components.map((y) => ({
           id: y.id,
-          name: y.definition.name,
-          label: y.definition.name,
+          name: y.definition?.name,
+          label: y.definition?.name,
           value: y.id,
         })),
       })) ?? []

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8094d0ecffd7ac02ea5dc798035ce8b6>>
+ * @generated SignedSource<<8b3eda6fd80ea8bb055409e540b39a15>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,7 +19,7 @@ export type ApplicationsList_applicationsEdge$data = {
       readonly definition: {
         readonly id: string;
         readonly name: string;
-      };
+      } | null;
       readonly id: string;
     }>;
     readonly id: string;

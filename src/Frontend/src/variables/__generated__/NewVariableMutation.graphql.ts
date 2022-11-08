@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1def172c7669ad1c8445dec416cf9177>>
+ * @generated SignedSource<<2633418ef124ed8929f11291c1d5560e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,7 +13,7 @@ export type CreateVariableInput = {
   defaultValue?: string | null;
   isSecret: boolean;
   name: string;
-  namespace?: string | null;
+  namespace: string;
 };
 export type NewVariableMutation$variables = {
   connectionIds: ReadonlyArray<string>;

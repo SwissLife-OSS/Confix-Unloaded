@@ -20,7 +20,7 @@ export const ApplicationPartComponents: React.FC<{
     return (
       <Row gutter={[16, 16]}>
         {(components.map((x) => ({ ...x })) ?? []).map((item) => (
-          <Col span={8} key={item.definition.id}>
+          <Col span={8} key={item.definition?.id}>
             <ApplicationPartComponentsDisplay
               applicationId={applicationId}
               part={item}
@@ -49,10 +49,10 @@ const ApplicationPartComponentsDisplay: React.FC<{
 }> = ({ part, applicationId }) => {
   const [isRemoveDialogShown, , enableRemoveDialog, disableRemoveDialog] =
     useToggle();
-  const {
-    id,
-    definition: { name, state },
-  } = useFragment(applicationPartComponentFragment, part);
+  const { id, definition } = useFragment(
+    applicationPartComponentFragment,
+    part
+  );
   const linkToPart = generatePath(
     `../:applicationId/components/:componentId/edit`,
     {
@@ -63,7 +63,7 @@ const ApplicationPartComponentsDisplay: React.FC<{
   return (
     <>
       <Card
-        title={name}
+        title={definition?.name}
         actions={[
           <Link to={linkToPart}>
             <EditIcon />
@@ -75,14 +75,18 @@ const ApplicationPartComponentsDisplay: React.FC<{
       >
         <CardBody>
           <Descriptions>
-            <Descriptions.Item label="name">{name}</Descriptions.Item>
-            <Descriptions.Item label="state">{state}</Descriptions.Item>
+            <Descriptions.Item label="name">
+              {definition?.name}
+            </Descriptions.Item>
+            <Descriptions.Item label="state">
+              {definition?.state}
+            </Descriptions.Item>
           </Descriptions>
         </CardBody>
       </Card>
       <RemoveComponentFromApplicationPartDialog
         partComponentId={id}
-        componentName={name}
+        componentName={definition?.name ?? ""}
         open={isRemoveDialogShown}
         onClose={disableRemoveDialog}
       />

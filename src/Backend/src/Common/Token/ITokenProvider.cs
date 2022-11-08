@@ -1,4 +1,4 @@
-namespace Confix.Vault.Core;
+namespace Confix.Common.Token;
 
 public interface ITokenProvider
 {
