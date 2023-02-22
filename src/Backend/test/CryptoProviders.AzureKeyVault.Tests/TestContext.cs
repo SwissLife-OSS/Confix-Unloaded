@@ -2,7 +2,7 @@ using Confix.Authoring;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ConfiX;
+namespace Confix.Value.Configuration;
 
 public static class TestContext
 {
