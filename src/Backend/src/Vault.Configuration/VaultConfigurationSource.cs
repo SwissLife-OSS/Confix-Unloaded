@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Configuration;
 
-namespace ConfiX;
+namespace Confix.Value.Configuration;
 
 public sealed class VaultConfigurationSource : IConfigurationSource
 {

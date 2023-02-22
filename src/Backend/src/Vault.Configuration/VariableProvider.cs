@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.DependencyInjection;
 using static System.Environment;
 
-namespace ConfiX;
+namespace Confix.Value.Configuration;
 
 internal sealed class VariableProvider
 {

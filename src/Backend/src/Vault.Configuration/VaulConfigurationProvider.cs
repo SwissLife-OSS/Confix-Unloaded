@@ -2,7 +2,7 @@ using Confix.Vault.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Memory;
 
-namespace ConfiX;
+namespace Confix.Value.Configuration;
 
 public class VaultConfigurationProvider : ConfigurationProvider
 {

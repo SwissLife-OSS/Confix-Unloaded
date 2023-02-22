@@ -1,6 +1,6 @@
 using Xunit;
 
-namespace ConfiX;
+namespace Confix.Value.Configuration;
 
 public class KeyVaultVariableCryptoProviderTests
 {

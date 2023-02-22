@@ -1,4 +1,4 @@
-using ConfiX;
+using Confix.Value.Configuration;
 
 namespace Microsoft.Extensions.Configuration;
 

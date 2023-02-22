@@ -2,7 +2,7 @@ using System.Diagnostics;
 using System.Text.Json;
 using Microsoft.Extensions.Configuration;
 
-namespace ConfiX;
+namespace Confix.Value.Configuration;
 
 /// <summary>
 /// This is the same implementen
