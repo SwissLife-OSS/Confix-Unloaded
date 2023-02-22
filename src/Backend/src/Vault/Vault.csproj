@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App"/>
   </ItemGroup>
 
   <PropertyGroup>
@@ -18,11 +18,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Vault.Abstractions\Vault.Abstractions.csproj" />
-    <ProjectReference Include="..\Vault.Core\Vault.Core.csproj" />
-    <ProjectReference Include="..\Vault.Store.Mongo\Vault.Store.Mongo.csproj" />
-    <ProjectReference Include="..\CryptoProviders.AzureKeyVault\CryptoProviders.AzureKeyVault.csproj" />
-    <ProjectReference Include="..\CryptoProviders.Mongo\CryptoProviders.Mongo.csproj" />
+    <ProjectReference Include="..\Vault.Abstractions\Vault.Abstractions.csproj"/>
+    <ProjectReference Include="..\Vault.Core\Vault.Core.csproj"/>
+    <ProjectReference Include="..\Vault.Store.Mongo\Vault.Store.Mongo.csproj"/>
+    <ProjectReference Include="..\CryptoProviders.AzureKeyVault\CryptoProviders.AzureKeyVault.csproj"/>
+    <ProjectReference Include="..\CryptoProviders.Mongo\CryptoProviders.Mongo.csproj"/>
   </ItemGroup>
 
 </Project>

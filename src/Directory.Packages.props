@@ -3,15 +3,15 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="Azure.Identity" Version="1.7.0" />
+    <PackageVersion Include="Azure.Identity" Version="1.8.2" />
     <PackageVersion Include="Azure.Security.KeyVault.Keys" Version="4.4.0" />
-    <PackageVersion Include="GreenDonut" Version="12.15.0" />
-    <PackageVersion Include="HotChocolate" Version="12.15.0" />
-    <PackageVersion Include="HotChocolate.AspNetCore" Version="12.15.0" />
-    <PackageVersion Include="HotChocolate.AspNetCore.Authorization" Version="12.15.0" />
-    <PackageVersion Include="HotChocolate.Data" Version="12.15.0" />
-    <PackageVersion Include="HotChocolate.Diagnostics" Version="12.15.0" />
-    <PackageVersion Include="McMaster.Extensions.CommandLineUtils" Version="4.0.1" />
+    <PackageVersion Include="GreenDonut" Version="13.0.4" />
+    <PackageVersion Include="HotChocolate" Version="13.0.4" />
+    <PackageVersion Include="HotChocolate.AspNetCore" Version="13.0.4" />
+    <PackageVersion Include="HotChocolate.AspNetCore.Authorization" Version="13.0.4" />
+    <PackageVersion Include="HotChocolate.Data" Version="13.0.4" />
+    <PackageVersion Include="HotChocolate.Diagnostics" Version="13.0.4" />
+    <PackageVersion Include="McMaster.Extensions.CommandLineUtils" Version="4.0.2" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.10" />
@@ -29,34 +29,34 @@
     <PackageVersion Include="Microsoft.Extensions.Options" Version="6.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="6.0.0" />
     <PackageVersion Include="Microsoft.Extensions.FileProviders.Embedded" Version="6.0.10" />
-    <PackageVersion Include="MongoDB.Extensions.Context" Version="1.2.0" />
-    <PackageVersion Include="MongoDB.Extensions.Transactions" Version="1.2.0" />
-    <PackageVersion Include="StrawberryShake.CodeGeneration.CSharp.Analyzers" Version="12.15.0" />
-    <PackageVersion Include="StrawberryShake.Transport.Http" Version="12.15.0" />
-    <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+    <PackageVersion Include="MongoDB.Extensions.Context" Version="2.0.0" />
+    <PackageVersion Include="MongoDB.Extensions.Transactions" Version="2.0.0" />
+    <PackageVersion Include="StrawberryShake.CodeGeneration.CSharp.Analyzers" Version="12.17.0" />
+    <PackageVersion Include="StrawberryShake.Transport.Http" Version="13.0.4" />
+    <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageVersion Include="System.Linq.Async" Version="6.0.1" />
     <PackageVersion Include="System.Net.Http" Version="4.3.4" />
     <PackageVersion Include="IdentityModel" Version="6.0.0" />
-    <PackageVersion Include="Yarp.ReverseProxy" Version="1.1.1" />
+    <PackageVersion Include="Yarp.ReverseProxy" Version="2.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <PackageVersion Include="FluentAssertions" Version="6.7.0" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
+    <PackageVersion Include="FluentAssertions" Version="6.10.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
     <PackageVersion Include="Squadron.Mongo" Version="0.17.0" />
-    <PackageVersion Include="coverlet.collector" Version="3.1.2">
+    <PackageVersion Include="coverlet.collector" Version="3.2.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
-    <PackageVersion Include="coverlet.msbuild" Version="3.1.2">
+    <PackageVersion Include="coverlet.msbuild" Version="3.2.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
-    <PackageVersion Include="Moq" Version="4.18.2" />
+    <PackageVersion Include="Moq" Version="4.18.4" />
     <PackageVersion Include="xunit" Version="2.4.2" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="2.4.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
-    <PackageVersion Include="Snapshooter.Xunit" Version="0.7.1" />
+    <PackageVersion Include="Snapshooter.Xunit" Version="0.12.0" />
   </ItemGroup>
 </Project>
