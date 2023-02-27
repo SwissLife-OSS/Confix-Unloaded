@@ -7,12 +7,14 @@ namespace Confix.Value.Configuration;
 public class VaultConfigurationProvider : ConfigurationProvider
 {
     private readonly VaultConfigurationSource _source;
-    private readonly VariableProvider _provider = new();
-    private readonly ConfigurationHttpClientFactory _clientFactory = new();
+    private readonly VariableProvider _provider;
+    private readonly ConfigurationHttpClientFactory _clientFactory;
 
     public VaultConfigurationProvider(VaultConfigurationSource source)
     {
         _source = source;
+        _provider = new VariableProvider();
+        _clientFactory = new ConfigurationHttpClientFactory(_provider);
     }
 
     public override void Load()
