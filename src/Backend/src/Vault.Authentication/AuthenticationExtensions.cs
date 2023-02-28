@@ -1,4 +1,3 @@
-using Confix.Authentication.Authorization;
 using Confix.Common;
 using Confix.Vault;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

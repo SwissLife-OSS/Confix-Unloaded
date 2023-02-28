@@ -8,11 +8,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Authoring.Abstractions\Authoring.Abstractions.csproj" />
+    <ProjectReference Include="..\Authoring.Messaging\Authoring.Messaging.csproj" />
     <ProjectReference Include="..\Vault.Client\Vault.Client.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="GreenDonut" />
+    <PackageReference Include="MassTransit" />
     <PackageReference Include="System.Linq.Async" />
   </ItemGroup>
 

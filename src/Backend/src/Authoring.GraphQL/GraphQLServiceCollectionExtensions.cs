@@ -1,4 +1,3 @@
-using Confix.Authoring.GraphQL.Serialization;
 using HotChocolate.Execution.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -41,9 +40,8 @@ public static class GraphQlServiceCollectionExtensions
             {
                 x.EnableFlagEnums = true;
                 x.EnableOneOf = true;
+                x.EnableDefer = true;
             });
-
-        builder.Services.AddHttpResultSerializer<ForbiddenHttpResultSerializer>();
 
         return builder;
     }

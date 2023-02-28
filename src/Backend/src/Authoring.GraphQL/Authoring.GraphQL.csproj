@@ -25,6 +25,7 @@
     <Folder Include="Groups\Dataloader" />
     <Folder Include="Groups\Extensions" />
     <Folder Include="Roles\Extensions" />
+    <Folder Include="Serialization" />
     <Folder Include="Vault.Authentication" />
   </ItemGroup>
 

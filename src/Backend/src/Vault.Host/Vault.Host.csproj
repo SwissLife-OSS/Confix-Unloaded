@@ -18,7 +18,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Messaging.RabbitMQ\Messaging.RabbitMQ.csproj" />
+    <ProjectReference Include="..\Messaging.ServiceBus\Messaging.ServiceBus.csproj" />
     <ProjectReference Include="..\Vault.Authentication\Vault.Authentication.csproj" />
+    <ProjectReference Include="..\Vault.Messaging\Vault.Messaging.csproj" />
     <ProjectReference Include="..\Vault\Vault.csproj" />
   </ItemGroup>
 

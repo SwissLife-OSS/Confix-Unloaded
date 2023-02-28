@@ -56,12 +56,16 @@ internal static class ValueHelper
             {
                 case "String":
                     return "abc";
+
                 case "Int":
                     return 123;
+
                 case "Float":
                     return 123.123;
+
                 case "Boolean":
                     return true;
+
                 default:
                     throw new NotSupportedException();
             }
@@ -185,6 +189,7 @@ internal static class ValueHelper
                 }
 
                 break;
+
             case string when type.NamedType() is EnumType enumType && value is string strValue:
                 if (!enumType.TryGetValue(strValue, out _))
                 {
@@ -192,6 +197,7 @@ internal static class ValueHelper
                 }
 
                 break;
+
             case string:
                 schemaViolations.Add(new SchemaViolation(path.ToList(), "INVALID_TYPE"));
 

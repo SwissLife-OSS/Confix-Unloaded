@@ -2,6 +2,7 @@ using System.Text.Json.Nodes;
 using System.Transactions;
 using Confix.Authentication.Authorization;
 using Confix.Authoring.Extensions;
+using Confix.Authoring.Messaging;
 using Confix.Authoring.Publishing.Stores;
 using Confix.Authoring.Store;
 using Confix.Common.Exceptions;
@@ -34,7 +35,7 @@ internal sealed class PublishingService : IPublishingService
     private readonly IPublishingStore _publishingStore;
     private readonly ISessionAccessor _sessionAccessor;
     private readonly IVariableService _variableService;
-    private readonly IVaultClient _vaultClient;
+    private readonly ICreateVaultConfigClient _createVaultConfig;
 
     public PublishingService(
         IDataLoader<Guid, PublishedApplicationPart?> publishedById,
@@ -46,14 +47,14 @@ internal sealed class PublishingService : IPublishingService
         IPublishingStore publishingStore,
         IEncryptor encryptor,
         IVariableService variableService,
-        IVaultClient vaultClient,
         IComponentService componentService,
         IAuthorizationService authorizationService,
         IApplicationByPartIdDataLoader applicationByPartId,
         IPublishedApplicationPartByIdDataloader publishedApplicationPartById,
         IChangeLogService changeLogService,
         IEnvironmentStore environmentStore,
-        IVariableStore variableStore)
+        IVariableStore variableStore,
+        ICreateVaultConfigClient createVaultConfig)
     {
         _publishedById = publishedById;
         _publishedApplicationPartsByPartId = publishedApplicationPartsByPartId;
@@ -70,7 +71,7 @@ internal sealed class PublishingService : IPublishingService
         _changeLogService = changeLogService;
         _environmentStore = environmentStore;
         _variableStore = variableStore;
-        _vaultClient = vaultClient;
+        _createVaultConfig = createVaultConfig;
         _encryptor = encryptor;
     }
 
@@ -289,11 +290,11 @@ internal sealed class PublishingService : IPublishingService
                 publishedApplicationPart.Configuration,
                 cancellationToken);
 
-            var token = await _vaultClient.CreateAsync(
-                app.Name!,
-                part.Name!,
-                environmentName,
-                variableReplaced,
+            var token = await _createVaultConfig.ExecuteAsync(
+                new(app.Name!,
+                    part.Name!,
+                    environmentName,
+                    variableReplaced),
                 cancellationToken);
 
             version = new ClaimedVersion(
