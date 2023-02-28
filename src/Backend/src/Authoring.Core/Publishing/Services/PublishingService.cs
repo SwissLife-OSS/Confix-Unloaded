@@ -7,6 +7,7 @@ using Confix.Authoring.Publishing.Stores;
 using Confix.Authoring.Store;
 using Confix.Common.Exceptions;
 using Confix.CryptoProviders;
+using Confix.CryptoProviders.AzureKeyVault;
 using Confix.Vault.Client;
 using GreenDonut;
 using static Confix.Authentication.Authorization.Permissions;
@@ -207,7 +208,7 @@ internal sealed class PublishingService : IPublishingService
             .GetClaimedVersionAsync(partId, environmentId, cancellationToken);
     }
 
-    public async Task<ClaimedVersion> ClaimVersionAsync(
+    public async Task<ClaimedVersion?> ClaimVersionAsync(
         string gitVersion,
         string applicationName,
         string applicationPartName,
@@ -290,11 +291,13 @@ internal sealed class PublishingService : IPublishingService
                 publishedApplicationPart.Configuration,
                 cancellationToken);
 
+            var cryptoProvider = InMemoryCryptoProvider.New();
+
             var token = await _createVaultConfig.ExecuteAsync(
                 new(app.Name!,
                     part.Name!,
                     environmentName,
-                    variableReplaced),
+                    cryptoProvider.EncryptAsync(variableReplaced).Serialize()),
                 cancellationToken);
 
             version = new ClaimedVersion(
@@ -314,10 +317,23 @@ internal sealed class PublishingService : IPublishingService
                     token.RefreshToken,
                     env.Id,
                     cancellationToken),
+                await _encryptor.EncryptAsync(
+                    "decryptionKey",
+                    cryptoProvider.KeyBase64,
+                    env.Id,
+                    cancellationToken),
                 DateTime.UtcNow);
 
-            return await _publishingStore
-                .GetOrCreateClaimedVersionAsync(version, cancellationToken);
+            version = await _publishingStore
+                .CreateClaimedVersionAsync(version, cancellationToken);
+
+            if (version is null)
+            {
+                throw ThrowHelper.ClaimFailedBecauseOtherClaimAlreadyInProgress(
+                    applicationName,
+                    applicationPartName,
+                    environmentName);
+            }
         }
 
         return version;

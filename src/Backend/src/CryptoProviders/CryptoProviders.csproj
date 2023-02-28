@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>Confix.CryptoProvider</AssemblyName>
+    <RootNamespace>Confix.CryptoProvider</RootNamespace>
+    <IsPackable>true</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CryptoProviders.Abstractions\CryptoProviders.Abstractions.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -15,6 +15,7 @@ public sealed record ClaimedVersion
         Guid publishingId,
         EncryptedValue token,
         EncryptedValue refreshToken,
+        EncryptedValue decryptionKey,
         DateTime claimedAt)
     {
         Id = id;
@@ -26,6 +27,7 @@ public sealed record ClaimedVersion
         Token = token;
         ClaimedAt = claimedAt;
         RefreshToken = refreshToken;
+        DecryptionKey = decryptionKey;
     }
 
     [ID]
@@ -46,6 +48,9 @@ public sealed record ClaimedVersion
 
     [GraphQLIgnore]
     public EncryptedValue RefreshToken { get; init; }
+
+    [GraphQLIgnore]
+    public EncryptedValue DecryptionKey { get; init; }
 
     public DateTime ClaimedAt { get; init; }
 }

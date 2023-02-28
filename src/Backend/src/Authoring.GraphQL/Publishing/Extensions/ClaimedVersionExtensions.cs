@@ -42,12 +42,4 @@ public sealed class ClaimedVersionExtensions
     {
         return await service.GetPublishedById(claimedVersion.PublishingId, cancellationToken);
     }
-
-    public async Task<string?> GetTokenAsync(
-        [Service] IDecryptor service,
-        [Parent] ClaimedVersion claimedVersion,
-        CancellationToken cancellationToken)
-    {
-        return await service.DecryptAsync(claimedVersion.Token, cancellationToken);
-    }
 }

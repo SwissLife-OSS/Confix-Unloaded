@@ -63,7 +63,12 @@ public sealed class ClaimCommand : Command
             return ExitCodes.Error;
         }
 
-        if (mutationResult.ClaimedVersion is not { } claimedVersion)
+        if (mutationResult.Result is not
+            {
+                Version: { } claimedVersion,
+                Token: { } token,
+                DecryptionKey: { } decryptionKey
+            })
         {
             console.Error("There was an unexpected error");
 
@@ -72,9 +77,10 @@ public sealed class ClaimCommand : Command
 
         console.Success("Successfully claimed Version!");
         console.MarkupLine($"""
-            [dim]Published Version: [bold]{claimedVersion.PublishedApplicationPart?.Version}[/][/]
-            [dim]Token:             [bold]{claimedVersion.PublishedApplicationPart?.Version}[/][/]
-            """);
+             [dim]Published Version:         [bold]{claimedVersion.PublishedApplicationPart?.Version}[/][/]
+             [dim]Token:                     [bold]{token}[/][/]
+             [dim]DecryptionKey:             [bold]{decryptionKey}[/][/]
+             """);
 
         return ExitCodes.Success;
     }

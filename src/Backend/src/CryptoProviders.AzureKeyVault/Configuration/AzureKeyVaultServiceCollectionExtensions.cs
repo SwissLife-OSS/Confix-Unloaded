@@ -17,11 +17,11 @@ public static class AzureKeyVaultServiceCollectionExtensions
         services.Services.AddSingleton<IKeyEncryptionKeyCache, KeyEncryptionKeyCache>();
         services.Services.AddSingleton<IEncryptionKeyProvider, EncryptionKeyProvider>();
         services.Services.AddSingleton<ICryptographyClientFactory, CryptographyClientFactory>();
-        services.Services.AddSingleton<KeyVaultCryptoProvider>();
+        services.Services.AddSingleton<EncryptionKeyCryptoProvider>();
         services.Services
-            .AddSingleton<IEncryptor>(sp => sp.GetRequiredService<KeyVaultCryptoProvider>());
+            .AddSingleton<IEncryptor>(sp => sp.GetRequiredService<EncryptionKeyCryptoProvider>());
         services.Services
-            .AddSingleton<IDecryptor>(sp => sp.GetRequiredService<KeyVaultCryptoProvider>());
+            .AddSingleton<IDecryptor>(sp => sp.GetRequiredService<EncryptionKeyCryptoProvider>());
 
         return services;
     }

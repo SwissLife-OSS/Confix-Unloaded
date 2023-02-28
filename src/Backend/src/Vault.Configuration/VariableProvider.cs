@@ -8,6 +8,7 @@ internal sealed class VariableProvider
 {
     private const string _vaultUrl = "SWISSLIFE_CONFIX_VAULT";
     private const string _environment = "SWISSLIFE_ENVIRONMENT";
+    private const string _decryptionKey = "SWISSLIFE_CONFIX_DECRYPTION_KEY";
     private const string _token = "SWISSLIFE_CONFIX_TOKEN";
 
     public string ResolveVaultUrl() => GetEnvironmentVariable(_vaultUrl)
@@ -15,6 +16,9 @@ internal sealed class VariableProvider
 
     public string ResolverEnvironment() => GetEnvironmentVariable(_environment)
         ?? throw EnvironmentVariableNotFound(_environment);
+
+    public string ResolveDecryptionKey() => GetEnvironmentVariable(_decryptionKey)
+        ?? throw EnvironmentVariableNotFound(_decryptionKey);
 
     public string ResolveToken(ApplicationPart part)
     {

@@ -1,5 +1,6 @@
 using Confix.Authoring.Publishing;
 using Confix.Authoring.Publishing.Stores;
+using HotChocolate.Utilities;
 using MongoDB.Driver;
 using static MongoDB.Driver.Builders<Confix.Authoring.Publishing.PublishedApplicationPart>;
 using Claimed = MongoDB.Driver.Builders<Confix.Authoring.Publishing.ClaimedVersion>;
@@ -86,7 +87,7 @@ internal sealed class PublishingStore : IPublishingStore
             .SingleOrDefaultAsync(cancellationToken);
     }
 
-    public async Task<ClaimedVersion> GetOrCreateClaimedVersionAsync(
+    public async Task<ClaimedVersion?> CreateClaimedVersionAsync(
         ClaimedVersion version,
         CancellationToken cancellationToken)
     {
@@ -104,6 +105,8 @@ internal sealed class PublishingStore : IPublishingStore
             .SetOnInsert(x => x.Tag, version.Tag)
             .SetOnInsert(x => x.PublishingId, version.PublishingId)
             .SetOnInsert(x => x.Token, version.Token)
+            .SetOnInsert(x => x.RefreshToken, version.RefreshToken)
+            .SetOnInsert(x => x.DecryptionKey, version.DecryptionKey)
             .SetOnInsert(x => x.ClaimedAt, version.ClaimedAt)
             .SetOnInsert(x => x.Id, version.Id);
 
@@ -113,8 +116,15 @@ internal sealed class PublishingStore : IPublishingStore
             ReturnDocument = ReturnDocument.After
         };
 
-        return await _dbContext.ClaimedVersions
+        var result =  await _dbContext.ClaimedVersions
             .FindOneAndUpdateAsync(filter, update, options, cancellationToken);
+
+        if (result.Token.Value != version.Token.Value)
+        {
+            return null;
+        }
+
+        return result;
     }
 
     public async Task<ClaimedVersion?> GetClaimedVersionByGitVersionAsync(
