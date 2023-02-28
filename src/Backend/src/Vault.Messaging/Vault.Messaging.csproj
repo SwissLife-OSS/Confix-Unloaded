@@ -1,29 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
+    <AssemblyName>Confix.Vault.Messaging</AssemblyName>
+    <RootNamespace>Confix.Vault.Messaging</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
-    <IsPackable>false</IsPackable>
-    <UserSecretsId>1c8699f1-4dc8-4cbf-9c09-e21e2332576a</UserSecretsId>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Swashbuckle.AspNetCore"/>
-  </ItemGroup>
-
-  <PropertyGroup>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <NoWarn>$(NoWarn);1591</NoWarn>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Messaging\Messaging.csproj"/>
     <ProjectReference Include="..\Vault\Vault.csproj"/>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="ApiKey"/>
   </ItemGroup>
 
 </Project>
