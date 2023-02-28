@@ -82,6 +82,16 @@ public static class Settings
                     public const string Section = $"{Authentication.Section}:{nameof(JwtBearer)}";
                 }
             }
+
+            public static class Environment
+            {
+                public const string Section = $"{Vault.Section}:{nameof(Environment)}";
+
+                public static class Name
+                {
+                    public const string Value = $"{Section}:{nameof(Name)}";
+                }
+            }
         }
 
         public static class Encryption
@@ -107,6 +117,21 @@ public static class Settings
                 {
                     public const string Section = $"{DataEncryptionKey.Section}:{nameof(Mongo)}";
                 }
+            }
+        }
+
+        public static class Messaging
+        {
+            public const string Section = $"{Confix.Section}:{nameof(Messaging)}";
+
+            public static class ServiceBus
+            {
+                public const string Section = $"{Messaging.Section}:{nameof(ServiceBus)}";
+            }
+
+            public static class RabbitMq
+            {
+                public const string Section = $"{Messaging.Section}:{nameof(RabbitMq)}";
             }
         }
     }

@@ -1,6 +1,8 @@
 using Confix.Authoring;
+using Confix.Authoring.Messaging;
 using Confix.Authoring.UI;
 using Confix.CryptoProviders;
+using Confix.Messaging.RabbitMQ;
 using IdentityModel;
 using Microsoft.AspNetCore.Authentication.OAuth.Claims;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -11,10 +13,10 @@ builder.Services
     .AddConfixAuthoringServer()
     .UseMongoDbStores()
     .AddVaultHttpClient()
-    .ConfigureEncryption(
-        descriptor => descriptor
-            .UseAzureKeyVaultKeyEncryptionKeys()
-            .UseMongoDbDataEncryptionKeys())
+    .ConfigureMessaging(x => x.UseRabbitMq())
+    .ConfigureEncryption(descriptor => descriptor
+        .UseAzureKeyVaultKeyEncryptionKeys()
+        .UseMongoDbDataEncryptionKeys())
     .ConfigureAuthentication(descriptor
         => descriptor.UseOpenIdConnectAndJwtBearerLogin().AddJwtBearer().AddOpenIdConnect());
 

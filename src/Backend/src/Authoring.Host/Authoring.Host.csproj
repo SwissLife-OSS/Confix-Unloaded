@@ -8,15 +8,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Authoring.UI\Authoring.UI.csproj" />
-    <ProjectReference Include="..\Authoring\Authoring.csproj" />
-    <ProjectReference Include="..\Authoring.Store.Mongo\Authoring.Store.Mongo.csproj" />
-    <ProjectReference Include="..\CryptoProviders.AzureKeyVault\CryptoProviders.AzureKeyVault.csproj" />
-    <ProjectReference Include="..\CryptoProviders.Mongo\CryptoProviders.Mongo.csproj" />
+    <ProjectReference Include="..\Authoring.Messaging\Authoring.Messaging.csproj"/>
+    <ProjectReference Include="..\Authoring.UI\Authoring.UI.csproj"/>
+    <ProjectReference Include="..\Authoring\Authoring.csproj"/>
+    <ProjectReference Include="..\Authoring.Store.Mongo\Authoring.Store.Mongo.csproj"/>
+    <ProjectReference Include="..\CryptoProviders.AzureKeyVault\CryptoProviders.AzureKeyVault.csproj"/>
+    <ProjectReference Include="..\CryptoProviders.Mongo\CryptoProviders.Mongo.csproj"/>
+    <ProjectReference Include="..\Messaging.RabbitMQ\Messaging.RabbitMQ.csproj"/>
+    <ProjectReference Include="..\Messaging.ServiceBus\Messaging.ServiceBus.csproj"/>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Yarp.ReverseProxy" />
+    <PackageReference Include="Yarp.ReverseProxy"/>
   </ItemGroup>
 
 </Project>
