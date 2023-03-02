@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />
     <ProjectReference Include="..\CryptoProviders.Abstractions\CryptoProviders.Abstractions.csproj" />
+    <ProjectReference Include="..\CryptoProviders\CryptoProviders.csproj" />
   </ItemGroup>
 
 </Project>

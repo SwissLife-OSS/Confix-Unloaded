@@ -3,8 +3,12 @@ mutation ClaimApplicationPart($input: ClaimVersionInput!) {
     errors {
       ...Error
     }
-    claimedVersion {
-      ...ClaimedVersion
+    result {
+      version {
+        ...ClaimedVersion
+      }
+      decryptionKey
+      token
     }
   }
 }
@@ -16,10 +20,9 @@ fragment ClaimedVersion on ClaimedVersion {
   publishedApplicationPart {
     version
   }
-  token
 }
 
-fragment  Error on IUserError {
+fragment  Error on UserError {
   message
   code
 }

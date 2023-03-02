@@ -19,7 +19,8 @@ public sealed class PublishingMutations
 
     [Error(typeof(ClaimVersionFailedException))]
     [Error(typeof(UnauthorizedOperationException))]
-    public async Task<ClaimedVersion> ClaimVersionAsync(
+    [UseMutationConvention(PayloadFieldName = "result")]
+    public async Task<ClaimVersionResult> ClaimVersionAsync(
         [Service] IPublishingService service,
         string tag,
         string applicationName,
@@ -27,13 +28,13 @@ public sealed class PublishingMutations
         string environmentName,
         CancellationToken cancellationToken)
     {
-        return await service.ClaimVersionAsync(
+        return new ClaimVersionResult(await service.ClaimVersionAsync(
                 tag,
                 applicationName,
                 applicationPartName,
                 environmentName,
                 cancellationToken)
             // TODO make nice remove
-            ?? throw new ClaimVersionFailedException("Failed");
+            ?? throw new ClaimVersionFailedException("Failed"));
     }
 }

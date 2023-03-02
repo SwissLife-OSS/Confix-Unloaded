@@ -9,6 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Authoring.Abstractions\Authoring.Abstractions.csproj" />
     <ProjectReference Include="..\Authoring.Messaging\Authoring.Messaging.csproj" />
+    <ProjectReference Include="..\CryptoProviders\CryptoProviders.csproj" />
     <ProjectReference Include="..\Vault.Client\Vault.Client.csproj" />
   </ItemGroup>
 

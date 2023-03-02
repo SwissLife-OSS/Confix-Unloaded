@@ -94,6 +94,16 @@ internal static class ThrowHelper
             "There was no configuration published for this part.");
     }
 
+    public static Exception ClaimFailedBecauseOtherClaimAlreadyInProgress(
+        string applicationName,
+        string partName,
+        string environment)
+    {
+        return new ClaimVersionFailedException(
+            $"Could not claim application part {applicationName}.{partName}. ({environment}) " +
+            "There was another claim already in progress.");
+    }
+
     public static Exception EnvironmentWasNotFound(Guid environmentId)
     {
         return new EnvironmentNotFoundException(environmentId);

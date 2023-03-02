@@ -1,3 +1,5 @@
+using System.Text.Json;
+using Confix.CryptoProviders.AzureKeyVault;
 using Confix.Vault.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Memory;
@@ -36,7 +38,13 @@ public class VaultConfigurationProvider : ConfigurationProvider
                 $"Could not load configuration from vault {_provider.ResolveVaultUrl()}");
         }
 
-        Data = JsonConfigurationFileParser.ParseJson(response);
+        var (cypher, iv) = response.RootElement.Deserialize<CypherAndIv>();
+
+        var decryptred = InMemoryCryptoProvider
+            .From(_provider.ResolveDecryptionKey())
+            .DecryptAsync(cypher, iv);
+
+        Data = JsonConfigurationFileParser.ParseJson(JsonDocument.Parse(decryptred));
     }
 
     private sealed class ConfigurationHttpClientFactory : IHttpClientFactory

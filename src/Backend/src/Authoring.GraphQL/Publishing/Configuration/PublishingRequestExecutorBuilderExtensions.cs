@@ -31,6 +31,7 @@ public static class PublishingRequestExecutorBuilderExtensions
         // extensions
         builder.AddTypeExtension<ApplicationPartPublishingExtensions>();
         builder.AddTypeExtension<ClaimedVersionExtensions>();
+        builder.AddTypeExtension<ClaimResultExtensions>();
         builder.AddTypeExtension<PublishedApplicationPartExtensions>();
 
         // change log
