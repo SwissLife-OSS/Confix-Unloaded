@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <AssemblyName>Confix.Samples.Host</AssemblyName>
+    <RootNamespace>Confix.Samples</RootNamespace>
+    <IsPackable>false</IsPackable>
+    <UserSecretsId>FFA5BA86-B890-4329-B7A5-ABEC3DAC9C53</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Yarp.ReverseProxy" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Vault.Configuration\Vault.Configuration.csproj" />
+  </ItemGroup>
+
+</Project>

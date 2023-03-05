@@ -31,4 +31,10 @@ public interface IPublishingService
         string applicationPartName,
         string environmentName,
         CancellationToken cancellationToken);
+
+    Task<string> BuildLatestPublishedVersion(
+        string applicationName,
+        string applicationPartName,
+        string environmentName,
+        CancellationToken cancellationToken);
 }

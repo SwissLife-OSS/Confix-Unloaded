@@ -7,14 +7,25 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Azure.Identity" />
     <PackageReference Include="Microsoft.Extensions.Configuration" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
     <PackageReference Include="Microsoft.AspNetCore.DataProtection" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" />
+    <PackageReference Include="StrawberryShake.Server" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\CryptoProviders\CryptoProviders.csproj" />
     <ProjectReference Include="..\Vault.Client\Vault.Client.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <GraphQL Update="schema.graphql">
+      <Generator>MSBuild:GenerateGraphQLCode</Generator>
+    </GraphQL>
+    <GraphQL Update="schema.extensions.graphql">
+      <Generator>MSBuild:GenerateGraphQLCode</Generator>
+    </GraphQL>
   </ItemGroup>
 </Project>

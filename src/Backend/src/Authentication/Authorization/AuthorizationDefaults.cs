@@ -27,6 +27,7 @@ public static class AuthorizationDefaults
         new Role(Guid.Parse("63C30F32-DEB1-4DFC-8D19-CD7767CE5A20"),
             "Default",
             new[] { new Permission(Scope.Environment, Permissions.Read) }),
+        // TODO this has to go?
         new Role(
             Guid.Parse("079AD2AD-FDCD-41E2-B33F-298654C6FC77"),
             "Tooling - Claim",

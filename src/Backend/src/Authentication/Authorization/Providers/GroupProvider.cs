@@ -24,6 +24,7 @@ public class GroupProvider : IGroupProvider
         CancellationToken cancellationToken)
     {
         var identifier = principal.FindFirstValue(JwtClaimTypes.Subject) ??
+            principal.FindFirstValue(ClaimTypes.NameIdentifier) ??
             principal.FindFirstValue(JwtClaimTypes.JwtId);
 
         if (identifier is null)

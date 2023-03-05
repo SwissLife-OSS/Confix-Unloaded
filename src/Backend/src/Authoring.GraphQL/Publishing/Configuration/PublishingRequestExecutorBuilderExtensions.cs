@@ -27,6 +27,7 @@ public static class PublishingRequestExecutorBuilderExtensions
 
         // types
         builder.AddTypeExtension<PublishingMutations>();
+        builder.AddTypeExtension<PublishingQueries>();
 
         // extensions
         builder.AddTypeExtension<ApplicationPartPublishingExtensions>();

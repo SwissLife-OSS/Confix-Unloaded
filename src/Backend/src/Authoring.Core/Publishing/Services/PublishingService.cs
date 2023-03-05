@@ -8,7 +8,6 @@ using Confix.Authoring.Store;
 using Confix.Common.Exceptions;
 using Confix.CryptoProviders;
 using Confix.CryptoProviders.AzureKeyVault;
-using Confix.Vault.Client;
 using GreenDonut;
 using static Confix.Authentication.Authorization.Permissions;
 
@@ -255,6 +254,14 @@ internal sealed class PublishingService : IPublishingService
                 .ClaimFailedBecauseApplicationPartWasNotFound(applicationName, applicationPartName);
         }
 
+        var version = await _publishingStore
+            .GetClaimedVersionAsync(part.Id, env.Id, gitVersion, cancellationToken);
+
+        if (version is not null)
+        {
+            return version;
+        }
+
         var claimedVersion = await _publishingStore
             .GetClaimedVersionByGitVersionAsync(gitVersion, app.Id, part.Id, cancellationToken);
 
@@ -279,64 +286,124 @@ internal sealed class PublishingService : IPublishingService
                 environmentName);
         }
 
-        var version = await _publishingStore
-            .GetClaimedVersionAsync(part.Id, env.Id, gitVersion, cancellationToken);
+        var variableReplaced = await ReplaceVariableValuesAsync(
+            app,
+            part,
+            env,
+            publishedApplicationPart.Configuration,
+            cancellationToken);
+
+        var cryptoProvider = InMemoryCryptoProvider.New();
+
+        var token = await _createVaultConfig.ExecuteAsync(
+            new(app.Name!,
+                part.Name!,
+                environmentName,
+                cryptoProvider.EncryptAsync(variableReplaced).Serialize()),
+            cancellationToken);
+
+        version = new ClaimedVersion(
+            Guid.NewGuid(),
+            gitVersion,
+            app.Id,
+            part.Id,
+            env.Id,
+            publishedApplicationPart.Id,
+            await _encryptor.EncryptAsync(
+                "token",
+                token.AccessToken,
+                env.Id,
+                cancellationToken),
+            await _encryptor.EncryptAsync(
+                "refreshToken",
+                token.RefreshToken,
+                env.Id,
+                cancellationToken),
+            await _encryptor.EncryptAsync(
+                "decryptionKey",
+                cryptoProvider.KeyBase64,
+                env.Id,
+                cancellationToken),
+            DateTime.UtcNow);
+
+        version = await _publishingStore
+            .CreateClaimedVersionAsync(version, cancellationToken);
 
         if (version is null)
         {
-            var variableReplaced = await ReplaceVariableValuesAsync(
-                app,
-                part,
-                env,
-                publishedApplicationPart.Configuration,
-                cancellationToken);
-
-            var cryptoProvider = InMemoryCryptoProvider.New();
-
-            var token = await _createVaultConfig.ExecuteAsync(
-                new(app.Name!,
-                    part.Name!,
-                    environmentName,
-                    cryptoProvider.EncryptAsync(variableReplaced).Serialize()),
-                cancellationToken);
-
-            version = new ClaimedVersion(
-                Guid.NewGuid(),
-                gitVersion,
-                app.Id,
-                part.Id,
-                env.Id,
-                publishedApplicationPart.Id,
-                await _encryptor.EncryptAsync(
-                    "token",
-                    token.AccessToken,
-                    env.Id,
-                    cancellationToken),
-                await _encryptor.EncryptAsync(
-                    "refreshToken",
-                    token.RefreshToken,
-                    env.Id,
-                    cancellationToken),
-                await _encryptor.EncryptAsync(
-                    "decryptionKey",
-                    cryptoProvider.KeyBase64,
-                    env.Id,
-                    cancellationToken),
-                DateTime.UtcNow);
-
-            version = await _publishingStore
-                .CreateClaimedVersionAsync(version, cancellationToken);
-
-            if (version is null)
-            {
-                throw ThrowHelper.ClaimFailedBecauseOtherClaimAlreadyInProgress(
-                    applicationName,
-                    applicationPartName,
-                    environmentName);
-            }
+            throw ThrowHelper.ClaimFailedBecauseOtherClaimAlreadyInProgress(
+                applicationName,
+                applicationPartName,
+                environmentName);
         }
 
         return version;
+    }
+
+    public async Task<string> BuildLatestPublishedVersion(
+        string applicationName,
+        string applicationPartName,
+        string environmentName,
+        CancellationToken cancellationToken)
+    {
+        var session = await _sessionAccessor.GetSession(cancellationToken);
+        var env = await _environmentStore.GetByNameAsync(environmentName, cancellationToken);
+
+        if (session is null)
+        {
+            throw new UnauthorizedOperationException();
+        }
+
+        if (env is null)
+        {
+            throw ThrowHelper.ClaimFailedBecauseEnvWasNotFound(applicationName,
+                applicationPartName,
+                environmentName);
+        }
+
+        var app = await _applicationStore
+            .FindByApplicationNameAsync(applicationName, cancellationToken);
+
+        if (app is null)
+        {
+            throw ThrowHelper.ClaimFailedBecauseApplicationWasNotFound(
+                applicationName,
+                applicationPartName);
+        }
+
+        // TODO claim on env & app??
+        if (!await _authorizationService
+                .RuleFor<Application>()
+                .IsAuthorizedAsync(app, Claim, cancellationToken))
+        {
+            throw new UnauthorizedOperationException();
+        }
+
+        var part = app.Parts.FirstOrDefault(x => x.Name == applicationPartName);
+
+        if (part is null)
+        {
+            throw ThrowHelper
+                .ClaimFailedBecauseApplicationPartWasNotFound(applicationName, applicationPartName);
+        }
+
+        var publishedApplicationPart = await _publishingStore
+            .GetMostRecentByApplicationPartIdAsync(part.Id, cancellationToken);
+
+        if (publishedApplicationPart is null)
+        {
+            throw ThrowHelper.ClaimFailedBecauseNoPublishedConfigurationWasFound(
+                applicationName,
+                applicationPartName,
+                environmentName);
+        }
+
+        return await ReplaceVariableValuesAsync(
+            app,
+            part,
+            env,
+            publishedApplicationPart.Configuration,
+            cancellationToken);
     }
 
     private async Task<string> BuildConfigurationForPartAsync(
@@ -376,7 +443,7 @@ internal sealed class PublishingService : IPublishingService
         JsonVariableVisitorContext context = new();
         JsonVariableVisitor.Default.Visit(jsonObject, context);
 
-        var variableNames = context.Variables.Select(x => x.VariableName).ToArray();
+        var variableNames = context.Variables.Select(x => x.VariableName).Distinct().ToArray();
 
         var resolvesValues = await GetBestMatchingValuesAsync(
             variableNames,
