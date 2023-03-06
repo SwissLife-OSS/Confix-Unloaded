@@ -10,7 +10,10 @@ public static class AuthorizationDefaults
             "Default",
             ImmutableHashSet<Requirement>.Empty,
             ImmutableHashSet.Create(new RoleScope(WellKnownNamespaces.Global,
-                new[] { Guid.Parse("63C30F32-DEB1-4DFC-8D19-CD7767CE5A20") }))),
+                new[]
+                {
+                    Guid.Parse("63C30F32-DEB1-4DFC-8D19-CD7767CE5A20")
+                }))),
         new Group(
             Guid.Parse("76C6CBA7-A71B-4653-BDBA-61BA4C3D335C"),
             "Tooling - Claim",
@@ -19,18 +22,19 @@ public static class AuthorizationDefaults
             ImmutableHashSet.Create(
                 new RoleScope(
                     WellKnownNamespaces.Global,
-                    new[] { Guid.Parse("079AD2AD-FDCD-41E2-B33F-298654C6FC77"), })))
+                    new[]
+                    {
+                        Guid.Parse("079AD2AD-FDCD-41E2-B33F-298654C6FC77"),
+                    })))
     };
 
     public static IReadOnlyList<Role> DefaultRoles { get; } = new[]
     {
         new Role(Guid.Parse("63C30F32-DEB1-4DFC-8D19-CD7767CE5A20"),
             "Default",
-            new[] { new Permission(Scope.Environment, Permissions.Read) }),
-        // TODO this has to go?
-        new Role(
-            Guid.Parse("079AD2AD-FDCD-41E2-B33F-298654C6FC77"),
-            "Tooling - Claim",
-            new List<Permission> { new(Scope.Application, Permissions.Claim) })
+            new[]
+            {
+                new Permission(Scope.Environment, Permissions.Read)
+            })
     };
 }

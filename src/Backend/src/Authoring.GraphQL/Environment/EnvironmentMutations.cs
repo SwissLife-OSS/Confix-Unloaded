@@ -49,4 +49,16 @@ public sealed class EnvironmentMutations
     {
         return await environmentService.SetParent(environmentId, parentId, cancellationToken);
     }
+
+    [Error(typeof(EnvironmentNotFoundError))]
+    [Error(typeof(UnauthorizedOperationException))]
+    public async Task<Environment> SetDeveloperAccessOfEnvironment(
+        [Service] IEnvironmentService environmentService,
+        [ID(nameof(Environment))] Guid environmentId,
+        bool isAllowed,
+        CancellationToken cancellationToken)
+    {
+        return await environmentService
+            .SetAllowDeveloperAccess(environmentId, isAllowed, cancellationToken);
+    }
 }

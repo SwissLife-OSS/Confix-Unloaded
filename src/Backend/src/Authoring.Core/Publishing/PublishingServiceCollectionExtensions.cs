@@ -10,6 +10,8 @@ public static class PublishingServiceCollectionExtensions
     {
         services.AddAuthorizationRule<PublishedApplicationPart,
             PublishedApplicationPartAuthorizationRule>();
+        services.AddAuthorizationRule<DeveloperAccessRequest, DeveloperAccessAuthorizationRule>();
+
         services.AddScoped<IPublishingService, PublishingService>();
 
         return services;

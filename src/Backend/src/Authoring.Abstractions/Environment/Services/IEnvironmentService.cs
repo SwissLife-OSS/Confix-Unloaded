@@ -24,6 +24,11 @@ public interface IEnvironmentService
         Guid parentId,
         CancellationToken cancellationToken = default);
 
+    Task<Environment> SetAllowDeveloperAccess(
+        Guid environmentId,
+        bool isAllowed,
+        CancellationToken cancellationToken = default);
+
     Task<IQueryable<Environment>> SearchAsync(
         string? search,
         CancellationToken cancellationToken = default);

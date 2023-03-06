@@ -3,6 +3,7 @@ using System.Transactions;
 using Confix.Authentication.Authorization;
 using Confix.Authoring.Extensions;
 using Confix.Authoring.Messaging;
+using Confix.Authoring.Publishing.Authorization;
 using Confix.Authoring.Publishing.Stores;
 using Confix.Authoring.Store;
 using Confix.Common.Exceptions;
@@ -371,10 +372,9 @@ internal sealed class PublishingService : IPublishingService
                 applicationPartName);
         }
 
-        // TODO claim on env & app??
         if (!await _authorizationService
-                .RuleFor<Application>()
-                .IsAuthorizedAsync(app, Claim, cancellationToken))
+                .RuleFor<DeveloperAccessRequest>()
+                .IsAuthorizedAsync(new(env, app), Claim, cancellationToken))
         {
             throw new UnauthorizedOperationException();
         }

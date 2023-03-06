@@ -121,6 +121,30 @@ internal sealed class EnvironmentService : IEnvironmentService
             throw new EnvironmentNotFoundException(environmentId);
     }
 
+    public async Task<Environment> SetAllowDeveloperAccess(
+        Guid environmentId,
+        bool isAllowed,
+        CancellationToken cancellationToken = default)
+    {
+        var environment = await _store.GetByIdAsync(environmentId, cancellationToken);
+
+        if (!await _authorizationService
+                .RuleFor<Environment>()
+                .IsAuthorizedAsync(environment, Write, cancellationToken))
+        {
+            throw new UnauthorizedOperationException();
+        }
+
+        if (environment is null)
+        {
+            throw ThrowHelper.EnvironmentWasNotFound(environmentId);
+        }
+
+        environment = environment with { AllowDeveloperAccess = isAllowed };
+
+        return await _store.UpdateAsync(environment, cancellationToken);
+    }
+
     public async Task<IQueryable<Environment>> SearchAsync(
         string? search,
         CancellationToken cancellationToken = default)

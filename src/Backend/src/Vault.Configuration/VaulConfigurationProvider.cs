@@ -125,12 +125,7 @@ public class VaultConfigurationProvider : ConfigurationProvider
             }
         }
 
-        if (data is null)
-        {
-            throw new Exception("Could not load configruation");
-        }
-
-        Data = data;
+        Data = data ?? throw new Exception("Could not load configruation");
     }
 
     private static IDataProtector CreateProtector() => new ServiceCollection().AddDataProtection()
