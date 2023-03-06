@@ -1,8 +1,11 @@
 using System.Text.Json;
+using Azure.Core;
+using Azure.Identity;
 using Confix.CryptoProviders.AzureKeyVault;
 using Confix.Vault.Client;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.Memory;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Confix.Value.Configuration;
 
@@ -21,31 +24,120 @@ public class VaultConfigurationProvider : ConfigurationProvider
 
     public override void Load()
     {
-        var client = new VaultClient(_clientFactory);
-        var response = client
-            .GetAsync(
-                _source.Part.Name,
-                _source.Part.PartName,
-                _provider.ResolverEnvironment(),
-                _provider.ResolveToken(_source.Part),
-                CancellationToken.None)
-            .GetAwaiter()
-            .GetResult();
+        var environment = _provider.ResolverEnvironment();
+        var part = _source.Part;
+        var applicationName = part.Name;
+        var partName = part.PartName;
 
-        if (response is not { })
+        IDictionary<string, string>? data = null;
+
+        if (_provider.ResolveVaultToken() is { } vaultToken)
         {
-            throw new Exception(
-                $"Could not load configuration from vault {_provider.ResolveVaultUrl()}");
+            var client = new VaultClient(_clientFactory);
+            var response = client
+                .GetAsync(
+                    applicationName,
+                    partName,
+                    environment,
+                    vaultToken,
+                    CancellationToken.None)
+                .GetAwaiter()
+                .GetResult();
+
+            if (response is { })
+            {
+                var (cypher, iv) = response.RootElement.Deserialize<CypherAndIv>();
+
+                var decrypted = InMemoryCryptoProvider
+                    .From(_provider.ResolveDecryptionKey())
+                    .DecryptAsync(cypher, iv);
+
+                data = JsonConfigurationFileParser.ParseJson(JsonDocument.Parse(decrypted));
+            }
         }
 
-        var (cypher, iv) = response.RootElement.Deserialize<CypherAndIv>();
+        if (data is null && _provider.ResolveAuthoringUrl() is { } authoringUrl)
+        {
+            try
+            {
+                var credential = new AzureCliCredential();
+                var requestContext = new TokenRequestContext(new[] { "https://vault.azure.net" });
+                if (credential.GetToken(requestContext) is { } azureCliToken)
+                {
+                    var builder = new UriBuilder(authoringUrl);
+                    if (!builder.Path.Trim('/').EndsWith("/graphql"))
+                    {
+                        builder.Path += Path.Join(builder.Path.Trim('/'), "graphql/");
+                    }
 
-        var decryptred = InMemoryCryptoProvider
-            .From(_provider.ResolveDecryptionKey())
-            .DecryptAsync(cypher, iv);
+                    var client =
+                        ConfixClientFactory.CreateClient(builder.Uri.ToString(),
+                            azureCliToken.Token);
+                    var result = client.GetLatestPublishedVersion
+                        .ExecuteAsync(applicationName, partName, environment)
+                        .GetAwaiter()
+                        .GetResult();
 
-        Data = JsonConfigurationFileParser.ParseJson(JsonDocument.Parse(decryptred));
+                    if (result.Data?.LatestPublishedVersion is
+                        GetLatestPublishedVersion_LatestPublishedVersion_LatestPublishedVersion
+                        {
+                            Configuration: { } configuration
+                        })
+                    {
+                        data = JsonConfigurationFileParser.ParseJson(
+                            JsonDocument.Parse(configuration));
+                    }
+                }
+            }
+            catch
+            {
+                // swallow any exception as this would mean the configuration is not available
+            }
+        }
+
+        var filepath = GetTokenFromFile(_source.Part.Name, _source.Part.PartName, environment);
+        var protector = CreateProtector();
+
+        if (data is not null)
+        {
+            if (File.Exists(filepath))
+            {
+                File.Delete(filepath);
+            }
+
+            File.WriteAllText(filepath, protector.Protect(JsonSerializer.Serialize(data)));
+        }
+
+        if (data is null)
+        {
+            try
+            {
+                if (File.Exists(filepath))
+                {
+                    var configuration = File.ReadAllBytes(filepath);
+                    var result = JsonDocument.Parse(protector.Unprotect(configuration));
+                    data = JsonConfigurationFileParser.ParseJson(result);
+                }
+            }
+            catch
+            {
+                // swallow any exception as this would mean messed up
+            }
+        }
+
+        Data = data ?? throw new Exception("Could not load configruation");
     }
+
+    private static IDataProtector CreateProtector() => new ServiceCollection().AddDataProtection()
+        .SetApplicationName("Confix_Token")
+        .Services
+        .BuildServiceProvider()
+        .GetRequiredService<IDataProtectionProvider>()
+        .CreateProtector("Confix_Token");
+
+    private static string GetTokenFromFile(string name, string partName, string environmentName)
+        => Path.Combine(Directory.GetCurrentDirectory(),
+            $"{name}_{partName}_{environmentName}_confix.vaultconfig.json");
 
     private sealed class ConfigurationHttpClientFactory : IHttpClientFactory
     {

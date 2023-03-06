@@ -1,0 +1,20 @@
+query GetLatestPublishedVersion(
+  $applicationName: String!,
+  $applicationPartName: String!,
+  $environmentName: String!) {
+  latestPublishedVersion(
+    applicationName: $applicationName,
+    applicationPartName: $applicationPartName,
+    environmentName: $environmentName) {
+    ...GetLatestPublishedVersion_LatestPublishedVersion
+    ...GetLatestPublishedVersion_UserError
+  }
+}
+
+fragment GetLatestPublishedVersion_LatestPublishedVersion on LatestPublishedVersion {
+  configuration
+}
+
+fragment GetLatestPublishedVersion_UserError on UserError {
+  message
+}

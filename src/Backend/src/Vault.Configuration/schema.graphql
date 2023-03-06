@@ -439,7 +439,6 @@ type EncryptedValue {
 type Environment implements Node {
   id: ID!
   name: String!
-  allowDeveloperAccess: Boolean!
   parent: Environment
 }
 
@@ -499,7 +498,6 @@ type Mutation {
   renameEnvironment(input: RenameEnvironmentInput!): RenameEnvironmentPayload!
   removeEnvironmentById(input: RemoveEnvironmentByIdInput!): RemoveEnvironmentByIdPayload!
   setParentOfEnvironment(input: SetParentOfEnvironmentInput!): SetParentOfEnvironmentPayload!
-  setDeveloperAccessOfEnvironment(input: SetDeveloperAccessOfEnvironmentInput!): SetDeveloperAccessOfEnvironmentPayload!
   createVariable(input: CreateVariableInput!): CreateVariablePayload!
   saveVariableValue(input: SaveVariableValueInput!): SaveVariableValuePayload!
   deleteVariableValue(input: DeleteVariableValueInput!): DeleteVariableValuePayload!
@@ -872,12 +870,6 @@ type SearchVariablesEdge {
   node: Variable!
 }
 
-type SetDeveloperAccessOfEnvironmentPayload {
-  environment: Environment
-  errors: [SetDeveloperAccessOfEnvironmentError!]
-  query: Query!
-}
-
 type SetParentOfEnvironmentPayload {
   environment: Environment
   errors: [SetParentOfEnvironmentError!]
@@ -1036,8 +1028,6 @@ union RenameVariableError = UnauthorizedOperationError
 union Requirement = ClaimRequirement
 
 union SaveVariableValueError = UnauthorizedOperationError
-
-union SetDeveloperAccessOfEnvironmentError = EnvironmentNotFoundError | UnauthorizedOperationError
 
 union SetParentOfEnvironmentError = EnvironmentNotFoundError | EnvironmentCycleDetectedError | UnauthorizedOperationError
 
@@ -1229,11 +1219,6 @@ input SaveVariableValueInput {
   applicationId: ID
   partId: ID
   environmentId: ID
-}
-
-input SetDeveloperAccessOfEnvironmentInput {
-  environmentId: ID!
-  isAllowed: Boolean!
 }
 
 input SetParentOfEnvironmentInput {

@@ -1,15 +1,14 @@
-using Microsoft.AspNetCore.DataProtection;
-using Microsoft.Extensions.DependencyInjection;
 using static System.Environment;
 
 namespace Confix.Value.Configuration;
 
-internal sealed class VariableProvider
+internal class VariableProvider
 {
-    private const string _vaultUrl = "SWISSLIFE_CONFIX_VAULT";
-    private const string _environment = "SWISSLIFE_ENVIRONMENT";
-    private const string _decryptionKey = "SWISSLIFE_CONFIX_DECRYPTION_KEY";
-    private const string _token = "SWISSLIFE_CONFIX_TOKEN";
+    private const string _vaultUrl = "CONFIX_VAULT";
+    private const string _authoringUrl = "CONFIX_AUTHORING";
+    private const string _environment = "CONFIX_ENVIRONMENT";
+    private const string _decryptionKey = "CONFIX_DECRYPTION_KEY";
+    private const string _token = "CONFIX_TOKEN";
 
     public string ResolveVaultUrl() => GetEnvironmentVariable(_vaultUrl)
         ?? throw EnvironmentVariableNotFound(_vaultUrl);
@@ -20,34 +19,13 @@ internal sealed class VariableProvider
     public string ResolveDecryptionKey() => GetEnvironmentVariable(_decryptionKey)
         ?? throw EnvironmentVariableNotFound(_decryptionKey);
 
-    public string ResolveToken(ApplicationPart part)
+    public string? ResolveVaultToken()
     {
-        var token = GetEnvironmentVariable(_token);
-        if (token is { })
-        {
-            return token;
-        }
-
-        var filepath = GetTokenFromFile(part.Name, part.PartName, ResolverEnvironment());
-        if (File.Exists(filepath))
-        {
-            var protector = new ServiceCollection().AddDataProtection()
-                .SetApplicationName("Confix_Token")
-                .Services
-                .BuildServiceProvider()
-                .GetRequiredService<IDataProtectionProvider>()
-                .CreateProtector("Confix_Token");
-
-            return protector.Unprotect(filepath);
-        }
-
-        throw EnvironmentVariableNotFound(_token);
+        return GetEnvironmentVariable(_token);
     }
 
-    private static string GetTokenFromFile(string name, string partName, string environmentName)
-        => Path.Combine(Directory.GetCurrentDirectory(),
-            $"{name}_{partName}_{environmentName}_confix.vaultconfig.json");
+    public string? ResolveAuthoringUrl() => GetEnvironmentVariable(_authoringUrl);
 
-    private static Exception EnvironmentVariableNotFound(string variable)
+    private Exception EnvironmentVariableNotFound(string variable)
         => throw new Exception($"Environment variable {variable} was not found");
 }

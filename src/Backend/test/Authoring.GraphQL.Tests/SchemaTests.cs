@@ -1,6 +1,5 @@
 using HotChocolate.Execution;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
 using Snapshooter.Xunit;
 using Xunit;
 

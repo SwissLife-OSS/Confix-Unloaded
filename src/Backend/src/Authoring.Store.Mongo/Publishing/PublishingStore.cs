@@ -1,6 +1,5 @@
 using Confix.Authoring.Publishing;
 using Confix.Authoring.Publishing.Stores;
-using HotChocolate.Utilities;
 using MongoDB.Driver;
 using static MongoDB.Driver.Builders<Confix.Authoring.Publishing.PublishedApplicationPart>;
 using Claimed = MongoDB.Driver.Builders<Confix.Authoring.Publishing.ClaimedVersion>;

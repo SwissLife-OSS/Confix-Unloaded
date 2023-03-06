@@ -343,3 +343,5 @@ tools/**
 
 
 appsettings.user.json
+
+**/*vaultconfig.json
