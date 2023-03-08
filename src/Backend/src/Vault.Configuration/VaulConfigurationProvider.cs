@@ -29,10 +29,12 @@ public class VaultConfigurationProvider : ConfigurationProvider
         var applicationName = part.Name;
         var partName = part.PartName;
 
-        IDictionary<string, string>? data = null;
+        IDictionary<string, string?>? data = null;
 
         if (_provider.ResolveVaultToken() is { } vaultToken)
         {
+            Console.WriteLine("Loading configuration with vault token");
+
             var client = new VaultClient(_clientFactory);
             var response = client
                 .GetAsync(
@@ -46,22 +48,35 @@ public class VaultConfigurationProvider : ConfigurationProvider
 
             if (response is { })
             {
-                var (cypher, iv) = response.RootElement.Deserialize<CypherAndIv>();
+                try
+                {
+                    var (cypher, iv) = response.RootElement.Deserialize<CypherAndIv>();
 
-                var decrypted = InMemoryCryptoProvider
-                    .From(_provider.ResolveDecryptionKey())
-                    .DecryptAsync(cypher, iv);
+                    var decrypted = InMemoryCryptoProvider
+                        .From(_provider.ResolveDecryptionKey())
+                        .DecryptAsync(cypher, iv);
 
-                data = JsonConfigurationFileParser.ParseJson(JsonDocument.Parse(decrypted));
+                    data = JsonConfigurationFileParser.ParseJson(JsonDocument.Parse(decrypted));
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(
+                        $"Could not load configuration with vault token: {ex.Message}");
+                }
             }
         }
 
         if (data is null && _provider.ResolveAuthoringUrl() is { } authoringUrl)
         {
+            Console.WriteLine($"Loading configuration with az login from {authoringUrl}");
+
             try
             {
                 var credential = new AzureCliCredential();
-                var requestContext = new TokenRequestContext(new[] { "https://vault.azure.net" });
+                var requestContext = new TokenRequestContext(new[]
+                {
+                    "https://vault.azure.net"
+                });
                 if (credential.GetToken(requestContext) is { } azureCliToken)
                 {
                     var builder = new UriBuilder(authoringUrl);
@@ -89,9 +104,9 @@ public class VaultConfigurationProvider : ConfigurationProvider
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                // swallow any exception as this would mean the configuration is not available
+                Console.WriteLine("Could not load configuration with az login" + ex.Message);
             }
         }
 
@@ -110,6 +125,8 @@ public class VaultConfigurationProvider : ConfigurationProvider
 
         if (data is null)
         {
+            Console.WriteLine($"Loading configuration from file {filepath}");
+
             try
             {
                 if (File.Exists(filepath))
@@ -119,9 +136,9 @@ public class VaultConfigurationProvider : ConfigurationProvider
                     data = JsonConfigurationFileParser.ParseJson(result);
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                // swallow any exception as this would mean messed up
+                Console.WriteLine("Could not load configuration from file: " + ex.Message);
             }
         }
 

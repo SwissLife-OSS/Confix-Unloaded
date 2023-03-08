@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<048a1e8e8b847432376c4223bb810f89>>
+ * @generated SignedSource<<7069ce6c79333dcbe9d22fcad65bcdc7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,6 +11,7 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type EditEnvironment_Environment$data = {
+  readonly allowDeveloperAccess: boolean;
   readonly id: string;
   readonly name: string;
   readonly parent: {
@@ -50,6 +51,13 @@ return {
     {
       "alias": null,
       "args": null,
+      "kind": "ScalarField",
+      "name": "allowDeveloperAccess",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
       "concreteType": "Environment",
       "kind": "LinkedField",
       "name": "parent",
@@ -66,6 +74,6 @@ return {
 };
 })();
 
-(node as any).hash = "eb11ee17a07a5e4b77b058c58308697a";
+(node as any).hash = "83c8aeadbf8f45546b9aa5be540d15b5";
 
 export default node;

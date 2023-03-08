@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<699fa59957e6f2e1b49d41e4a4cd027a>>
+ * @generated SignedSource<<e72584572772bc59f65b016dd0a98c99>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -100,6 +100,13 @@ return {
           {
             "alias": null,
             "args": null,
+            "kind": "ScalarField",
+            "name": "allowDeveloperAccess",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
             "concreteType": "Environment",
             "kind": "LinkedField",
             "name": "parent",
@@ -116,12 +123,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "0423a419f545768e873201cf6acd2c22",
+    "cacheID": "26904ebd5c3a737e6a31128cb6ee0d1c",
     "id": null,
     "metadata": {},
     "name": "EditEnvironmentQuery",
     "operationKind": "query",
-    "text": "query EditEnvironmentQuery(\n  $id: ID!\n) {\n  environmentById(id: $id) {\n    id\n    ...EditEnvironment_Environment\n  }\n}\n\nfragment EditEnvironment_Environment on Environment {\n  id\n  name\n  parent {\n    id\n    name\n  }\n}\n"
+    "text": "query EditEnvironmentQuery(\n  $id: ID!\n) {\n  environmentById(id: $id) {\n    id\n    ...EditEnvironment_Environment\n  }\n}\n\nfragment EditEnvironment_Environment on Environment {\n  id\n  name\n  allowDeveloperAccess\n  parent {\n    id\n    name\n  }\n}\n"
   }
 };
 })();
