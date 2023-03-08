@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a745e17261f95206f9baf483978fd055>>
+ * @generated SignedSource<<d623dce43d600cedba57e95522a88f9d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -190,6 +190,13 @@ return {
               {
                 "alias": null,
                 "args": null,
+                "kind": "ScalarField",
+                "name": "allowDeveloperAccess",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
                 "concreteType": "Environment",
                 "kind": "LinkedField",
                 "name": "parent",
@@ -229,12 +236,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "b3776787ef69bfe1ae3d330332d59777",
+    "cacheID": "b2a1c26249c120e9c74fa5ac64e83a8e",
     "id": null,
     "metadata": {},
     "name": "SetParentEnvironmentDialogMutation",
     "operationKind": "mutation",
-    "text": "mutation SetParentEnvironmentDialogMutation(\n  $input: SetParentOfEnvironmentInput!\n) {\n  setParentOfEnvironment(input: $input) {\n    environment {\n      id\n      ...EditEnvironment_Environment\n    }\n    errors {\n      __typename\n      ... on EnvironmentCycleDetectedError {\n        path\n        code\n        message\n      }\n      ... on EnvironmentNotFoundError {\n        environmentId\n        code\n        message\n      }\n    }\n  }\n}\n\nfragment EditEnvironment_Environment on Environment {\n  id\n  name\n  parent {\n    id\n    name\n  }\n}\n"
+    "text": "mutation SetParentEnvironmentDialogMutation(\n  $input: SetParentOfEnvironmentInput!\n) {\n  setParentOfEnvironment(input: $input) {\n    environment {\n      id\n      ...EditEnvironment_Environment\n    }\n    errors {\n      __typename\n      ... on EnvironmentCycleDetectedError {\n        path\n        code\n        message\n      }\n      ... on EnvironmentNotFoundError {\n        environmentId\n        code\n        message\n      }\n    }\n  }\n}\n\nfragment EditEnvironment_Environment on Environment {\n  id\n  name\n  allowDeveloperAccess\n  parent {\n    id\n    name\n  }\n}\n"
   }
 };
 })();
