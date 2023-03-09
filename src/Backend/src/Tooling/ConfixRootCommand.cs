@@ -9,6 +9,7 @@ internal sealed class ConfixRootCommand : Command
     {
         AddGlobalOption(Required<UrlOption>.Instance);
         AddGlobalOption(Required<ApiKeyOption>.Instance);
+        AddGlobalOption(Optional<JsonOption>.Instance);
         AddCommand(new ClaimCommand());
     }
 }
