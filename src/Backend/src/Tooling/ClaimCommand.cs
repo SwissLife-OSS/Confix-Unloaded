@@ -18,6 +18,7 @@ public sealed class ClaimCommand : Command
             ExecuteAsync,
             Bind.FromServiceProvider<IAnsiConsole>(),
             Bind.FromServiceProvider<IConfixClient>(),
+            Optional<JsonOption>.Instance,
             Required<AppOption>.Instance,
             Required<PartOption>.Instance,
             Required<EnvironmentOption>.Instance,
@@ -28,6 +29,7 @@ public sealed class ClaimCommand : Command
     private static async Task<int> ExecuteAsync(
         IAnsiConsole console,
         IConfixClient client,
+        bool useJson,
         string app,
         string part,
         string environment,
@@ -73,6 +75,18 @@ public sealed class ClaimCommand : Command
             console.Error("There was an unexpected error");
 
             return ExitCodes.Error;
+        }
+
+        if (useJson)
+        {
+            console.WriteJson(new
+            {
+                PublishdVersion = claimedVersion.PublishedApplicationPart?.Version,
+                Token = token,
+                DecryptionKey = decryptionKey
+            });
+
+            return ExitCodes.Success;
         }
 
         console.Success("Successfully claimed Version!");
