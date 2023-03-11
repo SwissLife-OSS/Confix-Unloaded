@@ -233,9 +233,9 @@ const applicationsQuery = graphql`
   query EditVariableApplicationsQuery(
     $cursor: String
     $count: Int
-    $where: ApplicationFilterInput
+    $search: String
   ) {
-    applications(after: $cursor, first: $count, where: $where)
+    applications(after: $cursor, first: $count, search: $search)
       @connection(key: "Query_applications") {
       edges {
         node {
@@ -274,14 +274,7 @@ const ApplicationSelector: React.FC<{
         env,
         applicationsQuery,
         {
-          where: !search
-            ? null
-            : {
-                or: [
-                  { namespace: { contains: search } },
-                  { name: { contains: search } },
-                ],
-              },
+          search,
         }
       ).toPromise();
       setOptions(

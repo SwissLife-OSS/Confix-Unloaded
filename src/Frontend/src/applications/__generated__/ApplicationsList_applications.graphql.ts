@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d05116ec82d6c9dcf4effd9a6b2b3784>>
+ * @generated SignedSource<<9e75fd864cbfa098dc7edc912cd126c9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -44,7 +44,7 @@ return {
     },
     {
       "kind": "RootArgument",
-      "name": "where"
+      "name": "search"
     }
   ],
   "kind": "Fragment",
@@ -77,8 +77,8 @@ return {
       "args": [
         {
           "kind": "Variable",
-          "name": "where",
-          "variableName": "where"
+          "name": "search",
+          "variableName": "search"
         }
       ],
       "concreteType": "ApplicationsConnection",
@@ -182,6 +182,6 @@ return {
 };
 })();
 
-(node as any).hash = "d7b4ad1923d9adae56e491423417c7a1";
+(node as any).hash = "4d02d05685c7ef620fea3571d1f05493";
 
 export default node;

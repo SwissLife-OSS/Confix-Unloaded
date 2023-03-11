@@ -15,7 +15,8 @@ internal sealed class ComponentAuthorizationRule : AuthorizationRule<Component>
         CancellationToken cancellationToken)
     {
         return new ValueTask<bool>(
-            session.HasPermission(resource.Namespace, Scope.Component, permissions));
+            resource.Scopes.Any(x
+                => session.HasPermission(x.Namespace, Scope.Component, permissions)));
     }
 
     protected override ValueTask<bool> IsAuthorizedFromAsync<TOther>(

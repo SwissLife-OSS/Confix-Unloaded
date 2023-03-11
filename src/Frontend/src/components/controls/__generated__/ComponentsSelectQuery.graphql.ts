@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6c6cf294359df6c7805264b880746a53>>
+ * @generated SignedSource<<02870b9d9a687525a28072d9a9aca930>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,27 +9,8 @@
 // @ts-nocheck
 
 import { ConcreteRequest, Query } from 'relay-runtime';
-export type ComponentFilterInput = {
-  and?: ReadonlyArray<ComponentFilterInput> | null;
-  name?: StringOperationFilterInput | null;
-  or?: ReadonlyArray<ComponentFilterInput> | null;
-};
-export type StringOperationFilterInput = {
-  and?: ReadonlyArray<StringOperationFilterInput> | null;
-  contains?: string | null;
-  endsWith?: string | null;
-  eq?: string | null;
-  in?: ReadonlyArray<string | null> | null;
-  ncontains?: string | null;
-  nendsWith?: string | null;
-  neq?: string | null;
-  nin?: ReadonlyArray<string | null> | null;
-  nstartsWith?: string | null;
-  or?: ReadonlyArray<StringOperationFilterInput> | null;
-  startsWith?: string | null;
-};
 export type ComponentsSelectQuery$variables = {
-  where?: ComponentFilterInput | null;
+  search?: string | null;
 };
 export type ComponentsSelectQuery$data = {
   readonly components: {
@@ -51,7 +32,7 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "where"
+    "name": "search"
   }
 ],
 v1 = [
@@ -60,8 +41,8 @@ v1 = [
     "args": [
       {
         "kind": "Variable",
-        "name": "where",
-        "variableName": "where"
+        "name": "search",
+        "variableName": "search"
       }
     ],
     "concreteType": "ComponentsConnection",
@@ -127,16 +108,16 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "1b05e6a55bb62a174861720deb80b892",
+    "cacheID": "108755c861695cbd286896e452666e35",
     "id": null,
     "metadata": {},
     "name": "ComponentsSelectQuery",
     "operationKind": "query",
-    "text": "query ComponentsSelectQuery(\n  $where: ComponentFilterInput\n) {\n  components(where: $where) {\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": "query ComponentsSelectQuery(\n  $search: String\n) {\n  components(search: $search) {\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "e508c4a8a83d3e985121e888459f528f";
+(node as any).hash = "61f50766e6cf0da9bf20383438f7133b";
 
 export default node;

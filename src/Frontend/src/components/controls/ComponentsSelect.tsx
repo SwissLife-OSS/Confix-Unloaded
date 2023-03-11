@@ -6,8 +6,8 @@ import { ComponentsSelectQuery } from "./__generated__/ComponentsSelectQuery.gra
 import { useDebounce } from "../../shared/debounce";
 
 const searchComponents = graphql`
-  query ComponentsSelectQuery($where: ComponentFilterInput) {
-    components(where: $where) {
+  query ComponentsSelectQuery($search: String) {
+    components(search: $search) {
       edges {
         node {
           id
@@ -35,13 +35,7 @@ export const ComponentsSelect: React.FC<{
         env,
         searchComponents,
         {
-          where: !search
-            ? null
-            : {
-                name: {
-                  contains: search,
-                },
-              },
+          search,
         }
       ).toPromise();
       setOptions(

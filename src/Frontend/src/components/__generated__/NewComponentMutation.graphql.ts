@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c311e64ccc090dc20fb14f1f4a13a37f>>
+ * @generated SignedSource<<104671ca618404013aca759145ab9094>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,9 +11,14 @@
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type CreateComponentInput = {
   name: string;
-  namespace: string;
   schema?: string | null;
+  scopes: ReadonlyArray<ComponentScopeInput>;
   values?: any | null;
+};
+export type ComponentScopeInput = {
+  applicationId?: string | null;
+  applicationPartId?: string | null;
+  namespace: string;
 };
 export type NewComponentMutation$variables = {
   connectionIds: ReadonlyArray<string>;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<afaf07258b54e0c509625681fbddd50a>>
+ * @generated SignedSource<<4ec2493940cfdb114bf1dff49c4d0358>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,30 +10,10 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ApplicationFilterInput = {
-  and?: ReadonlyArray<ApplicationFilterInput> | null;
-  name?: StringOperationFilterInput | null;
-  namespace?: StringOperationFilterInput | null;
-  or?: ReadonlyArray<ApplicationFilterInput> | null;
-};
-export type StringOperationFilterInput = {
-  and?: ReadonlyArray<StringOperationFilterInput> | null;
-  contains?: string | null;
-  endsWith?: string | null;
-  eq?: string | null;
-  in?: ReadonlyArray<string | null> | null;
-  ncontains?: string | null;
-  nendsWith?: string | null;
-  neq?: string | null;
-  nin?: ReadonlyArray<string | null> | null;
-  nstartsWith?: string | null;
-  or?: ReadonlyArray<StringOperationFilterInput> | null;
-  startsWith?: string | null;
-};
 export type ApplicationsListQuery$variables = {
   count?: number | null;
   cursor?: string | null;
-  where?: ApplicationFilterInput | null;
+  search?: string | null;
 };
 export type ApplicationsListQuery$data = {
   readonly " $fragmentSpreads": FragmentRefs<"ApplicationsList_applications">;
@@ -57,7 +37,7 @@ v1 = {
 v2 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "where"
+  "name": "search"
 },
 v3 = [
   {
@@ -72,8 +52,8 @@ v3 = [
   },
   {
     "kind": "Variable",
-    "name": "where",
-    "variableName": "where"
+    "name": "search",
+    "variableName": "search"
   }
 ],
 v4 = {
@@ -243,7 +223,7 @@ return {
         "alias": null,
         "args": (v3/*: any*/),
         "filters": [
-          "where"
+          "search"
         ],
         "handle": "connection",
         "key": "Query_applications",
@@ -253,16 +233,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "ce55f876b6d7e6032c94e24e6bd51e03",
+    "cacheID": "7f847263512fc7493136f4b25bb7f64a",
     "id": null,
     "metadata": {},
     "name": "ApplicationsListQuery",
     "operationKind": "query",
-    "text": "query ApplicationsListQuery(\n  $cursor: String\n  $count: Int\n  $where: ApplicationFilterInput\n) {\n  ...ApplicationsList_applications\n}\n\nfragment ApplicationsList_applications on Query {\n  applications(after: $cursor, first: $count, where: $where) {\n    edges {\n      node {\n        id\n        name\n        namespace\n        ...ApplicationsList_applicationsEdge\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment ApplicationsList_applicationsEdge on Application {\n  id\n  name\n  namespace\n  parts {\n    id\n    name\n    components {\n      id\n      definition {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": "query ApplicationsListQuery(\n  $cursor: String\n  $count: Int\n  $search: String\n) {\n  ...ApplicationsList_applications\n}\n\nfragment ApplicationsList_applications on Query {\n  applications(after: $cursor, first: $count, search: $search) {\n    edges {\n      node {\n        id\n        name\n        namespace\n        ...ApplicationsList_applicationsEdge\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment ApplicationsList_applicationsEdge on Application {\n  id\n  name\n  namespace\n  parts {\n    id\n    name\n    components {\n      id\n      definition {\n        id\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "6b31a121f725620ea7c7068d4ccd39cc";
+(node as any).hash = "98dc58ca879cb4dc3bdcbadb917fd628";
 
 export default node;

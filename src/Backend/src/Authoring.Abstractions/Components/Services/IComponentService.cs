@@ -8,12 +8,18 @@ public interface IComponentService
 
     Task<ISchema?> GetSchemaByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
-    Task<IQueryable<Component>> Query(CancellationToken cancellationToken);
+    Task<IReadOnlyList<Component>> Search(
+        int skip,
+        int take,
+        Guid? applicationId,
+        Guid? applicationPartId,
+        string? search,
+        CancellationToken cancellationToken);
 
     Task<Component> CreateAsync(
         string name,
         string? schemaSdl,
-        string @namespace,
+        IReadOnlyList<ComponentScope> scopes,
         IDictionary<string, object?>? values,
         CancellationToken cancellationToken);
 
@@ -38,5 +44,10 @@ public interface IComponentService
 
     Task<IDictionary<string, object?>?> GetDefaultValuesAsync(
         Guid id,
+        CancellationToken cancellationToken);
+
+    Task<Component> ChangeComponentScopeByIdAsync(
+        Guid id,
+        IReadOnlyList<ComponentScope> scopes,
         CancellationToken cancellationToken);
 }

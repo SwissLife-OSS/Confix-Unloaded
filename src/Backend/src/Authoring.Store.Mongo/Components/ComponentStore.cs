@@ -1,5 +1,7 @@
+using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
+using static MongoDB.Driver.Builders<Confix.Authoring.Component>;
 
 namespace Confix.Authoring.Store.Mongo;
 
@@ -28,9 +30,38 @@ internal sealed class ComponentStore : IComponentStore
             .ToListAsync(cancellationToken);
     }
 
-    public IQueryable<Component> Query()
+    public async Task<IReadOnlyList<Component>> Search(
+        int skip,
+        int take,
+        IEnumerable<string> namespaces,
+        Guid? applicationId,
+        Guid? applicationPartId,
+        string? search,
+        CancellationToken cancellationToken)
     {
-        return _dbContext.Components.AsQueryable();
+        var filter = Filter.In("Scopes.Namespace", namespaces);
+
+        if (!string.IsNullOrEmpty(search))
+        {
+            filter &= Filter.Regex(x => x.Name,
+                new BsonRegularExpression(search, "i"));
+        }
+
+        if (applicationId is not null)
+        {
+            filter &= Filter.EqOrNull("Scopes.ApplicationId", applicationId);
+        }
+
+        if (applicationPartId is not null)
+        {
+            filter &= Filter.EqOrNull("Scopes.ApplicationPartId", applicationPartId);
+        }
+
+        return await _dbContext.Components
+            .Find(filter)
+            .Skip(skip)
+            .Limit(take)
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<Component> AddAsync(Component component, CancellationToken cancellationToken)

@@ -1,3 +1,4 @@
+using MongoDB.Bson;
 using MongoDB.Driver;
 using static MongoDB.Driver.Builders<Confix.Authoring.Store.Application>;
 
@@ -31,7 +32,7 @@ internal sealed class ApplicationStore : IApplicationStore
 
     public Task<Application?> GetByPartIdAsync(Guid partId, CancellationToken cancellationToken)
     {
-        var filter = 
+        var filter =
             Filter.ElemMatch(x => x.Parts, Builders<ApplicationPart>.Filter.Eq(x => x.Id, partId));
 
         return _dbContext.Applications.Find(filter).FirstOrDefaultAsync(cancellationToken)!;
@@ -85,6 +86,36 @@ internal sealed class ApplicationStore : IApplicationStore
         var filter = Filter.In(x => x.Id, ids);
 
         return await _dbContext.Applications.Find(filter).ToListAsync(cancellationToken);
+    }
+
+    public async Task<IReadOnlyList<Application>> Search(
+        int skip,
+        int take,
+        IReadOnlySet<string> namespaces,
+        string? search,
+        CancellationToken cancellationToken)
+    {
+        var filter = Filter.In(x => x.Namespace, namespaces);
+
+        if (!string.IsNullOrEmpty(search))
+        {
+            filter &=
+                Filter.Or(
+                    Filter.Regex(x => x.Name, new BsonRegularExpression(search, "i")),
+                    Filter.Regex(x => x.Namespace, new BsonRegularExpression(search, "i")),
+                    Filter.ElemMatch(
+                        x => x.Parts,
+                        Builders<ApplicationPart>.Filter
+                            .Regex(x => x.Name, new BsonRegularExpression(search, "i"))
+                    )
+                );
+        }
+
+        return await _dbContext.Applications
+            .Find(filter)
+            .Skip(skip)
+            .Limit(take)
+            .ToListAsync(cancellationToken);
     }
 
     public IQueryable<Application> Query()

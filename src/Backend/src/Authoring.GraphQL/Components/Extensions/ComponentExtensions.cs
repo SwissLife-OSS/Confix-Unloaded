@@ -5,7 +5,7 @@ using HotChocolate.Language;
 
 namespace Confix.Authoring.GraphQL;
 
-[ExtendObjectType(typeof(Component))]
+[ExtendObjectType<Component>]
 public sealed class ComponentExtensions
 {
     public async Task<IEnumerable<ChangeLog>> GetChangeLogAsync(
@@ -17,13 +17,13 @@ public sealed class ComponentExtensions
     }
 
     [BindMember(nameof(Component.Schema))]
-    [GraphQLType(typeof(SdlType))]
+    [GraphQLType<SdlType>]
     public string? GetSchemaSdl([Parent] Component component)
     {
         return component.Schema;
     }
 
-    [GraphQLType(typeof(AnyType))]
+    [GraphQLType<AnyType>]
     public List<object> GetSchema([Parent] Component component)
     {
         //TODO:  Couldn't we just runn introspection here? What is this even used for
@@ -82,7 +82,7 @@ public sealed class ComponentExtensions
         return types;
     }
 
-    [GraphQLType(typeof(AnyType))]
+    [GraphQLType<AnyType>]
     [BindMember(nameof(Component.Values))]
     public async Task<IDictionary<string, object?>?> GetValues(
         [Parent] Component component,
@@ -189,18 +189,22 @@ public sealed class ComponentExtensions
                     typeKinds[objectType.Name.Value] = TypeKind.Object;
 
                     break;
+
                 case EnumTypeDefinitionNode enumType:
                     typeKinds[enumType.Name.Value] = TypeKind.Enum;
 
                     break;
+
                 case InterfaceTypeDefinitionNode interfaceType:
                     typeKinds[interfaceType.Name.Value] = TypeKind.Interface;
 
                     break;
+
                 case UnionTypeDefinitionNode unionType:
                     typeKinds[unionType.Name.Value] = TypeKind.Union;
 
                     break;
+
                 default:
                     throw new InvalidOperationException("Invalid type provided");
             }

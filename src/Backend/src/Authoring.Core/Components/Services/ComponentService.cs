@@ -37,7 +37,6 @@ internal sealed class ComponentService : IComponentService
         _accessor = accessor;
     }
 
-    // TODO add read component permission
     public async Task<Component?> GetByIdAsync(
         Guid id,
         CancellationToken cancellationToken = default)
@@ -65,30 +64,46 @@ internal sealed class ComponentService : IComponentService
         return _schemaService.CreateSchema(component.Schema);
     }
 
-    public async Task<IQueryable<Component>> Query(CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<Component>> Search(
+        int skip,
+        int take,
+        Guid? applicationId,
+        Guid? applicationPartId,
+        string? search,
+        CancellationToken cancellationToken)
     {
         var session = await _accessor.GetSession(cancellationToken);
 
         if (session is null)
         {
-            return Array.Empty<Component>()
-                .AsQueryable();
+            return Array.Empty<Component>();
         }
 
-        return _componentStore.Query()
-            .Where(x => session.Namespaces.Contains(x.Namespace));
+        return await _componentStore.Search(
+            skip,
+            take,
+            session.Namespaces,
+            applicationId,
+            applicationPartId,
+            search,
+            cancellationToken);
     }
 
     public async Task<Component> CreateAsync(
         string name,
         string? schemaSdl,
-        string @namespace,
+        IReadOnlyList<ComponentScope> scopes,
         IDictionary<string, object?>? values,
         CancellationToken cancellationToken)
     {
         if (string.IsNullOrEmpty(name))
         {
             throw new ArgumentException("Value cannot be null or empty.", nameof(name));
+        }
+
+        if (scopes.Count == 0)
+        {
+            throw ComponentValidationFailed.AtLeastOneScopeIsRequired();
         }
 
         string? serializedValues = null;
@@ -103,12 +118,8 @@ internal sealed class ComponentService : IComponentService
             }
         }
 
-        Component component = new(Guid.NewGuid(),
-            name,
-            schemaSdl,
-            serializedValues,
-            ComponentState.Active,
-            @namespace);
+        Component component =
+            new(Guid.NewGuid(), name, schemaSdl, serializedValues, ComponentState.Active, scopes);
 
         if (!await _authorizationService
                 .RuleFor<Component>()
@@ -324,5 +335,44 @@ internal sealed class ComponentService : IComponentService
         var schema = _schemaService.CreateSchema(component.Schema);
 
         return CreateDefaultObjectValue(schema, schema.QueryType);
+    }
+
+    public async Task<Component> ChangeComponentScopeByIdAsync(
+        Guid id,
+        IReadOnlyList<ComponentScope> scopes,
+        CancellationToken cancellationToken)
+    {
+        var component = await _componentById.LoadAsync(id, cancellationToken);
+
+        if (!await _authorizationService
+                .RuleFor<Component>()
+                .IsAuthorizedAsync(component, Write, cancellationToken))
+        {
+            throw new UnauthorizedOperationException();
+        }
+
+        if (component is null)
+        {
+            throw new ComponentNotFoundException(id);
+        }
+
+        if (scopes.Count == 0)
+        {
+            throw ComponentValidationFailed.AtLeastOneScopeIsRequired();
+        }
+
+        component = component with { Scopes = scopes };
+
+        var log = new ChangeScopeOfComponentChange(component.Id, component.Version, scopes);
+
+        using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+        {
+            await _changeLogService.CreateAsync(log, cancellationToken);
+            await _componentStore.UpdateAsync(component, cancellationToken);
+
+            transaction.Complete();
+        }
+
+        return component;
     }
 }

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4f11a6efd2715db083a9f6e7d40b7e8b>>
+ * @generated SignedSource<<3be76933b079c8d59265b22b2d0c5f47>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,30 +10,10 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ApplicationFilterInput = {
-  and?: ReadonlyArray<ApplicationFilterInput> | null;
-  name?: StringOperationFilterInput | null;
-  namespace?: StringOperationFilterInput | null;
-  or?: ReadonlyArray<ApplicationFilterInput> | null;
-};
-export type StringOperationFilterInput = {
-  and?: ReadonlyArray<StringOperationFilterInput> | null;
-  contains?: string | null;
-  endsWith?: string | null;
-  eq?: string | null;
-  in?: ReadonlyArray<string | null> | null;
-  ncontains?: string | null;
-  nendsWith?: string | null;
-  neq?: string | null;
-  nin?: ReadonlyArray<string | null> | null;
-  nstartsWith?: string | null;
-  or?: ReadonlyArray<StringOperationFilterInput> | null;
-  startsWith?: string | null;
-};
 export type EditVariableApplicationsQuery$variables = {
   count?: number | null;
   cursor?: string | null;
-  where?: ApplicationFilterInput | null;
+  search?: string | null;
 };
 export type EditVariableApplicationsQuery$data = {
   readonly applications: {
@@ -65,12 +45,12 @@ v1 = {
 v2 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "where"
+  "name": "search"
 },
 v3 = {
   "kind": "Variable",
-  "name": "where",
-  "variableName": "where"
+  "name": "search",
+  "variableName": "search"
 },
 v4 = {
   "alias": null,
@@ -295,7 +275,7 @@ return {
         "alias": null,
         "args": (v9/*: any*/),
         "filters": [
-          "where"
+          "search"
         ],
         "handle": "connection",
         "key": "Query_applications",
@@ -305,7 +285,7 @@ return {
     ]
   },
   "params": {
-    "cacheID": "5913d35d518e4a0e02ba9624fc5e34da",
+    "cacheID": "6f5bcf2a3212a833cfe8a91c4293a23d",
     "id": null,
     "metadata": {
       "connection": [
@@ -321,11 +301,11 @@ return {
     },
     "name": "EditVariableApplicationsQuery",
     "operationKind": "query",
-    "text": "query EditVariableApplicationsQuery(\n  $cursor: String\n  $count: Int\n  $where: ApplicationFilterInput\n) {\n  applications(after: $cursor, first: $count, where: $where) {\n    edges {\n      node {\n        id\n        name\n        ...ApplicationsList_applicationsEdge\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment ApplicationsList_applicationsEdge on Application {\n  id\n  name\n  namespace\n  parts {\n    id\n    name\n    components {\n      id\n      definition {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": "query EditVariableApplicationsQuery(\n  $cursor: String\n  $count: Int\n  $search: String\n) {\n  applications(after: $cursor, first: $count, search: $search) {\n    edges {\n      node {\n        id\n        name\n        ...ApplicationsList_applicationsEdge\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment ApplicationsList_applicationsEdge on Application {\n  id\n  name\n  namespace\n  parts {\n    id\n    name\n    components {\n      id\n      definition {\n        id\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "652751f2a2860073d69f4e3e10174930";
+(node as any).hash = "6e1dd02c8629d1745445349a7eefee33";
 
 export default node;

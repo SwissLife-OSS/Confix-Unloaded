@@ -26,11 +26,7 @@ import { useGoTo } from "../shared/useGoTo";
 import { useHref } from "react-router";
 
 const applicationsQuery = graphql`
-  query ApplicationsListQuery(
-    $cursor: String
-    $count: Int
-    $where: ApplicationFilterInput
-  ) {
+  query ApplicationsListQuery($cursor: String, $count: Int, $search: String) {
     ...ApplicationsList_applications
   }
 `;
@@ -38,7 +34,7 @@ const applicationsQuery = graphql`
 const applicationsConnectionFragment = graphql`
   fragment ApplicationsList_applications on Query
   @refetchable(queryName: "ApplicationsListPaginationQuery") {
-    applications(after: $cursor, first: $count, where: $where)
+    applications(after: $cursor, first: $count, search: $search)
       @connection(key: "Query_applications") {
       edges {
         node {
@@ -78,14 +74,7 @@ export const ApplicationList: React.FC<{
 }> = ({ search, onItemSelect, selectedApplicationId }) => {
   const queryData = useLazyLoadQuery<ApplicationsListQuery>(applicationsQuery, {
     count: config.pagination.pageSize,
-    where: !search
-      ? null
-      : {
-          or: [
-            { namespace: { contains: search } },
-            { name: { contains: search } },
-          ],
-        },
+    search,
   });
   const {
     data: connection,

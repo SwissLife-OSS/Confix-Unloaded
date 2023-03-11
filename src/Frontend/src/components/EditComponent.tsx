@@ -1,5 +1,5 @@
 import { useFragment, useLazyLoadQuery, useMutation } from "react-relay";
-import { Button, Col, Row, Tabs } from "antd";
+import { Button, Col, Row, Space, Tabs, Tag, Typography } from "antd";
 import { DetailView } from "../shared/DetailView";
 import { graphql } from "babel-plugin-relay/macro";
 import { EditComponentQuery } from "./__generated__/EditComponentQuery.graphql";
@@ -26,6 +26,8 @@ import { DefaultSuspense } from "../shared/DefaultSuspense";
 import { ChangeLog } from "../shared/ChangeLog";
 import { TabRow } from "../shared/TabRow";
 import { ButtonBar } from "../shared/ButtonBar";
+import { EditComponent_AvailableIn$key } from "./__generated__/EditComponent_AvailableIn.graphql";
+import { EditIcon } from "../icons/icons";
 
 const componentByIdQuery = graphql`
   query EditComponentQuery($id: ID!) {
@@ -33,6 +35,9 @@ const componentByIdQuery = graphql`
       id
       name
       ...EditComponent_component
+      scopes {
+        ...EditComponent_AvailableIn
+      }
     }
   }
 `;
@@ -121,6 +126,9 @@ export const EditComponent = () => {
         <Col xs={24}>
           <SectionHeader title={`Component ${name}`}></SectionHeader>
         </Col>
+      </Row>
+      <Row>
+        <AvailableIn data={component.componentById.scopes} />
       </Row>
       <TabRow>
         <Tabs
@@ -231,4 +239,57 @@ const ComponentChangeLog: React.FC<{
   );
 
   return <ChangeLog data={changeLog} />;
+};
+
+const AvailableIn: React.FC<{
+  data: EditComponent_AvailableIn$key;
+}> = ({ data }) => {
+  const scopes = useFragment<EditComponent_AvailableIn$key>(
+    graphql`
+      fragment EditComponent_AvailableIn on ComponentScope
+      @relay(plural: true) {
+        namespace
+        applicationId
+        application {
+          name
+        }
+        applicationPartId
+        applicationPart {
+          name
+        }
+      }
+    `,
+    data
+  );
+  return (
+    <>
+      <span style={{ marginRight: 8 }}>Scopes:</span>
+      <Space size={[0, 8]} wrap>
+        {scopes.map((scope) => {
+          const tag = scope.applicationPartId
+            ? `${scope.namespace}/${scope.application?.name}/${scope.applicationPart?.name}`
+            : scope.applicationId
+            ? `${scope.namespace}/${scope.application?.name}`
+            : `${scope.namespace}`;
+
+          return (
+            <Tag
+              key={
+                scope.namespace + scope.applicationId + scope.applicationPartId
+              }
+            >
+              {tag}
+            </Tag>
+          );
+        })}
+        <Button
+          type="text"
+          css={css`
+            display: inline-block;
+          `}
+          icon={<EditIcon />}
+        ></Button>
+      </Space>
+    </>
+  );
 };

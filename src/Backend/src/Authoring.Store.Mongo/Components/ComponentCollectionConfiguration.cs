@@ -7,6 +7,8 @@ internal sealed class ComponentCollectionConfiguration : IMongoCollectionConfigu
 {
     public void OnConfiguring(IMongoCollectionBuilder<Component> builder)
     {
+        // allow additional properties
+
         builder.WithCollectionName("component")
             .AddBsonClassMap<Component>(cm =>
             {

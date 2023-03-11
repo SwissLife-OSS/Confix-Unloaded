@@ -235,12 +235,6 @@ type ClaimRequirement {
   value: String!
 }
 
-type ClaimVersionResult {
-  version: ClaimedVersion!
-  token: String
-  decryptionKey: String
-}
-
 type ClaimVersionFailedError implements UserError {
   message: String!
   code: String!
@@ -250,6 +244,12 @@ type ClaimVersionPayload {
   result: ClaimVersionResult
   errors: [ClaimVersionError!]
   query: Query!
+}
+
+type ClaimVersionResult {
+  version: ClaimedVersion!
+  token: String
+  decryptionKey: String
 }
 
 type ClaimedVersion {
@@ -283,7 +283,7 @@ type ClaimedVersionsEdge {
 type Component implements Node {
   id: ID!
   name: String!
-  namespace: String!
+  scopes: [ComponentScope!]!
   version: Int!
   state: ComponentState!
   changeLog: [ChangeLog!]!
@@ -305,6 +305,12 @@ type ComponentSchemaChange implements ComponentChange & Change {
   kind: String!
   component: Component
   componentVersion: Int!
+}
+
+type ComponentScope {
+  namespace: String!
+  application: String
+  applicationPart: String
 }
 
 type ComponentValuesChange implements ComponentChange & Change {
@@ -439,6 +445,7 @@ type EncryptedValue {
 type Environment implements Node {
   id: ID!
   name: String!
+  allowDeveloperAccess: Boolean!
   parent: Environment
 }
 
@@ -465,6 +472,10 @@ type Group {
   name: String!
   requirements: [Requirement!]!
   roles: [RoleScope!]!
+}
+
+type LatestPublishedVersion {
+  configuration: String!
 }
 
 type Mutation {
@@ -494,6 +505,7 @@ type Mutation {
   renameEnvironment(input: RenameEnvironmentInput!): RenameEnvironmentPayload!
   removeEnvironmentById(input: RemoveEnvironmentByIdInput!): RemoveEnvironmentByIdPayload!
   setParentOfEnvironment(input: SetParentOfEnvironmentInput!): SetParentOfEnvironmentPayload!
+  setDeveloperAccessOfEnvironment(input: SetDeveloperAccessOfEnvironmentInput!): SetDeveloperAccessOfEnvironmentPayload!
   createVariable(input: CreateVariableInput!): CreateVariablePayload!
   saveVariableValue(input: SaveVariableValueInput!): SaveVariableValuePayload!
   deleteVariableValue(input: DeleteVariableValueInput!): DeleteVariableValuePayload!
@@ -609,12 +621,12 @@ type Query {
   apiKeys("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String): ApiKeysConnection
   apiKeyById(id: ID!): ApiKey
   "Get all application configurations."
-  applications("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: ApplicationFilterInput): ApplicationsConnection
+  applications(search: String "Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String): ApplicationsConnection
   "Get a specific application configuration by its ID."
   applicationById("The application ID." id: ID!): Application
   applicationPartById(id: ID!): ApplicationPart
   applicationPartComponentById(partComponentId: ID!): ApplicationPartComponent
-  components("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: ComponentFilterInput): ComponentsConnection
+  components(search: String "Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String): ComponentsConnection
   componentById(id: ID!): Component
   searchEnvironments(search: String "Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String): SearchEnvironmentsConnection
   environmentById(id: ID!): Environment
@@ -623,6 +635,8 @@ type Query {
   variable(id: ID!): Variable
   variableValues(variableId: ID! applicationId: ID applicationPartId: ID): [VariableValue!]!
   globalVariableValues: [VariableValue!]!
+  "Gets the latest published version of an application part."
+  latestPublishedVersion(applicationName: String! applicationPartName: String! environmentName: String!): LatestPublishedVersionResult
   changeLogById(id: ID!): ChangeLog
   searchRoles(search: String "Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String): SearchRolesConnection
   roleById(id: ID!): Role
@@ -864,6 +878,12 @@ type SearchVariablesEdge {
   node: Variable!
 }
 
+type SetDeveloperAccessOfEnvironmentPayload {
+  environment: Environment
+  errors: [SetDeveloperAccessOfEnvironmentError!]
+  query: Query!
+}
+
 type SetParentOfEnvironmentPayload {
   environment: Environment
   errors: [SetParentOfEnvironmentError!]
@@ -989,6 +1009,8 @@ union CreateVariableError = UnauthorizedOperationError
 
 union DeleteVariableValueError = UnauthorizedOperationError
 
+union LatestPublishedVersionResult = LatestPublishedVersion | ClaimVersionFailedError
+
 union PublishApplicationPartByIdError = PublishingError | UnauthorizedOperationError
 
 union RemoveApiKeyByIdError = UnauthorizedOperationError
@@ -1021,6 +1043,8 @@ union Requirement = ClaimRequirement
 
 union SaveVariableValueError = UnauthorizedOperationError
 
+union SetDeveloperAccessOfEnvironmentError = EnvironmentNotFoundError | UnauthorizedOperationError
+
 union SetParentOfEnvironmentError = EnvironmentNotFoundError | EnvironmentCycleDetectedError | UnauthorizedOperationError
 
 union UpdateApiKeyError = UnauthorizedOperationError
@@ -1045,13 +1069,6 @@ input AddPartToApplicationInput {
   applicationId: ID!
 }
 
-input ApplicationFilterInput {
-  and: [ApplicationFilterInput!]
-  or: [ApplicationFilterInput!]
-  name: StringOperationFilterInput
-  namespace: StringOperationFilterInput
-}
-
 input ChangeRolePermissionsInput {
   id: ID!
   permissions: [PermissionInput!]!
@@ -1067,12 +1084,6 @@ input ClaimVersionInput {
   applicationName: String!
   applicationPartName: String!
   environmentName: String!
-}
-
-input ComponentFilterInput {
-  and: [ComponentFilterInput!]
-  or: [ComponentFilterInput!]
-  name: StringOperationFilterInput
 }
 
 input CreateApiKeyInput {
@@ -1213,24 +1224,14 @@ input SaveVariableValueInput {
   environmentId: ID
 }
 
+input SetDeveloperAccessOfEnvironmentInput {
+  environmentId: ID!
+  isAllowed: Boolean!
+}
+
 input SetParentOfEnvironmentInput {
   environmentId: ID!
   parentId: ID!
-}
-
-input StringOperationFilterInput {
-  and: [StringOperationFilterInput!]
-  or: [StringOperationFilterInput!]
-  eq: String
-  neq: String
-  contains: String
-  ncontains: String
-  in: [String]
-  nin: [String]
-  startsWith: String
-  nstartsWith: String
-  endsWith: String
-  nendsWith: String
 }
 
 input UpdateApiKeyInput {

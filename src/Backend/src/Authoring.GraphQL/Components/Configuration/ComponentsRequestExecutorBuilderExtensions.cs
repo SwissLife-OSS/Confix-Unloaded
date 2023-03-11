@@ -38,6 +38,7 @@ public static class ComponentsRequestExecutorBuilderExtensions
             .AddType<CreateComponentChange>()
             .AddType<RemoveComponentChange>()
             .AddType<RenameComponentChange>()
+            .AddType<ChangeScopeOfComponentChange>()
             .AddType<ComponentSchemaChange>()
             .AddType<ComponentValuesChange>();
 

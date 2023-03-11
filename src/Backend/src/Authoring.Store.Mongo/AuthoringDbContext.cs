@@ -5,6 +5,7 @@ using Confix.Authoring.Store.Mongo.ApiKeys;
 using Confix.Authoring.Store.Mongo.Configuration;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 using MongoDB.Extensions.Context;
@@ -48,6 +49,7 @@ internal sealed class AuthoringDbContext : MongoDbContext, IAuthoringDbContext
     public IMongoCollection<ClaimedVersion> ClaimedVersions { get; }
 
     public IMongoCollection<Role> Roles { get; }
+
     public IMongoCollection<ApiKey> ApiKeys { get; }
 
     public IMongoCollection<Group> Groups { get; }
@@ -56,6 +58,7 @@ internal sealed class AuthoringDbContext : MongoDbContext, IAuthoringDbContext
     {
         builder
             .AddInstrumentation()
+            .RegisterDefaultConventionPack()
             .RegisterSerializer(new DateTimeOffsetSerializer(BsonType.String))
             .ConfigureConnection(con => con.ReadConcern = ReadConcern.Majority)
             .ConfigureConnection(con => con.WriteConcern = WriteConcern.WMajority)

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<532b229e95559f13b423b2919f8f2680>>
+ * @generated SignedSource<<f408243d8bdfd0c2a7b9ebc9c1928328>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,30 +10,10 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ApplicationFilterInput = {
-  and?: ReadonlyArray<ApplicationFilterInput> | null;
-  name?: StringOperationFilterInput | null;
-  namespace?: StringOperationFilterInput | null;
-  or?: ReadonlyArray<ApplicationFilterInput> | null;
-};
-export type StringOperationFilterInput = {
-  and?: ReadonlyArray<StringOperationFilterInput> | null;
-  contains?: string | null;
-  endsWith?: string | null;
-  eq?: string | null;
-  in?: ReadonlyArray<string | null> | null;
-  ncontains?: string | null;
-  nendsWith?: string | null;
-  neq?: string | null;
-  nin?: ReadonlyArray<string | null> | null;
-  nstartsWith?: string | null;
-  or?: ReadonlyArray<StringOperationFilterInput> | null;
-  startsWith?: string | null;
-};
 export type ApplicationsListPaginationQuery$variables = {
   count?: number | null;
   cursor?: string | null;
-  where?: ApplicationFilterInput | null;
+  search?: string | null;
 };
 export type ApplicationsListPaginationQuery$data = {
   readonly " $fragmentSpreads": FragmentRefs<"ApplicationsList_applications">;
@@ -58,7 +38,7 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "where"
+    "name": "search"
   }
 ],
 v1 = [
@@ -74,8 +54,8 @@ v1 = [
   },
   {
     "kind": "Variable",
-    "name": "where",
-    "variableName": "where"
+    "name": "search",
+    "variableName": "search"
   }
 ],
 v2 = {
@@ -237,7 +217,7 @@ return {
         "alias": null,
         "args": (v1/*: any*/),
         "filters": [
-          "where"
+          "search"
         ],
         "handle": "connection",
         "key": "Query_applications",
@@ -247,16 +227,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "dc2b6e4487ba14501a3f8316e8a7ac67",
+    "cacheID": "84adb9598037fc00881ced38b7a923d0",
     "id": null,
     "metadata": {},
     "name": "ApplicationsListPaginationQuery",
     "operationKind": "query",
-    "text": "query ApplicationsListPaginationQuery(\n  $count: Int\n  $cursor: String\n  $where: ApplicationFilterInput\n) {\n  ...ApplicationsList_applications\n}\n\nfragment ApplicationsList_applications on Query {\n  applications(after: $cursor, first: $count, where: $where) {\n    edges {\n      node {\n        id\n        name\n        namespace\n        ...ApplicationsList_applicationsEdge\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment ApplicationsList_applicationsEdge on Application {\n  id\n  name\n  namespace\n  parts {\n    id\n    name\n    components {\n      id\n      definition {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": "query ApplicationsListPaginationQuery(\n  $count: Int\n  $cursor: String\n  $search: String\n) {\n  ...ApplicationsList_applications\n}\n\nfragment ApplicationsList_applications on Query {\n  applications(after: $cursor, first: $count, search: $search) {\n    edges {\n      node {\n        id\n        name\n        namespace\n        ...ApplicationsList_applicationsEdge\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment ApplicationsList_applicationsEdge on Application {\n  id\n  name\n  namespace\n  parts {\n    id\n    name\n    components {\n      id\n      definition {\n        id\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "d7b4ad1923d9adae56e491423417c7a1";
+(node as any).hash = "4d02d05685c7ef620fea3571d1f05493";
 
 export default node;
