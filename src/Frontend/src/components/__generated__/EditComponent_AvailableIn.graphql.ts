@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<aea87fe2e399cc1943af90da1ab27631>>
+ * @generated SignedSource<<cef6802e1fc06142a6bc6a7fe0eafa63>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,22 +10,24 @@
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type EditComponent_AvailableIn$data = ReadonlyArray<{
-  readonly application: {
-    readonly name: string;
-  } | null;
-  readonly applicationId: string | null;
-  readonly applicationPart: {
-    readonly name: string;
-  } | null;
-  readonly applicationPartId: string | null;
-  readonly namespace: string;
+export type EditComponent_AvailableIn$data = {
+  readonly scopes: ReadonlyArray<{
+    readonly application: {
+      readonly name: string;
+    } | null;
+    readonly applicationId: string | null;
+    readonly applicationPart: {
+      readonly name: string;
+    } | null;
+    readonly applicationPartId: string | null;
+    readonly namespace: string;
+  }>;
   readonly " $fragmentType": "EditComponent_AvailableIn";
-}>;
-export type EditComponent_AvailableIn$key = ReadonlyArray<{
+};
+export type EditComponent_AvailableIn$key = {
   readonly " $data"?: EditComponent_AvailableIn$data;
   readonly " $fragmentSpreads": FragmentRefs<"EditComponent_AvailableIn">;
-}>;
+};
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -40,58 +42,67 @@ var v0 = [
 return {
   "argumentDefinitions": [],
   "kind": "Fragment",
-  "metadata": {
-    "plural": true
-  },
+  "metadata": null,
   "name": "EditComponent_AvailableIn",
   "selections": [
     {
       "alias": null,
       "args": null,
-      "kind": "ScalarField",
-      "name": "namespace",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "applicationId",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "Application",
+      "concreteType": "ComponentScope",
       "kind": "LinkedField",
-      "name": "application",
-      "plural": false,
-      "selections": (v0/*: any*/),
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "applicationPartId",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "ApplicationPart",
-      "kind": "LinkedField",
-      "name": "applicationPart",
-      "plural": false,
-      "selections": (v0/*: any*/),
+      "name": "scopes",
+      "plural": true,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "namespace",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "applicationId",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "Application",
+          "kind": "LinkedField",
+          "name": "application",
+          "plural": false,
+          "selections": (v0/*: any*/),
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "applicationPartId",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "ApplicationPart",
+          "kind": "LinkedField",
+          "name": "applicationPart",
+          "plural": false,
+          "selections": (v0/*: any*/),
+          "storageKey": null
+        }
+      ],
       "storageKey": null
     }
   ],
-  "type": "ComponentScope",
+  "type": "Component",
   "abstractKey": null
 };
 })();
 
-(node as any).hash = "a7c6dc395a99271d1fba737e30b95c61";
+(node as any).hash = "58dd3744ca8d22db7ecc2c56daf2f328";
 
 export default node;

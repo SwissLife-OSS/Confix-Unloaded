@@ -2,22 +2,23 @@ import * as React from "react";
 import { useLazyLoadQuery, useMutation } from "react-relay";
 import { graphql } from "babel-plugin-relay/macro";
 import { Modal } from "antd";
-import { FieldInput } from "../../../shared/FormField";
 import {
   pipeCommitFn,
   withSuccessMessage,
   withOnSuccess,
 } from "../../../shared/pipeCommitFn";
-import { useStringEventHanlder } from "../../../shared/useEventListener";
 import { ChangeComponentScopeDialog_Query } from "./__generated__/ChangeComponentScopeDialog_Query.graphql";
 import { ChangeComponentScopeDialogMutation } from "./__generated__/ChangeComponentScopeDialogMutation.graphql";
+import { ApplicationCascader } from "../../../applications/components/ApplicationCascader";
+
+type Result = [string] | [string, string] | [string, string, string];
 
 export const ChangeComponentScopeDialog: React.FC<{
   open: boolean;
   onClose: () => void;
-  name: string;
+  scopes: Result[];
   id: string;
-}> = ({ open, name, id, onClose }) => {
+}> = ({ open, id, scopes: initialScopes, onClose }) => {
   const [commit, isInFlight] = useMutation<ChangeComponentScopeDialogMutation>(
     graphql`
       mutation ChangeComponentScopeDialogMutation(
@@ -27,11 +28,13 @@ export const ChangeComponentScopeDialog: React.FC<{
           component {
             id
             ...ComponentsList_componentEdge
+            ...EditComponent
           }
         }
       }
     `
   );
+
   const data = useLazyLoadQuery<ChangeComponentScopeDialog_Query>(
     graphql`
       query ChangeComponentScopeDialog_Query($search: String) {
@@ -40,30 +43,39 @@ export const ChangeComponentScopeDialog: React.FC<{
     `,
     {}
   );
-  const [componentName, setComponentName] = React.useState(name);
-  const handlePartNameChange = useStringEventHanlder(setComponentName);
+
+  const [scopes, setScope] = React.useState<Result[]>(initialScopes);
   const handleRename = React.useCallback(() => {
     pipeCommitFn(commit, [
       withSuccessMessage(
-        (x) => x.renameComponent.component?.id,
-        "Renamed Component"
+        (x) => x.updateComponentScopes.component?.id,
+        "Changes scopes of component"
       ),
-      withOnSuccess((x) => x.renameComponent.component?.id, onClose),
-    ])({ variables: { input: { name: componentName, id } } });
-  }, [commit, id, componentName, onClose]);
+      withOnSuccess((x) => x.updateComponentScopes.component?.id, onClose),
+    ])({
+      variables: {
+        input: {
+          id,
+          scopes: scopes.map((x) => {
+            return {
+              namespace: x[0],
+              applicationId: x[1],
+              applicationPartId: x[2],
+            };
+          }),
+        },
+      },
+    });
+  }, [commit, id, onClose, scopes]);
   return (
     <Modal
-      title={`Rename Component ${name}`}
+      title={`Change component scope`}
       open={open}
       onOk={handleRename}
       confirmLoading={isInFlight}
       onCancel={onClose}
     >
-      <FieldInput
-        label="New Name"
-        value={componentName}
-        onChange={handlePartNameChange}
-      />
+      <ApplicationCascader $data={data} onChange={setScope} value={scopes} />
     </Modal>
   );
 };

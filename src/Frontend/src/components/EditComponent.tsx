@@ -1,5 +1,5 @@
 import { useFragment, useLazyLoadQuery, useMutation } from "react-relay";
-import { Button, Col, Row, Space, Tabs, Tag, Typography } from "antd";
+import { Button, Col, Row, Space, Tabs, Tag } from "antd";
 import { DetailView } from "../shared/DetailView";
 import { graphql } from "babel-plugin-relay/macro";
 import { EditComponentQuery } from "./__generated__/EditComponentQuery.graphql";
@@ -17,7 +17,6 @@ import {
   EditComponentUpdateMutation$data,
 } from "./__generated__/EditComponentUpdateMutation.graphql";
 import React, { useState } from "react";
-import { EditComponent_component$key } from "./__generated__/EditComponent_component.graphql";
 import { css } from "@emotion/react";
 import { SectionHeader } from "../shared/SectionHeader";
 import { useParams } from "react-router";
@@ -28,81 +27,43 @@ import { TabRow } from "../shared/TabRow";
 import { ButtonBar } from "../shared/ButtonBar";
 import { EditComponent_AvailableIn$key } from "./__generated__/EditComponent_AvailableIn.graphql";
 import { EditIcon } from "../icons/icons";
-
-const componentByIdQuery = graphql`
-  query EditComponentQuery($id: ID!) {
-    componentById(id: $id) {
-      id
-      name
-      ...EditComponent_component
-      scopes {
-        ...EditComponent_AvailableIn
-      }
-    }
-  }
-`;
-
-const editComponentFragment = graphql`
-  fragment EditComponent_component on Component {
-    id
-    name
-    state
-    schemaSdl
-    schema
-    values
-    defaults
-    schemaViolations {
-      path
-      code
-    }
-    changeLog {
-      ...ChangeLog_fragment
-    }
-  }
-`;
-
-const editComponentMutation = graphql`
-  mutation EditComponentUpdateMutation(
-    $valuesInput: UpdateComponentValuesInput!
-    $schemaInput: UpdateComponentSchemaInput!
-  ) {
-    updateComponentSchema(input: $schemaInput) {
-      component {
-        id
-        ...EditComponent_component
-      }
-      errors {
-        ... on UserError {
-          message
-          code
-        }
-      }
-    }
-    updateComponentValues(input: $valuesInput) {
-      component {
-        id
-        ...EditComponent_component
-      }
-      errors {
-        ... on UserError {
-          message
-          code
-        }
-      }
-    }
-  }
-`;
+import { ChangeComponentScopeDialog } from "./controls/dialogs/ChangeComponentScopeDialog";
+import { EditComponent$key } from "./__generated__/EditComponent.graphql";
+import { EditComponent_EditComponentForm$key } from "./__generated__/EditComponent_EditComponentForm.graphql";
+import { EditComponent_ComponentChangeLog$key } from "./__generated__/EditComponent_ComponentChangeLog.graphql";
 
 export const EditComponent = () => {
   const { id: componentId = "" } = useParams();
 
   const { tab, navigateToTab } = useTabSwitcher();
 
-  const component = useLazyLoadQuery<EditComponentQuery>(componentByIdQuery, {
-    id: componentId,
-  });
-  const id = component.componentById?.id;
-  const name = component.componentById?.name;
+  const data = useLazyLoadQuery<EditComponentQuery>(
+    graphql`
+      query EditComponentQuery($id: ID!) {
+        componentById(id: $id) {
+          ...EditComponent
+        }
+      }
+    `,
+    {
+      id: componentId,
+    }
+  );
+
+  const component = useFragment<EditComponent$key>(
+    graphql`
+      fragment EditComponent on Component {
+        id
+        name
+        ...EditComponent_AvailableIn
+        ...EditComponent_EditComponentForm
+        ...EditComponent_ComponentChangeLog
+      }
+    `,
+    data.componentById
+  );
+  const id = component?.id;
+  const name = component?.name;
   if (!id) {
     return (
       <DetailView style={{ padding: 1 }}>Coult not find component</DetailView>
@@ -128,7 +89,7 @@ export const EditComponent = () => {
         </Col>
       </Row>
       <Row>
-        <AvailableIn data={component.componentById.scopes} />
+        <AvailableIn id={id} data={component} />
       </Row>
       <TabRow>
         <Tabs
@@ -139,16 +100,14 @@ export const EditComponent = () => {
             {
               key: "edit",
               label: "Parts",
-              children: (
-                <EditComponentForm id={id} data={component.componentById} />
-              ),
+              children: <EditComponentForm id={id} data={component} />,
             },
             {
               key: "changelog",
               label: "Change Log",
               children: (
                 <DefaultSuspense>
-                  <ComponentChangeLog data={component.componentById} />
+                  <ComponentChangeLog data={component} />
                 </DefaultSuspense>
               ),
             },
@@ -161,14 +120,50 @@ export const EditComponent = () => {
 
 const EditComponentForm: React.FC<{
   id: string;
-  data: NonNullable<EditComponentQuery["response"]["componentById"]>;
+  data: EditComponent_EditComponentForm$key;
 }> = ({ data, id }) => {
-  const component = useFragment<EditComponent_component$key>(
-    editComponentFragment,
+  const component = useFragment(
+    graphql`
+      fragment EditComponent_EditComponentForm on Component {
+        id
+        schemaSdl
+        values
+      }
+    `,
     data
   );
   const [commit, isInFlight] = useMutation<EditComponentUpdateMutation>(
-    editComponentMutation
+    graphql`
+      mutation EditComponentUpdateMutation(
+        $valuesInput: UpdateComponentValuesInput!
+        $schemaInput: UpdateComponentSchemaInput!
+      ) {
+        updateComponentSchema(input: $schemaInput) {
+          component {
+            id
+            ...EditComponent
+          }
+          errors {
+            ... on UserError {
+              message
+              code
+            }
+          }
+        }
+        updateComponentValues(input: $valuesInput) {
+          component {
+            id
+            ...EditComponent
+          }
+          errors {
+            ... on UserError {
+              message
+              code
+            }
+          }
+        }
+      }
+    `
   );
 
   const [schema, setSchema] = useState<string | undefined>(
@@ -231,10 +226,16 @@ const Header: React.FC<{ name: string; id: string }> = ({ name, id }) => {
 };
 
 const ComponentChangeLog: React.FC<{
-  data: EditComponent_component$key;
+  data: EditComponent_ComponentChangeLog$key;
 }> = ({ data }) => {
-  const { changeLog } = useFragment<EditComponent_component$key>(
-    editComponentFragment,
+  const { changeLog } = useFragment(
+    graphql`
+      fragment EditComponent_ComponentChangeLog on Component {
+        changeLog {
+          ...ChangeLog_fragment
+        }
+      }
+    `,
     data
   );
 
@@ -242,20 +243,23 @@ const ComponentChangeLog: React.FC<{
 };
 
 const AvailableIn: React.FC<{
+  id: string;
   data: EditComponent_AvailableIn$key;
-}> = ({ data }) => {
-  const scopes = useFragment<EditComponent_AvailableIn$key>(
+}> = ({ data, id }) => {
+  const [isEdit, , edit, stopEdit] = useToggle();
+  const { scopes } = useFragment<EditComponent_AvailableIn$key>(
     graphql`
-      fragment EditComponent_AvailableIn on ComponentScope
-      @relay(plural: true) {
-        namespace
-        applicationId
-        application {
-          name
-        }
-        applicationPartId
-        applicationPart {
-          name
+      fragment EditComponent_AvailableIn on Component {
+        scopes {
+          namespace
+          applicationId
+          application {
+            name
+          }
+          applicationPartId
+          applicationPart {
+            name
+          }
         }
       }
     `,
@@ -287,9 +291,22 @@ const AvailableIn: React.FC<{
           css={css`
             display: inline-block;
           `}
+          onClick={edit}
           icon={<EditIcon />}
         ></Button>
       </Space>
+      <ChangeComponentScopeDialog
+        open={isEdit}
+        onClose={stopEdit}
+        id={id}
+        scopes={scopes.map((x) =>
+          x.applicationPartId
+            ? [x.namespace, x.applicationId!, x.applicationPartId]
+            : x.applicationId
+            ? [x.namespace, x.applicationId!]
+            : [x.namespace]
+        )}
+      />
     </>
   );
 };

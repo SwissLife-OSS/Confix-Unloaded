@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5863afa048841cc2767a62d754a5c37e>>
+ * @generated SignedSource<<4f9d554de5380505faf8aedd47902ffc>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -26,6 +26,7 @@ export type EditComponent_component$data = {
   }>;
   readonly state: ComponentState;
   readonly values: any | null;
+  readonly " $fragmentSpreads": FragmentRefs<"EditComponent_AvailableIn">;
   readonly " $fragmentType": "EditComponent_component";
 };
 export type EditComponent_component$key = {
@@ -114,6 +115,11 @@ const node: ReaderFragment = {
       "storageKey": null
     },
     {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "EditComponent_AvailableIn"
+    },
+    {
       "alias": null,
       "args": null,
       "concreteType": "ChangeLog",
@@ -134,6 +140,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "0bc4b461c49a6c830c8ccbdaa2e19b9f";
+(node as any).hash = "b20623de469c5452dbdf228fe00d6ec0";
 
 export default node;
