@@ -1,57 +1,54 @@
 import * as React from "react";
 import { graphql } from "babel-plugin-relay/macro";
-import { DeployedEnvironmentsOverviewFragment$key } from "./__generated__/DeployedEnvironmentsOverviewFragment.graphql";
+import { DeployedEnvironmentsOverview$key } from "./__generated__/DeployedEnvironmentsOverview.graphql";
 import { useFragment } from "react-relay";
 import { Steps } from "antd";
 import { ensureDate } from "../../shared/ensureDate";
 
-const deployedEnvironmentsOverview = graphql`
-  fragment DeployedEnvironmentsOverviewFragment on DeployedEnvironment
-  @relay(plural: true) {
-    environment {
-      id
-      name
-      parent {
-        id
-        name
-      }
-    }
-    claimedVersions {
-      nodes {
-        tag
-        application {
-          name
-        }
-        applicationPart {
-          name
-        }
-        publishedApplicationPart {
-          id
-          version
-          publishedAt
-        }
-        environment {
-          name
-        }
-      }
-    }
-  }
-`;
 export const DeployedEnvironmentsOverview: React.FC<{
-  data: DeployedEnvironmentsOverviewFragment$key;
-}> = ({ data }) => {
-  let deployedEnvironments = useFragment(
-    deployedEnvironmentsOverview,
-    data
+  fragmentRef: DeployedEnvironmentsOverview$key;
+}> = ({ fragmentRef }) => {
+  const data = useFragment(
+    graphql`
+      fragment DeployedEnvironmentsOverview on DeployedEnvironment
+      @relay(plural: true) {
+        environment {
+          id
+          name
+          parent {
+            id
+            name
+          }
+        }
+        claimedVersions {
+          nodes {
+            tag
+            application {
+              name
+            }
+            applicationPart {
+              name
+            }
+            publishedApplicationPart {
+              id
+              version
+              publishedAt
+            }
+            environment {
+              name
+            }
+          }
+        }
+      }
+    `,
+    fragmentRef
   ).filter((x) => !!x.environment);
 
-  const allDeployedIds = new Set(
-    deployedEnvironments.map((x) => x.environment!.id)
-  );
+  const allDeployedIds = new Set(data.map((x) => x.environment!.id));
 
   // Get root values
   let rootEnvironments = [];
-  for (var environment of deployedEnvironments) {
+  for (var environment of data) {
     if (
       !environment.environment?.parent ||
       !allDeployedIds.has(environment.environment.id)
@@ -63,7 +60,7 @@ export const DeployedEnvironmentsOverview: React.FC<{
   // get children of root values
   for (var environments of rootEnvironments) {
     for (let i = 0; i < environments.length; i++) {
-      for (const child of deployedEnvironments.filter(
+      for (const child of data.filter(
         // eslint-disable-next-line no-loop-func
         (x) => x.environment?.parent?.id === environments[i].environment?.id
       )) {
@@ -72,7 +69,7 @@ export const DeployedEnvironmentsOverview: React.FC<{
     }
   }
 
-  const newestDeployments = deployedEnvironments
+  const newestDeployments = data
     .flatMap(
       (x) =>
         x.claimedVersions?.nodes?.map((y) => y.publishedApplicationPart) ?? []

@@ -13,28 +13,6 @@ import { useStringEventHanlder } from "../../shared/useEventListener";
 import { FieldInput } from "../../shared/FormField";
 import { RenameApplicationPartDialogMutation } from "./__generated__/RenameApplicationPartDialogMutation.graphql";
 
-const renameApplicationPartMutation = graphql`
-  mutation RenameApplicationPartDialogMutation(
-    $input: RenameApplicationPartInput!
-  ) {
-    renameApplicationPart(input: $input) {
-      applicationPart {
-        ...EditApplicationPart_fragment
-        application {
-          id
-          ...ApplicationsList_applicationsEdge
-        }
-      }
-      errors {
-        ... on UserError {
-          message
-          code
-        }
-      }
-    }
-  }
-`;
-
 export const RenameApplicationPartDialog: React.FC<{
   open: boolean;
   onClose: () => void;
@@ -42,8 +20,29 @@ export const RenameApplicationPartDialog: React.FC<{
   applicationPartId: string;
 }> = ({ open, applicationPartName, applicationPartId, onClose }) => {
   const [commit, isInFlight] = useMutation<RenameApplicationPartDialogMutation>(
-    renameApplicationPartMutation
+    graphql`
+      mutation RenameApplicationPartDialogMutation(
+        $input: RenameApplicationPartInput!
+      ) {
+        renameApplicationPart(input: $input) {
+          applicationPart {
+            ...EditApplicationPart
+            application {
+              id
+              ...ApplicationsListItem
+            }
+          }
+          errors {
+            ... on UserError {
+              message
+              code
+            }
+          }
+        }
+      }
+    `
   );
+
   const [applicationName, setApplicationPartName] =
     useState(applicationPartName);
   const handlePartNameChange = useStringEventHanlder(setApplicationPartName);
@@ -64,6 +63,7 @@ export const RenameApplicationPartDialog: React.FC<{
       },
     });
   }, [commit, applicationPartId, applicationName, onClose]);
+
   return (
     <Modal
       title={`Rename ApplicationPart ${applicationPartName}`}

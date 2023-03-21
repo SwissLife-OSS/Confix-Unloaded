@@ -8,8 +8,8 @@ import { graphql } from "babel-plugin-relay/macro";
 import { config } from "../config";
 import { InfiniteScrollList } from "../shared/InfiniteScrollList";
 import { EnvironmentsListQuery } from "./__generated__/EnvironmentsListQuery.graphql";
-import { EnvironmentsList_EnvironmentEdge$key } from "./__generated__/EnvironmentsList_EnvironmentEdge.graphql";
-import { EnvironmentsList_Environments$key } from "./__generated__/EnvironmentsList_Environments.graphql";
+import { EnvironmentsList_EnvironmentListItem$key } from "./__generated__/EnvironmentsList_EnvironmentListItem.graphql";
+import { EnvironmentsList$key } from "./__generated__/EnvironmentsList.graphql";
 import styled from "@emotion/styled";
 import { Button, List } from "antd";
 import { DeleteIcon } from "../icons/icons";
@@ -18,57 +18,58 @@ import { useToggle } from "../shared/useToggle";
 import { RemoveEnvironmentDialog } from "./controls/dialogs/RemoveEnvironmentDialog";
 import { useGoTo } from "../shared/useGoTo";
 
-const environmentsQuery = graphql`
-  query EnvironmentsListQuery($cursor: String, $count: Int, $search: String) {
-    ...EnvironmentsList_Environments
-  }
-`;
-const environmentsConnectionFragment = graphql`
-  fragment EnvironmentsList_Environments on Query
-  @refetchable(queryName: "EnvironmentsListPaginationQuery") {
-    searchEnvironments(after: $cursor, first: $count, search: $search)
-      @connection(key: "Query_searchEnvironments") {
-      edges {
-        node {
-          id
-          name
-          ...EnvironmentsList_EnvironmentEdge
-        }
-      }
-    }
-  }
-`;
-
-const environmentFragment = graphql`
-  fragment EnvironmentsList_EnvironmentEdge on Environment {
-    id
-    name
-  }
-`;
-
 export const EnvironmentsList: React.FC<{
   selectedEnvironmentId?: string;
   onItemSelect: (item: string) => void;
   search: string | undefined;
 }> = ({ search, onItemSelect, selectedEnvironmentId }) => {
-  const queryData = useLazyLoadQuery<EnvironmentsListQuery>(environmentsQuery, {
-    count: config.pagination.pageSize,
-    search,
-  });
+  const queryData = useLazyLoadQuery<EnvironmentsListQuery>(
+    graphql`
+      query EnvironmentsListQuery(
+        $cursor: String
+        $count: Int
+        $search: String
+      ) {
+        ...EnvironmentsList
+      }
+    `,
+    {
+      count: config.pagination.pageSize,
+      search,
+    }
+  );
+
   const {
     data: connection,
     hasNext,
     loadNext,
     isLoadingNext,
-  } = usePaginationFragment<
-    EnvironmentsListQuery,
-    EnvironmentsList_Environments$key
-  >(environmentsConnectionFragment, queryData);
-  const data = connection?.searchEnvironments?.edges?.map((x) => x.node) ?? [];
+  } = usePaginationFragment<EnvironmentsListQuery, EnvironmentsList$key>(
+    graphql`
+      fragment EnvironmentsList on Query
+      @refetchable(queryName: "EnvironmentsListPaginationQuery") {
+        searchEnvironments(after: $cursor, first: $count, search: $search)
+          @connection(key: "Query_searchEnvironments") {
+          edges {
+            node {
+              id
+              name
+              ...EnvironmentsList_EnvironmentListItem
+            }
+          }
+        }
+      }
+    `,
+    queryData
+  );
+
   const handleOnItemSelected = useCallback(
     (id: string) => onItemSelect(id),
     [onItemSelect]
   );
+
+  const data = connection?.searchEnvironments?.edges?.map((x) => x.node) ?? [];
+
   return (
     <InfiniteScrollList
       items={data}
@@ -90,15 +91,22 @@ export const EnvironmentsList: React.FC<{
 const EnvironmentListItem: React.FC<{
   selected: boolean;
   onItemSelect: (envId: string) => void;
-  edge: EnvironmentsList_EnvironmentEdge$key;
+  edge: EnvironmentsList_EnvironmentListItem$key;
 }> = ({ onItemSelect, edge, selected }) => {
-  const { id, name } = useFragment<EnvironmentsList_EnvironmentEdge$key>(
-    environmentFragment,
+  const { id, name } = useFragment<EnvironmentsList_EnvironmentListItem$key>(
+    graphql`
+      fragment EnvironmentsList_EnvironmentListItem on Environment {
+        id
+        name
+      }
+    `,
     edge
   );
-  const handleClick = useCallback(() => onItemSelect(id), [onItemSelect, id]);
+
   const [isRemoveEnvVisible, , enableRemoveEnv, disableRemoveEnv] = useToggle();
+
   const goToOverview = useGoTo("/");
+  const handleClick = useCallback(() => onItemSelect(id), [onItemSelect, id]);
   const handleOnClose = useCallback(
     (removed: boolean) => {
       disableRemoveEnv();

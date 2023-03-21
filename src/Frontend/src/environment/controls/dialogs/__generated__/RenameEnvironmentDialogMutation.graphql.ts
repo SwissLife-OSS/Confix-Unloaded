@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<85b99ce579295ad1367b8b7cf0d3d449>>
+ * @generated SignedSource<<11810fead6826fae6433363707f75741>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,6 @@
 // @ts-nocheck
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
-import { FragmentRefs } from "relay-runtime";
 export type RenameEnvironmentInput = {
   id: string;
   name: string;
@@ -21,7 +20,7 @@ export type RenameEnvironmentDialogMutation$data = {
   readonly renameEnvironment: {
     readonly environment: {
       readonly id: string;
-      readonly " $fragmentSpreads": FragmentRefs<"EnvironmentsList_EnvironmentEdge">;
+      readonly name: string;
     } | null;
   };
 };
@@ -40,54 +39,55 @@ var v0 = [
 ],
 v1 = [
   {
-    "kind": "Variable",
-    "name": "input",
-    "variableName": "input"
-  }
-],
-v2 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-};
-return {
-  "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
-    "kind": "Fragment",
-    "metadata": null,
-    "name": "RenameEnvironmentDialogMutation",
+    "alias": null,
+    "args": [
+      {
+        "kind": "Variable",
+        "name": "input",
+        "variableName": "input"
+      }
+    ],
+    "concreteType": "RenameEnvironmentPayload",
+    "kind": "LinkedField",
+    "name": "renameEnvironment",
+    "plural": false,
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
-        "concreteType": "RenameEnvironmentPayload",
+        "args": null,
+        "concreteType": "Environment",
         "kind": "LinkedField",
-        "name": "renameEnvironment",
+        "name": "environment",
         "plural": false,
         "selections": [
           {
             "alias": null,
             "args": null,
-            "concreteType": "Environment",
-            "kind": "LinkedField",
-            "name": "environment",
-            "plural": false,
-            "selections": [
-              (v2/*: any*/),
-              {
-                "args": null,
-                "kind": "FragmentSpread",
-                "name": "EnvironmentsList_EnvironmentEdge"
-              }
-            ],
+            "kind": "ScalarField",
+            "name": "id",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "name",
             "storageKey": null
           }
         ],
         "storageKey": null
       }
     ],
+    "storageKey": null
+  }
+];
+return {
+  "fragment": {
+    "argumentDefinitions": (v0/*: any*/),
+    "kind": "Fragment",
+    "metadata": null,
+    "name": "RenameEnvironmentDialogMutation",
+    "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -96,50 +96,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "RenameEnvironmentDialogMutation",
-    "selections": [
-      {
-        "alias": null,
-        "args": (v1/*: any*/),
-        "concreteType": "RenameEnvironmentPayload",
-        "kind": "LinkedField",
-        "name": "renameEnvironment",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "Environment",
-            "kind": "LinkedField",
-            "name": "environment",
-            "plural": false,
-            "selections": [
-              (v2/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "name",
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
-      }
-    ]
+    "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "7827004bd6b9b4a47d0e16c0111bbc04",
+    "cacheID": "12048afc12af5fcebc78edf925f4d375",
     "id": null,
     "metadata": {},
     "name": "RenameEnvironmentDialogMutation",
     "operationKind": "mutation",
-    "text": "mutation RenameEnvironmentDialogMutation(\n  $input: RenameEnvironmentInput!\n) {\n  renameEnvironment(input: $input) {\n    environment {\n      id\n      ...EnvironmentsList_EnvironmentEdge\n    }\n  }\n}\n\nfragment EnvironmentsList_EnvironmentEdge on Environment {\n  id\n  name\n}\n"
+    "text": "mutation RenameEnvironmentDialogMutation(\n  $input: RenameEnvironmentInput!\n) {\n  renameEnvironment(input: $input) {\n    environment {\n      id\n      name\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "d70fa7e52bc51e2934286c5cd837af05";
+(node as any).hash = "513ba7bef3770542943aa990aa89d2f7";
 
 export default node;

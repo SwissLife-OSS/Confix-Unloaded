@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<910735115bffe0fca8178f0a5fe8a00e>>
+ * @generated SignedSource<<40e62559433255b58f7bdffe99e24ac6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,7 @@ export type EditRoleQuery$variables = {
 export type EditRoleQuery$data = {
   readonly roleById: {
     readonly id: string;
-    readonly " $fragmentSpreads": FragmentRefs<"EditRole_Role">;
+    readonly " $fragmentSpreads": FragmentRefs<"EditRole_Form">;
   } | null;
 };
 export type EditRoleQuery = {
@@ -65,7 +65,7 @@ return {
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "EditRole_Role"
+            "name": "EditRole_Form"
           }
         ],
         "storageKey": null
@@ -166,16 +166,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "75fa89b2591bcc64878253c06bc6798d",
+    "cacheID": "cdb9e0778d21d5ba533b3196d5f5f17c",
     "id": null,
     "metadata": {},
     "name": "EditRoleQuery",
     "operationKind": "query",
-    "text": "query EditRoleQuery(\n  $id: ID!\n) {\n  roleById(id: $id) {\n    id\n    ...EditRole_Role\n  }\n}\n\nfragment EditRole_Role on Role {\n  id\n  name\n  permissions {\n    scope\n    permissions {\n      isRead\n      isWrite\n      isClaim\n      isPublish\n      isDecrypt\n    }\n  }\n}\n"
+    "text": "query EditRoleQuery(\n  $id: ID!\n) {\n  roleById(id: $id) {\n    id\n    ...EditRole_Form\n  }\n}\n\nfragment EditRole_Form on Role {\n  id\n  name\n  permissions {\n    scope\n    permissions {\n      isRead\n      isWrite\n      isClaim\n      isPublish\n      isDecrypt\n    }\n  }\n  ...EditRole_Header\n}\n\nfragment EditRole_Header on Role {\n  id\n  name\n}\n"
   }
 };
 })();
 
-(node as any).hash = "67ccb511ff7da406ad56b66b36e4c5b5";
+(node as any).hash = "1796c7cad5cc53074553f1349d27c886";
 
 export default node;

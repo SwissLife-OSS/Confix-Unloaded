@@ -1,66 +1,66 @@
 import { useFragment, useLazyLoadQuery } from "react-relay";
-import { Button, Checkbox, Col, Input, Row, Typography } from "antd";
+import { Button, Checkbox, Col, Row, Typography } from "antd";
 import { DetailView } from "../shared/DetailView";
 import { graphql } from "babel-plugin-relay/macro";
 import { EditEnvironmentQuery } from "./__generated__/EditEnvironmentQuery.graphql";
 import { EditableBreadcrumbHeader } from "../shared/EditablePageHeader";
 import { useToggle } from "../shared/useToggle";
 import { RenameEnvironmentDialog } from "./controls/dialogs/RenameEnvironmentDialog";
-import React, { useCallback } from "react";
-import { EditEnvironment_Environment$key } from "./__generated__/EditEnvironment_Environment.graphql";
+import React, { useCallback, useState } from "react";
+import { EditEnvironment_EditEnvironmentForm$key } from "./__generated__/EditEnvironment_EditEnvironmentForm.graphql";
 import { css } from "@emotion/react";
 import { useParams } from "react-router";
 import { FieldInputGroup } from "../shared/FormField";
 import { SetParentEnvironmentDialog } from "./controls/dialogs/SetParentEnvironmentDialog";
 import { CheckboxChangeEvent } from "antd/lib/checkbox";
 import { SaveDeveloperAccessButton } from "./controls/buttons/SaveDeveloperAccessButton";
+import { EditEnvironment_IsDeveloperAccessAllowedFrom$key } from "./__generated__/EditEnvironment_IsDeveloperAccessAllowedFrom.graphql";
+import { EditEnvironment_ParentEnvironement$key } from "./__generated__/EditEnvironment_ParentEnvironement.graphql";
+import { EditEnvironment_Header$key } from "./__generated__/EditEnvironment_Header.graphql";
 
 const { Title } = Typography;
 
-const environmentByIdQuery = graphql`
-  query EditEnvironmentQuery($id: ID!) {
-    environmentById(id: $id) {
-      id
-      ...EditEnvironment_Environment
-    }
-  }
-`;
-const editEnvironmentFragment = graphql`
-  fragment EditEnvironment_Environment on Environment {
-    id
-    name
-    allowDeveloperAccess
-    parent {
-      id
-      name
-    }
-  }
-`;
-
 export const EditEnvironment = () => {
   const { environmentId = "" } = useParams();
-  const Environment = useLazyLoadQuery<EditEnvironmentQuery>(
-    environmentByIdQuery,
+  const query = useLazyLoadQuery<EditEnvironmentQuery>(
+    graphql`
+      query EditEnvironmentQuery($id: ID!) {
+        environmentById(id: $id) {
+          id
+          ...EditEnvironment_EditEnvironmentForm
+        }
+      }
+    `,
     {
       id: environmentId,
     }
   );
-  const id = Environment.environmentById?.id;
+
+  const id = query.environmentById?.id;
+
   if (!id) {
     return (
       <DetailView style={{ padding: 1 }}>Coult not find Environment</DetailView>
     );
   }
-  return <EditEnvironmentForm data={Environment.environmentById} id={id} />;
+
+  return <EditEnvironmentForm key={id} fragmentRef={query.environmentById} />;
 };
 
 const EditEnvironmentForm: React.FC<{
-  id: string;
-  data: NonNullable<EditEnvironmentQuery["response"]["environmentById"]>;
-}> = ({ data, id }) => {
-  const env = useFragment<EditEnvironment_Environment$key>(
-    editEnvironmentFragment,
-    data
+  fragmentRef: EditEnvironment_EditEnvironmentForm$key;
+}> = ({ fragmentRef }) => {
+  const data = useFragment<EditEnvironment_EditEnvironmentForm$key>(
+    graphql`
+      fragment EditEnvironment_EditEnvironmentForm on Environment {
+        id
+        name
+        ...EditEnvironment_ParentEnvironement
+        ...EditEnvironment_IsDeveloperAccessAllowedFrom
+        ...EditEnvironment_Header
+      }
+    `,
+    fragmentRef
   );
   return (
     <DetailView
@@ -73,17 +73,17 @@ const EditEnvironmentForm: React.FC<{
     >
       <Row>
         <Col xs={24}>
-          <Header name={env.name} id={env.id} />
+          <Header fragmentRef={data} />
         </Col>
       </Row>
       <Row>
         <Col xs={24}>
-          <ParentEnvironement data={data} />
+          <ParentEnvironement fragmentRef={data} />
         </Col>
       </Row>
       <Row>
         <Col xs={24}>
-          <IsDeveloperAccessAllowedFrom data={data} />
+          <IsDeveloperAccessAllowedFrom fragmentRef={data} />
         </Col>
       </Row>
     </DetailView>
@@ -91,12 +91,22 @@ const EditEnvironmentForm: React.FC<{
 };
 
 const ParentEnvironement: React.FC<{
-  data: EditEnvironment_Environment$key;
-}> = ({ data }) => {
-  const environment = useFragment<EditEnvironment_Environment$key>(
-    editEnvironmentFragment,
-    data
+  fragmentRef: EditEnvironment_ParentEnvironement$key;
+}> = ({ fragmentRef }) => {
+  const environment = useFragment<EditEnvironment_ParentEnvironement$key>(
+    graphql`
+      fragment EditEnvironment_ParentEnvironement on Environment {
+        id
+        name
+        parent {
+          id
+          name
+        }
+      }
+    `,
+    fragmentRef
   );
+
   const [open, , enable, disable] = useToggle();
 
   return (
@@ -121,15 +131,21 @@ const ParentEnvironement: React.FC<{
 };
 
 const IsDeveloperAccessAllowedFrom: React.FC<{
-  data: EditEnvironment_Environment$key;
-}> = ({ data }) => {
-  const environment = useFragment<EditEnvironment_Environment$key>(
-    editEnvironmentFragment,
-    data
+  fragmentRef: EditEnvironment_IsDeveloperAccessAllowedFrom$key;
+}> = ({ fragmentRef }) => {
+  const data = useFragment<EditEnvironment_IsDeveloperAccessAllowedFrom$key>(
+    graphql`
+      fragment EditEnvironment_IsDeveloperAccessAllowedFrom on Environment {
+        id
+        allowDeveloperAccess
+      }
+    `,
+    fragmentRef
   );
 
-  const [isDeveloperAccessAllowed, setIsDeveloperAccessAllowed] =
-    React.useState(environment.allowDeveloperAccess);
+  const [isDeveloperAccessAllowed, setIsDeveloperAccessAllowed] = useState(
+    data.allowDeveloperAccess
+  );
 
   const handleCheckboxChange = useCallback((e: CheckboxChangeEvent) => {
     setIsDeveloperAccessAllowed(e.target.checked);
@@ -149,7 +165,7 @@ const IsDeveloperAccessAllowedFrom: React.FC<{
       </p>
       <p>
         <SaveDeveloperAccessButton
-          environmentId={environment.id}
+          environmentId={data.id}
           isAllowed={isDeveloperAccessAllowed}
         />
       </p>
@@ -157,8 +173,21 @@ const IsDeveloperAccessAllowedFrom: React.FC<{
   );
 };
 
-const Header: React.FC<{ name: string; id: string }> = ({ name, id }) => {
+const Header: React.FC<{
+  fragmentRef: EditEnvironment_Header$key;
+}> = ({ fragmentRef }) => {
+  const { name, id } = useFragment<EditEnvironment_Header$key>(
+    graphql`
+      fragment EditEnvironment_Header on Environment {
+        id
+        name
+      }
+    `,
+    fragmentRef
+  );
+
   const [isEdit, , enable, disable] = useToggle();
+
   return (
     <EditableBreadcrumbHeader onEdit={enable} title={name}>
       <RenameEnvironmentDialog

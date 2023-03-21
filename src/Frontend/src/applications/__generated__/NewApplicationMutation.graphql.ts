@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<229582bfaa3584a68a4337fa6d3d75a4>>
+ * @generated SignedSource<<e88094dd2e7ab9c0f9a9e75313d2bc2a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -23,7 +23,7 @@ export type NewApplicationMutation$data = {
   readonly createApplication: {
     readonly application: {
       readonly id: string;
-      readonly " $fragmentSpreads": FragmentRefs<"ApplicationsList_applicationsEdge">;
+      readonly " $fragmentSpreads": FragmentRefs<"ApplicationsListItem">;
     } | null;
     readonly errors: ReadonlyArray<{
       readonly code?: string;
@@ -88,6 +88,13 @@ v5 = {
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
+},
+v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "namespace",
+  "storageKey": null
 };
 return {
   "fragment": {
@@ -119,7 +126,7 @@ return {
               {
                 "args": null,
                 "kind": "FragmentSpread",
-                "name": "ApplicationsList_applicationsEdge"
+                "name": "ApplicationsListItem"
               }
             ],
             "storageKey": null
@@ -170,13 +177,7 @@ return {
             "selections": [
               (v3/*: any*/),
               (v5/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "namespace",
-                "storageKey": null
-              },
+              (v6/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -185,8 +186,8 @@ return {
                 "name": "parts",
                 "plural": true,
                 "selections": [
-                  (v3/*: any*/),
                   (v5/*: any*/),
+                  (v3/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -195,7 +196,6 @@ return {
                     "name": "components",
                     "plural": true,
                     "selections": [
-                      (v3/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -208,7 +208,21 @@ return {
                           (v5/*: any*/)
                         ],
                         "storageKey": null
-                      }
+                      },
+                      (v3/*: any*/)
+                    ],
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Application",
+                    "kind": "LinkedField",
+                    "name": "application",
+                    "plural": false,
+                    "selections": [
+                      (v3/*: any*/),
+                      (v6/*: any*/)
                     ],
                     "storageKey": null
                   }
@@ -264,16 +278,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "1cd4cfae4c7e99ff572a128211b03978",
+    "cacheID": "af918b5576e5a958848488a240eeaeb7",
     "id": null,
     "metadata": {},
     "name": "NewApplicationMutation",
     "operationKind": "mutation",
-    "text": "mutation NewApplicationMutation(\n  $input: CreateApplicationInput!\n) {\n  createApplication(input: $input) {\n    application {\n      id\n      ...ApplicationsList_applicationsEdge\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment ApplicationsList_applicationsEdge on Application {\n  id\n  name\n  namespace\n  parts {\n    id\n    name\n    components {\n      id\n      definition {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": "mutation NewApplicationMutation(\n  $input: CreateApplicationInput!\n) {\n  createApplication(input: $input) {\n    application {\n      id\n      ...ApplicationsListItem\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment AddComponentsToApplicationPartDialog on ApplicationPart {\n  id\n  name\n  application {\n    id\n    namespace\n  }\n}\n\nfragment ApplicationsListItem on Application {\n  id\n  ...ApplicationsListItem_DefaultListItem\n  ...ApplicationsListItem_SelectedListItem\n}\n\nfragment ApplicationsListItem_ApplicationPart on ApplicationPart {\n  id\n  name\n  components {\n    definition {\n      id\n    }\n    ...ApplicationsListItem_Component\n    id\n  }\n  ...AddComponentsToApplicationPartDialog\n}\n\nfragment ApplicationsListItem_Component on ApplicationPartComponent {\n  id\n  definition {\n    id\n    name\n  }\n}\n\nfragment ApplicationsListItem_DefaultListItem on Application {\n  id\n  name\n  namespace\n  parts {\n    name\n    id\n  }\n}\n\nfragment ApplicationsListItem_SelectedListItem on Application {\n  id\n  name\n  namespace\n  parts {\n    id\n    ...ApplicationsListItem_ApplicationPart\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "664da104b0c287ba4fdf2d5be195f7bd";
+(node as any).hash = "be1fa298934c9cf03f1c4753a0a58be1";
 
 export default node;

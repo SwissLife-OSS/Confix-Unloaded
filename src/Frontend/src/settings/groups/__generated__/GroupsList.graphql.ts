@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1b3cd7e882ff9c75df3c38c751ebac1c>>
+ * @generated SignedSource<<8eb878192c5939b72e17307bd6ff402d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,25 +10,26 @@
 
 import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type useEnvironments_searchEnvironments$data = {
-  readonly searchEnvironments: {
+export type GroupsList$data = {
+  readonly searchGroups: {
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly id: string;
         readonly name: string;
+        readonly " $fragmentSpreads": FragmentRefs<"GroupsList_ListItem">;
       };
     }> | null;
   } | null;
-  readonly " $fragmentType": "useEnvironments_searchEnvironments";
+  readonly " $fragmentType": "GroupsList";
 };
-export type useEnvironments_searchEnvironments$key = {
-  readonly " $data"?: useEnvironments_searchEnvironments$data;
-  readonly " $fragmentSpreads": FragmentRefs<"useEnvironments_searchEnvironments">;
+export type GroupsList$key = {
+  readonly " $data"?: GroupsList$data;
+  readonly " $fragmentSpreads": FragmentRefs<"GroupsList">;
 };
 
 const node: ReaderFragment = (function(){
 var v0 = [
-  "searchEnvironments"
+  "searchGroups"
 ];
 return {
   "argumentDefinitions": [
@@ -39,6 +40,10 @@ return {
     {
       "kind": "RootArgument",
       "name": "cursor"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "search"
     }
   ],
   "kind": "Fragment",
@@ -61,23 +66,29 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./useEnvironmentsPaginationQuery.graphql')
+      "operation": require('./GroupsListPaginationQuery.graphql')
     }
   },
-  "name": "useEnvironments_searchEnvironments",
+  "name": "GroupsList",
   "selections": [
     {
-      "alias": "searchEnvironments",
-      "args": null,
-      "concreteType": "SearchEnvironmentsConnection",
+      "alias": "searchGroups",
+      "args": [
+        {
+          "kind": "Variable",
+          "name": "search",
+          "variableName": "search"
+        }
+      ],
+      "concreteType": "SearchGroupsConnection",
       "kind": "LinkedField",
-      "name": "__useEnvironments_searchEnvironments_connection",
+      "name": "__Query_searchGroups_connection",
       "plural": false,
       "selections": [
         {
           "alias": null,
           "args": null,
-          "concreteType": "SearchEnvironmentsEdge",
+          "concreteType": "SearchGroupsEdge",
           "kind": "LinkedField",
           "name": "edges",
           "plural": true,
@@ -85,7 +96,7 @@ return {
             {
               "alias": null,
               "args": null,
-              "concreteType": "Environment",
+              "concreteType": "Group",
               "kind": "LinkedField",
               "name": "node",
               "plural": false,
@@ -103,6 +114,11 @@ return {
                   "kind": "ScalarField",
                   "name": "name",
                   "storageKey": null
+                },
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "GroupsList_ListItem"
                 },
                 {
                   "alias": null,
@@ -158,6 +174,6 @@ return {
 };
 })();
 
-(node as any).hash = "919293b06c3e60921850070d82637bb1";
+(node as any).hash = "942093e4a7f812b9ab69468c29ff6904";
 
 export default node;

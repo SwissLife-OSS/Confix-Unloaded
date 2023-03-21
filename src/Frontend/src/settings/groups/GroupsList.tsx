@@ -14,54 +14,48 @@ import { InfiniteScrollList } from "../../shared/InfiniteScrollList";
 import { useGoTo } from "../../shared/useGoTo";
 import { useToggle } from "../../shared/useToggle";
 import { GroupsListQuery } from "./__generated__/GroupsListQuery.graphql";
-import { GroupsList_Groups$key } from "./__generated__/GroupsList_Groups.graphql";
-import { GroupsList_GroupEdge$key } from "./__generated__/GroupsList_GroupEdge.graphql";
+import { GroupsList$key } from "./__generated__/GroupsList.graphql";
+import { GroupsList_ListItem$key } from "./__generated__/GroupsList_ListItem.graphql";
 import { RemoveGroupDialog } from "./controls/dialogs/RemoveGroupDialog";
-
-const groupsQuery = graphql`
-  query GroupsListQuery($cursor: String, $count: Int, $search: String) {
-    ...GroupsList_Groups
-  }
-`;
-const groupsConnectionFragment = graphql`
-  fragment GroupsList_Groups on Query
-  @refetchable(queryName: "GroupsListPaginationQuery") {
-    searchGroups(after: $cursor, first: $count, search: $search)
-      @connection(key: "Query_searchGroups") {
-      edges {
-        node {
-          id
-          name
-          ...GroupsList_GroupEdge
-        }
-      }
-    }
-  }
-`;
-
-const groupFragment = graphql`
-  fragment GroupsList_GroupEdge on Group {
-    id
-    name
-  }
-`;
 
 export const GroupsList: React.FC<{
   selectedGroupId?: string;
   onItemSelect: (item: string) => void;
   search: string | undefined;
 }> = ({ search, onItemSelect, selectedGroupId }) => {
-  const queryData = useLazyLoadQuery<GroupsListQuery>(groupsQuery, {
-    count: config.pagination.pageSize,
-    search,
-  });
+  const queryData = useLazyLoadQuery<GroupsListQuery>(
+    graphql`
+      query GroupsListQuery($cursor: String, $count: Int, $search: String) {
+        ...GroupsList
+      }
+    `,
+    {
+      count: config.pagination.pageSize,
+      search,
+    }
+  );
   const {
     data: connection,
     hasNext,
     loadNext,
     isLoadingNext,
-  } = usePaginationFragment<GroupsListQuery, GroupsList_Groups$key>(
-    groupsConnectionFragment,
+  } = usePaginationFragment<GroupsListQuery, GroupsList$key>(
+    graphql`
+      fragment GroupsList on Query
+      @refetchable(queryName: "GroupsListPaginationQuery") {
+        searchGroups(after: $cursor, first: $count, search: $search)
+          @connection(key: "Query_searchGroups") {
+          edges {
+            node {
+              id
+              name
+              ...GroupsList_ListItem
+            }
+          }
+        }
+      }
+    `,
+
     queryData
   );
   const data = connection?.searchGroups?.edges?.map((x) => x.node) ?? [];
@@ -90,15 +84,24 @@ export const GroupsList: React.FC<{
 const GroupListItem: React.FC<{
   selected: boolean;
   onItemSelect: (envId: string) => void;
-  edge: GroupsList_GroupEdge$key;
+  edge: GroupsList_ListItem$key;
 }> = ({ onItemSelect, edge, selected }) => {
-  const { id, name } = useFragment<GroupsList_GroupEdge$key>(
-    groupFragment,
+  const { id, name } = useFragment<GroupsList_ListItem$key>(
+    graphql`
+      fragment GroupsList_ListItem on Group {
+        id
+        name
+      }
+    `,
+
     edge
   );
-  const handleClick = useCallback(() => onItemSelect(id), [onItemSelect, id]);
+
   const [isRemoveEnvVisible, , enableRemoveEnv, disableRemoveEnv] = useToggle();
+
   const goToOverview = useGoTo("/");
+
+  const handleClick = useCallback(() => onItemSelect(id), [onItemSelect, id]);
   const handleOnClose = useCallback(
     (removed: boolean) => {
       disableRemoveEnv();

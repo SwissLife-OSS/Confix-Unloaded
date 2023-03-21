@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7c3a925479292b6b0b65ea233c582619>>
+ * @generated SignedSource<<240acc481dae76e9e1608211cf2572fe>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,7 @@ export type ChangeComponentScopeDialog_Query$variables = {
   search?: string | null;
 };
 export type ChangeComponentScopeDialog_Query$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"ApplicationCascader_Data">;
+  readonly " $fragmentSpreads": FragmentRefs<"ApplicationCascader">;
 };
 export type ChangeComponentScopeDialog_Query = {
   response: ChangeComponentScopeDialog_Query$data;
@@ -60,7 +60,7 @@ return {
           (v1/*: any*/)
         ],
         "kind": "FragmentSpread",
-        "name": "ApplicationCascader_Data"
+        "name": "ApplicationCascader"
       }
     ],
     "type": "Query",
@@ -155,16 +155,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "bd5d6edcc09712d949a121e0c130f33d",
+    "cacheID": "fa893fba3844e296fc191be91cc61ef8",
     "id": null,
     "metadata": {},
     "name": "ChangeComponentScopeDialog_Query",
     "operationKind": "query",
-    "text": "query ChangeComponentScopeDialog_Query(\n  $search: String\n) {\n  ...ApplicationCascader_Data_40zwac\n}\n\nfragment ApplicationCascader_Applications_40zwac on Query {\n  applications(first: 50, search: $search) {\n    edges {\n      node {\n        namespace\n        id\n        name\n        parts {\n          id\n          name\n        }\n      }\n    }\n  }\n}\n\nfragment ApplicationCascader_Data_40zwac on Query {\n  ...ApplicationCascader_Namespaces\n  ...ApplicationCascader_Applications_40zwac\n}\n\nfragment ApplicationCascader_Namespaces on Query {\n  me {\n    namespaces\n  }\n}\n"
+    "text": "query ChangeComponentScopeDialog_Query(\n  $search: String\n) {\n  ...ApplicationCascader_40zwac\n}\n\nfragment ApplicationCascader_40zwac on Query {\n  ...ApplicationCascader_Namespaces\n  ...ApplicationCascader_Applications_40zwac\n}\n\nfragment ApplicationCascader_Applications_40zwac on Query {\n  applications(first: 50, search: $search) {\n    edges {\n      node {\n        namespace\n        id\n        name\n        parts {\n          id\n          name\n        }\n      }\n    }\n  }\n}\n\nfragment ApplicationCascader_Namespaces on Query {\n  me {\n    namespaces\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "615d9b81e3e36a07c09eb273f0b5ab90";
+(node as any).hash = "fdf8dae7337e81a721edd05be32dea54";
 
 export default node;

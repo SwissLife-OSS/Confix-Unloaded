@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6a63094e558faf5e964b27e1af663f22>>
+ * @generated SignedSource<<f44c8c91abfe960fb173581aedbda0eb>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,6 +9,7 @@
 // @ts-nocheck
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
+import { FragmentRefs } from "relay-runtime";
 export type CreateApiKeyInput = {
   name: string;
   roles: ReadonlyArray<RoleScopeInput>;
@@ -26,9 +27,9 @@ export type NewApiKeyMutation$data = {
     readonly apiKeyWithSecret: {
       readonly key: {
         readonly id: string;
-        readonly name: string;
       };
       readonly secret: string;
+      readonly " $fragmentSpreads": FragmentRefs<"NewApiKey_SuccessMessage">;
     } | null;
     readonly errors: ReadonlyArray<{
       readonly code?: string;
@@ -72,13 +73,6 @@ v3 = {
       "args": null,
       "kind": "ScalarField",
       "name": "id",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "name",
       "storageKey": null
     }
   ],
@@ -139,6 +133,11 @@ return {
             "plural": false,
             "selections": [
               (v3/*: any*/),
+              {
+                "args": null,
+                "kind": "FragmentSpread",
+                "name": "NewApiKey_SuccessMessage"
+              },
               (v4/*: any*/)
             ],
             "storageKey": null
@@ -238,16 +237,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "b5ca4a1a419252eca6e87ddca9cdac28",
+    "cacheID": "546ae9f1b65be30eaf25575963484379",
     "id": null,
     "metadata": {},
     "name": "NewApiKeyMutation",
     "operationKind": "mutation",
-    "text": "mutation NewApiKeyMutation(\n  $input: CreateApiKeyInput!\n) {\n  createApiKey(input: $input) {\n    apiKeyWithSecret {\n      key {\n        id\n        name\n      }\n      secret\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n"
+    "text": "mutation NewApiKeyMutation(\n  $input: CreateApiKeyInput!\n) {\n  createApiKey(input: $input) {\n    apiKeyWithSecret {\n      key {\n        id\n      }\n      ...NewApiKey_SuccessMessage\n      secret\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment NewApiKey_SuccessMessage on ApiKeyWithSecret {\n  secret\n}\n"
   }
 };
 })();
 
-(node as any).hash = "4599a90ff2beda536b1694f540d4547a";
+(node as any).hash = "5e664d40aaf2d3ecea6cc7162c18bcbe";
 
 export default node;

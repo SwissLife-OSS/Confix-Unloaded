@@ -14,38 +14,38 @@ import { useGoTo } from "../shared/useGoTo";
 import { useCommitForm } from "../shared/useCommitForm";
 import { NewEnvironmentMutation } from "./__generated__/NewEnvironmentMutation.graphql";
 
-const newEnvironmentMutation = graphql`
-  mutation NewEnvironmentMutation(
-    $input: CreateEnvironmentInput!
-    $connectionIds: [ID!]!
-  ) {
-    createEnvironment(input: $input) {
-      environment
-        @appendNode(
-          connections: $connectionIds
-          edgeTypeName: "EnvironmentsEdge"
-        ) {
-        id
-        name
-      }
-      errors {
-        ... on UserError {
-          message
-          code
-        }
-      }
-    }
-  }
-`;
 export const NewEnvironment: React.FC = () => {
   const [commit, isInFlight] = useMutation<NewEnvironmentMutation>(
-    newEnvironmentMutation
+    graphql`
+      mutation NewEnvironmentMutation(
+        $input: CreateEnvironmentInput!
+        $connectionIds: [ID!]!
+      ) {
+        createEnvironment(input: $input) {
+          environment
+            @appendNode(
+              connections: $connectionIds
+              edgeTypeName: "EnvironmentsEdge"
+            ) {
+            id
+            name
+          }
+          errors {
+            ... on UserError {
+              message
+              code
+            }
+          }
+        }
+      }
+    `
   );
 
   const connectionIds = [
     useConnectionId("useEnvironments_searchEnvironments"),
     useConnectionId("Query_searchEnvironments"),
   ];
+
   const goToEdit = useGoTo((id: string) => `${id}/edit`);
   const form = useCommitForm(
     commit,
@@ -64,6 +64,7 @@ export const NewEnvironment: React.FC = () => {
       ],
     }
   );
+
   return (
     <DetailView style={{ padding: 1 }}>
       <Row>

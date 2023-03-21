@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0d748c443bdb8e00941bee00715f83c1>>
+ * @generated SignedSource<<8a4538ed943063a0628c2156da8dba8c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,7 @@ export type EditApiKeyQuery$variables = {
 export type EditApiKeyQuery$data = {
   readonly apiKeyById: {
     readonly id: string;
-    readonly " $fragmentSpreads": FragmentRefs<"EditApiKey_ApiKey">;
+    readonly " $fragmentSpreads": FragmentRefs<"EditApiKey_Form">;
   } | null;
 };
 export type EditApiKeyQuery = {
@@ -72,7 +72,7 @@ return {
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "EditApiKey_ApiKey"
+            "name": "EditApiKey_Form"
           }
         ],
         "storageKey": null
@@ -134,16 +134,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "e0f11cdbc273979ba6927207d2643e7a",
+    "cacheID": "1592c6401b8e3fedfd70775a382d1ea6",
     "id": null,
     "metadata": {},
     "name": "EditApiKeyQuery",
     "operationKind": "query",
-    "text": "query EditApiKeyQuery(\n  $id: ID!\n) {\n  apiKeyById(id: $id) {\n    id\n    ...EditApiKey_ApiKey\n  }\n}\n\nfragment EditApiKey_ApiKey on ApiKey {\n  id\n  name\n  roles {\n    namespace\n    roles {\n      id\n      name\n    }\n  }\n}\n"
+    "text": "query EditApiKeyQuery(\n  $id: ID!\n) {\n  apiKeyById(id: $id) {\n    id\n    ...EditApiKey_Form\n  }\n}\n\nfragment EditApiKey_Form on ApiKey {\n  ...EditApiKey_RoleScopeSection\n  ...EditApiKey_Header\n}\n\nfragment EditApiKey_Header on ApiKey {\n  name\n}\n\nfragment EditApiKey_RoleScopeSection on ApiKey {\n  id\n  name\n  roles {\n    namespace\n    roles {\n      id\n      name\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "8812136e0ba31b623f057b8ccfcba4cf";
+(node as any).hash = "00e32057b083c99770b139a12f856adc";
 
 export default node;

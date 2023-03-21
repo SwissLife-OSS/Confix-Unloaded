@@ -10,22 +10,22 @@
 
 import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ApplicationsList_applications$data = {
+export type ApplicationsList$data = {
   readonly applications: {
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly id: string;
         readonly name: string;
         readonly namespace: string;
-        readonly " $fragmentSpreads": FragmentRefs<"ApplicationsList_applicationsEdge">;
+        readonly " $fragmentSpreads": FragmentRefs<"ApplicationsListItem">;
       };
     }> | null;
   } | null;
-  readonly " $fragmentType": "ApplicationsList_applications";
+  readonly " $fragmentType": "ApplicationsList";
 };
-export type ApplicationsList_applications$key = {
-  readonly " $data"?: ApplicationsList_applications$data;
-  readonly " $fragmentSpreads": FragmentRefs<"ApplicationsList_applications">;
+export type ApplicationsList$key = {
+  readonly " $data"?: ApplicationsList$data;
+  readonly " $fragmentSpreads": FragmentRefs<"ApplicationsList">;
 };
 
 const node: ReaderFragment = (function(){
@@ -70,7 +70,7 @@ return {
       "operation": require('./ApplicationsListPaginationQuery.graphql')
     }
   },
-  "name": "ApplicationsList_applications",
+  "name": "ApplicationsList",
   "selections": [
     {
       "alias": "applications",
@@ -126,7 +126,7 @@ return {
                 {
                   "args": null,
                   "kind": "FragmentSpread",
-                  "name": "ApplicationsList_applicationsEdge"
+                  "name": "ApplicationsListItem"
                 },
                 {
                   "alias": null,

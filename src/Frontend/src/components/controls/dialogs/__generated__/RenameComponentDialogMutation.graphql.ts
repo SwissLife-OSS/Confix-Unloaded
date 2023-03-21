@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b86940b0e72e63199fe6b46122a46c1f>>
+ * @generated SignedSource<<0ad33ddbaea7a2bd84511ab2e8118ff6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,6 @@
 // @ts-nocheck
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
-import { FragmentRefs } from "relay-runtime";
 export type RenameComponentInput = {
   id: string;
   name: string;
@@ -21,7 +20,7 @@ export type RenameComponentDialogMutation$data = {
   readonly renameComponent: {
     readonly component: {
       readonly id: string;
-      readonly " $fragmentSpreads": FragmentRefs<"ComponentsList_componentEdge">;
+      readonly name: string;
     } | null;
   };
 };
@@ -40,54 +39,55 @@ var v0 = [
 ],
 v1 = [
   {
-    "kind": "Variable",
-    "name": "input",
-    "variableName": "input"
-  }
-],
-v2 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-};
-return {
-  "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
-    "kind": "Fragment",
-    "metadata": null,
-    "name": "RenameComponentDialogMutation",
+    "alias": null,
+    "args": [
+      {
+        "kind": "Variable",
+        "name": "input",
+        "variableName": "input"
+      }
+    ],
+    "concreteType": "RenameComponentPayload",
+    "kind": "LinkedField",
+    "name": "renameComponent",
+    "plural": false,
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
-        "concreteType": "RenameComponentPayload",
+        "args": null,
+        "concreteType": "Component",
         "kind": "LinkedField",
-        "name": "renameComponent",
+        "name": "component",
         "plural": false,
         "selections": [
           {
             "alias": null,
             "args": null,
-            "concreteType": "Component",
-            "kind": "LinkedField",
-            "name": "component",
-            "plural": false,
-            "selections": [
-              (v2/*: any*/),
-              {
-                "args": null,
-                "kind": "FragmentSpread",
-                "name": "ComponentsList_componentEdge"
-              }
-            ],
+            "kind": "ScalarField",
+            "name": "id",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "name",
             "storageKey": null
           }
         ],
         "storageKey": null
       }
     ],
+    "storageKey": null
+  }
+];
+return {
+  "fragment": {
+    "argumentDefinitions": (v0/*: any*/),
+    "kind": "Fragment",
+    "metadata": null,
+    "name": "RenameComponentDialogMutation",
+    "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -96,50 +96,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "RenameComponentDialogMutation",
-    "selections": [
-      {
-        "alias": null,
-        "args": (v1/*: any*/),
-        "concreteType": "RenameComponentPayload",
-        "kind": "LinkedField",
-        "name": "renameComponent",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "Component",
-            "kind": "LinkedField",
-            "name": "component",
-            "plural": false,
-            "selections": [
-              (v2/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "name",
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
-      }
-    ]
+    "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "b9b4f7e89ed23c0a214977e0e0b2e82f",
+    "cacheID": "7b3c13b1f51a454b363f74e3c8c48a61",
     "id": null,
     "metadata": {},
     "name": "RenameComponentDialogMutation",
     "operationKind": "mutation",
-    "text": "mutation RenameComponentDialogMutation(\n  $input: RenameComponentInput!\n) {\n  renameComponent(input: $input) {\n    component {\n      id\n      ...ComponentsList_componentEdge\n    }\n  }\n}\n\nfragment ComponentsList_componentEdge on Component {\n  id\n  name\n}\n"
+    "text": "mutation RenameComponentDialogMutation(\n  $input: RenameComponentInput!\n) {\n  renameComponent(input: $input) {\n    component {\n      id\n      name\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "b859dc61c7019cfc0a1456384c577db5";
+(node as any).hash = "2aad54d597cbbe839a6194c71002c89a";
 
 export default node;

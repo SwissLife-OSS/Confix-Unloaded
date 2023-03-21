@@ -14,59 +14,56 @@ import { InfiniteScrollList } from "../../shared/InfiniteScrollList";
 import { useGoTo } from "../../shared/useGoTo";
 import { useToggle } from "../../shared/useToggle";
 import { ApiKeysListQuery } from "./__generated__/ApiKeysListQuery.graphql";
-import { ApiKeysList_ApiKeys$key } from "./__generated__/ApiKeysList_ApiKeys.graphql";
-import { ApiKeysList_ApiKeyEdge$key } from "./__generated__/ApiKeysList_ApiKeyEdge.graphql";
+import { ApiKeysList$key } from "./__generated__/ApiKeysList.graphql";
+import { ApiKeysList_ApiKeyListItem$key } from "./__generated__/ApiKeysList_ApiKeyListItem.graphql";
 import { RemoveApiKeyDialog } from "./controls/dialogs/RemoveApiKeyDialog";
-
-const groupsQuery = graphql`
-  query ApiKeysListQuery($cursor: String, $count: Int) {
-    ...ApiKeysList_ApiKeys
-  }
-`;
-const groupsConnectionFragment = graphql`
-  fragment ApiKeysList_ApiKeys on Query
-  @refetchable(queryName: "ApiKeysListPaginationQuery") {
-    apiKeys(after: $cursor, first: $count) @connection(key: "Query__apiKeys") {
-      edges {
-        node {
-          id
-          name
-          ...ApiKeysList_ApiKeyEdge
-        }
-      }
-    }
-  }
-`;
-
-const groupFragment = graphql`
-  fragment ApiKeysList_ApiKeyEdge on ApiKey {
-    id
-    name
-  }
-`;
 
 export const ApiKeysList: React.FC<{
   selectedApiKeyId?: string;
   onItemSelect: (item: string) => void;
-  search: string | undefined;
-}> = ({ search, onItemSelect, selectedApiKeyId }) => {
-  const queryData = useLazyLoadQuery<ApiKeysListQuery>(groupsQuery, {
-    count: config.pagination.pageSize,
-  });
+}> = ({ onItemSelect, selectedApiKeyId }) => {
+  const query = useLazyLoadQuery<ApiKeysListQuery>(
+    graphql`
+      query ApiKeysListQuery($cursor: String, $count: Int) {
+        ...ApiKeysList
+      }
+    `,
+    {
+      count: config.pagination.pageSize,
+    }
+  );
+
   const {
     data: connection,
     hasNext,
     loadNext,
     isLoadingNext,
-  } = usePaginationFragment<ApiKeysListQuery, ApiKeysList_ApiKeys$key>(
-    groupsConnectionFragment,
-    queryData
+  } = usePaginationFragment<ApiKeysListQuery, ApiKeysList$key>(
+    graphql`
+      fragment ApiKeysList on Query
+      @refetchable(queryName: "ApiKeysListPaginationQuery") {
+        apiKeys(after: $cursor, first: $count)
+          @connection(key: "Query__apiKeys") {
+          edges {
+            node {
+              id
+              name
+              ...ApiKeysList_ApiKeyListItem
+            }
+          }
+        }
+      }
+    `,
+    query
   );
+
   const data = connection?.apiKeys?.edges?.map((x) => x.node) ?? [];
+
   const handleOnItemSelected = useCallback(
     (id: string) => onItemSelect(id),
     [onItemSelect]
   );
+
   return (
     <InfiniteScrollList
       items={data}
@@ -77,7 +74,7 @@ export const ApiKeysList: React.FC<{
         <ApiKeyListItem
           selected={item.id === selectedApiKeyId}
           onItemSelect={handleOnItemSelected}
-          edge={item}
+          fragmentRef={item}
           key={item.id}
         />
       )}
@@ -88,15 +85,24 @@ export const ApiKeysList: React.FC<{
 const ApiKeyListItem: React.FC<{
   selected: boolean;
   onItemSelect: (envId: string) => void;
-  edge: ApiKeysList_ApiKeyEdge$key;
-}> = ({ onItemSelect, edge, selected }) => {
-  const { id, name } = useFragment<ApiKeysList_ApiKeyEdge$key>(
-    groupFragment,
-    edge
+  fragmentRef: ApiKeysList_ApiKeyListItem$key;
+}> = ({ onItemSelect, fragmentRef, selected }) => {
+  const { id, name } = useFragment<ApiKeysList_ApiKeyListItem$key>(
+    graphql`
+      fragment ApiKeysList_ApiKeyListItem on ApiKey {
+        id
+        name
+      }
+    `,
+    fragmentRef
   );
-  const handleClick = useCallback(() => onItemSelect(id), [onItemSelect, id]);
+
   const [isRemoveEnvVisible, , enableRemoveEnv, disableRemoveEnv] = useToggle();
+
   const goToOverview = useGoTo("/");
+
+  const handleClick = useCallback(() => onItemSelect(id), [onItemSelect, id]);
+
   const handleOnClose = useCallback(
     (removed: boolean) => {
       disableRemoveEnv();

@@ -15,36 +15,36 @@ import { useGoTo } from "../shared/useGoTo";
 import { Connections } from "../Connections";
 import { useCommitForm } from "../shared/useCommitForm";
 
-const newApplicationMutation = graphql`
-  mutation NewApplicationMutation(
-    $input: CreateApplicationInput!
-    $connectionIds: [ID!]!
-  ) {
-    createApplication(input: $input) {
-      application
-        @prependNode(
-          connections: $connectionIds
-          edgeTypeName: "ApplicationsEdge"
-        ) {
-        id
-        ...ApplicationsList_applicationsEdge
-      }
-      errors {
-        ... on UserError {
-          message
-          code
-        }
-      }
-    }
-  }
-`;
-
 export const NewApplication: React.FC = () => {
   const [commit, isInFlight] = useMutation<NewApplicationMutation>(
-    newApplicationMutation
+    graphql`
+      mutation NewApplicationMutation(
+        $input: CreateApplicationInput!
+        $connectionIds: [ID!]!
+      ) {
+        createApplication(input: $input) {
+          application
+            @prependNode(
+              connections: $connectionIds
+              edgeTypeName: "ApplicationsEdge"
+            ) {
+            id
+            ...ApplicationsListItem
+          }
+          errors {
+            ... on UserError {
+              message
+              code
+            }
+          }
+        }
+      }
+    `
   );
+
   const goToEdit = useGoTo((id?: string) => `../${id}/edit`);
   const connectionId = useConnectionId(Connections.applications.name);
+
   const form = useCommitForm(
     commit,
     { name: "", namespace: "", parts: [] },

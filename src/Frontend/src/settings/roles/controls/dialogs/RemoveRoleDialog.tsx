@@ -12,36 +12,34 @@ import {
 import { useConnectionId } from "../../../../shared/useConnectionId";
 import { RemoveRoleDialogMutation } from "./__generated__/RemoveRoleDialogMutation.graphql";
 
-export const removeRoleDialog = graphql`
-  mutation RemoveRoleDialogMutation(
-    $input: RemoveRoleByIdInput!
-    $connectionIds: [ID!]!
-  ) {
-    removeRoleById(input: $input) {
-      role {
-        id @deleteEdge(connections: $connectionIds)
-        ...RolesList_RoleEdge
-      }
-      errors {
-        __typename
-        ... on UserError {
-          message
-          code
-        }
-      }
-    }
-  }
-`;
-
 export const RemoveRoleDialog: React.FC<{
   open: boolean;
   onClose: (removed: boolean) => void;
   roleId: string;
   roleName: string;
 }> = ({ open, roleId, roleName, onClose }) => {
-  const [commit, isInFlight] =
-    useMutation<RemoveRoleDialogMutation>(removeRoleDialog);
+  const [commit, isInFlight] = useMutation<RemoveRoleDialogMutation>(graphql`
+    mutation RemoveRoleDialogMutation(
+      $input: RemoveRoleByIdInput!
+      $connectionIds: [ID!]!
+    ) {
+      removeRoleById(input: $input) {
+        role {
+          id @deleteEdge(connections: $connectionIds)
+        }
+        errors {
+          __typename
+          ... on UserError {
+            message
+            code
+          }
+        }
+      }
+    }
+  `);
+
   const connectionId = useConnectionId("Query_searchRoles");
+
   const handleRemoveRole = useCallback(() => {
     pipeCommitFn(commit, [
       withSuccessMessage(
@@ -60,9 +58,9 @@ export const RemoveRoleDialog: React.FC<{
       },
     });
   }, [commit, roleId, onClose, roleName, connectionId]);
-  const handleClose = useCallback(() => {
-    onClose(false);
-  }, [onClose]);
+
+  const handleClose = useCallback(() => onClose(false), [onClose]);
+
   return (
     <Modal
       title={`Remove ${roleName}`}

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<76ab407d14515df92401966000a68fc9>>
+ * @generated SignedSource<<2dfc465b74a959f2dcf9f963599ec2c0>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,7 +12,7 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type EditComponent_ComponentChangeLog$data = {
   readonly changeLog: ReadonlyArray<{
-    readonly " $fragmentSpreads": FragmentRefs<"ChangeLog_fragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"ChangeLog">;
   }>;
   readonly " $fragmentType": "EditComponent_ComponentChangeLog";
 };
@@ -38,7 +38,7 @@ const node: ReaderFragment = {
         {
           "args": null,
           "kind": "FragmentSpread",
-          "name": "ChangeLog_fragment"
+          "name": "ChangeLog"
         }
       ],
       "storageKey": null
@@ -48,6 +48,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "585034e70535c2f4f83e0ce8c9c73949";
+(node as any).hash = "3cdeb5b0abfc356796c570533e68466a";
 
 export default node;

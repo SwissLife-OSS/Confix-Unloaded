@@ -2,7 +2,7 @@ import * as React from "react";
 import { useFragment, useRefetchableFragment } from "react-relay";
 import { graphql } from "babel-plugin-relay/macro";
 import { useCallback, useMemo } from "react";
-import { ApplicationCascader_Data$key } from "./__generated__/ApplicationCascader_Data.graphql";
+import { ApplicationCascader$key } from "./__generated__/ApplicationCascader.graphql";
 import { ApplicationCascader_Namespaces$key } from "./__generated__/ApplicationCascader_Namespaces.graphql";
 import { ApplicationCascader_ApplicationPagination_Query } from "./__generated__/ApplicationCascader_ApplicationPagination_Query.graphql";
 import { ApplicationCascader_Applications$key } from "./__generated__/ApplicationCascader_Applications.graphql";
@@ -15,17 +15,17 @@ type Result = [string] | [string, string] | [string, string, string];
 export const ApplicationCascader: React.FC<{
   onChange: (option: Result[]) => void;
   value: Result[];
-  $data: ApplicationCascader_Data$key;
-}> = ({ onChange, value, $data }) => {
-  const $innerData = useFragment(
+  fragmentRef: ApplicationCascader$key;
+}> = ({ onChange, value, fragmentRef }) => {
+  const data = useFragment(
     graphql`
-      fragment ApplicationCascader_Data on Query
+      fragment ApplicationCascader on Query
       @argumentDefinitions(search: { type: "String" }) {
         ...ApplicationCascader_Namespaces
         ...ApplicationCascader_Applications @arguments(search: $search)
       }
     `,
-    $data
+    fragmentRef
   );
   const [{ applications }] = useRefetchableFragment<
     ApplicationCascader_ApplicationPagination_Query,
@@ -50,7 +50,7 @@ export const ApplicationCascader: React.FC<{
         }
       }
     `,
-    $innerData
+    data
   );
 
   const { me } = useFragment<ApplicationCascader_Namespaces$key>(
@@ -61,7 +61,7 @@ export const ApplicationCascader: React.FC<{
         }
       }
     `,
-    $innerData
+    data
   );
 
   const options = useMemo<DefaultOptionType[]>(() => {

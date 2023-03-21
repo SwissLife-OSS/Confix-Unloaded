@@ -11,26 +11,6 @@ import { useCallback } from "react";
 import { Modal } from "antd";
 import { PublishApplicationPartDialogMutation } from "./__generated__/PublishApplicationPartDialogMutation.graphql";
 
-export const publishApplicationPartMutation = graphql`
-  mutation PublishApplicationPartDialogMutation(
-    $input: PublishApplicationPartByIdInput!
-  ) {
-    publishApplicationPartById(input: $input) {
-      publishedApplicationPart {
-        id
-        version
-      }
-      errors {
-        __typename
-        ... on UserError {
-          message
-          code
-        }
-      }
-    }
-  }
-`;
-
 export const PublishApplicationPartDialog: React.FC<{
   open: boolean;
   onClose: () => void;
@@ -39,8 +19,27 @@ export const PublishApplicationPartDialog: React.FC<{
 }> = ({ open, applicationPartId, applicationPartName, onClose }) => {
   const [commit, isInFlight] =
     useMutation<PublishApplicationPartDialogMutation>(
-      publishApplicationPartMutation
+      graphql`
+        mutation PublishApplicationPartDialogMutation(
+          $input: PublishApplicationPartByIdInput!
+        ) {
+          publishApplicationPartById(input: $input) {
+            publishedApplicationPart {
+              id
+              version
+            }
+            errors {
+              __typename
+              ... on UserError {
+                message
+                code
+              }
+            }
+          }
+        }
+      `
     );
+
   const handlePublish = useCallback(() => {
     pipeCommitFn(commit, [
       withSuccessMessage(
@@ -58,6 +57,7 @@ export const PublishApplicationPartDialog: React.FC<{
       },
     });
   }, [commit, onClose, applicationPartId, applicationPartName]);
+
   return (
     <Modal
       title={`Publish ${applicationPartName}`}

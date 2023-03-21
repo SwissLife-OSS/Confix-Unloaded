@@ -12,27 +12,6 @@ import {
 } from "../../../shared/pipeCommitFn";
 import { RemoveEnvironmentDialogMutation } from "./__generated__/RemoveEnvironmentDialogMutation.graphql";
 
-export const removeEnvironmentDialog = graphql`
-  mutation RemoveEnvironmentDialogMutation(
-    $input: RemoveEnvironmentByIdInput!
-    $connectionIds: [ID!]!
-  ) {
-    removeEnvironmentById(input: $input) {
-      environment {
-        id @deleteEdge(connections: $connectionIds)
-        ...EnvironmentsList_EnvironmentEdge
-      }
-      errors {
-        __typename
-        ... on UserError {
-          message
-          code
-        }
-      }
-    }
-  }
-`;
-
 export const RemoveEnvironmentDialog: React.FC<{
   open: boolean;
   onClose: (removed: boolean) => void;
@@ -40,9 +19,30 @@ export const RemoveEnvironmentDialog: React.FC<{
   environmentName: string;
 }> = ({ open, environmentId, environmentName, onClose }) => {
   const [commit, isInFlight] = useMutation<RemoveEnvironmentDialogMutation>(
-    removeEnvironmentDialog
+    graphql`
+      mutation RemoveEnvironmentDialogMutation(
+        $input: RemoveEnvironmentByIdInput!
+        $connectionIds: [ID!]!
+      ) {
+        removeEnvironmentById(input: $input) {
+          environment {
+            id @deleteEdge(connections: $connectionIds)
+            name
+          }
+          errors {
+            __typename
+            ... on UserError {
+              message
+              code
+            }
+          }
+        }
+      }
+    `
   );
+
   const connectionId = useConnectionId("Query_searchEnvironments");
+
   const handleRemoveEnvironment = useCallback(() => {
     pipeCommitFn(commit, [
       withSuccessMessage(
@@ -61,9 +61,9 @@ export const RemoveEnvironmentDialog: React.FC<{
       },
     });
   }, [commit, environmentId, onClose, environmentName, connectionId]);
-  const handleClose = useCallback(() => {
-    onClose(false);
-  }, [onClose]);
+
+  const handleClose = useCallback(() => onClose(false), [onClose]);
+
   return (
     <Modal
       title={`Remove ${environmentName}`}

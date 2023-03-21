@@ -25,6 +25,7 @@ interface IHeader {
   title: React.ReactNode;
   actions?: React.ReactElement[] | React.ReactElement;
 }
+
 interface IHeaders {
   original: IHeader;
   modified: IHeader;
@@ -37,6 +38,7 @@ const usePrettyPrint = (val: string) => {
     return val;
   }
 };
+
 export const ComponentDiffEditor: React.FC<{
   headers: IHeaders;
   original: string;
@@ -89,15 +91,18 @@ const Header: React.FC<{ headers: IHeaders }> = ({ headers }) => {
     </div>
   );
 };
+
 const HeaderSubtitleWrapper = styled.div`
   display: flex;
   flex-direction: row;
   width: calc(50% - 15px);
 `;
+
 const HeaderSubtitle = styled.div`
   text-align: center;
   flex-grow: 1;
 `;
+
 const HeaderSubtitleActions = styled.div`
   flex-shrink: 1;
 `;

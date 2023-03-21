@@ -23,55 +23,49 @@ import {
   withSuccessMessage,
 } from "../../shared/pipeCommitFn";
 import { RoleScopeData, RoleScopeEditor } from "../shared/RoleScopeEdit";
-
-const groupByIdQuery = graphql`
-  query EditGroupQuery($id: ID!) {
-    groupById(id: $id) {
-      id
-      ...EditGroup_Group
-    }
-  }
-`;
-const editGroupFragment = graphql`
-  fragment EditGroup_Group on Group {
-    id
-    name
-    requirements {
-      ... on ClaimRequirement {
-        __typename
-        type
-        value
-      }
-    }
-    roles {
-      namespace
-      roles {
-        id
-        name
-      }
-    }
-  }
-`;
+import { EditGroup_Form$key } from "./__generated__/EditGroup_Form.graphql";
+import { EditGroup_RoleScopeSection$key } from "./__generated__/EditGroup_RoleScopeSection.graphql";
+import { EditGroup_RequirementsSection$key } from "./__generated__/EditGroup_RequirementsSection.graphql";
 
 export const EditGroup = () => {
   const { groupId = "" } = useParams();
-  const group = useLazyLoadQuery<EditGroupQuery>(groupByIdQuery, {
-    id: groupId,
-  });
+  const group = useLazyLoadQuery<EditGroupQuery>(
+    graphql`
+      query EditGroupQuery($id: ID!) {
+        groupById(id: $id) {
+          id
+          ...EditGroup_Form
+        }
+      }
+    `,
+    {
+      id: groupId,
+    }
+  );
   const id = group.groupById?.id;
   if (!id) {
     return (
       <DetailView style={{ padding: 1 }}>Coult not find group </DetailView>
     );
   }
-  return <EditGroupForm data={group.groupById} id={id} key={id} />;
+  return <EditGroupForm fragmentRef={group.groupById} id={id} key={id} />;
 };
 
 const EditGroupForm: React.FC<{
   id: string;
-  data: NonNullable<EditGroupQuery["response"]["groupById"]>;
-}> = ({ data, id }) => {
-  const group = useFragment<EditGroup_Group$key>(editGroupFragment, data);
+  fragmentRef: EditGroup_Form$key;
+}> = ({ fragmentRef, id }) => {
+  const data = useFragment(
+    graphql`
+      fragment EditGroup_Form on Group {
+        ...EditGroup_RoleScopeSection
+        ...EditGroup_Header
+        ...EditGroup_RequirementsSection
+      }
+    `,
+    fragmentRef
+  );
+
   return (
     <DetailView
       style={{ padding: 1 }}
@@ -83,26 +77,41 @@ const EditGroupForm: React.FC<{
     >
       <Row>
         <Col xs={24}>
-          <Header name={group.name} id={group.id} />
+          <Header fragmentRef={data} />
         </Col>
       </Row>
       <Row>
-        <RoleScopeSection $data={data} groupId={group.id} />
+        <RoleScopeSection fragmentRef={data} />
       </Row>
       <Row>
-        <RequirementsSection $data={data} groupId={group.id} />
+        <RequirementsSection fragmentRef={data} />
       </Row>
     </DetailView>
   );
 };
 
 const RoleScopeSection: React.FC<{
-  $data: EditGroup_Group$key;
-  groupId: string;
-}> = ({ $data, groupId }) => {
-  const group = useFragment<EditGroup_Group$key>(editGroupFragment, $data);
-  const [data, setData] = useState((): RoleScopeData[] => {
-    return group.roles.map<RoleScopeData>((x) => ({
+  fragmentRef: EditGroup_RoleScopeSection$key;
+}> = ({ fragmentRef }) => {
+  const data = useFragment(
+    graphql`
+      fragment EditGroup_RoleScopeSection on Group {
+        id
+        name
+        roles {
+          namespace
+          roles {
+            id
+            name
+          }
+        }
+      }
+    `,
+    fragmentRef
+  );
+
+  const [roleScope, setRoleScope] = useState((): RoleScopeData[] => {
+    return data.roles.map<RoleScopeData>((x) => ({
       key: x.namespace,
       namespace: x.namespace,
       roles: x.roles,
@@ -117,7 +126,7 @@ const RoleScopeSection: React.FC<{
         updateGroupRoles(input: $input) {
           group {
             id
-            ...EditGroup_Group
+            ...EditGroup_RoleScopeSection
           }
           errors {
             ... on UserError {
@@ -133,14 +142,14 @@ const RoleScopeSection: React.FC<{
     pipeCommitFn(commit, [
       withSuccessMessage(
         (x) => x.updateGroupRoles.group?.id,
-        `Updated requirements of ${group.name}`
+        `Updated requirements of ${data.name}`
       ),
       withErrorNotifications((x) => x.updateGroupRoles?.errors),
     ])({
       variables: {
         input: {
-          id: groupId,
-          roles: data.map((x) => ({
+          id: data.id,
+          roles: roleScope.map((x) => ({
             namespace: x.namespace,
             roleIds: x.roles.map((r) => r.id),
           })),
@@ -151,7 +160,7 @@ const RoleScopeSection: React.FC<{
 
   return (
     <>
-      <RoleScopeEditor data={data} onChange={setData} />
+      <RoleScopeEditor data={roleScope} onChange={setRoleScope} />
       <Col span={24}>
         <FormActions justify="end">
           <Button
@@ -168,8 +177,21 @@ const RoleScopeSection: React.FC<{
   );
 };
 
-const Header: React.FC<{ name: string; id: string }> = ({ name, id }) => {
+const Header: React.FC<{ fragmentRef: EditGroup_Header$key }> = ({
+  fragmentRef,
+}) => {
+  const { id, name } = useFragment(
+    graphql`
+      fragment EditGroup_Header on Group {
+        id
+        name
+      }
+    `,
+    fragmentRef
+  );
+
   const [isEdit, , enable, disable] = useToggle();
+
   return (
     <EditableBreadcrumbHeader onEdit={enable} title={name}>
       <RenameGroupDialog
@@ -184,12 +206,52 @@ const Header: React.FC<{ name: string; id: string }> = ({ name, id }) => {
 };
 
 const RequirementsSection: React.FC<{
-  $data: EditGroup_Group$key;
-  groupId: string;
-}> = ({ $data, groupId }) => {
-  const group = useFragment<EditGroup_Group$key>(editGroupFragment, $data);
-  const [data, setData] = useState((): Requirements[] => {
-    return group.requirements.reduce<Requirements[]>((previous, current) => {
+  fragmentRef: EditGroup_RequirementsSection$key;
+}> = ({ fragmentRef }) => {
+  const data = useFragment(
+    graphql`
+      fragment EditGroup_RequirementsSection on Group {
+        id
+        name
+        requirements {
+          ... on ClaimRequirement {
+            __typename
+            type
+            value
+          }
+        }
+      }
+    `,
+    fragmentRef
+  );
+
+  const [commit, isInFlight] =
+    useMutation<EditGroup_UpdateGroupRequirements_Mutation>(graphql`
+      mutation EditGroup_UpdateGroupRequirements_Mutation(
+        $input: UpdateGroupRequirementsInput!
+      ) {
+        updateGroupRequirements(input: $input) {
+          group {
+            id
+            ...EditGroup_RequirementsSection
+          }
+          errors {
+            ... on UserError {
+              code
+              message
+            }
+          }
+        }
+      }
+    `);
+
+  const [isEdit, , enable, disable] = useToggle();
+
+  const [selectedRequirementType, setSelectedRequirementType] =
+    useState("ClaimRequirement");
+
+  const [requirements, setRequirements] = useState((): Requirements[] => {
+    return data.requirements.reduce<Requirements[]>((previous, current) => {
       switch (current.__typename) {
         case "ClaimRequirement":
           previous.push({
@@ -206,38 +268,18 @@ const RequirementsSection: React.FC<{
     }, []);
   });
 
-  const [commit, isInFlight] =
-    useMutation<EditGroup_UpdateGroupRequirements_Mutation>(graphql`
-      mutation EditGroup_UpdateGroupRequirements_Mutation(
-        $input: UpdateGroupRequirementsInput!
-      ) {
-        updateGroupRequirements(input: $input) {
-          group {
-            id
-            ...EditGroup_Group
-          }
-          errors {
-            ... on UserError {
-              code
-              message
-            }
-          }
-        }
-      }
-    `);
-
   const handleSave = useHandler(() => {
     pipeCommitFn(commit, [
       withSuccessMessage(
         (x) => x.updateGroupRequirements.group?.id,
-        `Updated requirements of ${group.name}`
+        `Updated requirements of ${data.name}`
       ),
       withErrorNotifications((x) => x.updateGroupRequirements?.errors),
     ])({
       variables: {
         input: {
-          id: groupId,
-          requirements: data.map((x) => {
+          id: data.id,
+          requirements: requirements.map((x) => {
             switch (x.kind) {
               case "ClaimRequirement":
                 return { claimRequirement: { type: x.type, value: x.value } };
@@ -250,14 +292,11 @@ const RequirementsSection: React.FC<{
   });
 
   const onUpdate = (requirement: Requirements) => {
-    setData((previous) =>
+    setRequirements((previous) =>
       previous.map((x) => (x.id !== requirement.id ? x : requirement))
     );
   };
 
-  const [isEdit, , enable, disable] = useToggle();
-  const [selectedRequirementType, setSelectedRequirementType] =
-    useState("ClaimRequirement");
   const handleAddRequirement = useHandler(() => {
     const newRequirement = ((): Requirements | undefined => {
       switch (selectedRequirementType) {
@@ -266,15 +305,17 @@ const RequirementsSection: React.FC<{
       }
       return undefined;
     })();
+
     if (newRequirement) {
-      setData((previous) => [...previous, newRequirement]);
+      setRequirements((previous) => [...previous, newRequirement]);
     }
+
     setSelectedRequirementType("ClaimRequirement");
     disable();
   });
 
   const removeNamespace = useHandler((data: Requirements) =>
-    setData((previous) => previous.filter((x) => x.id !== data.id))
+    setRequirements((previous) => previous.filter((x) => x.id !== data.id))
   );
 
   return (
@@ -285,7 +326,7 @@ const RequirementsSection: React.FC<{
           grid={{
             gutter: 16,
           }}
-          dataSource={data}
+          dataSource={requirements}
           renderItem={(requirement) => {
             switch (requirement.kind) {
               case "ClaimRequirement":
@@ -310,7 +351,7 @@ const RequirementsSection: React.FC<{
         />
       </Col>
       <Modal
-        title={`Add  to ${group.name}`}
+        title={`Add  to ${data.name}`}
         open={isEdit}
         onOk={handleAddRequirement}
         onCancel={disable}

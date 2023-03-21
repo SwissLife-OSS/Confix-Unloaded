@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button, Col, Input, message, Row, Tooltip } from "antd";
-import { useMutation } from "react-relay";
+import { useFragment, useMutation } from "react-relay";
 import { graphql } from "babel-plugin-relay/macro";
 import { DetailView } from "../../shared/DetailView";
 import { FormActions, Field } from "../../shared/FormField";
@@ -14,36 +14,35 @@ import { useGoTo } from "../../shared/useGoTo";
 import { NewApiKeyMutation } from "./__generated__/NewApiKeyMutation.graphql";
 import { RoleScopeData, RoleScopeEditor } from "../shared/RoleScopeEdit";
 import { CopyOutlined } from "@ant-design/icons";
+import { NewApiKey_SuccessMessage$key } from "./__generated__/NewApiKey_SuccessMessage.graphql";
 
-const newApiKeyMutation = graphql`
-  mutation NewApiKeyMutation(
-    $input: CreateApiKeyInput!
-    $connectionIds: [ID!]!
-  ) {
-    createApiKey(input: $input) {
-      apiKeyWithSecret {
-        key
-          @appendNode(
-            connections: $connectionIds
-            edgeTypeName: "ApiKeysEdge"
-          ) {
-          id
-          name
+export const NewApiKey: React.FC = () => {
+  const [commit, isInFlight] = useMutation<NewApiKeyMutation>(graphql`
+    mutation NewApiKeyMutation(
+      $input: CreateApiKeyInput!
+      $connectionIds: [ID!]!
+    ) {
+      createApiKey(input: $input) {
+        apiKeyWithSecret {
+          key
+            @appendNode(
+              connections: $connectionIds
+              edgeTypeName: "ApiKeysEdge"
+            ) {
+            id
+          }
+          ...NewApiKey_SuccessMessage
+          secret
         }
-        secret
-      }
-      errors {
-        ... on UserError {
-          message
-          code
+        errors {
+          ... on UserError {
+            message
+            code
+          }
         }
       }
     }
-  }
-`;
-export const NewApiKey: React.FC = () => {
-  const [commit, isInFlight] =
-    useMutation<NewApiKeyMutation>(newApiKeyMutation);
+  `);
 
   const [data, setData] = useState<RoleScopeData[]>([]);
   const [name, setName] = useState("");
@@ -53,6 +52,7 @@ export const NewApiKey: React.FC = () => {
     useConnectionId("Query__apiKeys"),
   ];
   const goToEdit = useGoTo((id: string) => `${id}/edit`);
+
   const form = useCommitForm(
     commit,
     {
@@ -69,24 +69,7 @@ export const NewApiKey: React.FC = () => {
         withOnSuccess((x) => x.createApiKey.apiKeyWithSecret?.key.id, goToEdit),
         withOnSuccess(
           (x) => x.createApiKey.apiKeyWithSecret,
-          ({ secret }) =>
-            message.success(
-              <div style={{ minWidth: "300px" }}>
-                Api key created! <br />
-                Safe your secret key:
-                <Input.Group compact>
-                  <Input readOnly value={secret}></Input>
-                  <Tooltip title="Copy">
-                    <Button
-                      onClick={() => {
-                        navigator.clipboard.writeText(secret);
-                      }}
-                      icon={<CopyOutlined />}
-                    />
-                  </Tooltip>
-                </Input.Group>
-              </div>
-            )
+          (value) => message.success(<SuccessMessage fragmentRef={value} />)
         ),
       ],
     }
@@ -119,5 +102,35 @@ export const NewApiKey: React.FC = () => {
         </Col>
       </Row>
     </DetailView>
+  );
+};
+
+const SuccessMessage: React.FC<{
+  fragmentRef: NewApiKey_SuccessMessage$key;
+}> = ({ fragmentRef }) => {
+  const { secret } = useFragment(
+    graphql`
+      fragment NewApiKey_SuccessMessage on ApiKeyWithSecret {
+        secret
+      }
+    `,
+    fragmentRef
+  );
+  return (
+    <div style={{ minWidth: "300px" }}>
+      Api key created! <br />
+      Safe your secret key:
+      <Input.Group compact>
+        <Input readOnly value={secret}></Input>
+        <Tooltip title="Copy">
+          <Button
+            onClick={() => {
+              navigator.clipboard.writeText(secret);
+            }}
+            icon={<CopyOutlined />}
+          />
+        </Tooltip>
+      </Input.Group>
+    </div>
   );
 };

@@ -1,3 +1,4 @@
+using Confix.Authoring.Store;
 using HotChocolate.Resolvers;
 using HotChocolate.Types.Pagination;
 
@@ -10,19 +11,20 @@ public sealed class ComponentQueries
     public async Task<Connection<Component>> GetComponents(
         [Service] IComponentService componentService,
         IResolverContext context,
-        Guid? applicationId,
-        Guid? applicationPartId,
+        [ID<Application>] Guid? applicationId,
+        [ID<ApplicationPart>] Guid? applicationPartId,
+        string? @namespace,
         string? search)
     {
         return await context.ApplyPaginationAsync((skip, take, ct) => componentService
-            .Search(skip, take, applicationId, applicationPartId, search, ct));
+            .Search(skip, take, applicationId, applicationPartId,@namespace, search, ct));
     }
 
-    public Task<Component?> GetComponentByIdAsync(
+    public async Task<Component?> GetComponentByIdAsync(
         [ID(nameof(Component))] Guid id,
         [Service] IComponentService componentService,
         CancellationToken cancellationToken)
     {
-        return componentService.GetByIdAsync(id, cancellationToken);
+        return await componentService.GetByIdAsync(id, cancellationToken);
     }
 }

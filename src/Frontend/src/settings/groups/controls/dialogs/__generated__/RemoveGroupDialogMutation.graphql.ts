@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<fbbe7da2ad7bac9c210f92f7b9723f2d>>
+ * @generated SignedSource<<08177055f854c1949dd1c715179b9b91>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,6 @@
 // @ts-nocheck
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
-import { FragmentRefs } from "relay-runtime";
 export type RemoveGroupByIdInput = {
   id: string;
 };
@@ -26,7 +25,6 @@ export type RemoveGroupDialogMutation$data = {
     }> | null;
     readonly group: {
       readonly id: string;
-      readonly " $fragmentSpreads": FragmentRefs<"GroupsList_GroupEdge">;
     } | null;
   };
 };
@@ -125,12 +123,7 @@ return {
             "name": "group",
             "plural": false,
             "selections": [
-              (v3/*: any*/),
-              {
-                "args": null,
-                "kind": "FragmentSpread",
-                "name": "GroupsList_GroupEdge"
-              }
+              (v3/*: any*/)
             ],
             "storageKey": null
           },
@@ -183,14 +176,6 @@ return {
                     "variableName": "connectionIds"
                   }
                 ]
-              },
-              (v3/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "name",
-                "storageKey": null
               }
             ],
             "storageKey": null
@@ -202,16 +187,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "857ce48f695006cc32be903dedb9d7a3",
+    "cacheID": "d17fabcfa72ad7a67dda358cbcf9f64e",
     "id": null,
     "metadata": {},
     "name": "RemoveGroupDialogMutation",
     "operationKind": "mutation",
-    "text": "mutation RemoveGroupDialogMutation(\n  $input: RemoveGroupByIdInput!\n) {\n  removeGroupById(input: $input) {\n    group {\n      id\n      ...GroupsList_GroupEdge\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment GroupsList_GroupEdge on Group {\n  id\n  name\n}\n"
+    "text": "mutation RemoveGroupDialogMutation(\n  $input: RemoveGroupByIdInput!\n) {\n  removeGroupById(input: $input) {\n    group {\n      id\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "70c4fb036db9837baefb89ce68e6efc2";
+(node as any).hash = "0b94e613b990776f50ede4d31591841b";
 
 export default node;

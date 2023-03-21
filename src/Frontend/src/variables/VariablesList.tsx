@@ -8,56 +8,49 @@ import { graphql } from "babel-plugin-relay/macro";
 import { config } from "../config";
 import { InfiniteScrollList } from "../shared/InfiniteScrollList";
 import { VariablesListQuery } from "./__generated__/VariablesListQuery.graphql";
-import { VariablesList_VariableEdge$key } from "./__generated__/VariablesList_VariableEdge.graphql";
-import { VariablesList_Variables$key } from "./__generated__/VariablesList_Variables.graphql";
+import { VariablesList_ListItem$key } from "./__generated__/VariablesList_ListItem.graphql";
+import { VariablesList$key } from "./__generated__/VariablesList.graphql";
 import styled from "@emotion/styled";
 import { List } from "antd";
 import { Colors } from "../shared/colors";
-
-const VariablesQuery = graphql`
-  query VariablesListQuery($cursor: String, $count: Int, $search: String) {
-    ...VariablesList_Variables
-  }
-`;
-const VariablesConnectionFragment = graphql`
-  fragment VariablesList_Variables on Query
-  @refetchable(queryName: "VariablesListPaginationQuery") {
-    searchVariables(after: $cursor, first: $count, search: $search)
-      @connection(key: "Query_searchVariables") {
-      edges {
-        node {
-          id
-          name
-          ...VariablesList_VariableEdge
-        }
-      }
-    }
-  }
-`;
-
-const variableFragment = graphql`
-  fragment VariablesList_VariableEdge on Variable {
-    id
-    name
-  }
-`;
 
 export const VariablesList: React.FC<{
   selectedVariableId?: string;
   onItemSelect: (item: string) => void;
   search: string | undefined;
 }> = ({ search, onItemSelect, selectedVariableId }) => {
-  const queryData = useLazyLoadQuery<VariablesListQuery>(VariablesQuery, {
-    count: config.pagination.pageSize,
-    search,
-  });
+  const queryData = useLazyLoadQuery<VariablesListQuery>(
+    graphql`
+      query VariablesListQuery($cursor: String, $count: Int, $search: String) {
+        ...VariablesList
+      }
+    `,
+    {
+      count: config.pagination.pageSize,
+      search,
+    }
+  );
   const {
     data: connection,
     hasNext,
     loadNext,
     isLoadingNext,
-  } = usePaginationFragment<VariablesListQuery, VariablesList_Variables$key>(
-    VariablesConnectionFragment,
+  } = usePaginationFragment<VariablesListQuery, VariablesList$key>(
+    graphql`
+      fragment VariablesList on Query
+      @refetchable(queryName: "VariablesListPaginationQuery") {
+        searchVariables(after: $cursor, first: $count, search: $search)
+          @connection(key: "Query_searchVariables") {
+          edges {
+            node {
+              id
+              name
+              ...VariablesList_ListItem
+            }
+          }
+        }
+      }
+    `,
     queryData
   );
   const data = connection?.searchVariables?.edges?.map((x) => x.node) ?? [];
@@ -86,10 +79,16 @@ export const VariablesList: React.FC<{
 const VariableListItem: React.FC<{
   selected: boolean;
   onItemSelect: (envId: string) => void;
-  edge: VariablesList_VariableEdge$key;
+  edge: VariablesList_ListItem$key;
 }> = ({ onItemSelect, edge, selected }) => {
-  const { id, name } = useFragment<VariablesList_VariableEdge$key>(
-    variableFragment,
+  const { id, name } = useFragment<VariablesList_ListItem$key>(
+    graphql`
+      fragment VariablesList_ListItem on Variable {
+        id
+        name
+      }
+    `,
+
     edge
   );
   const handleClick = useCallback(() => onItemSelect(id), [onItemSelect, id]);

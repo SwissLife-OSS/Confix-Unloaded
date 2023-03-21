@@ -5,12 +5,10 @@ import {
   PermissionInput,
   PermissionsFlagsInput,
 } from "../../__generated__/NewRoleMutation.graphql";
-import {
-  EditRole_Role$data,
-  Scope,
-} from "../../__generated__/EditRole_Role.graphql";
+import { Scope } from "../../__generated__/EditRole_Role.graphql";
 import { noop } from "../../../../shared/noop";
 import styled from "@emotion/styled";
+import { EditRole_Form$data } from "../../__generated__/EditRole_Form.graphql";
 
 export interface Permissions {
   identity: {
@@ -87,12 +85,12 @@ export const mapPermissionsToInput = (data: Permissions): PermissionInput[] => {
 };
 
 export const mapPermissionsFromObjectType = (
-  data: EditRole_Role$data
+  data: EditRole_Form$data
 ): Permissions => {
   let permissions = createDefaultPermissions();
   function map<TKeys extends AllPermissions>(
     keys: TKeys[],
-    data: EditRole_Role$data["permissions"][number]["permissions"]
+    data: EditRole_Form$data["permissions"][number]["permissions"]
   ): {
     [Key in TKeys]: boolean;
   } {

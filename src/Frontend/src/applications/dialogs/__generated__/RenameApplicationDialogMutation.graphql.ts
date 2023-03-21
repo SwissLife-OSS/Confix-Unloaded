@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<da76779b8b2b634483daf601e42f5900>>
+ * @generated SignedSource<<e2e42fdc284ad29273f0c54d798bb59c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,7 +21,7 @@ export type RenameApplicationDialogMutation$data = {
   readonly renameApplication: {
     readonly application: {
       readonly id: string;
-      readonly " $fragmentSpreads": FragmentRefs<"ApplicationsList_applicationsEdge">;
+      readonly " $fragmentSpreads": FragmentRefs<"ApplicationsListItem">;
     } | null;
     readonly errors: ReadonlyArray<{
       readonly code?: string;
@@ -83,6 +83,13 @@ v4 = {
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
+},
+v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "namespace",
+  "storageKey": null
 };
 return {
   "fragment": {
@@ -111,7 +118,7 @@ return {
               {
                 "args": null,
                 "kind": "FragmentSpread",
-                "name": "ApplicationsList_applicationsEdge"
+                "name": "ApplicationsListItem"
               }
             ],
             "storageKey": null
@@ -159,13 +166,7 @@ return {
             "selections": [
               (v2/*: any*/),
               (v4/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "namespace",
-                "storageKey": null
-              },
+              (v5/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -174,8 +175,8 @@ return {
                 "name": "parts",
                 "plural": true,
                 "selections": [
-                  (v2/*: any*/),
                   (v4/*: any*/),
+                  (v2/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -184,7 +185,6 @@ return {
                     "name": "components",
                     "plural": true,
                     "selections": [
-                      (v2/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -197,7 +197,21 @@ return {
                           (v4/*: any*/)
                         ],
                         "storageKey": null
-                      }
+                      },
+                      (v2/*: any*/)
+                    ],
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Application",
+                    "kind": "LinkedField",
+                    "name": "application",
+                    "plural": false,
+                    "selections": [
+                      (v2/*: any*/),
+                      (v5/*: any*/)
                     ],
                     "storageKey": null
                   }
@@ -232,16 +246,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "a79f721380e8196df1886518e9689e42",
+    "cacheID": "fcf304dad48732491f505c7b75182e0e",
     "id": null,
     "metadata": {},
     "name": "RenameApplicationDialogMutation",
     "operationKind": "mutation",
-    "text": "mutation RenameApplicationDialogMutation(\n  $input: RenameApplicationInput!\n) {\n  renameApplication(input: $input) {\n    application {\n      id\n      ...ApplicationsList_applicationsEdge\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment ApplicationsList_applicationsEdge on Application {\n  id\n  name\n  namespace\n  parts {\n    id\n    name\n    components {\n      id\n      definition {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": "mutation RenameApplicationDialogMutation(\n  $input: RenameApplicationInput!\n) {\n  renameApplication(input: $input) {\n    application {\n      id\n      ...ApplicationsListItem\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment AddComponentsToApplicationPartDialog on ApplicationPart {\n  id\n  name\n  application {\n    id\n    namespace\n  }\n}\n\nfragment ApplicationsListItem on Application {\n  id\n  ...ApplicationsListItem_DefaultListItem\n  ...ApplicationsListItem_SelectedListItem\n}\n\nfragment ApplicationsListItem_ApplicationPart on ApplicationPart {\n  id\n  name\n  components {\n    definition {\n      id\n    }\n    ...ApplicationsListItem_Component\n    id\n  }\n  ...AddComponentsToApplicationPartDialog\n}\n\nfragment ApplicationsListItem_Component on ApplicationPartComponent {\n  id\n  definition {\n    id\n    name\n  }\n}\n\nfragment ApplicationsListItem_DefaultListItem on Application {\n  id\n  name\n  namespace\n  parts {\n    name\n    id\n  }\n}\n\nfragment ApplicationsListItem_SelectedListItem on Application {\n  id\n  name\n  namespace\n  parts {\n    id\n    ...ApplicationsListItem_ApplicationPart\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "36641c8d332fd70f858614c14ce43eba";
+(node as any).hash = "4f061c3b1f10f707f85c2e432ccc6798";
 
 export default node;

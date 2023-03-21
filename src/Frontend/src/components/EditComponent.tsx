@@ -31,18 +31,20 @@ import { ChangeComponentScopeDialog } from "./controls/dialogs/ChangeComponentSc
 import { EditComponent$key } from "./__generated__/EditComponent.graphql";
 import { EditComponent_EditComponentForm$key } from "./__generated__/EditComponent_EditComponentForm.graphql";
 import { EditComponent_ComponentChangeLog$key } from "./__generated__/EditComponent_ComponentChangeLog.graphql";
+import { EditComponent_AvailableIn_Query$key } from "./__generated__/EditComponent_AvailableIn_Query.graphql";
 
 export const EditComponent = () => {
   const { id: componentId = "" } = useParams();
 
   const { tab, navigateToTab } = useTabSwitcher();
 
-  const data = useLazyLoadQuery<EditComponentQuery>(
+  const query = useLazyLoadQuery<EditComponentQuery>(
     graphql`
       query EditComponentQuery($id: ID!) {
         componentById(id: $id) {
           ...EditComponent
         }
+        ...EditComponent_AvailableIn_Query @defer
       }
     `,
     {
@@ -50,7 +52,7 @@ export const EditComponent = () => {
     }
   );
 
-  const component = useFragment<EditComponent$key>(
+  const data = useFragment<EditComponent$key>(
     graphql`
       fragment EditComponent on Component {
         id
@@ -60,10 +62,10 @@ export const EditComponent = () => {
         ...EditComponent_ComponentChangeLog
       }
     `,
-    data.componentById
+    query.componentById
   );
-  const id = component?.id;
-  const name = component?.name;
+  const id = data?.id;
+  const name = data?.name;
   if (!id) {
     return (
       <DetailView style={{ padding: 1 }}>Coult not find component</DetailView>
@@ -89,30 +91,19 @@ export const EditComponent = () => {
         </Col>
       </Row>
       <Row>
-        <AvailableIn id={id} data={component} />
+        <AvailableIn id={id} fragmentRef={[query, data]} />
       </Row>
       <TabRow>
-        <Tabs
-          defaultActiveKey={tab}
-          key={tab}
-          onChange={navigateToTab}
-          items={[
-            {
-              key: "edit",
-              label: "Parts",
-              children: <EditComponentForm id={id} data={component} />,
-            },
-            {
-              key: "changelog",
-              label: "Change Log",
-              children: (
-                <DefaultSuspense>
-                  <ComponentChangeLog data={component} />
-                </DefaultSuspense>
-              ),
-            },
-          ]}
-        />
+        <Tabs defaultActiveKey={tab} key={tab} onChange={navigateToTab}>
+          <Tabs.TabPane key="edit" tab="Parts">
+            <EditComponentForm id={id} data={data} />
+          </Tabs.TabPane>
+          <Tabs.TabPane key="changelog" tab="Change Log">
+            <DefaultSuspense>
+              <ComponentChangeLog data={data} />
+            </DefaultSuspense>
+          </Tabs.TabPane>
+        </Tabs>
       </TabRow>
     </DetailView>
   );
@@ -141,7 +132,7 @@ const EditComponentForm: React.FC<{
         updateComponentSchema(input: $schemaInput) {
           component {
             id
-            ...EditComponent
+            schema
           }
           errors {
             ... on UserError {
@@ -153,7 +144,7 @@ const EditComponentForm: React.FC<{
         updateComponentValues(input: $valuesInput) {
           component {
             id
-            ...EditComponent
+            values
           }
           errors {
             ... on UserError {
@@ -232,7 +223,7 @@ const ComponentChangeLog: React.FC<{
     graphql`
       fragment EditComponent_ComponentChangeLog on Component {
         changeLog {
-          ...ChangeLog_fragment
+          ...ChangeLog
         }
       }
     `,
@@ -244,9 +235,22 @@ const ComponentChangeLog: React.FC<{
 
 const AvailableIn: React.FC<{
   id: string;
-  data: EditComponent_AvailableIn$key;
-}> = ({ data, id }) => {
+  fragmentRef: [
+    EditComponent_AvailableIn_Query$key,
+    EditComponent_AvailableIn$key
+  ];
+}> = ({ fragmentRef, id }) => {
   const [isEdit, , edit, stopEdit] = useToggle();
+
+  const query = useFragment<EditComponent_AvailableIn_Query$key>(
+    graphql`
+      fragment EditComponent_AvailableIn_Query on Query {
+        ...ChangeComponentScopeDialog
+      }
+    `,
+    fragmentRef[0]
+  );
+
   const { scopes } = useFragment<EditComponent_AvailableIn$key>(
     graphql`
       fragment EditComponent_AvailableIn on Component {
@@ -263,7 +267,7 @@ const AvailableIn: React.FC<{
         }
       }
     `,
-    data
+    fragmentRef[1]
   );
   return (
     <>
@@ -299,6 +303,7 @@ const AvailableIn: React.FC<{
         open={isEdit}
         onClose={stopEdit}
         id={id}
+        fragmentRef={query}
         scopes={scopes.map((x) =>
           x.applicationPartId
             ? [x.namespace, x.applicationId!, x.applicationPartId]

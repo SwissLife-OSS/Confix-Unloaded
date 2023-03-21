@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<180bd8f971a4e63a912a39ba33aa3ae5>>
+ * @generated SignedSource<<f8f68e59fe0781e90834429e8dc39b6e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -39,7 +39,7 @@ export type NewRoleMutation$data = {
     readonly role: {
       readonly id: string;
       readonly name: string;
-      readonly " $fragmentSpreads": FragmentRefs<"RolesList_RoleEdge">;
+      readonly " $fragmentSpreads": FragmentRefs<"RolesList_RoleListItem">;
     } | null;
   };
 };
@@ -132,7 +132,7 @@ return {
               {
                 "args": null,
                 "kind": "FragmentSpread",
-                "name": "RolesList_RoleEdge"
+                "name": "RolesList_RoleListItem"
               }
             ],
             "storageKey": null
@@ -232,16 +232,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "29b091ea74e9ad937acac6358312b76e",
+    "cacheID": "cb1415fbf322a1537f30a1334c2deecf",
     "id": null,
     "metadata": {},
     "name": "NewRoleMutation",
     "operationKind": "mutation",
-    "text": "mutation NewRoleMutation(\n  $input: CreateRoleInput!\n) {\n  createRole(input: $input) {\n    role {\n      id\n      name\n      ...RolesList_RoleEdge\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment RolesList_RoleEdge on Role {\n  id\n  name\n}\n"
+    "text": "mutation NewRoleMutation(\n  $input: CreateRoleInput!\n) {\n  createRole(input: $input) {\n    role {\n      id\n      name\n      ...RolesList_RoleListItem\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment RolesList_RoleListItem on Role {\n  id\n  name\n}\n"
   }
 };
 })();
 
-(node as any).hash = "bae0f69dfe669a530d34b4d5ee6bd508";
+(node as any).hash = "47f20dfe81945f6fe843678f57491c36";
 
 export default node;

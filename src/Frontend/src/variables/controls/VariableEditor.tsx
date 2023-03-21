@@ -1,8 +1,11 @@
 import { Button, message, Row } from "antd";
 import { graphql } from "babel-plugin-relay/macro";
 import React, { useCallback, useEffect, useState } from "react";
-import { useLazyLoadQuery, useMutation } from "react-relay";
-import { useEnvironments } from "../../environment/data/useEnvironments";
+import {
+  useLazyLoadQuery,
+  useMutation,
+  usePaginationFragment,
+} from "react-relay";
 import { FieldInputGroup } from "../../shared/FormField";
 import {
   pipeCommitFn,
@@ -17,6 +20,8 @@ import {
   VariableEditorQuery$data,
 } from "./__generated__/VariableEditorQuery.graphql";
 import { VariableEditorSaveVariableMutation } from "./__generated__/VariableEditorSaveVariableMutation.graphql";
+import { VariableEditor_useEnvironments$key } from "./__generated__/VariableEditor_useEnvironments.graphql";
+import { VariableEditor_useEnvironmentsPaginationQuery } from "./__generated__/VariableEditor_useEnvironmentsPaginationQuery.graphql";
 
 const variableEditorQuery = graphql`
   query VariableEditorQuery(
@@ -49,6 +54,7 @@ const variableEditorQuery = graphql`
       }
       value
     }
+    ...VariableEditor_useEnvironments
   }
 `;
 
@@ -73,17 +79,17 @@ export const VariableEditor: React.FC<{
     },
     { fetchPolicy: "network-only", ...queryOptions }
   );
-  const valueByEnv: Record<
-    string,
-    VariableEditorQuery$data["variableValues"][0]
-  > = data.variableValues.reduce(
+  const valueByEnv: {
+    [key: string]: VariableEditorQuery$data["variableValues"][0];
+  } = data.variableValues.reduce(
     (p, c) => ({
       ...p,
       [c.environment?.id ?? "-"]: c,
     }),
     {}
   );
-  const environments = useEnvironments();
+
+  const environments = useEnvironments(data);
   const refresh = useCallback(() => {
     outerRefresh && outerRefresh();
     setQueryOptions((p) => ({
@@ -106,7 +112,7 @@ export const VariableEditor: React.FC<{
             environment={x}
             value={valueByEnv[x.id]?.value ?? ""}
             valueId={valueByEnv[x.id]?.id}
-            isSecret={valueByEnv[x.id].variable?.isSecret ?? true}
+            isSecret={valueByEnv[x.id]?.variable?.isSecret ?? true}
             applicationId={applicationId}
             applicationPartId={applicationPartId}
             variableId={variableId}
@@ -282,4 +288,37 @@ const EnvironementVariableValue: React.FC<{
       </Button>
     </FieldInputGroup>
   );
+};
+
+const useEnvironments = (
+  dataRef: VariableEditor_useEnvironments$key
+): { id: string; name: string }[] => {
+  const { data: connection } = usePaginationFragment<
+    VariableEditor_useEnvironmentsPaginationQuery,
+    VariableEditor_useEnvironments$key
+  >(
+    graphql`
+      fragment VariableEditor_useEnvironments on Query
+      @argumentDefinitions(
+        count: { type: "Int", defaultValue: 50 }
+        cursor: { type: "String" }
+      )
+      @refetchable(queryName: "VariableEditor_useEnvironmentsPaginationQuery") {
+        searchEnvironments(after: $cursor, first: $count)
+          @connection(
+            key: "VariableEditor_useEnvironments_searchEnvironments"
+          ) {
+          edges {
+            node {
+              id
+              name
+            }
+          }
+        }
+      }
+    `,
+    dataRef
+  );
+
+  return connection?.searchEnvironments?.edges?.map((x) => x.node) ?? [];
 };

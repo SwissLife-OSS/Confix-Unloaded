@@ -10,17 +10,7 @@ import {
   withOnSuccess,
 } from "../../../../shared/pipeCommitFn";
 import { useStringEventHanlder } from "../../../../shared/useEventListener";
-
-const renameRoleMutation = graphql`
-  mutation RenameRoleDialogMutation($input: RenameRoleInput!) {
-    renameRole(input: $input) {
-      role {
-        id
-        ...RolesList_RoleEdge
-      }
-    }
-  }
-`;
+import { useCallback, useState } from "react";
 
 export const RenameRoleDialog: React.FC<{
   open: boolean;
@@ -28,16 +18,25 @@ export const RenameRoleDialog: React.FC<{
   name: string;
   id: string;
 }> = ({ open, name, id, onClose }) => {
-  const [commit, isInFlight] =
-    useMutation<RenameRoleDialogMutation>(renameRoleMutation);
-  const [RoleName, setRoleName] = React.useState(name);
+  const [commit, isInFlight] = useMutation<RenameRoleDialogMutation>(graphql`
+    mutation RenameRoleDialogMutation($input: RenameRoleInput!) {
+      renameRole(input: $input) {
+        role {
+          id
+          name
+        }
+      }
+    }
+  `);
+  const [roleName, setRoleName] = useState(name);
+
   const handlePartNameChange = useStringEventHanlder(setRoleName);
-  const handleRename = React.useCallback(() => {
+  const handleRename = useCallback(() => {
     pipeCommitFn(commit, [
       withSuccessMessage((x) => x.renameRole.role?.id, "Renamed Role"),
       withOnSuccess((x) => x.renameRole.role?.id, onClose),
-    ])({ variables: { input: { name: RoleName, id } } });
-  }, [commit, id, RoleName, onClose]);
+    ])({ variables: { input: { name: roleName, id } } });
+  }, [commit, id, roleName, onClose]);
   return (
     <Modal
       title={`Rename Role ${name}`}
@@ -48,7 +47,7 @@ export const RenameRoleDialog: React.FC<{
     >
       <FieldInput
         label="New Name"
-        value={RoleName}
+        value={roleName}
         onChange={handlePartNameChange}
       />
     </Modal>

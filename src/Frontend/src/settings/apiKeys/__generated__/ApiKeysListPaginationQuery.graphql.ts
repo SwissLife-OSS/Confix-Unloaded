@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e4a9074ee85cc6cf9a0f86425c251dcb>>
+ * @generated SignedSource<<e99d0b16fe795db0df3eaad622f15dd5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,7 @@ export type ApiKeysListPaginationQuery$variables = {
   cursor?: string | null;
 };
 export type ApiKeysListPaginationQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"ApiKeysList_ApiKeys">;
+  readonly " $fragmentSpreads": FragmentRefs<"ApiKeysList">;
 };
 export type ApiKeysListPaginationQuery = {
   response: ApiKeysListPaginationQuery$data;
@@ -57,7 +57,7 @@ return {
       {
         "args": null,
         "kind": "FragmentSpread",
-        "name": "ApiKeysList_ApiKeys"
+        "name": "ApiKeysList"
       }
     ],
     "type": "Query",
@@ -167,16 +167,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "429509abfdf387da03edd8ebc4fdfbce",
+    "cacheID": "4d2e012a78049d1b2db717c3d48dc6d2",
     "id": null,
     "metadata": {},
     "name": "ApiKeysListPaginationQuery",
     "operationKind": "query",
-    "text": "query ApiKeysListPaginationQuery(\n  $count: Int\n  $cursor: String\n) {\n  ...ApiKeysList_ApiKeys\n}\n\nfragment ApiKeysList_ApiKeyEdge on ApiKey {\n  id\n  name\n}\n\nfragment ApiKeysList_ApiKeys on Query {\n  apiKeys(after: $cursor, first: $count) {\n    edges {\n      node {\n        id\n        name\n        ...ApiKeysList_ApiKeyEdge\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query ApiKeysListPaginationQuery(\n  $count: Int\n  $cursor: String\n) {\n  ...ApiKeysList\n}\n\nfragment ApiKeysList on Query {\n  apiKeys(after: $cursor, first: $count) {\n    edges {\n      node {\n        id\n        name\n        ...ApiKeysList_ApiKeyListItem\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment ApiKeysList_ApiKeyListItem on ApiKey {\n  id\n  name\n}\n"
   }
 };
 })();
 
-(node as any).hash = "3897ddb845a81058ff3e3f3a7dab23ad";
+(node as any).hash = "086085b1a1b3f2523c2b76e4ffdc7b8a";
 
 export default node;

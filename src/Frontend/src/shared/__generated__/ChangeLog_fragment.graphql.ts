@@ -10,7 +10,7 @@
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ChangeLog_fragment$data = ReadonlyArray<{
+export type ChangeLog$data = ReadonlyArray<{
   readonly change: {
     readonly __typename: string;
     readonly kind: string;
@@ -26,11 +26,11 @@ export type ChangeLog_fragment$data = ReadonlyArray<{
   readonly modifiedBy: {
     readonly email: string | null;
   };
-  readonly " $fragmentType": "ChangeLog_fragment";
+  readonly " $fragmentType": "ChangeLog";
 }>;
-export type ChangeLog_fragment$key = ReadonlyArray<{
-  readonly " $data"?: ChangeLog_fragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"ChangeLog_fragment">;
+export type ChangeLog$key = ReadonlyArray<{
+  readonly " $data"?: ChangeLog$data;
+  readonly " $fragmentSpreads": FragmentRefs<"ChangeLog">;
 }>;
 
 const node: ReaderFragment = {
@@ -39,7 +39,7 @@ const node: ReaderFragment = {
   "metadata": {
     "plural": true
   },
-  "name": "ChangeLog_fragment",
+  "name": "ChangeLog",
   "selections": [
     {
       "alias": null,

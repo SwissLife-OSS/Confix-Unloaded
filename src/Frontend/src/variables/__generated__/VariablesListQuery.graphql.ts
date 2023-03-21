@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7bb06eac9f51116c1500f2afa7153334>>
+ * @generated SignedSource<<903103bc34a3d0896975f2a8ad375d93>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,7 @@ export type VariablesListQuery$variables = {
   search?: string | null;
 };
 export type VariablesListQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"VariablesList_Variables">;
+  readonly " $fragmentSpreads": FragmentRefs<"VariablesList">;
 };
 export type VariablesListQuery = {
   response: VariablesListQuery$data;
@@ -70,7 +70,7 @@ return {
       {
         "args": null,
         "kind": "FragmentSpread",
-        "name": "VariablesList_Variables"
+        "name": "VariablesList"
       }
     ],
     "type": "Query",
@@ -186,16 +186,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "a699002ce286e118e3d560887d9ecb6b",
+    "cacheID": "939cf79e148c8bc32fd96ac8492082d3",
     "id": null,
     "metadata": {},
     "name": "VariablesListQuery",
     "operationKind": "query",
-    "text": "query VariablesListQuery(\n  $cursor: String\n  $count: Int\n  $search: String\n) {\n  ...VariablesList_Variables\n}\n\nfragment VariablesList_VariableEdge on Variable {\n  id\n  name\n}\n\nfragment VariablesList_Variables on Query {\n  searchVariables(after: $cursor, first: $count, search: $search) {\n    edges {\n      node {\n        id\n        name\n        ...VariablesList_VariableEdge\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query VariablesListQuery(\n  $cursor: String\n  $count: Int\n  $search: String\n) {\n  ...VariablesList\n}\n\nfragment VariablesList on Query {\n  searchVariables(after: $cursor, first: $count, search: $search) {\n    edges {\n      node {\n        id\n        name\n        ...VariablesList_ListItem\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment VariablesList_ListItem on Variable {\n  id\n  name\n}\n"
   }
 };
 })();
 
-(node as any).hash = "6366291965ac231c705893cb3e2d0a2c";
+(node as any).hash = "cec1e2f106662ab6485db637327abc6a";
 
 export default node;

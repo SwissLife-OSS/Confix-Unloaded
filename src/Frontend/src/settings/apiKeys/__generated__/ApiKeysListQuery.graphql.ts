@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<35dee7df2f99a7b3c685d6a36caa8c70>>
+ * @generated SignedSource<<b741e4f28b1ba72cba6918d78c98a3e5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,7 @@ export type ApiKeysListQuery$variables = {
   cursor?: string | null;
 };
 export type ApiKeysListQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"ApiKeysList_ApiKeys">;
+  readonly " $fragmentSpreads": FragmentRefs<"ApiKeysList">;
 };
 export type ApiKeysListQuery = {
   response: ApiKeysListQuery$data;
@@ -58,7 +58,7 @@ return {
       {
         "args": null,
         "kind": "FragmentSpread",
-        "name": "ApiKeysList_ApiKeys"
+        "name": "ApiKeysList"
       }
     ],
     "type": "Query",
@@ -171,16 +171,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "c314083b6fab9a9496080368300005ae",
+    "cacheID": "4a6d520f324c72b4f724bf5481fb686d",
     "id": null,
     "metadata": {},
     "name": "ApiKeysListQuery",
     "operationKind": "query",
-    "text": "query ApiKeysListQuery(\n  $cursor: String\n  $count: Int\n) {\n  ...ApiKeysList_ApiKeys\n}\n\nfragment ApiKeysList_ApiKeyEdge on ApiKey {\n  id\n  name\n}\n\nfragment ApiKeysList_ApiKeys on Query {\n  apiKeys(after: $cursor, first: $count) {\n    edges {\n      node {\n        id\n        name\n        ...ApiKeysList_ApiKeyEdge\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query ApiKeysListQuery(\n  $cursor: String\n  $count: Int\n) {\n  ...ApiKeysList\n}\n\nfragment ApiKeysList on Query {\n  apiKeys(after: $cursor, first: $count) {\n    edges {\n      node {\n        id\n        name\n        ...ApiKeysList_ApiKeyListItem\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment ApiKeysList_ApiKeyListItem on ApiKey {\n  id\n  name\n}\n"
   }
 };
 })();
 
-(node as any).hash = "52aed0d503214134f7dd8fc6b4b14a86";
+(node as any).hash = "ce965f60a64d9781382b9fe75d2b0210";
 
 export default node;

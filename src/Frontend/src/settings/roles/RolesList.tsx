@@ -14,56 +14,52 @@ import { InfiniteScrollList } from "../../shared/InfiniteScrollList";
 import { useGoTo } from "../../shared/useGoTo";
 import { useToggle } from "../../shared/useToggle";
 import { RolesListQuery } from "./__generated__/RolesListQuery.graphql";
-import { RolesList_Roles$key } from "./__generated__/RolesList_Roles.graphql";
-import { RolesList_RoleEdge$key } from "./__generated__/RolesList_RoleEdge.graphql";
 import { RemoveRoleDialog } from "./controls/dialogs/RemoveRoleDialog";
-
-const rolesQuery = graphql`
-  query RolesListQuery($cursor: String, $count: Int, $search: String) {
-    ...RolesList_Roles
-  }
-`;
-const rolesConnectionFragment = graphql`
-  fragment RolesList_Roles on Query
-  @refetchable(queryName: "RolesListPaginationQuery") {
-    searchRoles(after: $cursor, first: $count, search: $search)
-      @connection(key: "Query_searchRoles") {
-      edges {
-        node {
-          id
-          name
-          ...RolesList_RoleEdge
-        }
-      }
-    }
-  }
-`;
-
-const roleFragment = graphql`
-  fragment RolesList_RoleEdge on Role {
-    id
-    name
-  }
-`;
+import { RolesListPaginationQuery } from "./__generated__/RolesListPaginationQuery.graphql";
+import { RolesList$key } from "./__generated__/RolesList.graphql";
+import { RolesList_RoleListItem$key } from "./__generated__/RolesList_RoleListItem.graphql";
 
 export const RolesList: React.FC<{
   selectedRoleId?: string;
   onItemSelect: (item: string) => void;
   search: string | undefined;
 }> = ({ search, onItemSelect, selectedRoleId }) => {
-  const queryData = useLazyLoadQuery<RolesListQuery>(rolesQuery, {
-    count: config.pagination.pageSize,
-    search,
-  });
+  const queryData = useLazyLoadQuery<RolesListQuery>(
+    graphql`
+      query RolesListQuery($cursor: String, $count: Int, $search: String) {
+        ...RolesList
+      }
+    `,
+    {
+      count: config.pagination.pageSize,
+      search,
+    }
+  );
+
   const {
     data: connection,
     hasNext,
     loadNext,
     isLoadingNext,
-  } = usePaginationFragment<RolesListQuery, RolesList_Roles$key>(
-    rolesConnectionFragment,
+  } = usePaginationFragment<RolesListPaginationQuery, RolesList$key>(
+    graphql`
+      fragment RolesList on Query
+      @refetchable(queryName: "RolesListPaginationQuery") {
+        searchRoles(after: $cursor, first: $count, search: $search)
+          @connection(key: "Query_searchRoles") {
+          edges {
+            node {
+              id
+              name
+              ...RolesList_RoleListItem
+            }
+          }
+        }
+      }
+    `,
     queryData
   );
+
   const data = connection?.searchRoles?.edges?.map((x) => x.node) ?? [];
   const handleOnItemSelected = useCallback(
     (id: string) => onItemSelect(id),
@@ -90,12 +86,23 @@ export const RolesList: React.FC<{
 const RoleListItem: React.FC<{
   selected: boolean;
   onItemSelect: (envId: string) => void;
-  edge: RolesList_RoleEdge$key;
+  edge: RolesList_RoleListItem$key;
 }> = ({ onItemSelect, edge, selected }) => {
-  const { id, name } = useFragment<RolesList_RoleEdge$key>(roleFragment, edge);
-  const handleClick = useCallback(() => onItemSelect(id), [onItemSelect, id]);
+  const { id, name } = useFragment(
+    graphql`
+      fragment RolesList_RoleListItem on Role {
+        id
+        name
+      }
+    `,
+    edge
+  );
+
   const [isRemoveEnvVisible, , enableRemoveEnv, disableRemoveEnv] = useToggle();
+
   const goToOverview = useGoTo("/");
+
+  const handleClick = useCallback(() => onItemSelect(id), [onItemSelect, id]);
   const handleOnClose = useCallback(
     (removed: boolean) => {
       disableRemoveEnv();

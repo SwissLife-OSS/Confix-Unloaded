@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<81cfb7e6bc7edda8405ac32a4fb6ed64>>
+ * @generated SignedSource<<15bf38519b800cccf3020d8d66aa8e29>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,6 @@
 // @ts-nocheck
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
-import { FragmentRefs } from "relay-runtime";
 export type RemoveApiKeyByIdInput = {
   id: string;
 };
@@ -21,7 +20,6 @@ export type RemoveApiKeyDialogMutation$data = {
   readonly removeApiKeyById: {
     readonly apiKey: {
       readonly id: string;
-      readonly " $fragmentSpreads": FragmentRefs<"ApiKeysList_ApiKeyEdge">;
     } | null;
     readonly errors: ReadonlyArray<{
       readonly __typename: string;
@@ -125,12 +123,7 @@ return {
             "name": "apiKey",
             "plural": false,
             "selections": [
-              (v3/*: any*/),
-              {
-                "args": null,
-                "kind": "FragmentSpread",
-                "name": "ApiKeysList_ApiKeyEdge"
-              }
+              (v3/*: any*/)
             ],
             "storageKey": null
           },
@@ -183,14 +176,6 @@ return {
                     "variableName": "connectionIds"
                   }
                 ]
-              },
-              (v3/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "name",
-                "storageKey": null
               }
             ],
             "storageKey": null
@@ -202,16 +187,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "e540ec1c41f8414cb9c9306ba2294955",
+    "cacheID": "d4eb374cd146d0ca090c0255cf1cd98e",
     "id": null,
     "metadata": {},
     "name": "RemoveApiKeyDialogMutation",
     "operationKind": "mutation",
-    "text": "mutation RemoveApiKeyDialogMutation(\n  $input: RemoveApiKeyByIdInput!\n) {\n  removeApiKeyById(input: $input) {\n    apiKey {\n      id\n      ...ApiKeysList_ApiKeyEdge\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment ApiKeysList_ApiKeyEdge on ApiKey {\n  id\n  name\n}\n"
+    "text": "mutation RemoveApiKeyDialogMutation(\n  $input: RemoveApiKeyByIdInput!\n) {\n  removeApiKeyById(input: $input) {\n    apiKey {\n      id\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "cda817d81b8f83628d56198633c3cfd3";
+(node as any).hash = "f62bb2faf51ad707e7e8a24094b24b11";
 
 export default node;

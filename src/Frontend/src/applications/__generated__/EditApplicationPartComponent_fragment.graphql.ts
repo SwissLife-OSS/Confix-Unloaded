@@ -44,7 +44,7 @@ export type EditApplicationPartComponent_fragment$data = {
   } | null;
   readonly values: string | null;
   readonly version: number;
-  readonly " $fragmentSpreads": FragmentRefs<"EditApplicationPartComponent_ChangeLog_Fragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"EditApplicationPartComponent_ChangeLog">;
   readonly " $fragmentType": "EditApplicationPartComponent_fragment";
 };
 export type EditApplicationPartComponent_fragment$key = {
@@ -216,7 +216,7 @@ return {
         {
           "args": null,
           "kind": "FragmentSpread",
-          "name": "EditApplicationPartComponent_ChangeLog_Fragment"
+          "name": "EditApplicationPartComponent_ChangeLog"
         }
       ]
     }

@@ -51,7 +51,7 @@ export const NewComponent: React.FC = () => {
   const data = useLazyLoadQuery<NewComponent_Query>(
     graphql`
       query NewComponent_Query($search: String) {
-        ...ApplicationCascader_Data @arguments(search: $search)
+        ...ApplicationCascader @arguments(search: $search)
       }
     `,
     {}
@@ -99,7 +99,7 @@ export const NewComponent: React.FC = () => {
           <form onSubmitCapture={form.handleSubmit}>
             <FormField form={form} field="name" label="Name" />
             <ApplicationCascader
-              $data={data}
+              fragmentRef={data}
               onChange={setScope}
               value={scopes}
             />

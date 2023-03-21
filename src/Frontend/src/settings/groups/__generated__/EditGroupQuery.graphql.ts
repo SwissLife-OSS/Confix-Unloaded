@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<38060657160e247c39ed40f0d33fa1cb>>
+ * @generated SignedSource<<38e8c39b528ded94ef69a9b2cfd2b223>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,7 @@ export type EditGroupQuery$variables = {
 export type EditGroupQuery$data = {
   readonly groupById: {
     readonly id: string;
-    readonly " $fragmentSpreads": FragmentRefs<"EditGroup_Group">;
+    readonly " $fragmentSpreads": FragmentRefs<"EditGroup_Form">;
   } | null;
 };
 export type EditGroupQuery = {
@@ -72,7 +72,7 @@ return {
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "EditGroup_Group"
+            "name": "EditGroup_Form"
           }
         ],
         "storageKey": null
@@ -97,6 +97,37 @@ return {
         "selections": [
           (v2/*: any*/),
           (v3/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "RoleScope",
+            "kind": "LinkedField",
+            "name": "roles",
+            "plural": true,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "namespace",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Role",
+                "kind": "LinkedField",
+                "name": "roles",
+                "plural": true,
+                "selections": [
+                  (v2/*: any*/),
+                  (v3/*: any*/)
+                ],
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
           {
             "alias": null,
             "args": null,
@@ -135,37 +166,6 @@ return {
               }
             ],
             "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "RoleScope",
-            "kind": "LinkedField",
-            "name": "roles",
-            "plural": true,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "namespace",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "Role",
-                "kind": "LinkedField",
-                "name": "roles",
-                "plural": true,
-                "selections": [
-                  (v2/*: any*/),
-                  (v3/*: any*/)
-                ],
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
           }
         ],
         "storageKey": null
@@ -173,16 +173,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "d089ef032c2a880c81afc0ce1b748ba9",
+    "cacheID": "60aaf24cb338a10057ad75dd80cb30c0",
     "id": null,
     "metadata": {},
     "name": "EditGroupQuery",
     "operationKind": "query",
-    "text": "query EditGroupQuery(\n  $id: ID!\n) {\n  groupById(id: $id) {\n    id\n    ...EditGroup_Group\n  }\n}\n\nfragment EditGroup_Group on Group {\n  id\n  name\n  requirements {\n    __typename\n    ... on ClaimRequirement {\n      __typename\n      type\n      value\n    }\n  }\n  roles {\n    namespace\n    roles {\n      id\n      name\n    }\n  }\n}\n"
+    "text": "query EditGroupQuery(\n  $id: ID!\n) {\n  groupById(id: $id) {\n    id\n    ...EditGroup_Form\n  }\n}\n\nfragment EditGroup_Form on Group {\n  ...EditGroup_RoleScopeSection\n  ...EditGroup_Header\n  ...EditGroup_RequirementsSection\n}\n\nfragment EditGroup_Header on Group {\n  id\n  name\n}\n\nfragment EditGroup_RequirementsSection on Group {\n  id\n  name\n  requirements {\n    __typename\n    ... on ClaimRequirement {\n      __typename\n      type\n      value\n    }\n  }\n}\n\nfragment EditGroup_RoleScopeSection on Group {\n  id\n  name\n  roles {\n    namespace\n    roles {\n      id\n      name\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "e0ebf1f134ed531457a16f20502c37c5";
+(node as any).hash = "515f5b57fc6b5dd0bb8cf96c084eae6a";
 
 export default node;

@@ -10,17 +10,7 @@ import {
   withOnSuccess,
 } from "../../../../shared/pipeCommitFn";
 import { useStringEventHanlder } from "../../../../shared/useEventListener";
-
-const renameGroupMutation = graphql`
-  mutation RenameGroupDialogMutation($input: RenameGroupInput!) {
-    renameGroup(input: $input) {
-      group {
-        id
-        ...GroupsList_GroupEdge
-      }
-    }
-  }
-`;
+import { useCallback, useState } from "react";
 
 export const RenameGroupDialog: React.FC<{
   open: boolean;
@@ -28,16 +18,28 @@ export const RenameGroupDialog: React.FC<{
   name: string;
   id: string;
 }> = ({ open, name, id, onClose }) => {
-  const [commit, isInFlight] =
-    useMutation<RenameGroupDialogMutation>(renameGroupMutation);
-  const [GroupName, setGroupName] = React.useState(name);
+  const [commit, isInFlight] = useMutation<RenameGroupDialogMutation>(graphql`
+    mutation RenameGroupDialogMutation($input: RenameGroupInput!) {
+      renameGroup(input: $input) {
+        group {
+          id
+          name
+        }
+      }
+    }
+  `);
+
+  const [groupName, setGroupName] = useState(name);
+
   const handlePartNameChange = useStringEventHanlder(setGroupName);
-  const handleRename = React.useCallback(() => {
+
+  const handleRename = useCallback(() => {
     pipeCommitFn(commit, [
       withSuccessMessage((x) => x.renameGroup.group?.id, "Renamed Group"),
       withOnSuccess((x) => x.renameGroup.group?.id, onClose),
-    ])({ variables: { input: { name: GroupName, id } } });
-  }, [commit, id, GroupName, onClose]);
+    ])({ variables: { input: { name: groupName, id } } });
+  }, [commit, id, groupName, onClose]);
+
   return (
     <Modal
       title={`Rename Group ${name}`}
@@ -48,7 +50,7 @@ export const RenameGroupDialog: React.FC<{
     >
       <FieldInput
         label="New Name"
-        value={GroupName}
+        value={groupName}
         onChange={handlePartNameChange}
       />
     </Modal>

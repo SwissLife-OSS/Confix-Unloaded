@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6f54ced2aea48e80d9c39ce1676cefd3>>
+ * @generated SignedSource<<40606aea8002989e8d779a22c3dc652c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,7 @@ export type RolesListQuery$variables = {
   search?: string | null;
 };
 export type RolesListQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"RolesList_Roles">;
+  readonly " $fragmentSpreads": FragmentRefs<"RolesList">;
 };
 export type RolesListQuery = {
   response: RolesListQuery$data;
@@ -70,7 +70,7 @@ return {
       {
         "args": null,
         "kind": "FragmentSpread",
-        "name": "RolesList_Roles"
+        "name": "RolesList"
       }
     ],
     "type": "Query",
@@ -186,16 +186,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "759bf3d9f66f43a46d3da4980660d2c4",
+    "cacheID": "61e0d5dad6f516727af4c1aea94cee9b",
     "id": null,
     "metadata": {},
     "name": "RolesListQuery",
     "operationKind": "query",
-    "text": "query RolesListQuery(\n  $cursor: String\n  $count: Int\n  $search: String\n) {\n  ...RolesList_Roles\n}\n\nfragment RolesList_RoleEdge on Role {\n  id\n  name\n}\n\nfragment RolesList_Roles on Query {\n  searchRoles(after: $cursor, first: $count, search: $search) {\n    edges {\n      node {\n        id\n        name\n        ...RolesList_RoleEdge\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query RolesListQuery(\n  $cursor: String\n  $count: Int\n  $search: String\n) {\n  ...RolesList\n}\n\nfragment RolesList on Query {\n  searchRoles(after: $cursor, first: $count, search: $search) {\n    edges {\n      node {\n        id\n        name\n        ...RolesList_RoleListItem\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment RolesList_RoleListItem on Role {\n  id\n  name\n}\n"
   }
 };
 })();
 
-(node as any).hash = "4073948de246ebf155152d94c4bffff5";
+(node as any).hash = "883489d0c13930a717cd3341a25b4c1f";
 
 export default node;

@@ -7,52 +7,69 @@ import { generatePath, Link } from "react-router-dom";
 import { EditIcon, DeleteIcon } from "../../icons/icons";
 import { useToggle } from "../../shared/useToggle";
 import { RemoveComponentFromApplicationPartDialog } from "../dialogs/RemoveComponentFromApplicationPartDialog";
-import { EditApplicationPart_fragment$data } from "../__generated__/EditApplicationPart_fragment.graphql";
-import { ApplicationPartComponents_component$key } from "./__generated__/ApplicationPartComponents_component.graphql";
+import { ApplicationPartComponents$key } from "./__generated__/ApplicationPartComponents.graphql";
+import { ApplicationPartComponents_ApplicationPartComponentsDisplay$key } from "./__generated__/ApplicationPartComponents_ApplicationPartComponentsDisplay.graphql";
 
 export const ApplicationPartComponents: React.FC<{
   applicationId: string;
-  components: EditApplicationPart_fragment$data["components"];
-}> = ({ applicationId, components }) => {
+  fragmentRef: ApplicationPartComponents$key;
+}> = ({ applicationId, fragmentRef }) => {
+  const { components } = useFragment(
+    graphql`
+      fragment ApplicationPartComponents on ApplicationPart {
+        components {
+          id
+          definition {
+            id
+          }
+          ...ApplicationPartComponents_ApplicationPartComponentsDisplay
+        }
+      }
+    `,
+    fragmentRef
+  );
+
   if (components.length === 0) {
     return <Empty description="No Application Parts"></Empty>;
-  } else {
-    return (
-      <Row gutter={[16, 16]}>
-        {(components.map((x) => ({ ...x })) ?? []).map((item) => (
-          <Col span={8} key={item.definition?.id}>
-            <ApplicationPartComponentsDisplay
-              applicationId={applicationId}
-              part={item}
-              componentPartId={item.id}
-            />
-          </Col>
-        ))}
-      </Row>
-    );
   }
+
+  return (
+    <Row gutter={[16, 16]}>
+      {(components.map((x) => ({ ...x })) ?? []).map((item) => (
+        <Col span={8} key={item.definition?.id}>
+          <ApplicationPartComponentsDisplay
+            applicationId={applicationId}
+            fragmentRef={item}
+            componentPartId={item.id}
+          />
+        </Col>
+      ))}
+    </Row>
+  );
 };
-const applicationPartComponentFragment = graphql`
-  fragment ApplicationPartComponents_component on ApplicationPartComponent {
-    id
-    definition {
-      id
-      name
-      state
-    }
-  }
-`;
+
 const ApplicationPartComponentsDisplay: React.FC<{
   applicationId: string;
   componentPartId: string;
-  part: ApplicationPartComponents_component$key;
-}> = ({ part, applicationId }) => {
+  fragmentRef: ApplicationPartComponents_ApplicationPartComponentsDisplay$key;
+}> = ({ fragmentRef, applicationId }) => {
+  const { id, definition } = useFragment(
+    graphql`
+      fragment ApplicationPartComponents_ApplicationPartComponentsDisplay on ApplicationPartComponent {
+        id
+        definition {
+          id
+          name
+          state
+        }
+      }
+    `,
+    fragmentRef
+  );
+
   const [isRemoveDialogShown, , enableRemoveDialog, disableRemoveDialog] =
     useToggle();
-  const { id, definition } = useFragment(
-    applicationPartComponentFragment,
-    part
-  );
+
   const linkToPart = generatePath(
     `../:applicationId/components/:componentId/edit`,
     {
@@ -60,6 +77,7 @@ const ApplicationPartComponentsDisplay: React.FC<{
       componentId: id,
     }
   );
+
   return (
     <>
       <Card
@@ -93,6 +111,7 @@ const ApplicationPartComponentsDisplay: React.FC<{
     </>
   );
 };
+
 const CardBody = styled("div")`
   height: 200px;
   overflow-y: auto;

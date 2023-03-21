@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c02d01f0964f8f9b4aeb6b8c68cb050a>>
+ * @generated SignedSource<<e07523e30289b9c767eb3145c470b8ed>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,22 +10,22 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type useEnvironmentsPaginationQuery$variables = {
+export type VariableEditor_useEnvironmentsPaginationQuery$variables = {
   count?: number | null;
   cursor?: string | null;
 };
-export type useEnvironmentsPaginationQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"useEnvironments_searchEnvironments">;
+export type VariableEditor_useEnvironmentsPaginationQuery$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"VariableEditor_useEnvironments">;
 };
-export type useEnvironmentsPaginationQuery = {
-  response: useEnvironmentsPaginationQuery$data;
-  variables: useEnvironmentsPaginationQuery$variables;
+export type VariableEditor_useEnvironmentsPaginationQuery = {
+  response: VariableEditor_useEnvironmentsPaginationQuery$data;
+  variables: VariableEditor_useEnvironmentsPaginationQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
 var v0 = [
   {
-    "defaultValue": null,
+    "defaultValue": 50,
     "kind": "LocalArgument",
     "name": "count"
   },
@@ -52,12 +52,23 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "useEnvironmentsPaginationQuery",
+    "name": "VariableEditor_useEnvironmentsPaginationQuery",
     "selections": [
       {
-        "args": null,
+        "args": [
+          {
+            "kind": "Variable",
+            "name": "count",
+            "variableName": "count"
+          },
+          {
+            "kind": "Variable",
+            "name": "cursor",
+            "variableName": "cursor"
+          }
+        ],
         "kind": "FragmentSpread",
-        "name": "useEnvironments_searchEnvironments"
+        "name": "VariableEditor_useEnvironments"
       }
     ],
     "type": "Query",
@@ -67,7 +78,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "useEnvironmentsPaginationQuery",
+    "name": "VariableEditor_useEnvironmentsPaginationQuery",
     "selections": [
       {
         "alias": null,
@@ -160,23 +171,23 @@ return {
         "args": (v1/*: any*/),
         "filters": null,
         "handle": "connection",
-        "key": "useEnvironments_searchEnvironments",
+        "key": "VariableEditor_useEnvironments_searchEnvironments",
         "kind": "LinkedHandle",
         "name": "searchEnvironments"
       }
     ]
   },
   "params": {
-    "cacheID": "d5608bb38df8d60ef8aec75243ff5074",
+    "cacheID": "10e1b2468ad5ba9e8e9051e1ca51167a",
     "id": null,
     "metadata": {},
-    "name": "useEnvironmentsPaginationQuery",
+    "name": "VariableEditor_useEnvironmentsPaginationQuery",
     "operationKind": "query",
-    "text": "query useEnvironmentsPaginationQuery(\n  $count: Int\n  $cursor: String\n) {\n  ...useEnvironments_searchEnvironments\n}\n\nfragment useEnvironments_searchEnvironments on Query {\n  searchEnvironments(after: $cursor, first: $count) {\n    edges {\n      node {\n        id\n        name\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query VariableEditor_useEnvironmentsPaginationQuery(\n  $count: Int = 50\n  $cursor: String\n) {\n  ...VariableEditor_useEnvironments_1G22uz\n}\n\nfragment VariableEditor_useEnvironments_1G22uz on Query {\n  searchEnvironments(after: $cursor, first: $count) {\n    edges {\n      node {\n        id\n        name\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "919293b06c3e60921850070d82637bb1";
+(node as any).hash = "745ea4e9244939e3fad8b82e37101f01";
 
 export default node;

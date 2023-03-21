@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<81af4219df5506abb7c9cced06b5c5bd>>
+ * @generated SignedSource<<b8c0667089a02558484a0df0cfe61128>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -29,7 +29,7 @@ export type EditGroup_UpdateGroupRoles_Mutation$data = {
     }> | null;
     readonly group: {
       readonly id: string;
-      readonly " $fragmentSpreads": FragmentRefs<"EditGroup_Group">;
+      readonly " $fragmentSpreads": FragmentRefs<"EditGroup_RoleScopeSection">;
     } | null;
   };
 };
@@ -87,13 +87,6 @@ v4 = {
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
-},
-v5 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "__typename",
-  "storageKey": null
 };
 return {
   "fragment": {
@@ -122,7 +115,7 @@ return {
               {
                 "args": null,
                 "kind": "FragmentSpread",
-                "name": "EditGroup_Group"
+                "name": "EditGroup_RoleScopeSection"
               }
             ],
             "storageKey": null
@@ -173,39 +166,6 @@ return {
               {
                 "alias": null,
                 "args": null,
-                "concreteType": null,
-                "kind": "LinkedField",
-                "name": "requirements",
-                "plural": true,
-                "selections": [
-                  (v5/*: any*/),
-                  {
-                    "kind": "InlineFragment",
-                    "selections": [
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "type",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "value",
-                        "storageKey": null
-                      }
-                    ],
-                    "type": "ClaimRequirement",
-                    "abstractKey": null
-                  }
-                ],
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
                 "concreteType": "RoleScope",
                 "kind": "LinkedField",
                 "name": "roles",
@@ -245,7 +205,13 @@ return {
             "name": "errors",
             "plural": true,
             "selections": [
-              (v5/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "__typename",
+                "storageKey": null
+              },
               (v3/*: any*/)
             ],
             "storageKey": null
@@ -256,16 +222,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "054219bdab656fcc81a735d2cde4b60e",
+    "cacheID": "cdafe066fdb43aaf4a2ec10ed45ddd9d",
     "id": null,
     "metadata": {},
     "name": "EditGroup_UpdateGroupRoles_Mutation",
     "operationKind": "mutation",
-    "text": "mutation EditGroup_UpdateGroupRoles_Mutation(\n  $input: UpdateGroupRolesInput!\n) {\n  updateGroupRoles(input: $input) {\n    group {\n      id\n      ...EditGroup_Group\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        code\n        message\n      }\n    }\n  }\n}\n\nfragment EditGroup_Group on Group {\n  id\n  name\n  requirements {\n    __typename\n    ... on ClaimRequirement {\n      __typename\n      type\n      value\n    }\n  }\n  roles {\n    namespace\n    roles {\n      id\n      name\n    }\n  }\n}\n"
+    "text": "mutation EditGroup_UpdateGroupRoles_Mutation(\n  $input: UpdateGroupRolesInput!\n) {\n  updateGroupRoles(input: $input) {\n    group {\n      id\n      ...EditGroup_RoleScopeSection\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        code\n        message\n      }\n    }\n  }\n}\n\nfragment EditGroup_RoleScopeSection on Group {\n  id\n  name\n  roles {\n    namespace\n    roles {\n      id\n      name\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "4618c5c845d6385a412ddfe8e93b659f";
+(node as any).hash = "ceb1fa205662103fd6f8331a8d57ac51";
 
 export default node;

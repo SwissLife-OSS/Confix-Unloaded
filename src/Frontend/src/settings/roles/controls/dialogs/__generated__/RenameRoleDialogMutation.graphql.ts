@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<faaf9fee603f7ef1562ee8cc137af31e>>
+ * @generated SignedSource<<c3470e530aeff9e181d4a447560e1b89>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,6 @@
 // @ts-nocheck
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
-import { FragmentRefs } from "relay-runtime";
 export type RenameRoleInput = {
   id: string;
   name: string;
@@ -21,7 +20,7 @@ export type RenameRoleDialogMutation$data = {
   readonly renameRole: {
     readonly role: {
       readonly id: string;
-      readonly " $fragmentSpreads": FragmentRefs<"RolesList_RoleEdge">;
+      readonly name: string;
     } | null;
   };
 };
@@ -40,54 +39,55 @@ var v0 = [
 ],
 v1 = [
   {
-    "kind": "Variable",
-    "name": "input",
-    "variableName": "input"
-  }
-],
-v2 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-};
-return {
-  "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
-    "kind": "Fragment",
-    "metadata": null,
-    "name": "RenameRoleDialogMutation",
+    "alias": null,
+    "args": [
+      {
+        "kind": "Variable",
+        "name": "input",
+        "variableName": "input"
+      }
+    ],
+    "concreteType": "RenameRolePayload",
+    "kind": "LinkedField",
+    "name": "renameRole",
+    "plural": false,
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
-        "concreteType": "RenameRolePayload",
+        "args": null,
+        "concreteType": "Role",
         "kind": "LinkedField",
-        "name": "renameRole",
+        "name": "role",
         "plural": false,
         "selections": [
           {
             "alias": null,
             "args": null,
-            "concreteType": "Role",
-            "kind": "LinkedField",
-            "name": "role",
-            "plural": false,
-            "selections": [
-              (v2/*: any*/),
-              {
-                "args": null,
-                "kind": "FragmentSpread",
-                "name": "RolesList_RoleEdge"
-              }
-            ],
+            "kind": "ScalarField",
+            "name": "id",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "name",
             "storageKey": null
           }
         ],
         "storageKey": null
       }
     ],
+    "storageKey": null
+  }
+];
+return {
+  "fragment": {
+    "argumentDefinitions": (v0/*: any*/),
+    "kind": "Fragment",
+    "metadata": null,
+    "name": "RenameRoleDialogMutation",
+    "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -96,50 +96,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "RenameRoleDialogMutation",
-    "selections": [
-      {
-        "alias": null,
-        "args": (v1/*: any*/),
-        "concreteType": "RenameRolePayload",
-        "kind": "LinkedField",
-        "name": "renameRole",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "Role",
-            "kind": "LinkedField",
-            "name": "role",
-            "plural": false,
-            "selections": [
-              (v2/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "name",
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
-      }
-    ]
+    "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "d29cdabf20c3696b410578b0d6c474c5",
+    "cacheID": "0b6b18c087606c0db70ff725282c5a7a",
     "id": null,
     "metadata": {},
     "name": "RenameRoleDialogMutation",
     "operationKind": "mutation",
-    "text": "mutation RenameRoleDialogMutation(\n  $input: RenameRoleInput!\n) {\n  renameRole(input: $input) {\n    role {\n      id\n      ...RolesList_RoleEdge\n    }\n  }\n}\n\nfragment RolesList_RoleEdge on Role {\n  id\n  name\n}\n"
+    "text": "mutation RenameRoleDialogMutation(\n  $input: RenameRoleInput!\n) {\n  renameRole(input: $input) {\n    role {\n      id\n      name\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "52ef21c7046034fc06f654f3307db251";
+(node as any).hash = "c5f981256fd6c42376b7cca88f987536";
 
 export default node;

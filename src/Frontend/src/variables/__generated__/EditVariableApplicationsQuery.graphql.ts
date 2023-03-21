@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3be76933b079c8d59265b22b2d0c5f47>>
+ * @generated SignedSource<<534ef601e010c3ef5a3c7ba6cfb28650>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,6 @@
 // @ts-nocheck
 
 import { ConcreteRequest, Query } from 'relay-runtime';
-import { FragmentRefs } from "relay-runtime";
 export type EditVariableApplicationsQuery$variables = {
   count?: number | null;
   cursor?: string | null;
@@ -21,7 +20,6 @@ export type EditVariableApplicationsQuery$data = {
       readonly node: {
         readonly id: string;
         readonly name: string;
-        readonly " $fragmentSpreads": FragmentRefs<"ApplicationsList_applicationsEdge">;
       };
     }> | null;
   } | null;
@@ -52,60 +50,84 @@ v3 = {
   "name": "search",
   "variableName": "search"
 },
-v4 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-},
-v5 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "name",
-  "storageKey": null
-},
-v6 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "__typename",
-  "storageKey": null
-},
-v7 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "cursor",
-  "storageKey": null
-},
-v8 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "PageInfo",
-  "kind": "LinkedField",
-  "name": "pageInfo",
-  "plural": false,
-  "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "endCursor",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "hasNextPage",
-      "storageKey": null
-    }
-  ],
-  "storageKey": null
-},
-v9 = [
+v4 = [
+  {
+    "alias": null,
+    "args": null,
+    "concreteType": "ApplicationsEdge",
+    "kind": "LinkedField",
+    "name": "edges",
+    "plural": true,
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "Application",
+        "kind": "LinkedField",
+        "name": "node",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "id",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "name",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "__typename",
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "cursor",
+        "storageKey": null
+      }
+    ],
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "concreteType": "PageInfo",
+    "kind": "LinkedField",
+    "name": "pageInfo",
+    "plural": false,
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "endCursor",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "hasNextPage",
+        "storageKey": null
+      }
+    ],
+    "storageKey": null
+  }
+],
+v5 = [
   {
     "kind": "Variable",
     "name": "after",
@@ -138,40 +160,7 @@ return {
         "kind": "LinkedField",
         "name": "__Query_applications_connection",
         "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "ApplicationsEdge",
-            "kind": "LinkedField",
-            "name": "edges",
-            "plural": true,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "Application",
-                "kind": "LinkedField",
-                "name": "node",
-                "plural": false,
-                "selections": [
-                  (v4/*: any*/),
-                  (v5/*: any*/),
-                  {
-                    "args": null,
-                    "kind": "FragmentSpread",
-                    "name": "ApplicationsList_applicationsEdge"
-                  },
-                  (v6/*: any*/)
-                ],
-                "storageKey": null
-              },
-              (v7/*: any*/)
-            ],
-            "storageKey": null
-          },
-          (v8/*: any*/)
-        ],
+        "selections": (v4/*: any*/),
         "storageKey": null
       }
     ],
@@ -190,90 +179,17 @@ return {
     "selections": [
       {
         "alias": null,
-        "args": (v9/*: any*/),
+        "args": (v5/*: any*/),
         "concreteType": "ApplicationsConnection",
         "kind": "LinkedField",
         "name": "applications",
         "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "ApplicationsEdge",
-            "kind": "LinkedField",
-            "name": "edges",
-            "plural": true,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "Application",
-                "kind": "LinkedField",
-                "name": "node",
-                "plural": false,
-                "selections": [
-                  (v4/*: any*/),
-                  (v5/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "namespace",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "ApplicationPart",
-                    "kind": "LinkedField",
-                    "name": "parts",
-                    "plural": true,
-                    "selections": [
-                      (v4/*: any*/),
-                      (v5/*: any*/),
-                      {
-                        "alias": null,
-                        "args": null,
-                        "concreteType": "ApplicationPartComponent",
-                        "kind": "LinkedField",
-                        "name": "components",
-                        "plural": true,
-                        "selections": [
-                          (v4/*: any*/),
-                          {
-                            "alias": null,
-                            "args": null,
-                            "concreteType": "Component",
-                            "kind": "LinkedField",
-                            "name": "definition",
-                            "plural": false,
-                            "selections": [
-                              (v4/*: any*/),
-                              (v5/*: any*/)
-                            ],
-                            "storageKey": null
-                          }
-                        ],
-                        "storageKey": null
-                      }
-                    ],
-                    "storageKey": null
-                  },
-                  (v6/*: any*/)
-                ],
-                "storageKey": null
-              },
-              (v7/*: any*/)
-            ],
-            "storageKey": null
-          },
-          (v8/*: any*/)
-        ],
+        "selections": (v4/*: any*/),
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v9/*: any*/),
+        "args": (v5/*: any*/),
         "filters": [
           "search"
         ],
@@ -285,7 +201,7 @@ return {
     ]
   },
   "params": {
-    "cacheID": "6f5bcf2a3212a833cfe8a91c4293a23d",
+    "cacheID": "17e7f79d852a56ec14ff7b4b9cc1046d",
     "id": null,
     "metadata": {
       "connection": [
@@ -301,11 +217,11 @@ return {
     },
     "name": "EditVariableApplicationsQuery",
     "operationKind": "query",
-    "text": "query EditVariableApplicationsQuery(\n  $cursor: String\n  $count: Int\n  $search: String\n) {\n  applications(after: $cursor, first: $count, search: $search) {\n    edges {\n      node {\n        id\n        name\n        ...ApplicationsList_applicationsEdge\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment ApplicationsList_applicationsEdge on Application {\n  id\n  name\n  namespace\n  parts {\n    id\n    name\n    components {\n      id\n      definition {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": "query EditVariableApplicationsQuery(\n  $cursor: String\n  $count: Int\n  $search: String\n) {\n  applications(after: $cursor, first: $count, search: $search) {\n    edges {\n      node {\n        id\n        name\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "6e1dd02c8629d1745445349a7eefee33";
+(node as any).hash = "0257ade131fc543e68f794864e12855d";
 
 export default node;

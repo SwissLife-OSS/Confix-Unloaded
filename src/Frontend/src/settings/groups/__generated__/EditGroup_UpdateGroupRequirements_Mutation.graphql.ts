@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<91e44045ff3d7949a44baa54263c9590>>
+ * @generated SignedSource<<76f5fe11852233ebfcd2957ff716a7ff>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -32,7 +32,7 @@ export type EditGroup_UpdateGroupRequirements_Mutation$data = {
     }> | null;
     readonly group: {
       readonly id: string;
-      readonly " $fragmentSpreads": FragmentRefs<"EditGroup_Group">;
+      readonly " $fragmentSpreads": FragmentRefs<"EditGroup_RequirementsSection">;
     } | null;
   };
 };
@@ -88,13 +88,6 @@ v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
-  "storageKey": null
-},
-v5 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
   "name": "__typename",
   "storageKey": null
 };
@@ -125,7 +118,7 @@ return {
               {
                 "args": null,
                 "kind": "FragmentSpread",
-                "name": "EditGroup_Group"
+                "name": "EditGroup_RequirementsSection"
               }
             ],
             "storageKey": null
@@ -172,7 +165,13 @@ return {
             "plural": false,
             "selections": [
               (v2/*: any*/),
-              (v4/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "name",
+                "storageKey": null
+              },
               {
                 "alias": null,
                 "args": null,
@@ -181,7 +180,7 @@ return {
                 "name": "requirements",
                 "plural": true,
                 "selections": [
-                  (v5/*: any*/),
+                  (v4/*: any*/),
                   {
                     "kind": "InlineFragment",
                     "selections": [
@@ -205,37 +204,6 @@ return {
                   }
                 ],
                 "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "RoleScope",
-                "kind": "LinkedField",
-                "name": "roles",
-                "plural": true,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "namespace",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "Role",
-                    "kind": "LinkedField",
-                    "name": "roles",
-                    "plural": true,
-                    "selections": [
-                      (v2/*: any*/),
-                      (v4/*: any*/)
-                    ],
-                    "storageKey": null
-                  }
-                ],
-                "storageKey": null
               }
             ],
             "storageKey": null
@@ -248,7 +216,7 @@ return {
             "name": "errors",
             "plural": true,
             "selections": [
-              (v5/*: any*/),
+              (v4/*: any*/),
               (v3/*: any*/)
             ],
             "storageKey": null
@@ -259,16 +227,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "af188f1b01a1dcc1aed4db285453ecde",
+    "cacheID": "b9c33abe9bcfbb204f23206b0e83886d",
     "id": null,
     "metadata": {},
     "name": "EditGroup_UpdateGroupRequirements_Mutation",
     "operationKind": "mutation",
-    "text": "mutation EditGroup_UpdateGroupRequirements_Mutation(\n  $input: UpdateGroupRequirementsInput!\n) {\n  updateGroupRequirements(input: $input) {\n    group {\n      id\n      ...EditGroup_Group\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        code\n        message\n      }\n    }\n  }\n}\n\nfragment EditGroup_Group on Group {\n  id\n  name\n  requirements {\n    __typename\n    ... on ClaimRequirement {\n      __typename\n      type\n      value\n    }\n  }\n  roles {\n    namespace\n    roles {\n      id\n      name\n    }\n  }\n}\n"
+    "text": "mutation EditGroup_UpdateGroupRequirements_Mutation(\n  $input: UpdateGroupRequirementsInput!\n) {\n  updateGroupRequirements(input: $input) {\n    group {\n      id\n      ...EditGroup_RequirementsSection\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        code\n        message\n      }\n    }\n  }\n}\n\nfragment EditGroup_RequirementsSection on Group {\n  id\n  name\n  requirements {\n    __typename\n    ... on ClaimRequirement {\n      __typename\n      type\n      value\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "502463a1ca9cd1c3242bab64e18ef9d1";
+(node as any).hash = "2cfcad3cfc60c83e4e552496baf99c53";
 
 export default node;

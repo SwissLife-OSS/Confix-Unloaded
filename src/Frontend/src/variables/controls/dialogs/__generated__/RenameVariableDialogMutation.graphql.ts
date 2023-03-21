@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c7c7e7e43fa92bca886497ab06db30cc>>
+ * @generated SignedSource<<2661b77d19126013ca733a467e484307>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,6 @@
 // @ts-nocheck
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
-import { FragmentRefs } from "relay-runtime";
 export type RenameVariableInput = {
   id: string;
   name: string;
@@ -21,7 +20,7 @@ export type RenameVariableDialogMutation$data = {
   readonly renameVariable: {
     readonly variable: {
       readonly id: string;
-      readonly " $fragmentSpreads": FragmentRefs<"VariablesList_VariableEdge">;
+      readonly name: string;
     } | null;
   };
 };
@@ -40,54 +39,55 @@ var v0 = [
 ],
 v1 = [
   {
-    "kind": "Variable",
-    "name": "input",
-    "variableName": "input"
-  }
-],
-v2 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-};
-return {
-  "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
-    "kind": "Fragment",
-    "metadata": null,
-    "name": "RenameVariableDialogMutation",
+    "alias": null,
+    "args": [
+      {
+        "kind": "Variable",
+        "name": "input",
+        "variableName": "input"
+      }
+    ],
+    "concreteType": "RenameVariablePayload",
+    "kind": "LinkedField",
+    "name": "renameVariable",
+    "plural": false,
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
-        "concreteType": "RenameVariablePayload",
+        "args": null,
+        "concreteType": "Variable",
         "kind": "LinkedField",
-        "name": "renameVariable",
+        "name": "variable",
         "plural": false,
         "selections": [
           {
             "alias": null,
             "args": null,
-            "concreteType": "Variable",
-            "kind": "LinkedField",
-            "name": "variable",
-            "plural": false,
-            "selections": [
-              (v2/*: any*/),
-              {
-                "args": null,
-                "kind": "FragmentSpread",
-                "name": "VariablesList_VariableEdge"
-              }
-            ],
+            "kind": "ScalarField",
+            "name": "id",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "name",
             "storageKey": null
           }
         ],
         "storageKey": null
       }
     ],
+    "storageKey": null
+  }
+];
+return {
+  "fragment": {
+    "argumentDefinitions": (v0/*: any*/),
+    "kind": "Fragment",
+    "metadata": null,
+    "name": "RenameVariableDialogMutation",
+    "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -96,50 +96,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "RenameVariableDialogMutation",
-    "selections": [
-      {
-        "alias": null,
-        "args": (v1/*: any*/),
-        "concreteType": "RenameVariablePayload",
-        "kind": "LinkedField",
-        "name": "renameVariable",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "Variable",
-            "kind": "LinkedField",
-            "name": "variable",
-            "plural": false,
-            "selections": [
-              (v2/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "name",
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
-      }
-    ]
+    "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "55817aed5e5873996aef951cdd22c3bc",
+    "cacheID": "17d5b40c675e96a240e2bcb090028ad7",
     "id": null,
     "metadata": {},
     "name": "RenameVariableDialogMutation",
     "operationKind": "mutation",
-    "text": "mutation RenameVariableDialogMutation(\n  $input: RenameVariableInput!\n) {\n  renameVariable(input: $input) {\n    variable {\n      id\n      ...VariablesList_VariableEdge\n    }\n  }\n}\n\nfragment VariablesList_VariableEdge on Variable {\n  id\n  name\n}\n"
+    "text": "mutation RenameVariableDialogMutation(\n  $input: RenameVariableInput!\n) {\n  renameVariable(input: $input) {\n    variable {\n      id\n      name\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "1a2b0d88f368062790f5faff5c8f785a";
+(node as any).hash = "9ea97b861c34882cb976467c51d2aa31";
 
 export default node;

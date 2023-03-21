@@ -18,9 +18,9 @@ import { ChangeLog_CreateComponentChange$key } from "./__generated__/ChangeLog_C
 import { ChangeLog_CreateVariableChange$key } from "./__generated__/ChangeLog_CreateVariableChange.graphql";
 import { ChangeLog_DeleteVariableValueChange$key } from "./__generated__/ChangeLog_DeleteVariableValueChange.graphql";
 import {
-  ChangeLog_fragment$data,
-  ChangeLog_fragment$key,
-} from "./__generated__/ChangeLog_fragment.graphql";
+  ChangeLog$data,
+  ChangeLog$key,
+} from "./__generated__/ChangeLog.graphql";
 import { ChangeLog_PublishedApplicationPartChange$key } from "./__generated__/ChangeLog_PublishedApplicationPartChange.graphql";
 import { ChangeLog_RemoveComponentChange$key } from "./__generated__/ChangeLog_RemoveComponentChange.graphql";
 import { ChangeLog_RemoveComponentFromApplicationPartChange$key } from "./__generated__/ChangeLog_RemoveComponentFromApplicationPartChange.graphql";
@@ -31,59 +31,12 @@ import { ChangeLog_RenameComponentChange$key } from "./__generated__/ChangeLog_R
 import { ChangeLog_RenameVariableChange$key } from "./__generated__/ChangeLog_RenameVariableChange.graphql";
 import { ChangeLog_VariableValueChange$key } from "./__generated__/ChangeLog_VariableValueChange.graphql";
 
-const changeLogFragment = graphql`
-  fragment ChangeLog_fragment on ChangeLog @relay(plural: true) {
-    id
-    change {
-      kind
-      __typename
-      ...ChangeLog_RenameApplicationChange
-      ...ChangeLog_RenameApplicationPartChange
-      ...ChangeLog_AddComponentToApplicationPartChange
-      ...ChangeLog_AddPartToApplicationChange
-      ...ChangeLog_RemoveComponentFromApplicationPartChange
-      ...ChangeLog_RemovePartFromApplicationChange
-      ...ChangeLog_ApplicationPartComponentValuesChange
-
-      ...ChangeLog_ComponentSchemaChange
-      ...ChangeLog_ComponentValuesChange
-      ...ChangeLog_CreateComponentChange
-      ...ChangeLog_RemoveComponentChange
-      ...ChangeLog_RenameComponentChange
-
-      ...ChangeLog_CreateVariableChange
-      ...ChangeLog_DeleteVariableValueChange
-      ...ChangeLog_RenameVariableChange
-      ...ChangeLog_VariableValueChange
-      ...ChangeLog_PublishedApplicationPartChange
-      ... on ApplicationChange {
-        versionOfApp: applicationVersion
-      }
-      ... on ApplicationPartChange {
-        versionOfPart: partVersion
-      }
-      ... on ApplicationPartComponentChange {
-        versionOfPartComponent: partComponentVersion
-      }
-      ... on ComponentChange {
-        versionOfComponent: componentVersion
-      }
-      ... on VariableChange {
-        versionOfVariable: variableVersion
-      }
-    }
-    modifiedAt
-    modifiedBy {
-      email
-    }
-  }
-`;
 const columns = [
   {
     title: "Version",
     dataIndex: "version",
     key: "version",
-    render: (_: unknown, value: ChangeLog_fragment$data[0]) => (
+    render: (_: unknown, value: ChangeLog$data[0]) => (
       <>
         {value.change.versionOfApp ??
           value.change.versionOfComponent ??
@@ -97,7 +50,7 @@ const columns = [
     title: "Modifed By",
     dataIndex: "modifiedBy",
     key: "name",
-    render: (_: unknown, value: ChangeLog_fragment$data[0]) => (
+    render: (_: unknown, value: ChangeLog$data[0]) => (
       <>{value.modifiedBy.email}</>
     ),
   },
@@ -105,7 +58,7 @@ const columns = [
     title: "Modified At",
     dataIndex: "modifiedAt",
     key: "modifiedAt",
-    render: (_: unknown, value: ChangeLog_fragment$data[0]) => (
+    render: (_: unknown, value: ChangeLog$data[0]) => (
       <>{formatDate(value.modifiedAt)}</>
     ),
   },
@@ -113,14 +66,12 @@ const columns = [
     title: "Kind",
     dataIndex: "kind",
     key: "kind",
-    render: (_: unknown, value: ChangeLog_fragment$data[0]) => (
-      <>{value.change.kind}</>
-    ),
+    render: (_: unknown, value: ChangeLog$data[0]) => <>{value.change.kind}</>,
   },
   {
     title: "Value",
     key: "value",
-    render: (_: unknown, value: ChangeLog_fragment$data[0]) => {
+    render: (_: unknown, value: ChangeLog$data[0]) => {
       switch (value.change.__typename) {
         case "RenameApplicationChange": {
           return <ChangeLogRenameApplicationChange data={value.change} />;
@@ -211,13 +162,57 @@ const ChangeLogContext = React.createContext<{
   setSelectedForCompare: () => {},
 });
 
-export const ChangeLog: React.FC<{ data: ChangeLog_fragment$key }> = ({
-  data,
-}) => {
+export const ChangeLog: React.FC<{ data: ChangeLog$key }> = ({ data }) => {
   const [selectedForCompare, setSelectedForCompare] =
     useState<SelectedForCompare>();
-  const changeLogs = useFragment<ChangeLog_fragment$key>(
-    changeLogFragment,
+  const changeLogs = useFragment<ChangeLog$key>(
+    graphql`
+      fragment ChangeLog on ChangeLog @relay(plural: true) {
+        id
+        modifiedAt
+        modifiedBy {
+          email
+        }
+        change {
+          kind
+          __typename
+          ...ChangeLog_RenameApplicationChange
+          ...ChangeLog_RenameApplicationPartChange
+          ...ChangeLog_AddComponentToApplicationPartChange
+          ...ChangeLog_AddPartToApplicationChange
+          ...ChangeLog_RemoveComponentFromApplicationPartChange
+          ...ChangeLog_RemovePartFromApplicationChange
+          ...ChangeLog_ApplicationPartComponentValuesChange
+
+          ...ChangeLog_ComponentSchemaChange
+          ...ChangeLog_ComponentValuesChange
+          ...ChangeLog_CreateComponentChange
+          ...ChangeLog_RemoveComponentChange
+          ...ChangeLog_RenameComponentChange
+
+          ...ChangeLog_CreateVariableChange
+          ...ChangeLog_DeleteVariableValueChange
+          ...ChangeLog_RenameVariableChange
+          ...ChangeLog_VariableValueChange
+          ...ChangeLog_PublishedApplicationPartChange
+          ... on ApplicationChange {
+            versionOfApp: applicationVersion
+          }
+          ... on ApplicationPartChange {
+            versionOfPart: partVersion
+          }
+          ... on ApplicationPartComponentChange {
+            versionOfPartComponent: partComponentVersion
+          }
+          ... on ComponentChange {
+            versionOfComponent: componentVersion
+          }
+          ... on VariableChange {
+            versionOfVariable: variableVersion
+          }
+        }
+      }
+    `,
     data
   );
 
@@ -230,54 +225,48 @@ export const ChangeLog: React.FC<{ data: ChangeLog_fragment$key }> = ({
   );
 };
 
-const changeLogRenameApplicationChange = graphql`
-  fragment ChangeLog_RenameApplicationChange on RenameApplicationChange {
-    name
-  }
-`;
-
 const ChangeLogRenameApplicationChange: React.FC<{
   data: ChangeLog_RenameApplicationChange$key;
 }> = ({ data }) => {
   const changelog = useFragment<ChangeLog_RenameApplicationChange$key>(
-    changeLogRenameApplicationChange,
+    graphql`
+      fragment ChangeLog_RenameApplicationChange on RenameApplicationChange {
+        name
+      }
+    `,
     data
   );
   return <>Changed name to {changelog.name}</>;
 };
-
-const changeLogRenameApplicationPartChange = graphql`
-  fragment ChangeLog_RenameApplicationPartChange on RenameApplicationPartChange {
-    name
-  }
-`;
 
 const ChangeLogRenameApplicationPartChange: React.FC<{
   data: ChangeLog_RenameApplicationPartChange$key;
 }> = ({ data }) => {
   const changelog = useFragment<ChangeLog_RenameApplicationPartChange$key>(
-    changeLogRenameApplicationPartChange,
+    graphql`
+      fragment ChangeLog_RenameApplicationPartChange on RenameApplicationPartChange {
+        name
+      }
+    `,
     data
   );
   return <>Changed name to {changelog.name}</>;
 };
-
-const changeLogAddComponentToApplicationPartChange = graphql`
-  fragment ChangeLog_AddComponentToApplicationPartChange on AddComponentToApplicationPartChange {
-    addedComponent {
-      definition {
-        name
-      }
-    }
-  }
-`;
 
 const ChangeLogAddComponentToApplicationPartChange: React.FC<{
   data: ChangeLog_AddComponentToApplicationPartChange$key;
 }> = ({ data }) => {
   const changelog =
     useFragment<ChangeLog_AddComponentToApplicationPartChange$key>(
-      changeLogAddComponentToApplicationPartChange,
+      graphql`
+        fragment ChangeLog_AddComponentToApplicationPartChange on AddComponentToApplicationPartChange {
+          addedComponent {
+            definition {
+              name
+            }
+          }
+        }
+      `,
       data
     );
   return (
@@ -288,40 +277,36 @@ const ChangeLogAddComponentToApplicationPartChange: React.FC<{
   );
 };
 
-const changeLogAddPartToApplicationChange = graphql`
-  fragment ChangeLog_AddPartToApplicationChange on AddPartToApplicationChange {
-    addedPart {
-      name
-    }
-  }
-`;
-
 const ChangeLogAddPartToApplicationChange: React.FC<{
   data: ChangeLog_AddPartToApplicationChange$key;
 }> = ({ data }) => {
   const changelog = useFragment<ChangeLog_AddPartToApplicationChange$key>(
-    changeLogAddPartToApplicationChange,
+    graphql`
+      fragment ChangeLog_AddPartToApplicationChange on AddPartToApplicationChange {
+        addedPart {
+          name
+        }
+      }
+    `,
     data
   );
   return <>Added part {changelog.addedPart.name}</>;
 };
-
-const changeLogRemoveComponentFromApplicationPartChange = graphql`
-  fragment ChangeLog_RemoveComponentFromApplicationPartChange on RemoveComponentFromApplicationPartChange {
-    removedComponent {
-      definition {
-        name
-      }
-    }
-  }
-`;
 
 const ChangeLogRemoveComponentFromApplicationPartChange: React.FC<{
   data: ChangeLog_RemoveComponentFromApplicationPartChange$key;
 }> = ({ data }) => {
   const changelog =
     useFragment<ChangeLog_RemoveComponentFromApplicationPartChange$key>(
-      changeLogRemoveComponentFromApplicationPartChange,
+      graphql`
+        fragment ChangeLog_RemoveComponentFromApplicationPartChange on RemoveComponentFromApplicationPartChange {
+          removedComponent {
+            definition {
+              name
+            }
+          }
+        }
+      `,
       data
     );
   return (
@@ -332,39 +317,21 @@ const ChangeLogRemoveComponentFromApplicationPartChange: React.FC<{
   );
 };
 
-const changeLogRemovePartFromApplicationChange = graphql`
-  fragment ChangeLog_RemovePartFromApplicationChange on RemovePartFromApplicationChange {
-    removedPart {
-      name
-    }
-  }
-`;
-
 const ChangeLogRemovePartFromApplicationChange: React.FC<{
   data: ChangeLog_RemovePartFromApplicationChange$key;
 }> = ({ data }) => {
   const changelog = useFragment<ChangeLog_RemovePartFromApplicationChange$key>(
-    changeLogRemovePartFromApplicationChange,
+    graphql`
+      fragment ChangeLog_RemovePartFromApplicationChange on RemovePartFromApplicationChange {
+        removedPart {
+          name
+        }
+      }
+    `,
     data
   );
   return <>Removed part {changelog.removedPart.name}</>;
 };
-
-const changeLogApplicationPartComponentValuesChange = graphql`
-  fragment ChangeLog_ApplicationPartComponentValuesChange on ApplicationPartComponentValuesChange {
-    part {
-      id
-    }
-    application {
-      id
-    }
-    partComponent {
-      id
-      version
-    }
-    partComponentVersion
-  }
-`;
 
 const ChangeLogApplicationPartComponentValuesChange: React.FC<{
   data: ChangeLog_ApplicationPartComponentValuesChange$key;
@@ -372,7 +339,21 @@ const ChangeLogApplicationPartComponentValuesChange: React.FC<{
 }> = ({ data, changeId }) => {
   const { part, application, partComponent, partComponentVersion } =
     useFragment<ChangeLog_ApplicationPartComponentValuesChange$key>(
-      changeLogApplicationPartComponentValuesChange,
+      graphql`
+        fragment ChangeLog_ApplicationPartComponentValuesChange on ApplicationPartComponentValuesChange {
+          part {
+            id
+          }
+          application {
+            id
+          }
+          partComponent {
+            id
+            version
+          }
+          partComponentVersion
+        }
+      `,
       data
     );
   const { setSelectedForCompare, selectedForCompare } =
@@ -492,171 +473,164 @@ const ChangeLogApplicationPartComponentValuesChange: React.FC<{
   );
 };
 
-graphql`
-  fragment ChangeLog_ComponentSchemaChange on ComponentSchemaChange {
-    kind
-  }
-`;
-
 const ChangeLogComponentSchemaChange: React.FC<{
   data: ChangeLog_ComponentSchemaChange$key;
-}> = () => {
+}> = ({ data }) => {
+  useFragment(
+    graphql`
+      fragment ChangeLog_ComponentSchemaChange on ComponentSchemaChange {
+        kind
+      }
+    `,
+    data
+  );
   return <>Changed schema</>;
 };
 
-graphql`
-  fragment ChangeLog_ComponentValuesChange on ComponentValuesChange {
-    kind
-  }
-`;
-
 const ChangeLogComponentValuesChange: React.FC<{
   data: ChangeLog_ComponentValuesChange$key;
-}> = () => {
+}> = ({ data }) => {
+  useFragment(
+    graphql`
+      fragment ChangeLog_ComponentValuesChange on ComponentValuesChange {
+        kind
+      }
+    `,
+    data
+  );
+
   return <>Values changed</>;
 };
-
-const changeLogCreateComponentChanged = graphql`
-  fragment ChangeLog_CreateComponentChange on CreateComponentChange {
-    component {
-      name
-    }
-  }
-`;
 
 const ChangeLogCreateComponentChange: React.FC<{
   data: ChangeLog_CreateComponentChange$key;
 }> = ({ data }) => {
   const { component } = useFragment<ChangeLog_CreateComponentChange$key>(
-    changeLogCreateComponentChanged,
+    graphql`
+      fragment ChangeLog_CreateComponentChange on CreateComponentChange {
+        component {
+          name
+        }
+      }
+    `,
     data
   );
   return <>Created {component?.name}</>;
 };
 
-const changeLogRemoveComponentChanged = graphql`
-  fragment ChangeLog_RemoveComponentChange on RemoveComponentChange {
-    component {
-      name
-    }
-  }
-`;
-
 const ChangeLogRemoveComponentChange: React.FC<{
   data: ChangeLog_RemoveComponentChange$key;
 }> = ({ data }) => {
   const { component } = useFragment<ChangeLog_RemoveComponentChange$key>(
-    changeLogRemoveComponentChanged,
+    graphql`
+      fragment ChangeLog_RemoveComponentChange on RemoveComponentChange {
+        component {
+          name
+        }
+      }
+    `,
+
     data
   );
   return <>Removed {component?.name}</>;
 };
 
-const changeLogRenameComponentChanged = graphql`
-  fragment ChangeLog_RenameComponentChange on RenameComponentChange {
-    component {
-      name
-    }
-  }
-`;
-
 const ChangeLogRenameComponentChange: React.FC<{
   data: ChangeLog_RenameComponentChange$key;
 }> = ({ data }) => {
   const { component } = useFragment<ChangeLog_RenameComponentChange$key>(
-    changeLogRenameComponentChanged,
+    graphql`
+      fragment ChangeLog_RenameComponentChange on RenameComponentChange {
+        component {
+          name
+        }
+      }
+    `,
     data
   );
   return <>Renamed {component?.name}</>;
 };
 
-const changeLogCreateVariableChange = graphql`
-  fragment ChangeLog_CreateVariableChange on CreateVariableChange {
-    variable {
-      name
-    }
-  }
-`;
-
 const ChangeLogCreateVariableChange: React.FC<{
   data: ChangeLog_CreateVariableChange$key;
 }> = ({ data }) => {
   const { variable } = useFragment<ChangeLog_CreateVariableChange$key>(
-    changeLogCreateVariableChange,
+    graphql`
+      fragment ChangeLog_CreateVariableChange on CreateVariableChange {
+        variable {
+          name
+        }
+      }
+    `,
+
     data
   );
   return <>Created value for {variable?.name}</>;
 };
 
-const changeLogDeleteVariableValueChange = graphql`
-  fragment ChangeLog_DeleteVariableValueChange on DeleteVariableValueChange {
-    variable {
-      name
-    }
-  }
-`;
-
 const ChangeLogDeleteVariableValueChange: React.FC<{
   data: ChangeLog_DeleteVariableValueChange$key;
 }> = ({ data }) => {
   const { variable } = useFragment<ChangeLog_DeleteVariableValueChange$key>(
-    changeLogDeleteVariableValueChange,
+    graphql`
+      fragment ChangeLog_DeleteVariableValueChange on DeleteVariableValueChange {
+        variable {
+          name
+        }
+      }
+    `,
+
     data
   );
   return <>Deleted value {variable?.name}</>;
 };
 
-const changeLogVariableValueChange = graphql`
-  fragment ChangeLog_VariableValueChange on VariableValueChange {
-    variable {
-      name
-    }
-  }
-`;
-
 const ChangeLogVariableValueChange: React.FC<{
   data: ChangeLog_VariableValueChange$key;
 }> = ({ data }) => {
   const { variable } = useFragment<ChangeLog_VariableValueChange$key>(
-    changeLogVariableValueChange,
+    graphql`
+      fragment ChangeLog_VariableValueChange on VariableValueChange {
+        variable {
+          name
+        }
+      }
+    `,
+
     data
   );
   return <>Variable value of {variable?.name ?? "removed"} changed</>;
 };
 
-const changeLogRenameVariableChange = graphql`
-  fragment ChangeLog_RenameVariableChange on RenameVariableChange {
-    variable {
-      name
-    }
-  }
-`;
-
 const ChangeLogRenameVariableChange: React.FC<{
   data: ChangeLog_RenameVariableChange$key;
 }> = ({ data }) => {
   const { variable } = useFragment<ChangeLog_RenameVariableChange$key>(
-    changeLogRenameVariableChange,
+    graphql`
+      fragment ChangeLog_RenameVariableChange on RenameVariableChange {
+        variable {
+          name
+        }
+      }
+    `,
     data
   );
   return <>Variable renamed to {variable?.name}</>;
 };
-
-const changeLogPublishedApplicationPartChange = graphql`
-  fragment ChangeLog_PublishedApplicationPartChange on PublishedApplicationPartChange {
-    partVersion
-    part {
-      name
-    }
-  }
-`;
 
 const ChangeLogPublishedApplicationPartChange: React.FC<{
   data: ChangeLog_PublishedApplicationPartChange$key;
 }> = ({ data }) => {
   const { partVersion, part } =
     useFragment<ChangeLog_PublishedApplicationPartChange$key>(
-      changeLogPublishedApplicationPartChange,
+      graphql`
+        fragment ChangeLog_PublishedApplicationPartChange on PublishedApplicationPartChange {
+          partVersion
+          part {
+            name
+          }
+        }
+      `,
       data
     );
   return (

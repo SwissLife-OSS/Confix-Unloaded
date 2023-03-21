@@ -279,7 +279,7 @@ const ApplicationPartComponentNode: React.FC<{
       url={`applications/:applicationId/components/:componentId/edit`}
       urlParams={{ applicationId, componentId: data.id }}
       text={data.definition?.name ?? ""}
-    ></TreeNode>
+    />
   );
 };
 

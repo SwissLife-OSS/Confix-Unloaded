@@ -4,29 +4,27 @@ import { List, Button } from "antd";
 import { useMemo } from "react";
 import { ColorTag } from "../../shared/ColorTag";
 import { groupBy } from "../../shared/groupBy";
-import { VariableValueList_values$key } from "./__generated__/VariableValueList_values.graphql";
-
-const variablueValues = graphql`
-  fragment VariableValueList_values on VariableValue @relay(plural: true) {
-    id
-    environment {
-      id
-      name
-    }
-    variable {
-      id
-      name
-    }
-    value
-  }
-`;
+import { VariableValueList$key } from "./__generated__/VariableValueList.graphql";
 
 export const VariableValueList: React.FC<{
-  data: VariableValueList_values$key;
+  data: VariableValueList$key;
   onEdit: (id: string, name: string) => void;
 }> = ({ data, onEdit }) => {
-  const values = useFragment<VariableValueList_values$key>(
-    variablueValues,
+  const values = useFragment<VariableValueList$key>(
+    graphql`
+      fragment VariableValueList on VariableValue @relay(plural: true) {
+        id
+        environment {
+          id
+          name
+        }
+        variable {
+          id
+          name
+        }
+        value
+      }
+    `,
     data
   );
 
@@ -47,6 +45,7 @@ export const VariableValueList: React.FC<{
           .map((x) => x.environment?.name)
           .filter((x) => !!x)
           .map((x) => <ColorTag value={x ?? "-"}>{x}</ColorTag>);
+
         return (
           <List.Item
             actions={[

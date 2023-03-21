@@ -13,7 +13,7 @@ export type VariableState = "ACTIVE" | "DEPRECATED" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type EditVariable_Variable$data = {
   readonly changeLog: ReadonlyArray<{
-    readonly " $fragmentSpreads": FragmentRefs<"ChangeLog_fragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"ChangeLog">;
   }>;
   readonly id: string;
   readonly isSecret: boolean;
@@ -133,7 +133,7 @@ return {
         {
           "args": null,
           "kind": "FragmentSpread",
-          "name": "ChangeLog_fragment"
+          "name": "ChangeLog"
         }
       ],
       "storageKey": null

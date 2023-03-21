@@ -13,6 +13,7 @@ public interface IComponentService
         int take,
         Guid? applicationId,
         Guid? applicationPartId,
+        string? @namespace,
         string? search,
         CancellationToken cancellationToken);
 

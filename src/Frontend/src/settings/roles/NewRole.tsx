@@ -19,33 +19,37 @@ import {
   PermissionsForm,
 } from "./controls/forms/PermissionForm";
 
-const newRoleMutation = graphql`
-  mutation NewRoleMutation($input: CreateRoleInput!, $connectionIds: [ID!]!) {
-    createRole(input: $input) {
-      role @appendNode(connections: $connectionIds, edgeTypeName: "RolesEdge") {
-        id
-        name
-        ...RolesList_RoleEdge
-      }
-      errors {
-        ... on UserError {
-          message
-          code
+export const NewRole: React.FC = () => {
+  const [commit, isInFlight] = useMutation<NewRoleMutation>(graphql`
+    mutation NewRoleMutation($input: CreateRoleInput!, $connectionIds: [ID!]!) {
+      createRole(input: $input) {
+        role
+          @appendNode(connections: $connectionIds, edgeTypeName: "RolesEdge") {
+          id
+          name
+          ...RolesList_RoleListItem
+        }
+        errors {
+          ... on UserError {
+            message
+            code
+          }
         }
       }
     }
-  }
-`;
-export const NewRole: React.FC = () => {
-  const [commit, isInFlight] = useMutation<NewRoleMutation>(newRoleMutation);
+  `);
+
   const [permissions, setPermissions] = useState(() =>
     createDefaultPermissions()
   );
+
   const connectionIds = [
     useConnectionId("useRoles_searchRoles"),
     useConnectionId("Query_searchRoles"),
   ];
+
   const goToEdit = useGoTo((id: string) => `${id}/edit`);
+
   const form = useCommitForm(
     commit,
     {
@@ -64,6 +68,7 @@ export const NewRole: React.FC = () => {
       ],
     }
   );
+
   return (
     <DetailView style={{ padding: 1 }}>
       <Row>

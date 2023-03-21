@@ -69,6 +69,7 @@ internal sealed class ComponentService : IComponentService
         int take,
         Guid? applicationId,
         Guid? applicationPartId,
+        string? @namespace,
         string? search,
         CancellationToken cancellationToken)
     {
@@ -79,10 +80,23 @@ internal sealed class ComponentService : IComponentService
             return Array.Empty<Component>();
         }
 
+        var namespaces = session.Namespaces;
+        if (@namespace is not null)
+        {
+            if (namespaces.Contains(@namespace))
+            {
+                namespaces = new HashSet<string> { @namespace };
+            }
+            else
+            {
+                return Array.Empty<Component>();
+            }
+        }
+
         return await _componentStore.Search(
             skip,
             take,
-            session.Namespaces,
+            namespaces,
             applicationId,
             applicationPartId,
             search,

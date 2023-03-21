@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<02870b9d9a687525a28072d9a9aca930>>
+ * @generated SignedSource<<214ee19436f9f8b22415ea544453dcf8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,6 +10,9 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 export type ComponentsSelectQuery$variables = {
+  applicationId?: string | null;
+  applicationPartId?: string | null;
+  namespace?: string | null;
   search?: string | null;
 };
 export type ComponentsSelectQuery$data = {
@@ -28,17 +31,45 @@ export type ComponentsSelectQuery = {
 };
 
 const node: ConcreteRequest = (function(){
-var v0 = [
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "search"
-  }
-],
-v1 = [
+var v0 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "applicationId"
+},
+v1 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "applicationPartId"
+},
+v2 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "namespace"
+},
+v3 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "search"
+},
+v4 = [
   {
     "alias": null,
     "args": [
+      {
+        "kind": "Variable",
+        "name": "applicationId",
+        "variableName": "applicationId"
+      },
+      {
+        "kind": "Variable",
+        "name": "applicationPartId",
+        "variableName": "applicationPartId"
+      },
+      {
+        "kind": "Variable",
+        "name": "namespace",
+        "variableName": "namespace"
+      },
       {
         "kind": "Variable",
         "name": "search",
@@ -92,32 +123,42 @@ v1 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": [
+      (v0/*: any*/),
+      (v1/*: any*/),
+      (v2/*: any*/),
+      (v3/*: any*/)
+    ],
     "kind": "Fragment",
     "metadata": null,
     "name": "ComponentsSelectQuery",
-    "selections": (v1/*: any*/),
+    "selections": (v4/*: any*/),
     "type": "Query",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": [
+      (v3/*: any*/),
+      (v0/*: any*/),
+      (v1/*: any*/),
+      (v2/*: any*/)
+    ],
     "kind": "Operation",
     "name": "ComponentsSelectQuery",
-    "selections": (v1/*: any*/)
+    "selections": (v4/*: any*/)
   },
   "params": {
-    "cacheID": "108755c861695cbd286896e452666e35",
+    "cacheID": "36ebeb037f6dbc968a55908e6cef901a",
     "id": null,
     "metadata": {},
     "name": "ComponentsSelectQuery",
     "operationKind": "query",
-    "text": "query ComponentsSelectQuery(\n  $search: String\n) {\n  components(search: $search) {\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": "query ComponentsSelectQuery(\n  $search: String\n  $applicationId: ID\n  $applicationPartId: ID\n  $namespace: String\n) {\n  components(search: $search, applicationId: $applicationId, applicationPartId: $applicationPartId, namespace: $namespace) {\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "61f50766e6cf0da9bf20383438f7133b";
+(node as any).hash = "656b8984d1248995ccbedb132b55360c";
 
 export default node;

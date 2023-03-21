@@ -11,26 +11,6 @@ import { useCallback } from "react";
 import { Alert, Modal } from "antd";
 import { RemoveComponentFromApplicationPartDialogMutation } from "./__generated__/RemoveComponentFromApplicationPartDialogMutation.graphql";
 
-export const removeComponentFromApplicationPartDialog = graphql`
-  mutation RemoveComponentFromApplicationPartDialogMutation(
-    $input: RemoveComponentFromApplicationPartInput!
-  ) {
-    removeComponentFromApplicationPart(input: $input) {
-      applicationPart {
-        id
-        ...EditApplicationPart_fragment
-      }
-      errors {
-        __typename
-        ... on UserError {
-          message
-          code
-        }
-      }
-    }
-  }
-`;
-
 export const RemoveComponentFromApplicationPartDialog: React.FC<{
   open: boolean;
   onClose: () => void;
@@ -39,8 +19,27 @@ export const RemoveComponentFromApplicationPartDialog: React.FC<{
 }> = ({ open, partComponentId, componentName, onClose }) => {
   const [commit, isInFlight] =
     useMutation<RemoveComponentFromApplicationPartDialogMutation>(
-      removeComponentFromApplicationPartDialog
+      graphql`
+        mutation RemoveComponentFromApplicationPartDialogMutation(
+          $input: RemoveComponentFromApplicationPartInput!
+        ) {
+          removeComponentFromApplicationPart(input: $input) {
+            applicationPart {
+              id
+              ...EditApplicationPart
+            }
+            errors {
+              __typename
+              ... on UserError {
+                message
+                code
+              }
+            }
+          }
+        }
+      `
     );
+
   const handleAddApplication = useCallback(() => {
     pipeCommitFn(commit, [
       withSuccessMessage(
@@ -56,6 +55,7 @@ export const RemoveComponentFromApplicationPartDialog: React.FC<{
       ),
     ])({ variables: { input: { partComponentId } } });
   }, [commit, onClose, componentName, partComponentId]);
+
   return (
     <Modal
       title={`Remove ${componentName}`}

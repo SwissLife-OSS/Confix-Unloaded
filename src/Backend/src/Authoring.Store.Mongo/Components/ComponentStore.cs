@@ -1,7 +1,9 @@
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
-using static MongoDB.Driver.Builders<Confix.Authoring.Component>;
+using C = MongoDB.Driver.Builders<Confix.Authoring.Component>;
+using CS = MongoDB.Driver.Builders<Confix.Authoring.ComponentScope>;
+using static Confix.Authoring.Store.Mongo.Builders;
 
 namespace Confix.Authoring.Store.Mongo;
 
@@ -39,22 +41,47 @@ internal sealed class ComponentStore : IComponentStore
         string? search,
         CancellationToken cancellationToken)
     {
-        var filter = Filter.In("Scopes.Namespace", namespaces);
+        var namespaceFilter = Filter<Component>()
+            .ElemMatch(x => x.Scopes,
+                And(
+                    Filter<ComponentScope>().In(x => x.Namespace, namespaces),
+                    Filter<ComponentScope>().Null(x => x.ApplicationId),
+                    Filter<ComponentScope>().Null(x => x.ApplicationPartId)
+                ));
 
-        if (!string.IsNullOrEmpty(search))
-        {
-            filter &= Filter.Regex(x => x.Name,
-                new BsonRegularExpression(search, "i"));
-        }
+        var scopeFilter = namespaceFilter;
 
         if (applicationId is not null)
         {
-            filter &= Filter.EqOrNull("Scopes.ApplicationId", applicationId);
+            var applicationIdFilter = Filter<Component>()
+                .ElemMatch(x => x.Scopes,
+                    And(
+                        Filter<ComponentScope>().In(x => x.Namespace, namespaces),
+                        Filter<ComponentScope>().Eq(x => x.ApplicationId, applicationId),
+                        Filter<ComponentScope>().Null(x => x.ApplicationPartId)
+                    ));
+
+            scopeFilter |= applicationIdFilter;
+
+            if (applicationPartId is not null)
+            {
+                scopeFilter |= Filter<Component>()
+                    .ElemMatch(x => x.Scopes,
+                        And(
+                            Filter<ComponentScope>().In(x => x.Namespace, namespaces),
+                            Filter<ComponentScope>().Eq(x => x.ApplicationId, applicationId),
+                            Filter<ComponentScope>()
+                                .Eq(x => x.ApplicationPartId, applicationPartId)
+                        ));
+            }
         }
 
-        if (applicationPartId is not null)
+        var filter = scopeFilter;
+
+        if (!string.IsNullOrEmpty(search))
         {
-            filter &= Filter.EqOrNull("Scopes.ApplicationPartId", applicationPartId);
+            filter &= Filter<Component>()
+                .Regex(x => x.Name, new BsonRegularExpression(search, "i"));
         }
 
         return await _dbContext.Components
@@ -83,4 +110,12 @@ internal sealed class ComponentStore : IComponentStore
 
         return component;
     }
+}
+
+public static class Builders
+{
+    public static FilterDefinitionBuilder<T> Filter<T>() => Builders<T>.Filter;
+
+    public static FilterDefinition<T> And<T>(params FilterDefinition<T>[] filters)
+        => Builders<T>.Filter.And(filters);
 }

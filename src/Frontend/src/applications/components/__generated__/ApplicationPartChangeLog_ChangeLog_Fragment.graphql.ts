@@ -10,22 +10,22 @@
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ApplicationPartChangeLog_ChangeLog_Fragment$data = {
+export type ApplicationPartChangeLog$data = {
   readonly changeLog: ReadonlyArray<{
-    readonly " $fragmentSpreads": FragmentRefs<"ChangeLog_fragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"ChangeLog">;
   }>;
-  readonly " $fragmentType": "ApplicationPartChangeLog_ChangeLog_Fragment";
+  readonly " $fragmentType": "ApplicationPartChangeLog";
 };
-export type ApplicationPartChangeLog_ChangeLog_Fragment$key = {
-  readonly " $data"?: ApplicationPartChangeLog_ChangeLog_Fragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"ApplicationPartChangeLog_ChangeLog_Fragment">;
+export type ApplicationPartChangeLog$key = {
+  readonly " $data"?: ApplicationPartChangeLog$data;
+  readonly " $fragmentSpreads": FragmentRefs<"ApplicationPartChangeLog">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "ApplicationPartChangeLog_ChangeLog_Fragment",
+  "name": "ApplicationPartChangeLog",
   "selections": [
     {
       "alias": null,
@@ -38,7 +38,7 @@ const node: ReaderFragment = {
         {
           "args": null,
           "kind": "FragmentSpread",
-          "name": "ChangeLog_fragment"
+          "name": "ChangeLog"
         }
       ],
       "storageKey": null
