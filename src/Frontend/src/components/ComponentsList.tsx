@@ -1,69 +1,56 @@
 import { useCallback } from "react";
-import {
-  useLazyLoadQuery,
-  usePaginationFragment,
-  useFragment,
-} from "react-relay";
+import { useLazyLoadQuery, usePaginationFragment } from "react-relay";
 import { graphql } from "babel-plugin-relay/macro";
 import { config } from "../config";
 import { InfiniteScrollList } from "../shared/InfiniteScrollList";
 import { ComponentsListQuery } from "./__generated__/ComponentsListQuery.graphql";
-import { ComponentsList_componentEdge$key } from "./__generated__/ComponentsList_componentEdge.graphql";
-import { ComponentsList_components$key } from "./__generated__/ComponentsList_components.graphql";
-
-const componentsQuery = graphql`
-  query ComponentsListQuery($cursor: String, $count: Int) {
-    ...ComponentsList_components
-  }
-`;
-const componentsConnectionFragment = graphql`
-  fragment ComponentsList_components on Query
-  @refetchable(queryName: "ComponentsListPaginationQuery") {
-    components(after: $cursor, first: $count)
-      @connection(key: "Query_components") {
-      edges {
-        node {
-          ...ComponentsList_componentEdge
-        }
-      }
-    }
-  }
-`;
-
-const componentFragment = graphql`
-  fragment ComponentsList_componentEdge on Component @relay(plural: true) {
-    id
-    name
-  }
-`;
+import { ComponentsList$key } from "./__generated__/ComponentsList.graphql";
 
 export const ComponentsList: React.FC<{
   onItemSelect: (item: string) => void;
   search: string | undefined;
 }> = ({ search, onItemSelect }) => {
-  const queryData = useLazyLoadQuery<ComponentsListQuery>(componentsQuery, {
-    count: config.pagination.pageSize,
-  });
-  const {
-    data: connection,
-    hasNext,
-    loadNext,
-    isLoadingNext,
-  } = usePaginationFragment<ComponentsListQuery, ComponentsList_components$key>(
-    componentsConnectionFragment,
-    queryData
+  const query = useLazyLoadQuery<ComponentsListQuery>(
+    graphql`
+      query ComponentsListQuery($cursor: String, $count: Int, $search: String) {
+        ...ComponentsList
+      }
+    `,
+    {
+      count: config.pagination.pageSize,
+      search,
+    }
   );
-  const data = useFragment<ComponentsList_componentEdge$key>(
-    componentFragment,
-    connection?.components?.edges?.map((x) => x.node) ?? null
+
+  const { data, hasNext, loadNext, isLoadingNext } = usePaginationFragment<
+    ComponentsListQuery,
+    ComponentsList$key
+  >(
+    graphql`
+      fragment ComponentsList on Query
+      @refetchable(queryName: "ComponentsListPaginationQuery") {
+        components(after: $cursor, first: $count, search: $search)
+          @connection(key: "Query_components") {
+          edges {
+            node {
+              id
+              name
+            }
+          }
+        }
+      }
+    `,
+    query
   );
+
   const handleOnItemSelected = useCallback(
     (t: { id: string }) => onItemSelect(t.id),
     [onItemSelect]
   );
+
   return (
     <InfiniteScrollList
-      items={data?.map((x) => x) ?? []}
+      items={data?.components?.edges?.map((x) => x.node) ?? []}
       label="name"
       id="id"
       isLoading={isLoadingNext || !data}

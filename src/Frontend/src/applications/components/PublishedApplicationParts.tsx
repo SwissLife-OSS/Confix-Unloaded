@@ -1,10 +1,6 @@
 import * as React from "react";
 import { usePaginationFragment } from "react-relay";
 import { graphql } from "babel-plugin-relay/macro";
-import {
-  PublishedApplicationPartsFragment$data,
-  PublishedApplicationPartsFragment$key,
-} from "./__generated__/PublishedApplicationPartsFragment.graphql";
 import { Lookup } from "../../shared/hacks";
 import { formatDate } from "../../shared/formatDate";
 import { Divider, Empty, Skeleton, SkeletonProps, Table, Tag } from "antd";
@@ -13,40 +9,13 @@ import { distinct } from "../../shared/distinct";
 import { ColorTag } from "../../shared/ColorTag";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useIntersectionObserver } from "../../shared/useIntersectionObserver";
+import {
+  PublishedApplicationParts$data,
+  PublishedApplicationParts$key,
+} from "./__generated__/PublishedApplicationParts.graphql";
 
-const publishedPartsConnection = graphql`
-  fragment PublishedApplicationPartsFragment on ApplicationPart
-  @refetchable(queryName: "PublishedApplicationPartsPaginationQuery")
-  @argumentDefinitions(
-    count: { type: "Int", defaultValue: 20 }
-    cursor: { type: "String" }
-  ) {
-    publishedVersions(first: $count, after: $cursor)
-      @connection(key: "part_publishedVersions") {
-      edges {
-        node {
-          id
-          publishedAt
-          part {
-            name
-          }
-          publishedBy {
-            email
-          }
-          version
-          claimsVersions {
-            tag
-            environment {
-              name
-            }
-          }
-        }
-      }
-    }
-  }
-`;
 type Value = Lookup<
-  PublishedApplicationPartsFragment$data,
+  PublishedApplicationParts$data,
   "publishedVersions",
   "edges",
   0
@@ -106,43 +75,74 @@ const columns = [
 ];
 
 export const PublishedApplicationParts: React.FC<{
-  data: PublishedApplicationPartsFragment$key;
-}> = ({ data }) => {
-  const {
-    data: connection,
-    loadNext,
-    hasNext,
-  } = usePaginationFragment(publishedPartsConnection, data);
-  const fetchNext = useCallback(() => loadNext(20), [loadNext]);
-  const nodes = connection?.publishedVersions?.edges ?? [];
-  if (nodes.length === 0) {
-    return <Empty description="Never published"></Empty>;
-  } else {
-    return (
-      <div
-        style={{ flex: 1, overflow: "auto", overscrollBehavior: "contain" }}
-        id="published_application_parts"
-      >
-        <InfiniteScroll
-          dataLength={nodes.length}
-          next={fetchNext}
-          hasMore={hasNext}
-          loader={
-            <SkeletonWithNotifier
-              onIsVisible={fetchNext}
-              avatar
-              paragraph={{ rows: 1 }}
-              active
-            />
+  fragmentRef: PublishedApplicationParts$key;
+}> = ({ fragmentRef }) => {
+  const { data, loadNext, hasNext } = usePaginationFragment(
+    graphql`
+      fragment PublishedApplicationParts on ApplicationPart
+      @refetchable(queryName: "PublishedApplicationPartsQuery")
+      @argumentDefinitions(
+        count: { type: "Int", defaultValue: 20 }
+        cursor: { type: "String" }
+      ) {
+        publishedVersions(first: $count, after: $cursor)
+          @connection(key: "part_publishedVersions") {
+          edges {
+            node {
+              id
+              publishedAt
+              part {
+                name
+              }
+              publishedBy {
+                email
+              }
+              version
+              claimsVersions {
+                tag
+                environment {
+                  name
+                }
+              }
+            }
           }
-          endMessage={<Divider plain />}
-          scrollableTarget="published_application_parts"
-        >
-          <Table columns={columns} pagination={false} dataSource={nodes} />
-        </InfiniteScroll>
-      </div>
-    );
+        }
+      }
+    `,
+    fragmentRef
+  );
+
+  const fetchNext = useCallback(() => loadNext(20), [loadNext]);
+
+  const nodes = data?.publishedVersions?.edges ?? [];
+
+  if (nodes.length === 0) {
+    return <Empty description="Never published" />;
   }
+  return (
+    <div
+      style={{ flex: 1, overflow: "auto", overscrollBehavior: "contain" }}
+      id="published_application_parts"
+    >
+      <InfiniteScroll
+        dataLength={nodes.length}
+        next={fetchNext}
+        hasMore={hasNext}
+        loader={
+          <SkeletonWithNotifier
+            onIsVisible={fetchNext}
+            avatar
+            paragraph={{ rows: 1 }}
+            active
+          />
+        }
+        endMessage={<Divider plain />}
+        scrollableTarget="published_application_parts"
+      >
+        <Table columns={columns} pagination={false} dataSource={nodes} />
+      </InfiniteScroll>
+    </div>
+  );
 };
 
 const SkeletonWithNotifier: React.FC<

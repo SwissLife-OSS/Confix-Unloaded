@@ -12,35 +12,31 @@ import {
 import { useConnectionId } from "../../../../shared/useConnectionId";
 import { RemoveApiKeyDialogMutation } from "./__generated__/RemoveApiKeyDialogMutation.graphql";
 
-export const removeApiKeyDialog = graphql`
-  mutation RemoveApiKeyDialogMutation(
-    $input: RemoveApiKeyByIdInput!
-    $connectionIds: [ID!]!
-  ) {
-    removeApiKeyById(input: $input) {
-      apiKey {
-        id @deleteEdge(connections: $connectionIds)
-        ...ApiKeysList_ApiKeyEdge
-      }
-      errors {
-        __typename
-        ... on UserError {
-          message
-          code
-        }
-      }
-    }
-  }
-`;
-
 export const RemoveApiKeyDialog: React.FC<{
   open: boolean;
   onClose: (removed: boolean) => void;
   keyId: string;
   keyName: string;
 }> = ({ open, keyId, keyName, onClose }) => {
-  const [commit, isInFlight] =
-    useMutation<RemoveApiKeyDialogMutation>(removeApiKeyDialog);
+  const [commit, isInFlight] = useMutation<RemoveApiKeyDialogMutation>(graphql`
+    mutation RemoveApiKeyDialogMutation(
+      $input: RemoveApiKeyByIdInput!
+      $connectionIds: [ID!]!
+    ) {
+      removeApiKeyById(input: $input) {
+        apiKey {
+          id @deleteEdge(connections: $connectionIds)
+        }
+        errors {
+          __typename
+          ... on UserError {
+            message
+            code
+          }
+        }
+      }
+    }
+  `);
 
   const connectionId = useConnectionId("Query__apiKeys");
 
@@ -63,9 +59,7 @@ export const RemoveApiKeyDialog: React.FC<{
     });
   }, [commit, keyId, onClose, keyName, connectionId]);
 
-  const handleClose = useCallback(() => {
-    onClose(false);
-  }, [onClose]);
+  const handleClose = useCallback(() => onClose(false), [onClose]);
 
   return (
     <Modal

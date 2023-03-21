@@ -12,7 +12,7 @@ public sealed record Component
         string? values,
         int version,
         ComponentState state,
-        string ns)
+        IReadOnlyList<ComponentScope> scopes)
     {
         Id = id;
         Name = name;
@@ -20,7 +20,7 @@ public sealed record Component
         Values = values;
         Version = version;
         State = state;
-        Namespace = ns;
+        Scopes = scopes;
     }
 
     public Component(
@@ -29,14 +29,14 @@ public sealed record Component
         string? schema,
         string? values,
         ComponentState state,
-        string ns)
+        IReadOnlyList<ComponentScope> scopes)
     {
         Id = id;
         Name = name;
         Schema = schema;
         Values = values;
         State = state;
-        Namespace = ns;
+        Scopes = scopes;
     }
 
     [ID]
@@ -50,7 +50,7 @@ public sealed record Component
 
     public string? Values { get; init; }
 
-    public string Namespace { get; init; }
+    public IReadOnlyList<ComponentScope> Scopes { get; init; }
 
     public int Version { get; init; }
 

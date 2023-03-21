@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e72584572772bc59f65b016dd0a98c99>>
+ * @generated SignedSource<<e2c7b1279cc702b776587a51e6f51018>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,7 @@ export type EditEnvironmentQuery$variables = {
 export type EditEnvironmentQuery$data = {
   readonly environmentById: {
     readonly id: string;
-    readonly " $fragmentSpreads": FragmentRefs<"EditEnvironment_Environment">;
+    readonly " $fragmentSpreads": FragmentRefs<"EditEnvironment_EditEnvironmentForm">;
   } | null;
 };
 export type EditEnvironmentQuery = {
@@ -72,7 +72,7 @@ return {
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "EditEnvironment_Environment"
+            "name": "EditEnvironment_EditEnvironmentForm"
           }
         ],
         "storageKey": null
@@ -100,13 +100,6 @@ return {
           {
             "alias": null,
             "args": null,
-            "kind": "ScalarField",
-            "name": "allowDeveloperAccess",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
             "concreteType": "Environment",
             "kind": "LinkedField",
             "name": "parent",
@@ -116,6 +109,13 @@ return {
               (v3/*: any*/)
             ],
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "allowDeveloperAccess",
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -123,16 +123,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "26904ebd5c3a737e6a31128cb6ee0d1c",
+    "cacheID": "4a2099fe01acecfda537932b40f1d993",
     "id": null,
     "metadata": {},
     "name": "EditEnvironmentQuery",
     "operationKind": "query",
-    "text": "query EditEnvironmentQuery(\n  $id: ID!\n) {\n  environmentById(id: $id) {\n    id\n    ...EditEnvironment_Environment\n  }\n}\n\nfragment EditEnvironment_Environment on Environment {\n  id\n  name\n  allowDeveloperAccess\n  parent {\n    id\n    name\n  }\n}\n"
+    "text": "query EditEnvironmentQuery(\n  $id: ID!\n) {\n  environmentById(id: $id) {\n    id\n    ...EditEnvironment_EditEnvironmentForm\n  }\n}\n\nfragment EditEnvironment_EditEnvironmentForm on Environment {\n  id\n  name\n  ...EditEnvironment_ParentEnvironement\n  ...EditEnvironment_IsDeveloperAccessAllowedFrom\n  ...EditEnvironment_Header\n}\n\nfragment EditEnvironment_Header on Environment {\n  id\n  name\n}\n\nfragment EditEnvironment_IsDeveloperAccessAllowedFrom on Environment {\n  id\n  allowDeveloperAccess\n}\n\nfragment EditEnvironment_ParentEnvironement on Environment {\n  id\n  name\n  parent {\n    id\n    name\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "bb3096ceb0cc7df8ddc858950ae65621";
+(node as any).hash = "4955fac7ae0d1b6be773ffaee574f66e";
 
 export default node;

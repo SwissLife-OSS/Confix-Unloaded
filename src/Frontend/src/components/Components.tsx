@@ -11,7 +11,7 @@ import { DefaultSuspense } from "../shared/DefaultSuspense";
 import { ComponentsList } from "./ComponentsList";
 import { useGoTo } from "../shared/useGoTo";
 
-export const Components: React.FC = (props) => {
+export const Components: React.FC = () => {
   const [search, setSearch] = useState<string | undefined>();
   const handleOnItemSelected = useGoTo((id: string) => `${id}/edit`);
 

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c245fb7c65f12e69b19077269e8e5063>>
+ * @generated SignedSource<<c061d5d6df52a096142d175f71ed426f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,6 @@
 // @ts-nocheck
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
-import { FragmentRefs } from "relay-runtime";
 export type RemoveEnvironmentByIdInput = {
   id: string;
 };
@@ -21,7 +20,7 @@ export type RemoveEnvironmentDialogMutation$data = {
   readonly removeEnvironmentById: {
     readonly environment: {
       readonly id: string;
-      readonly " $fragmentSpreads": FragmentRefs<"EnvironmentsList_EnvironmentEdge">;
+      readonly name: string;
     } | null;
     readonly errors: ReadonlyArray<{
       readonly __typename: string;
@@ -61,6 +60,13 @@ v3 = {
   "storageKey": null
 },
 v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v5 = {
   "alias": null,
   "args": null,
   "concreteType": null,
@@ -126,15 +132,11 @@ return {
             "plural": false,
             "selections": [
               (v3/*: any*/),
-              {
-                "args": null,
-                "kind": "FragmentSpread",
-                "name": "EnvironmentsList_EnvironmentEdge"
-              }
+              (v4/*: any*/)
             ],
             "storageKey": null
           },
-          (v4/*: any*/)
+          (v5/*: any*/)
         ],
         "storageKey": null
       }
@@ -184,34 +186,27 @@ return {
                   }
                 ]
               },
-              (v3/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "name",
-                "storageKey": null
-              }
+              (v4/*: any*/)
             ],
             "storageKey": null
           },
-          (v4/*: any*/)
+          (v5/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "e852dd4365a4ae55efdf9be922c2dd56",
+    "cacheID": "72f78a96391d14d0dedf756471fefcf3",
     "id": null,
     "metadata": {},
     "name": "RemoveEnvironmentDialogMutation",
     "operationKind": "mutation",
-    "text": "mutation RemoveEnvironmentDialogMutation(\n  $input: RemoveEnvironmentByIdInput!\n) {\n  removeEnvironmentById(input: $input) {\n    environment {\n      id\n      ...EnvironmentsList_EnvironmentEdge\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment EnvironmentsList_EnvironmentEdge on Environment {\n  id\n  name\n}\n"
+    "text": "mutation RemoveEnvironmentDialogMutation(\n  $input: RemoveEnvironmentByIdInput!\n) {\n  removeEnvironmentById(input: $input) {\n    environment {\n      id\n      name\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "4d5f4978f5e62d9817e75059feecc165";
+(node as any).hash = "7b3a31884d521db50585d9039df57e19";
 
 export default node;

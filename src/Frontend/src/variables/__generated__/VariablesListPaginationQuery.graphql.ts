@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<226ebd434c3a53b9357192afb0a282eb>>
+ * @generated SignedSource<<7a96502999e43b983c9e19e1c165cb59>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,7 @@ export type VariablesListPaginationQuery$variables = {
   search?: string | null;
 };
 export type VariablesListPaginationQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"VariablesList_Variables">;
+  readonly " $fragmentSpreads": FragmentRefs<"VariablesList">;
 };
 export type VariablesListPaginationQuery = {
   response: VariablesListPaginationQuery$data;
@@ -68,7 +68,7 @@ return {
       {
         "args": null,
         "kind": "FragmentSpread",
-        "name": "VariablesList_Variables"
+        "name": "VariablesList"
       }
     ],
     "type": "Query",
@@ -180,16 +180,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "d82eca679132ef14b6df40b744218245",
+    "cacheID": "b8e3f2f6baf08e609da1dc96277b3f5d",
     "id": null,
     "metadata": {},
     "name": "VariablesListPaginationQuery",
     "operationKind": "query",
-    "text": "query VariablesListPaginationQuery(\n  $count: Int\n  $cursor: String\n  $search: String\n) {\n  ...VariablesList_Variables\n}\n\nfragment VariablesList_VariableEdge on Variable {\n  id\n  name\n}\n\nfragment VariablesList_Variables on Query {\n  searchVariables(after: $cursor, first: $count, search: $search) {\n    edges {\n      node {\n        id\n        name\n        ...VariablesList_VariableEdge\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query VariablesListPaginationQuery(\n  $count: Int\n  $cursor: String\n  $search: String\n) {\n  ...VariablesList\n}\n\nfragment VariablesList on Query {\n  searchVariables(after: $cursor, first: $count, search: $search) {\n    edges {\n      node {\n        id\n        name\n        ...VariablesList_ListItem\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment VariablesList_ListItem on Variable {\n  id\n  name\n}\n"
   }
 };
 })();
 
-(node as any).hash = "b2f8df3c3361e91c95ebef4f6d606cf6";
+(node as any).hash = "d20bcf9b9282a90a777eb670882f08b2";
 
 export default node;

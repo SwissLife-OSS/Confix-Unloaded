@@ -10,17 +10,7 @@ import {
 } from "../../../shared/pipeCommitFn";
 import { useStringEventHanlder } from "../../../shared/useEventListener";
 import { RenameVariableDialogMutation } from "./__generated__/RenameVariableDialogMutation.graphql";
-
-const renameVariableMutation = graphql`
-  mutation RenameVariableDialogMutation($input: RenameVariableInput!) {
-    renameVariable(input: $input) {
-      variable {
-        id
-        ...VariablesList_VariableEdge
-      }
-    }
-  }
-`;
+import { useCallback, useState } from "react";
 
 export const RenameVariableDialog: React.FC<{
   open: boolean;
@@ -29,19 +19,31 @@ export const RenameVariableDialog: React.FC<{
   id: string;
 }> = ({ open, name, id, onClose }) => {
   const [commit, isInFlight] = useMutation<RenameVariableDialogMutation>(
-    renameVariableMutation
+    graphql`
+      mutation RenameVariableDialogMutation($input: RenameVariableInput!) {
+        renameVariable(input: $input) {
+          variable {
+            id
+            name
+          }
+        }
+      }
+    `
   );
-  const [VariableName, setVariableName] = React.useState(name);
+  const [variableName, setVariableName] = useState(name);
+
   const handlePartNameChange = useStringEventHanlder(setVariableName);
-  const handleRename = React.useCallback(() => {
+
+  const handleRename = useCallback(() => {
     pipeCommitFn(commit, [
       withSuccessMessage(
         (x) => x.renameVariable.variable?.id,
         "Renamed Variable"
       ),
       withOnSuccess((x) => x.renameVariable.variable?.id, onClose),
-    ])({ variables: { input: { name: VariableName, id } } });
-  }, [commit, id, VariableName, onClose]);
+    ])({ variables: { input: { name: variableName, id } } });
+  }, [commit, id, variableName, onClose]);
+
   return (
     <Modal
       title={`Rename Variable ${name}`}
@@ -52,7 +54,7 @@ export const RenameVariableDialog: React.FC<{
     >
       <FieldInput
         label="New Name"
-        value={VariableName}
+        value={variableName}
         onChange={handlePartNameChange}
       />
     </Modal>

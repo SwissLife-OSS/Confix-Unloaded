@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4f11a6efd2715db083a9f6e7d40b7e8b>>
+ * @generated SignedSource<<534ef601e010c3ef5a3c7ba6cfb28650>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,31 +9,10 @@
 // @ts-nocheck
 
 import { ConcreteRequest, Query } from 'relay-runtime';
-import { FragmentRefs } from "relay-runtime";
-export type ApplicationFilterInput = {
-  and?: ReadonlyArray<ApplicationFilterInput> | null;
-  name?: StringOperationFilterInput | null;
-  namespace?: StringOperationFilterInput | null;
-  or?: ReadonlyArray<ApplicationFilterInput> | null;
-};
-export type StringOperationFilterInput = {
-  and?: ReadonlyArray<StringOperationFilterInput> | null;
-  contains?: string | null;
-  endsWith?: string | null;
-  eq?: string | null;
-  in?: ReadonlyArray<string | null> | null;
-  ncontains?: string | null;
-  nendsWith?: string | null;
-  neq?: string | null;
-  nin?: ReadonlyArray<string | null> | null;
-  nstartsWith?: string | null;
-  or?: ReadonlyArray<StringOperationFilterInput> | null;
-  startsWith?: string | null;
-};
 export type EditVariableApplicationsQuery$variables = {
   count?: number | null;
   cursor?: string | null;
-  where?: ApplicationFilterInput | null;
+  search?: string | null;
 };
 export type EditVariableApplicationsQuery$data = {
   readonly applications: {
@@ -41,7 +20,6 @@ export type EditVariableApplicationsQuery$data = {
       readonly node: {
         readonly id: string;
         readonly name: string;
-        readonly " $fragmentSpreads": FragmentRefs<"ApplicationsList_applicationsEdge">;
       };
     }> | null;
   } | null;
@@ -65,67 +43,91 @@ v1 = {
 v2 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "where"
+  "name": "search"
 },
 v3 = {
   "kind": "Variable",
-  "name": "where",
-  "variableName": "where"
+  "name": "search",
+  "variableName": "search"
 },
-v4 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-},
-v5 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "name",
-  "storageKey": null
-},
-v6 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "__typename",
-  "storageKey": null
-},
-v7 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "cursor",
-  "storageKey": null
-},
-v8 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "PageInfo",
-  "kind": "LinkedField",
-  "name": "pageInfo",
-  "plural": false,
-  "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "endCursor",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "hasNextPage",
-      "storageKey": null
-    }
-  ],
-  "storageKey": null
-},
-v9 = [
+v4 = [
+  {
+    "alias": null,
+    "args": null,
+    "concreteType": "ApplicationsEdge",
+    "kind": "LinkedField",
+    "name": "edges",
+    "plural": true,
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "Application",
+        "kind": "LinkedField",
+        "name": "node",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "id",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "name",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "__typename",
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "cursor",
+        "storageKey": null
+      }
+    ],
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "concreteType": "PageInfo",
+    "kind": "LinkedField",
+    "name": "pageInfo",
+    "plural": false,
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "endCursor",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "hasNextPage",
+        "storageKey": null
+      }
+    ],
+    "storageKey": null
+  }
+],
+v5 = [
   {
     "kind": "Variable",
     "name": "after",
@@ -158,40 +160,7 @@ return {
         "kind": "LinkedField",
         "name": "__Query_applications_connection",
         "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "ApplicationsEdge",
-            "kind": "LinkedField",
-            "name": "edges",
-            "plural": true,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "Application",
-                "kind": "LinkedField",
-                "name": "node",
-                "plural": false,
-                "selections": [
-                  (v4/*: any*/),
-                  (v5/*: any*/),
-                  {
-                    "args": null,
-                    "kind": "FragmentSpread",
-                    "name": "ApplicationsList_applicationsEdge"
-                  },
-                  (v6/*: any*/)
-                ],
-                "storageKey": null
-              },
-              (v7/*: any*/)
-            ],
-            "storageKey": null
-          },
-          (v8/*: any*/)
-        ],
+        "selections": (v4/*: any*/),
         "storageKey": null
       }
     ],
@@ -210,92 +179,19 @@ return {
     "selections": [
       {
         "alias": null,
-        "args": (v9/*: any*/),
+        "args": (v5/*: any*/),
         "concreteType": "ApplicationsConnection",
         "kind": "LinkedField",
         "name": "applications",
         "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "ApplicationsEdge",
-            "kind": "LinkedField",
-            "name": "edges",
-            "plural": true,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "Application",
-                "kind": "LinkedField",
-                "name": "node",
-                "plural": false,
-                "selections": [
-                  (v4/*: any*/),
-                  (v5/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "namespace",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "ApplicationPart",
-                    "kind": "LinkedField",
-                    "name": "parts",
-                    "plural": true,
-                    "selections": [
-                      (v4/*: any*/),
-                      (v5/*: any*/),
-                      {
-                        "alias": null,
-                        "args": null,
-                        "concreteType": "ApplicationPartComponent",
-                        "kind": "LinkedField",
-                        "name": "components",
-                        "plural": true,
-                        "selections": [
-                          (v4/*: any*/),
-                          {
-                            "alias": null,
-                            "args": null,
-                            "concreteType": "Component",
-                            "kind": "LinkedField",
-                            "name": "definition",
-                            "plural": false,
-                            "selections": [
-                              (v4/*: any*/),
-                              (v5/*: any*/)
-                            ],
-                            "storageKey": null
-                          }
-                        ],
-                        "storageKey": null
-                      }
-                    ],
-                    "storageKey": null
-                  },
-                  (v6/*: any*/)
-                ],
-                "storageKey": null
-              },
-              (v7/*: any*/)
-            ],
-            "storageKey": null
-          },
-          (v8/*: any*/)
-        ],
+        "selections": (v4/*: any*/),
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v9/*: any*/),
+        "args": (v5/*: any*/),
         "filters": [
-          "where"
+          "search"
         ],
         "handle": "connection",
         "key": "Query_applications",
@@ -305,7 +201,7 @@ return {
     ]
   },
   "params": {
-    "cacheID": "5913d35d518e4a0e02ba9624fc5e34da",
+    "cacheID": "17e7f79d852a56ec14ff7b4b9cc1046d",
     "id": null,
     "metadata": {
       "connection": [
@@ -321,11 +217,11 @@ return {
     },
     "name": "EditVariableApplicationsQuery",
     "operationKind": "query",
-    "text": "query EditVariableApplicationsQuery(\n  $cursor: String\n  $count: Int\n  $where: ApplicationFilterInput\n) {\n  applications(after: $cursor, first: $count, where: $where) {\n    edges {\n      node {\n        id\n        name\n        ...ApplicationsList_applicationsEdge\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment ApplicationsList_applicationsEdge on Application {\n  id\n  name\n  namespace\n  parts {\n    id\n    name\n    components {\n      id\n      definition {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": "query EditVariableApplicationsQuery(\n  $cursor: String\n  $count: Int\n  $search: String\n) {\n  applications(after: $cursor, first: $count, search: $search) {\n    edges {\n      node {\n        id\n        name\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "652751f2a2860073d69f4e3e10174930";
+(node as any).hash = "0257ade131fc543e68f794864e12855d";
 
 export default node;

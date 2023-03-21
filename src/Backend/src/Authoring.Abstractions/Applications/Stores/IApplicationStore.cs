@@ -71,10 +71,12 @@ public interface IApplicationStore
         IEnumerable<Guid> ids,
         CancellationToken cancellationToken);
 
-    /// <summary>
-    ///     Allows to query the application store.
-    /// </summary>
-    IQueryable<Application> Query();
+    Task<IReadOnlyList<Application>> Search(
+        int skip,
+        int take,
+        IReadOnlySet<string> sessionNamespaces,
+        string? search,
+        CancellationToken cancellationToken);
 
     /// <summary>
     ///     Adds a new application to the application store.

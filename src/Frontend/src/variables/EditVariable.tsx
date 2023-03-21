@@ -1,8 +1,7 @@
 import {
-  fetchQuery,
   useFragment,
   useLazyLoadQuery,
-  useRelayEnvironment,
+  useRefetchableFragment,
 } from "react-relay";
 import { Col, Descriptions, Empty, Row, Select, Spin, Tabs } from "antd";
 import { DetailView } from "../shared/DetailView";
@@ -12,14 +11,10 @@ import { EditableBreadcrumbHeader } from "../shared/EditablePageHeader";
 import { useToggle } from "../shared/useToggle";
 import { RenameVariableDialog } from "./controls/dialogs/RenameVariableDialog";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { EditVariable_Variable$key } from "./__generated__/EditVariable_Variable.graphql";
 import { css } from "@emotion/react";
 import { CheckIcon, NotCheckIcon } from "../icons/icons";
 import { Field } from "../shared/FormField";
 import { useDebounce } from "../shared/debounce";
-import { EditVariableApplicationsQuery } from "./__generated__/EditVariableApplicationsQuery.graphql";
-import { ApplicationsList_applicationsEdge$key } from "../applications/__generated__/ApplicationsList_applicationsEdge.graphql";
-import { applicationFragment } from "../applications/ApplicationsList";
 import { useMultiplexer } from "../shared/useMultiplexer";
 import { VariableEditor } from "./controls/VariableEditor";
 import { DefaultSuspense } from "../shared/DefaultSuspense";
@@ -27,53 +22,51 @@ import { useParams } from "react-router";
 import { TabRow } from "../shared/TabRow";
 import { useTabSwitcher } from "../shared/useTabSwitcher";
 import { ChangeLog } from "../shared/ChangeLog";
-
-const variableByIdQuery = graphql`
-  query EditVariableQuery($id: ID!) {
-    variable(id: $id) {
-      id
-      name
-      namespace
-      ...EditVariable_Variable
-    }
-  }
-`;
-
-const editVariableFragment = graphql`
-  fragment EditVariable_Variable on Variable {
-    id
-    name
-    namespace
-    isSecret
-    state
-    values {
-      application {
-        id
-      }
-      applicationPart {
-        id
-      }
-      id
-      value
-    }
-    changeLog {
-      ...ChangeLog_fragment
-    }
-  }
-`;
+import { EditVariable$key } from "./__generated__/EditVariable.graphql";
+import { EditVariable_EditVariableForm$key } from "./__generated__/EditVariable_EditVariableForm.graphql";
+import { EditVariable_VariableChangeLog$key } from "./__generated__/EditVariable_VariableChangeLog.graphql";
+import { EditVariable_ApplicationSelector_Query } from "./__generated__/EditVariable_ApplicationSelector_Query.graphql";
+import { EditVariable_ApplicationPartSelector$key } from "./__generated__/EditVariable_ApplicationPartSelector.graphql";
+import { EditVariable_ApplicationSelector$key } from "./__generated__/EditVariable_ApplicationSelector.graphql";
 
 export const EditVariable = () => {
   const { variableId = "" } = useParams();
-  const { variable } = useLazyLoadQuery<EditVariableQuery>(variableByIdQuery, {
-    id: variableId,
-  });
+  const query = useLazyLoadQuery<EditVariableQuery>(
+    graphql`
+      query EditVariableQuery($id: ID!) {
+        variable(id: $id) {
+          ...EditVariable
+        }
+        ...EditVariable_ApplicationSelector @defer
+      }
+    `,
+    {
+      id: variableId,
+    }
+  );
+  const variable = useFragment<EditVariable$key>(
+    graphql`
+      fragment EditVariable on Variable {
+        id
+        name
+        namespace
+        ...EditVariable_EditVariableForm
+        ...EditVariable_VariableChangeLog
+      }
+    `,
+    query.variable
+  );
+
   const { tab, navigateToTab } = useTabSwitcher();
-  const id = variable?.id;
-  if (!id) {
+
+  if (!variable?.id) {
     return (
       <DetailView style={{ padding: 1 }}>Coult not find Variable</DetailView>
     );
   }
+
+  const { id, name, namespace } = variable;
+
   return (
     <DetailView
       style={{ padding: 1 }}
@@ -85,7 +78,7 @@ export const EditVariable = () => {
     >
       <Row>
         <Col xs={24}>
-          <Header namespace={variable.namespace} name={variable.name} id={id} />
+          <Header namespace={namespace} name={name} id={id} />
         </Col>
       </Row>
 
@@ -98,7 +91,9 @@ export const EditVariable = () => {
             {
               key: "edit",
               label: "Edit",
-              children: <EditVariableForm id={id} data={variable} />,
+              children: (
+                <EditVariableForm id={id} data={variable} query={query} />
+              ),
             },
             {
               key: "changelog",
@@ -118,10 +113,17 @@ export const EditVariable = () => {
 
 const EditVariableForm: React.FC<{
   id: string;
-  data: NonNullable<EditVariableQuery["response"]["variable"]>;
-}> = ({ data, id }) => {
-  const { name, namespace, isSecret } = useFragment<EditVariable_Variable$key>(
-    editVariableFragment,
+  data: EditVariable_EditVariableForm$key;
+  query: EditVariable_ApplicationSelector$key;
+}> = ({ data, id, query }) => {
+  const { name, namespace, isSecret } = useFragment(
+    graphql`
+      fragment EditVariable_EditVariableForm on Variable {
+        name
+        namespace
+        isSecret
+      }
+    `,
     data
   );
   const [application, setSelectedApplication] = useState<ApplicationOption>();
@@ -152,6 +154,7 @@ const EditVariableForm: React.FC<{
       </Row>
       <Row>
         <ApplicationSelector
+          query={query}
           onChange={handleApplicationChange}
           value={application}
         />
@@ -229,28 +232,10 @@ const Header: React.FC<{
   );
 };
 
-const applicationsQuery = graphql`
-  query EditVariableApplicationsQuery(
-    $cursor: String
-    $count: Int
-    $where: ApplicationFilterInput
-  ) {
-    applications(after: $cursor, first: $count, where: $where)
-      @connection(key: "Query_applications") {
-      edges {
-        node {
-          id
-          name
-          ...ApplicationsList_applicationsEdge
-        }
-      }
-    }
-  }
-`;
 export type ApplicationOption = {
   label: string;
   value: string;
-  edge?: ApplicationsList_applicationsEdge$key & { id: string };
+  edge?: EditVariable_ApplicationPartSelector$key & { id: string };
 };
 
 const globalOption: ApplicationOption = {
@@ -260,30 +245,46 @@ const globalOption: ApplicationOption = {
 };
 
 const ApplicationSelector: React.FC<{
+  query: EditVariable_ApplicationSelector$key;
   onChange: (id?: ApplicationOption) => void;
   value?: ApplicationOption;
-}> = ({ onChange, value }) => {
+}> = ({ onChange, value, query }) => {
   const [options, setOptions] = useState<ApplicationOption[]>([]);
   const [isLoading, setIsLoading] = useState(options.length === 0);
-  const env = useRelayEnvironment();
+
+  const [data, refetch] = useRefetchableFragment<
+    EditVariable_ApplicationSelector_Query,
+    EditVariable_ApplicationSelector$key
+  >(
+    graphql`
+      fragment EditVariable_ApplicationSelector on Query
+      @refetchable(queryName: "EditVariable_ApplicationSelector_Query")
+      @argumentDefinitions(
+        cursor: { type: "String" }
+        count: { type: "Int", defaultValue: 20 }
+        search: { type: "String" }
+      ) {
+        applications(after: $cursor, first: $count, search: $search)
+          @connection(key: "Query_applications") {
+          edges {
+            node {
+              id
+              name
+              ...EditVariable_ApplicationPartSelector
+            }
+          }
+        }
+      }
+    `,
+    query
+  );
 
   const fetchData = useCallback(
     async (search: string) => {
       setIsLoading(true);
-      const data = await fetchQuery<EditVariableApplicationsQuery>(
-        env,
-        applicationsQuery,
-        {
-          where: !search
-            ? null
-            : {
-                or: [
-                  { namespace: { contains: search } },
-                  { name: { contains: search } },
-                ],
-              },
-        }
-      ).toPromise();
+      refetch({
+        search,
+      });
       setOptions(
         data?.applications?.edges?.map((x) => ({
           value: x.node.id,
@@ -293,7 +294,7 @@ const ApplicationSelector: React.FC<{
       );
       setIsLoading(false);
     },
-    [env]
+    [data, refetch]
   );
 
   const debouncedSearch = useDebounce((search: string) => {
@@ -349,8 +350,22 @@ const ApplicationPartSelector: React.FC<{
   onChange: (id?: ApplicationPartOption) => void;
   value?: ApplicationPartOption;
 }> = ({ onChange, application, value }) => {
-  const data = useFragment<ApplicationsList_applicationsEdge$key>(
-    applicationFragment,
+  const data = useFragment<EditVariable_ApplicationPartSelector$key>(
+    graphql`
+      fragment EditVariable_ApplicationPartSelector on Application {
+        id
+        parts {
+          id
+          name
+          components {
+            id
+            definition {
+              name
+            }
+          }
+        }
+      }
+    `,
     application?.edge ?? null
   );
 
@@ -401,10 +416,16 @@ const ApplicationPartSelector: React.FC<{
 };
 
 const VariableChangeLog: React.FC<{
-  data: EditVariable_Variable$key;
+  data: EditVariable_VariableChangeLog$key;
 }> = ({ data }) => {
-  const { changeLog } = useFragment<EditVariable_Variable$key>(
-    editVariableFragment,
+  const { changeLog } = useFragment(
+    graphql`
+      fragment EditVariable_VariableChangeLog on Variable {
+        changeLog {
+          ...ChangeLog
+        }
+      }
+    `,
     data
   );
 

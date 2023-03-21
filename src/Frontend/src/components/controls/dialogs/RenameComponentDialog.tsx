@@ -11,17 +11,6 @@ import {
 import { useStringEventHanlder } from "../../../shared/useEventListener";
 import { RenameComponentDialogMutation } from "./__generated__/RenameComponentDialogMutation.graphql";
 
-const renameComponentMutation = graphql`
-  mutation RenameComponentDialogMutation($input: RenameComponentInput!) {
-    renameComponent(input: $input) {
-      component {
-        id
-        ...ComponentsList_componentEdge
-      }
-    }
-  }
-`;
-
 export const RenameComponentDialog: React.FC<{
   open: boolean;
   onClose: () => void;
@@ -29,9 +18,20 @@ export const RenameComponentDialog: React.FC<{
   id: string;
 }> = ({ open, name, id, onClose }) => {
   const [commit, isInFlight] = useMutation<RenameComponentDialogMutation>(
-    renameComponentMutation
+    graphql`
+      mutation RenameComponentDialogMutation($input: RenameComponentInput!) {
+        renameComponent(input: $input) {
+          component {
+            id
+            name
+          }
+        }
+      }
+    `
   );
+
   const [componentName, setComponentName] = React.useState(name);
+
   const handlePartNameChange = useStringEventHanlder(setComponentName);
   const handleRename = React.useCallback(() => {
     pipeCommitFn(commit, [
@@ -42,6 +42,7 @@ export const RenameComponentDialog: React.FC<{
       withOnSuccess((x) => x.renameComponent.component?.id, onClose),
     ])({ variables: { input: { name: componentName, id } } });
   }, [commit, id, componentName, onClose]);
+
   return (
     <Modal
       title={`Rename Component ${name}`}

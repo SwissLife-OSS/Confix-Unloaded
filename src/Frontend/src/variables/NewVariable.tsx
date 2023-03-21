@@ -10,29 +10,29 @@ import { useGoTo } from "../shared/useGoTo";
 import { useCommitForm } from "../shared/useCommitForm";
 import { NewVariableMutation } from "./__generated__/NewVariableMutation.graphql";
 
-const newVariableMutation = graphql`
-  mutation NewVariableMutation(
-    $input: CreateVariableInput!
-    $connectionIds: [ID!]!
-  ) {
-    createVariable(input: $input) {
-      variable
-        @appendNode(
-          connections: $connectionIds
-          edgeTypeName: "VariablesEdge"
-        ) {
-        id
-        name
+export const NewVariable: React.FC = () => {
+  const [commit, isInFlight] = useMutation<NewVariableMutation>(graphql`
+    mutation NewVariableMutation(
+      $input: CreateVariableInput!
+      $connectionIds: [ID!]!
+    ) {
+      createVariable(input: $input) {
+        variable
+          @appendNode(
+            connections: $connectionIds
+            edgeTypeName: "VariablesEdge"
+          ) {
+          id
+          name
+        }
       }
     }
-  }
-`;
-export const NewVariable: React.FC = () => {
-  const [commit, isInFlight] =
-    useMutation<NewVariableMutation>(newVariableMutation);
+  `);
 
   const connectionId = useConnectionId("Query_searchVariables");
+
   const goToEdit = useGoTo((id: string) => `../${id}/edit`);
+
   const form = useCommitForm(
     commit,
     {
@@ -52,6 +52,7 @@ export const NewVariable: React.FC = () => {
       ],
     }
   );
+
   return (
     <DetailView style={{ padding: 1 }}>
       <Row>

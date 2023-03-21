@@ -17,7 +17,7 @@ export type EditApplication_Application_Fragment$data = {
   readonly parts: ReadonlyArray<{
     readonly " $fragmentSpreads": FragmentRefs<"EditApplication_part">;
   }>;
-  readonly " $fragmentSpreads": FragmentRefs<"ApplicationPartSectionHeaderFragment" | "EditApplication_ChangeLog_Fragment" | "EditApplication_VariableValues_Fragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"ApplicationPartSectionHeaderFragment" | "EditApplication_ChangeLog" | "EditApplication_VariableValues_Fragment">;
   readonly " $fragmentType": "EditApplication_Application_Fragment";
 };
 export type EditApplication_Application_Fragment$key = {
@@ -93,7 +93,7 @@ const node: ReaderFragment = {
         {
           "args": null,
           "kind": "FragmentSpread",
-          "name": "EditApplication_ChangeLog_Fragment"
+          "name": "EditApplication_ChangeLog"
         }
       ]
     },

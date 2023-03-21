@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<61ae88bf8afe6eac556c6b2e89cacbe8>>
+ * @generated SignedSource<<75342b8b600378cf48d21cdf0cf04af6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,6 +9,7 @@
 // @ts-nocheck
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
+import { FragmentRefs } from "relay-runtime";
 export type CreateGroupInput = {
   name: string;
   requirements: ReadonlyArray<RequirementInput>;
@@ -37,7 +38,7 @@ export type NewGroupMutation$data = {
     }> | null;
     readonly group: {
       readonly id: string;
-      readonly name: string;
+      readonly " $fragmentSpreads": FragmentRefs<"GroupsList_ListItem">;
     } | null;
   };
 };
@@ -67,26 +68,8 @@ v2 = [
 v3 = {
   "alias": null,
   "args": null,
-  "concreteType": "Group",
-  "kind": "LinkedField",
-  "name": "group",
-  "plural": false,
-  "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "name",
-      "storageKey": null
-    }
-  ],
+  "kind": "ScalarField",
+  "name": "id",
   "storageKey": null
 },
 v4 = {
@@ -128,7 +111,23 @@ return {
         "name": "createGroup",
         "plural": false,
         "selections": [
-          (v3/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Group",
+            "kind": "LinkedField",
+            "name": "group",
+            "plural": false,
+            "selections": [
+              (v3/*: any*/),
+              {
+                "args": null,
+                "kind": "FragmentSpread",
+                "name": "GroupsList_ListItem"
+              }
+            ],
+            "storageKey": null
+          },
           {
             "alias": null,
             "args": null,
@@ -165,7 +164,25 @@ return {
         "name": "createGroup",
         "plural": false,
         "selections": [
-          (v3/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Group",
+            "kind": "LinkedField",
+            "name": "group",
+            "plural": false,
+            "selections": [
+              (v3/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "name",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
           {
             "alias": null,
             "args": null,
@@ -212,16 +229,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "c2f6adffaad5a135527b51a127b4222f",
+    "cacheID": "f9fa1031591e572ab85257cdc6f72b4a",
     "id": null,
     "metadata": {},
     "name": "NewGroupMutation",
     "operationKind": "mutation",
-    "text": "mutation NewGroupMutation(\n  $input: CreateGroupInput!\n) {\n  createGroup(input: $input) {\n    group {\n      id\n      name\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n"
+    "text": "mutation NewGroupMutation(\n  $input: CreateGroupInput!\n) {\n  createGroup(input: $input) {\n    group {\n      id\n      ...GroupsList_ListItem\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment GroupsList_ListItem on Group {\n  id\n  name\n}\n"
   }
 };
 })();
 
-(node as any).hash = "8e42551c331e16e346232dae711aad05";
+(node as any).hash = "0387cba4f475a8e022f9ba2bcb0a45d6";
 
 export default node;

@@ -10,7 +10,7 @@
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ApplicationsList_applicationsEdge$data = {
+export type ApplicationsListItem$data = {
   readonly id: string;
   readonly name: string;
   readonly namespace: string;
@@ -25,11 +25,11 @@ export type ApplicationsList_applicationsEdge$data = {
     readonly id: string;
     readonly name: string;
   }>;
-  readonly " $fragmentType": "ApplicationsList_applicationsEdge";
+  readonly " $fragmentType": "ApplicationsListItem";
 };
-export type ApplicationsList_applicationsEdge$key = {
-  readonly " $data"?: ApplicationsList_applicationsEdge$data;
-  readonly " $fragmentSpreads": FragmentRefs<"ApplicationsList_applicationsEdge">;
+export type ApplicationsListItem$key = {
+  readonly " $data"?: ApplicationsListItem$data;
+  readonly " $fragmentSpreads": FragmentRefs<"ApplicationsListItem">;
 };
 
 const node: ReaderFragment = (function(){
@@ -51,7 +51,7 @@ return {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "ApplicationsList_applicationsEdge",
+  "name": "ApplicationsListItem",
   "selections": [
     (v0/*: any*/),
     (v1/*: any*/),

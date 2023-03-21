@@ -19,7 +19,10 @@ const setParentMutation = graphql`
     setParentOfEnvironment(input: $input) {
       environment {
         id
-        ...EditEnvironment_Environment
+        parent {
+          id
+          name
+        }
       }
       errors {
         ... on EnvironmentCycleDetectedError {
@@ -45,7 +48,9 @@ export const SetParentEnvironmentDialog: React.FC<{
 }> = ({ open, name, id, onClose }) => {
   const [commit, isInFlight] =
     useMutation<SetParentEnvironmentDialogMutation>(setParentMutation);
+
   const [parent, setParent] = React.useState<string>();
+
   const handleSetParent = React.useCallback(() => {
     if (!parent) {
       return;
@@ -59,6 +64,7 @@ export const SetParentEnvironmentDialog: React.FC<{
       withOnSuccess((x) => x.setParentOfEnvironment.environment?.id, onClose),
     ])({ variables: { input: { parentId: parent, environmentId: id } } });
   }, [commit, id, parent, onClose]);
+
   return (
     <Modal
       title={`SetParent Environment ${name}`}

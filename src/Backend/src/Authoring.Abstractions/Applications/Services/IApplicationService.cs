@@ -22,7 +22,11 @@ public interface IApplicationService
 
     Task<ApplicationPart?> GetPartByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
-    Task<IQueryable<Application>> Query(CancellationToken cancellationToken);
+    Task<IReadOnlyList<Application>> Search(
+        int skip,
+        int take,
+        string? search,
+        CancellationToken cancellationToken);
 
     Task<Application> CreateAsync(
         string name,

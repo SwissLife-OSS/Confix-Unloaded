@@ -8,27 +8,6 @@ import { ComponentDiffEditor } from "./components/ComponentDiffEditor";
 import { useSearchQuery } from "../shared/useQuery";
 import { useHandler } from "../shared/useHandler";
 
-const applicationPartComponentQuery = graphql`
-  query CompareApplicationPartComponentVersions_Query(
-    $partComponentId: ID!
-    $from: Int!
-    $to: Int!
-  ) {
-    applicationPartComponentById(partComponentId: $partComponentId) {
-      version
-      fromValues: values(version: $from)
-      toValues: values(version: $to)
-      changeLog {
-        change {
-          ... on ApplicationPartComponentValuesChange {
-            partComponentVersion
-          }
-        }
-      }
-    }
-  }
-`;
-
 export const generateComparePartComponentVersionPath = (
   applicationId: string,
   partComponentId: string,
@@ -61,7 +40,26 @@ export const CompareApplicationPartComponentVersions: React.FC<{
   const to = Math.max(fromParam, toParam);
 
   const data = useLazyLoadQuery<CompareApplicationPartComponentVersions_Query>(
-    applicationPartComponentQuery,
+    graphql`
+      query CompareApplicationPartComponentVersions_Query(
+        $partComponentId: ID!
+        $from: Int!
+        $to: Int!
+      ) {
+        applicationPartComponentById(partComponentId: $partComponentId) {
+          version
+          fromValues: values(version: $from)
+          toValues: values(version: $to)
+          changeLog {
+            change {
+              ... on ApplicationPartComponentValuesChange {
+                partComponentVersion
+              }
+            }
+          }
+        }
+      }
+    `,
     {
       partComponentId,
       from,

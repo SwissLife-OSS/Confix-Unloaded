@@ -104,15 +104,20 @@ internal sealed class ApplicationService : IApplicationService
                 Read,
                 cancellationToken);
 
-    public async Task<IQueryable<Application>> Query(CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<Application>> Search(
+        int skip,
+        int take,
+        string? search,
+        CancellationToken cancellationToken)
     {
         var session = await _sessionAccessor.GetSession(cancellationToken);
         if (session is null)
         {
-            return Array.Empty<Application>().AsQueryable();
+            return Array.Empty<Application>();
         }
 
-        return _appStore.Query().Where(x => session.Namespaces.Contains(x.Namespace));
+        return await _appStore
+            .Search(skip, take, session.Namespaces, search, cancellationToken);
     }
 
     public async Task<Application> CreateAsync(
@@ -159,8 +164,7 @@ internal sealed class ApplicationService : IApplicationService
 
         application = application with
         {
-            Version = application.Version + 1,
-            Parts = applicationParts
+            Version = application.Version + 1, Parts = applicationParts
         };
 
         using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))

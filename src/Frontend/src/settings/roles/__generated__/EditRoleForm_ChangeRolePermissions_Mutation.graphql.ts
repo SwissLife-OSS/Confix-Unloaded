@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6059f1d99102d9bca8db48ec8101166f>>
+ * @generated SignedSource<<b0ad96371a6183e8cc90c9e991393b1a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -37,7 +37,7 @@ export type EditRoleForm_ChangeRolePermissions_Mutation$data = {
     }> | null;
     readonly role: {
       readonly id: string;
-      readonly " $fragmentSpreads": FragmentRefs<"EditRole_Role">;
+      readonly " $fragmentSpreads": FragmentRefs<"EditRole_Form">;
     } | null;
   };
 };
@@ -116,7 +116,7 @@ return {
               {
                 "args": null,
                 "kind": "FragmentSpread",
-                "name": "EditRole_Role"
+                "name": "EditRole_Form"
               }
             ],
             "storageKey": null
@@ -262,16 +262,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "602d55f174b0e4c3f91669003ffebf1b",
+    "cacheID": "97b99f2d810597f71e2d1eaf1565cf1f",
     "id": null,
     "metadata": {},
     "name": "EditRoleForm_ChangeRolePermissions_Mutation",
     "operationKind": "mutation",
-    "text": "mutation EditRoleForm_ChangeRolePermissions_Mutation(\n  $input: ChangeRolePermissionsInput!\n) {\n  changeRolePermissions(input: $input) {\n    role {\n      id\n      ...EditRole_Role\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment EditRole_Role on Role {\n  id\n  name\n  permissions {\n    scope\n    permissions {\n      isRead\n      isWrite\n      isClaim\n      isPublish\n      isDecrypt\n    }\n  }\n}\n"
+    "text": "mutation EditRoleForm_ChangeRolePermissions_Mutation(\n  $input: ChangeRolePermissionsInput!\n) {\n  changeRolePermissions(input: $input) {\n    role {\n      id\n      ...EditRole_Form\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment EditRole_Form on Role {\n  id\n  name\n  permissions {\n    scope\n    permissions {\n      isRead\n      isWrite\n      isClaim\n      isPublish\n      isDecrypt\n    }\n  }\n  ...EditRole_Header\n}\n\nfragment EditRole_Header on Role {\n  id\n  name\n}\n"
   }
 };
 })();
 
-(node as any).hash = "f5b0b9d93a8003cf33ce714d44268421";
+(node as any).hash = "56594864461e5fcc7f090efce1f75679";
 
 export default node;

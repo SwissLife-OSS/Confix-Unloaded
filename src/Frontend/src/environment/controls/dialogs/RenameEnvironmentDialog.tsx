@@ -10,17 +10,7 @@ import {
 } from "../../../shared/pipeCommitFn";
 import { useStringEventHanlder } from "../../../shared/useEventListener";
 import { RenameEnvironmentDialogMutation } from "./__generated__/RenameEnvironmentDialogMutation.graphql";
-
-const renameEnvironmentMutation = graphql`
-  mutation RenameEnvironmentDialogMutation($input: RenameEnvironmentInput!) {
-    renameEnvironment(input: $input) {
-      environment {
-        id
-        ...EnvironmentsList_EnvironmentEdge
-      }
-    }
-  }
-`;
+import { useCallback, useState } from "react";
 
 export const RenameEnvironmentDialog: React.FC<{
   open: boolean;
@@ -29,19 +19,32 @@ export const RenameEnvironmentDialog: React.FC<{
   id: string;
 }> = ({ open, name, id, onClose }) => {
   const [commit, isInFlight] = useMutation<RenameEnvironmentDialogMutation>(
-    renameEnvironmentMutation
+    graphql`
+      mutation RenameEnvironmentDialogMutation(
+        $input: RenameEnvironmentInput!
+      ) {
+        renameEnvironment(input: $input) {
+          environment {
+            id
+            name
+          }
+        }
+      }
+    `
   );
-  const [EnvironmentName, setEnvironmentName] = React.useState(name);
+  const [environmentName, setEnvironmentName] = useState(name);
+
   const handlePartNameChange = useStringEventHanlder(setEnvironmentName);
-  const handleRename = React.useCallback(() => {
+  const handleRename = useCallback(() => {
     pipeCommitFn(commit, [
       withSuccessMessage(
         (x) => x.renameEnvironment.environment?.id,
         "Renamed Environment"
       ),
       withOnSuccess((x) => x.renameEnvironment.environment?.id, onClose),
-    ])({ variables: { input: { name: EnvironmentName, id } } });
-  }, [commit, id, EnvironmentName, onClose]);
+    ])({ variables: { input: { name: environmentName, id } } });
+  }, [commit, id, environmentName, onClose]);
+
   return (
     <Modal
       title={`Rename Environment ${name}`}
@@ -52,7 +55,7 @@ export const RenameEnvironmentDialog: React.FC<{
     >
       <FieldInput
         label="New Name"
-        value={EnvironmentName}
+        value={environmentName}
         onChange={handlePartNameChange}
       />
     </Modal>

@@ -22,6 +22,7 @@ internal sealed class ChangeLogCollectionConfiguration : IMongoCollectionConfigu
             .AddBsonClassMap<RenameApplicationChange>(cm => cm.AutoMap())
             .AddBsonClassMap<RenameApplicationPartChange>(cm => cm.AutoMap())
             .AddBsonClassMap<AddComponentToApplicationPartChange>(cm => cm.AutoMap())
+            .AddBsonClassMap<ChangeScopeOfComponentChange>(cm => cm.AutoMap())
             .AddBsonClassMap<AddPartToApplicationChange>(cm => cm.AutoMap())
             .AddBsonClassMap<RemovePartFromApplicationChange>(cm => cm.AutoMap())
             .AddBsonClassMap<RemoveComponentFromApplicationPartChange>(cm => cm.AutoMap())

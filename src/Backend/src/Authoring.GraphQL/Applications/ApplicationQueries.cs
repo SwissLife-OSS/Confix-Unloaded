@@ -1,5 +1,7 @@
-using Confix.Authoring.GraphQL.Applications.Filters;
+using Confix.Authoring.GraphQL.Components;
 using Confix.Authoring.Store;
+using HotChocolate.Resolvers;
+using HotChocolate.Types.Pagination;
 
 namespace Confix.Authoring.GraphQL.Applications;
 
@@ -9,13 +11,14 @@ public sealed class ApplicationQueries
     /// <summary>
     ///     Get all application configurations.
     /// </summary>
-    [UsePaging]
-    [UseFiltering(typeof(ApplicationFilterInputType))]
-    public Task<IQueryable<Application>> GetApplicationsAsync(
+    [UsePaging(AllowBackwardPagination = false, IncludeTotalCount = false)]
+    public async Task<Connection<Application>> GetApplicationsAsync(
         [Service] IApplicationService applicationService,
-        CancellationToken cancellationToken)
+        IResolverContext context,
+        string? search)
     {
-        return applicationService.Query(cancellationToken);
+        return await context.ApplyPaginationAsync(
+            (skip, take, ct) => applicationService.Search(skip, take, search, ct));
     }
 
     /// <summary>

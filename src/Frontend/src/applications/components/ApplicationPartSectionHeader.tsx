@@ -4,22 +4,20 @@ import { graphql } from "babel-plugin-relay/macro";
 import { SectionHeader } from "../../shared/SectionHeader";
 import { useToggle } from "../../shared/useToggle";
 import { AddPartToApplicationDialog } from "../dialogs/AddPartToApplicationDialog";
-import { ApplicationPartSectionHeaderFragment$key } from "./__generated__/ApplicationPartSectionHeaderFragment.graphql";
-
-const applicationFragment = graphql`
-  fragment ApplicationPartSectionHeaderFragment on Application {
-    id
-    name
-  }
-`;
+import { ApplicationPartSectionHeader$key } from "./__generated__/ApplicationPartSectionHeader.graphql";
 
 export const ApplicationPartSectionHeader: React.FC<{
-  applicationKey: ApplicationPartSectionHeaderFragment$key;
   children?: React.ReactElement;
-}> = ({ applicationKey, children }) => {
+  fragmentRef: ApplicationPartSectionHeader$key;
+}> = ({ fragmentRef, children }) => {
   const { name: applicationName, id: applicationId } = useFragment(
-    applicationFragment,
-    applicationKey
+    graphql`
+      fragment ApplicationPartSectionHeader on Application {
+        id
+        name
+      }
+    `,
+    fragmentRef
   );
   const [isEdit, , enable, disable] = useToggle();
   return (

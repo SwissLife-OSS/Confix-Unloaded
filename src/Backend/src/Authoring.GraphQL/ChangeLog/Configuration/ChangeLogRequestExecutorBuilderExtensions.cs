@@ -20,6 +20,7 @@ public static class ChangeLogRequestExecutorBuilderExtensions
 
         // extensions
         builder.AddTypeExtension<ComponentExtensions>();
+        builder.AddTypeExtension<ComponentScopeExtensions>();
 
         // change log
         builder.AddInterfaceType<IChange>(x => x.Name("Change"));

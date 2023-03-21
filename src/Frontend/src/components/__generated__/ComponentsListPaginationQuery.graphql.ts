@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e7bac6ec2ed86bb1b3cbab42a3799e52>>
+ * @generated SignedSource<<00888f7938b1e791946b475822e0e9ec>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,9 +13,10 @@ import { FragmentRefs } from "relay-runtime";
 export type ComponentsListPaginationQuery$variables = {
   count?: number | null;
   cursor?: string | null;
+  search?: string | null;
 };
 export type ComponentsListPaginationQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"ComponentsList_components">;
+  readonly " $fragmentSpreads": FragmentRefs<"ComponentsList">;
 };
 export type ComponentsListPaginationQuery = {
   response: ComponentsListPaginationQuery$data;
@@ -33,6 +34,11 @@ var v0 = [
     "defaultValue": null,
     "kind": "LocalArgument",
     "name": "cursor"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "search"
   }
 ],
 v1 = [
@@ -45,6 +51,11 @@ v1 = [
     "kind": "Variable",
     "name": "first",
     "variableName": "count"
+  },
+  {
+    "kind": "Variable",
+    "name": "search",
+    "variableName": "search"
   }
 ];
 return {
@@ -57,7 +68,7 @@ return {
       {
         "args": null,
         "kind": "FragmentSpread",
-        "name": "ComponentsList_components"
+        "name": "ComponentsList"
       }
     ],
     "type": "Query",
@@ -158,7 +169,9 @@ return {
       {
         "alias": null,
         "args": (v1/*: any*/),
-        "filters": null,
+        "filters": [
+          "search"
+        ],
         "handle": "connection",
         "key": "Query_components",
         "kind": "LinkedHandle",
@@ -167,16 +180,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "272457b7c82f93abf9aca109407f7ea3",
+    "cacheID": "09b8e9bb3978953253886783d65a9eb1",
     "id": null,
     "metadata": {},
     "name": "ComponentsListPaginationQuery",
     "operationKind": "query",
-    "text": "query ComponentsListPaginationQuery(\n  $count: Int\n  $cursor: String\n) {\n  ...ComponentsList_components\n}\n\nfragment ComponentsList_componentEdge on Component {\n  id\n  name\n}\n\nfragment ComponentsList_components on Query {\n  components(after: $cursor, first: $count) {\n    edges {\n      node {\n        ...ComponentsList_componentEdge\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query ComponentsListPaginationQuery(\n  $count: Int\n  $cursor: String\n  $search: String\n) {\n  ...ComponentsList\n}\n\nfragment ComponentsList on Query {\n  components(after: $cursor, first: $count, search: $search) {\n    edges {\n      node {\n        id\n        name\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "d19d5adb277a80308b5687e44afb844d";
+(node as any).hash = "7d11a1e9c5e4ed3745e2ec3fe5aaccd4";
 
 export default node;

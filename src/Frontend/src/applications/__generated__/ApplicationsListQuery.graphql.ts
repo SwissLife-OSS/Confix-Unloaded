@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<afaf07258b54e0c509625681fbddd50a>>
+ * @generated SignedSource<<66255d829a237d7101f112ae8cf70e29>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,33 +10,13 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ApplicationFilterInput = {
-  and?: ReadonlyArray<ApplicationFilterInput> | null;
-  name?: StringOperationFilterInput | null;
-  namespace?: StringOperationFilterInput | null;
-  or?: ReadonlyArray<ApplicationFilterInput> | null;
-};
-export type StringOperationFilterInput = {
-  and?: ReadonlyArray<StringOperationFilterInput> | null;
-  contains?: string | null;
-  endsWith?: string | null;
-  eq?: string | null;
-  in?: ReadonlyArray<string | null> | null;
-  ncontains?: string | null;
-  nendsWith?: string | null;
-  neq?: string | null;
-  nin?: ReadonlyArray<string | null> | null;
-  nstartsWith?: string | null;
-  or?: ReadonlyArray<StringOperationFilterInput> | null;
-  startsWith?: string | null;
-};
 export type ApplicationsListQuery$variables = {
   count?: number | null;
   cursor?: string | null;
-  where?: ApplicationFilterInput | null;
+  search?: string | null;
 };
 export type ApplicationsListQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"ApplicationsList_applications">;
+  readonly " $fragmentSpreads": FragmentRefs<"ApplicationsList">;
 };
 export type ApplicationsListQuery = {
   response: ApplicationsListQuery$data;
@@ -57,7 +37,7 @@ v1 = {
 v2 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "where"
+  "name": "search"
 },
 v3 = [
   {
@@ -72,8 +52,8 @@ v3 = [
   },
   {
     "kind": "Variable",
-    "name": "where",
-    "variableName": "where"
+    "name": "search",
+    "variableName": "search"
   }
 ],
 v4 = {
@@ -88,6 +68,13 @@ v5 = {
   "args": null,
   "kind": "ScalarField",
   "name": "name",
+  "storageKey": null
+},
+v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "namespace",
   "storageKey": null
 };
 return {
@@ -104,7 +91,7 @@ return {
       {
         "args": null,
         "kind": "FragmentSpread",
-        "name": "ApplicationsList_applications"
+        "name": "ApplicationsList"
       }
     ],
     "type": "Query",
@@ -146,13 +133,7 @@ return {
                 "selections": [
                   (v4/*: any*/),
                   (v5/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "namespace",
-                    "storageKey": null
-                  },
+                  (v6/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -161,8 +142,8 @@ return {
                     "name": "parts",
                     "plural": true,
                     "selections": [
-                      (v4/*: any*/),
                       (v5/*: any*/),
+                      (v4/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -171,7 +152,6 @@ return {
                         "name": "components",
                         "plural": true,
                         "selections": [
-                          (v4/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -184,7 +164,21 @@ return {
                               (v5/*: any*/)
                             ],
                             "storageKey": null
-                          }
+                          },
+                          (v4/*: any*/)
+                        ],
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "Application",
+                        "kind": "LinkedField",
+                        "name": "application",
+                        "plural": false,
+                        "selections": [
+                          (v4/*: any*/),
+                          (v6/*: any*/)
                         ],
                         "storageKey": null
                       }
@@ -243,7 +237,7 @@ return {
         "alias": null,
         "args": (v3/*: any*/),
         "filters": [
-          "where"
+          "search"
         ],
         "handle": "connection",
         "key": "Query_applications",
@@ -253,16 +247,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "ce55f876b6d7e6032c94e24e6bd51e03",
+    "cacheID": "a7311a2069081b0c48fb89f27dedbbaa",
     "id": null,
     "metadata": {},
     "name": "ApplicationsListQuery",
     "operationKind": "query",
-    "text": "query ApplicationsListQuery(\n  $cursor: String\n  $count: Int\n  $where: ApplicationFilterInput\n) {\n  ...ApplicationsList_applications\n}\n\nfragment ApplicationsList_applications on Query {\n  applications(after: $cursor, first: $count, where: $where) {\n    edges {\n      node {\n        id\n        name\n        namespace\n        ...ApplicationsList_applicationsEdge\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment ApplicationsList_applicationsEdge on Application {\n  id\n  name\n  namespace\n  parts {\n    id\n    name\n    components {\n      id\n      definition {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": "query ApplicationsListQuery(\n  $cursor: String\n  $count: Int\n  $search: String\n) {\n  ...ApplicationsList\n}\n\nfragment AddComponentsToApplicationPartDialog on ApplicationPart {\n  id\n  name\n  application {\n    id\n    namespace\n  }\n}\n\nfragment ApplicationsList on Query {\n  applications(after: $cursor, first: $count, search: $search) {\n    edges {\n      node {\n        id\n        name\n        namespace\n        ...ApplicationsListItem\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment ApplicationsListItem on Application {\n  id\n  ...ApplicationsListItem_DefaultListItem\n  ...ApplicationsListItem_SelectedListItem\n}\n\nfragment ApplicationsListItem_ApplicationPart on ApplicationPart {\n  id\n  name\n  components {\n    definition {\n      id\n    }\n    ...ApplicationsListItem_Component\n    id\n  }\n  ...AddComponentsToApplicationPartDialog\n}\n\nfragment ApplicationsListItem_Component on ApplicationPartComponent {\n  id\n  definition {\n    id\n    name\n  }\n}\n\nfragment ApplicationsListItem_DefaultListItem on Application {\n  id\n  name\n  namespace\n  parts {\n    name\n    id\n  }\n}\n\nfragment ApplicationsListItem_SelectedListItem on Application {\n  id\n  name\n  namespace\n  parts {\n    id\n    ...ApplicationsListItem_ApplicationPart\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "6b31a121f725620ea7c7068d4ccd39cc";
+(node as any).hash = "650f96258c6ee44bcaccdf4823870b44";
 
 export default node;

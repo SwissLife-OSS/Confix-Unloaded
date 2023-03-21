@@ -11,27 +11,6 @@ import { useCallback } from "react";
 import { Alert, Modal } from "antd";
 import { RemovePartFromApplicationDialogMutation } from "./__generated__/RemovePartFromApplicationDialogMutation.graphql";
 
-export const removePartFromApplicationDialog = graphql`
-  mutation RemovePartFromApplicationDialogMutation(
-    $input: RemoveApplicationPartInput!
-  ) {
-    removeApplicationPart(input: $input) {
-      application {
-        id
-        ...ApplicationsList_applicationsEdge
-        ...EditApplication_Application_Fragment
-      }
-      errors {
-        __typename
-        ... on UserError {
-          message
-          code
-        }
-      }
-    }
-  }
-`;
-
 export const RemovePartFromApplicationDialog: React.FC<{
   open: boolean;
   onClose: () => void;
@@ -40,8 +19,28 @@ export const RemovePartFromApplicationDialog: React.FC<{
 }> = ({ open, applicationPartId, applicationPartName, onClose }) => {
   const [commit, isInFlight] =
     useMutation<RemovePartFromApplicationDialogMutation>(
-      removePartFromApplicationDialog
+      graphql`
+        mutation RemovePartFromApplicationDialogMutation(
+          $input: RemoveApplicationPartInput!
+        ) {
+          removeApplicationPart(input: $input) {
+            application {
+              id
+              ...ApplicationsListItem
+              ...EditApplication
+            }
+            errors {
+              __typename
+              ... on UserError {
+                message
+                code
+              }
+            }
+          }
+        }
+      `
     );
+
   const handleAddApplication = useCallback(() => {
     pipeCommitFn(commit, [
       withSuccessMessage(
@@ -52,6 +51,7 @@ export const RemovePartFromApplicationDialog: React.FC<{
       withOnSuccess((x) => x.removeApplicationPart.application?.id, onClose),
     ])({ variables: { input: { applicationPartId } } });
   }, [commit, applicationPartId, onClose, applicationPartName]);
+
   return (
     <Modal
       title={`Remove ${applicationPartName}`}

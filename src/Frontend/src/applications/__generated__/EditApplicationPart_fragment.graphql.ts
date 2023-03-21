@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<fcfdc79a194fbfe9d2a1628b0a4e16b3>>
+ * @generated SignedSource<<a7ff4a8a0aa8480daab088bf1dc9e53a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -25,7 +25,7 @@ export type EditApplicationPart_fragment$data = {
   }>;
   readonly id: string;
   readonly name: string;
-  readonly " $fragmentSpreads": FragmentRefs<"ApplicationPartChangeLog_ChangeLog_Fragment" | "EditApplicationPart_DeployedEnvironment_Fragment" | "EditApplicationPart_VariableValues_Fragment" | "PublishedApplicationPartsFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"ApplicationPartChangeLog" | "EditApplicationPart_DeployedEnvironment_Fragment" | "EditApplicationPart_VariableValues_Fragment" | "PublishedApplicationPartsFragment">;
   readonly " $fragmentType": "EditApplicationPart_fragment";
 };
 export type EditApplicationPart_fragment$key = {
@@ -130,7 +130,7 @@ return {
         {
           "args": null,
           "kind": "FragmentSpread",
-          "name": "ApplicationPartChangeLog_ChangeLog_Fragment"
+          "name": "ApplicationPartChangeLog"
         }
       ]
     },
@@ -155,6 +155,6 @@ return {
 };
 })();
 
-(node as any).hash = "c8f759aa76978deb8c028ee4e3bc12e7";
+(node as any).hash = "f0f4db271ae63de1c96584057ba24ee9";
 
 export default node;

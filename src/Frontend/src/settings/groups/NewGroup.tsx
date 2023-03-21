@@ -14,31 +14,35 @@ import { useConnectionId } from "../../shared/useConnectionId";
 import { useGoTo } from "../../shared/useGoTo";
 import { NewGroupMutation } from "./__generated__/NewGroupMutation.graphql";
 
-const newGroupMutation = graphql`
-  mutation NewGroupMutation($input: CreateGroupInput!, $connectionIds: [ID!]!) {
-    createGroup(input: $input) {
-      group
-        @appendNode(connections: $connectionIds, edgeTypeName: "GroupsEdge") {
-        id
-        name
-      }
-      errors {
-        ... on UserError {
-          message
-          code
+export const NewGroup: React.FC = () => {
+  const [commit, isInFlight] = useMutation<NewGroupMutation>(graphql`
+    mutation NewGroupMutation(
+      $input: CreateGroupInput!
+      $connectionIds: [ID!]!
+    ) {
+      createGroup(input: $input) {
+        group
+          @appendNode(connections: $connectionIds, edgeTypeName: "GroupsEdge") {
+          id
+          ...GroupsList_ListItem
+        }
+        errors {
+          ... on UserError {
+            message
+            code
+          }
         }
       }
     }
-  }
-`;
-export const NewGroup: React.FC = () => {
-  const [commit, isInFlight] = useMutation<NewGroupMutation>(newGroupMutation);
+  `);
 
   const connectionIds = [
     useConnectionId("useGroups_searchGroups"),
     useConnectionId("Query_searchGroups"),
   ];
+
   const goToEdit = useGoTo((id: string) => `${id}/edit`);
+
   const form = useCommitForm(
     commit,
     {
@@ -55,6 +59,7 @@ export const NewGroup: React.FC = () => {
       ],
     }
   );
+
   return (
     <DetailView style={{ padding: 1 }}>
       <Row>

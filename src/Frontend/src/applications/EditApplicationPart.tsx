@@ -1,13 +1,8 @@
 import * as React from "react";
-import {
-  useFragment,
-  useLazyLoadQuery,
-  useRefetchableFragment,
-} from "react-relay";
+import { useFragment } from "react-relay";
 import { DetailView } from "../shared/DetailView";
 import { graphql } from "babel-plugin-relay/macro";
 import { useParams } from "react-router";
-import { EditApplicationPart_GetById_Query } from "./__generated__/EditApplicationPart_GetById_Query.graphql";
 import { Col, Empty, Row, Tabs, Typography } from "antd";
 import {
   EditableBreadcrumbHeader,
@@ -15,10 +10,6 @@ import {
 } from "../shared/EditablePageHeader";
 import { PublishIcon } from "../icons/icons";
 import { useToggle } from "../shared/useToggle";
-import {
-  EditApplicationPart_fragment$data,
-  EditApplicationPart_fragment$key,
-} from "./__generated__/EditApplicationPart_fragment.graphql";
 import { RenameApplicationPartDialog } from "./dialogs/RenameApplicationPartDialog";
 import {
   VariableOption,
@@ -27,14 +18,12 @@ import {
 import { DefaultSuspense } from "../shared/DefaultSuspense";
 import { useCallback, useEffect, useState } from "react";
 import { VariableEditor } from "../variables/controls/VariableEditor";
-import { EditApplicationPartRefetchPartQuery } from "./__generated__/EditApplicationPartRefetchPartQuery.graphql";
 import { VariableValueList } from "../variables/controls/VariableValueList";
-import { useSilentRefresh } from "../shared/useDefaultRefetch";
+import { useSilentRefreshQuery } from "../shared/useDefaultRefetch";
 import { useLocation } from "react-router-dom";
-import { EditApplicationPart_VariableValues_Fragment$key } from "./__generated__/EditApplicationPart_VariableValues_Fragment.graphql";
 import { useTabSwitcher } from "../shared/useTabSwitcher";
 import { PublishApplicationPartDialog } from "./dialogs/PublishApplicationPartDialog";
-import { EditApplicationPart_DeployedEnvironment_Fragment$key } from "./__generated__/EditApplicationPart_DeployedEnvironment_Fragment.graphql";
+import { EditApplicationPart_DeployedEnvironments$key } from "./__generated__/EditApplicationPart_DeployedEnvironments.graphql";
 import { DeployedEnvironmentsOverview } from "./components/DeployedEnvironmentsOverview";
 import {
   Title,
@@ -42,90 +31,57 @@ import {
 } from "./components/ApplicationPartChangeLog";
 import { ApplicationPartComponents } from "./components/ApplicationPartComponents";
 import { PublishedApplicationParts } from "./components/PublishedApplicationParts";
-
-const applicationByIdQuery = graphql`
-  query EditApplicationPart_GetById_Query($id: ID!) {
-    applicationPartById(id: $id) {
-      id
-      ...EditApplicationPart_fragment
-    }
-  }
-`;
-
-const applicationPartfragment = graphql`
-  fragment EditApplicationPart_fragment on ApplicationPart
-  @refetchable(queryName: "EditApplicationPartRefetchPartQuery") {
-    id
-    name
-    application {
-      id
-      namespace
-      name
-    }
-    components {
-      id
-      definition {
-        id
-      }
-      ...ApplicationPartComponents_component
-    }
-    ...EditApplicationPart_VariableValues_Fragment @defer
-    ...ApplicationPartChangeLog_ChangeLog_Fragment @defer
-    ...EditApplicationPart_DeployedEnvironment_Fragment @defer
-    ...PublishedApplicationPartsFragment
-  }
-`;
-
-const applicationDeployedEnvironmentPart = graphql`
-  fragment EditApplicationPart_DeployedEnvironment_Fragment on ApplicationPart {
-    deployments {
-      nodes {
-        ...DeployedEnvironmentsOverviewFragment
-      }
-    }
-  }
-`;
-
-const applicationVariableValuesFragment = graphql`
-  fragment EditApplicationPart_VariableValues_Fragment on ApplicationPart {
-    variableValues {
-      ...VariableValueList_values
-    }
-  }
-`;
+import { EditApplicationPart_Variable$key } from "./__generated__/EditApplicationPart_Variable.graphql";
+import { EditApplicationPart$key } from "./__generated__/EditApplicationPart.graphql";
+import { EditApplicationPartQuery } from "./__generated__/EditApplicationPartQuery.graphql";
 
 export const EditApplicationPart = () => {
   const { applicationId = "", id: applicationPartId = "" } = useParams();
   const variables = { id: applicationPartId };
   const { tab, navigateToTab } = useTabSwitcher();
-  const data = useLazyLoadQuery<EditApplicationPart_GetById_Query>(
-    applicationByIdQuery,
-    variables
-  );
-  const [applicationPartById, refetch] = useRefetchableFragment<
-    EditApplicationPartRefetchPartQuery,
-    EditApplicationPart_fragment$key
-  >(applicationPartfragment, data.applicationPartById);
 
-  const { refresh } = useSilentRefresh(
-    applicationByIdQuery,
-    refetch,
-    variables
+  const { data: query, refresh } =
+    useSilentRefreshQuery<EditApplicationPartQuery>(
+      graphql`
+        query EditApplicationPartQuery($id: ID!) {
+          applicationPartById(id: $id) {
+            id
+            ...EditApplicationPart
+          }
+        }
+      `,
+      variables
+    );
+
+  const data = useFragment<EditApplicationPart$key>(
+    graphql`
+      fragment EditApplicationPart on ApplicationPart {
+        id
+        name
+        application {
+          id
+          namespace
+          name
+        }
+        ...ApplicationPartComponents
+        ...EditApplicationPart_Variable @defer
+        ...ApplicationPartChangeLog @defer
+        ...EditApplicationPart_DeployedEnvironments @defer
+        ...PublishedApplicationParts
+      }
+    `,
+    query.applicationPartById
   );
 
-  if (!applicationPartById) {
+  if (!data) {
     return (
       <DetailView style={{ padding: 1 }}>
         Coult not find application part
       </DetailView>
     );
   }
-  const {
-    id,
-    components,
-    name: applicationPartName,
-    application,
-  } = applicationPartById;
+
+  const { id, name: applicationPartName, application } = data;
 
   return (
     <DetailView style={{ padding: 1 }}>
@@ -155,13 +111,13 @@ export const EditApplicationPart = () => {
                     <Title>
                       <h3>Deployments</h3>
                     </Title>
-                    <DeployedEnvironments data={applicationPartById} />
+                    <DeployedEnvironments fragmentRef={data} />
                     <Title>
                       <h3>Components</h3>
                     </Title>
                     <ApplicationPartComponents
                       applicationId={applicationId}
-                      components={components}
+                      fragmentRef={data}
                     />
                   </>
                 ),
@@ -171,7 +127,7 @@ export const EditApplicationPart = () => {
                 label: "Variables",
                 children: (
                   <DefaultSuspense>
-                    <Variables data={applicationPartById} refetch={refresh} />
+                    <Variables fragmentRef={data} refetch={refresh} />
                   </DefaultSuspense>
                 ),
               },
@@ -180,7 +136,7 @@ export const EditApplicationPart = () => {
                 label: "Publish Log",
                 children: (
                   <DefaultSuspense>
-                    <PublishedApplicationParts data={applicationPartById} />
+                    <PublishedApplicationParts fragmentRef={data} />
                   </DefaultSuspense>
                 ),
               },
@@ -189,7 +145,7 @@ export const EditApplicationPart = () => {
                 label: "Change Log",
                 children: (
                   <DefaultSuspense>
-                    <ApplicationPartChangeLog data={applicationPartById} />
+                    <ApplicationPartChangeLog fragmentRef={data} />
                   </DefaultSuspense>
                 ),
               },
@@ -202,28 +158,42 @@ export const EditApplicationPart = () => {
 };
 
 const Variables: React.FC<{
-  data: EditApplicationPart_fragment$data;
+  fragmentRef: EditApplicationPart_Variable$key;
   refetch: () => void;
-}> = ({ data, refetch }) => {
-  const { variableValues } =
-    useFragment<EditApplicationPart_VariableValues_Fragment$key>(
-      applicationVariableValuesFragment,
-      data
-    );
+}> = ({ fragmentRef, refetch }) => {
   const { state } = useLocation();
+
+  const data = useFragment(
+    graphql`
+      fragment EditApplicationPart_Variable on ApplicationPart {
+        id
+        application {
+          id
+        }
+        variableValues {
+          ...VariableValueList
+        }
+      }
+    `,
+    fragmentRef
+  );
+
   const [selected, setSelected] = useState<VariableOption>(
     state?.variableOption
   );
-  useEffect(
-    () => state?.variableOption && setSelected(state?.variableOption),
-    [state?.variableOption]
-  );
+
   const handleVariableValueEditClick = useCallback(
     (id: string, name: string) => {
       setSelected({ label: name, value: id });
     },
     []
   );
+
+  useEffect(
+    () => state?.variableOption && setSelected(state?.variableOption),
+    [state?.variableOption]
+  );
+
   return (
     <>
       <Row gutter={[16, 16]}>
@@ -252,7 +222,7 @@ const Variables: React.FC<{
           <DefaultSuspense>
             <VariableValueList
               onEdit={handleVariableValueEditClick}
-              data={variableValues}
+              data={data.variableValues}
             />
           </DefaultSuspense>
         </Col>
@@ -262,19 +232,27 @@ const Variables: React.FC<{
 };
 
 const DeployedEnvironments: React.FC<{
-  data: EditApplicationPart_DeployedEnvironment_Fragment$key;
-}> = ({ data }) => {
-  const { deployments } =
-    useFragment<EditApplicationPart_DeployedEnvironment_Fragment$key>(
-      applicationDeployedEnvironmentPart,
-      data
-    );
+  fragmentRef: EditApplicationPart_DeployedEnvironments$key;
+}> = ({ fragmentRef }) => {
+  const { deployments } = useFragment(
+    graphql`
+      fragment EditApplicationPart_DeployedEnvironments on ApplicationPart {
+        deployments {
+          nodes {
+            ...DeployedEnvironmentsOverview
+          }
+        }
+      }
+    `,
+    fragmentRef
+  );
+
   if (!deployments?.nodes || deployments.nodes.length === 0) {
     return <Empty description="This part was never deployed"></Empty>;
   } else {
     return (
       <Row>
-        <DeployedEnvironmentsOverview data={deployments?.nodes} />
+        <DeployedEnvironmentsOverview fragmentRef={deployments?.nodes} />
       </Row>
     );
   }

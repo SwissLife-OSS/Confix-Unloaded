@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e341cc56ca86b829cb5d4e048a4993a7>>
+ * @generated SignedSource<<366efa95be13a36c290a5569799b7e1b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,9 +13,10 @@ import { FragmentRefs } from "relay-runtime";
 export type ComponentsListQuery$variables = {
   count?: number | null;
   cursor?: string | null;
+  search?: string | null;
 };
 export type ComponentsListQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"ComponentsList_components">;
+  readonly " $fragmentSpreads": FragmentRefs<"ComponentsList">;
 };
 export type ComponentsListQuery = {
   response: ComponentsListQuery$data;
@@ -33,7 +34,12 @@ v1 = {
   "kind": "LocalArgument",
   "name": "cursor"
 },
-v2 = [
+v2 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "search"
+},
+v3 = [
   {
     "kind": "Variable",
     "name": "after",
@@ -43,13 +49,19 @@ v2 = [
     "kind": "Variable",
     "name": "first",
     "variableName": "count"
+  },
+  {
+    "kind": "Variable",
+    "name": "search",
+    "variableName": "search"
   }
 ];
 return {
   "fragment": {
     "argumentDefinitions": [
       (v0/*: any*/),
-      (v1/*: any*/)
+      (v1/*: any*/),
+      (v2/*: any*/)
     ],
     "kind": "Fragment",
     "metadata": null,
@@ -58,7 +70,7 @@ return {
       {
         "args": null,
         "kind": "FragmentSpread",
-        "name": "ComponentsList_components"
+        "name": "ComponentsList"
       }
     ],
     "type": "Query",
@@ -68,14 +80,15 @@ return {
   "operation": {
     "argumentDefinitions": [
       (v1/*: any*/),
-      (v0/*: any*/)
+      (v0/*: any*/),
+      (v2/*: any*/)
     ],
     "kind": "Operation",
     "name": "ComponentsListQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v2/*: any*/),
+        "args": (v3/*: any*/),
         "concreteType": "ComponentsConnection",
         "kind": "LinkedField",
         "name": "components",
@@ -161,8 +174,10 @@ return {
       },
       {
         "alias": null,
-        "args": (v2/*: any*/),
-        "filters": null,
+        "args": (v3/*: any*/),
+        "filters": [
+          "search"
+        ],
         "handle": "connection",
         "key": "Query_components",
         "kind": "LinkedHandle",
@@ -171,16 +186,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "b0fba9b04657a476499e2f156f82b2d1",
+    "cacheID": "1b4a992778065f7a31d447f5b624f351",
     "id": null,
     "metadata": {},
     "name": "ComponentsListQuery",
     "operationKind": "query",
-    "text": "query ComponentsListQuery(\n  $cursor: String\n  $count: Int\n) {\n  ...ComponentsList_components\n}\n\nfragment ComponentsList_componentEdge on Component {\n  id\n  name\n}\n\nfragment ComponentsList_components on Query {\n  components(after: $cursor, first: $count) {\n    edges {\n      node {\n        ...ComponentsList_componentEdge\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query ComponentsListQuery(\n  $cursor: String\n  $count: Int\n  $search: String\n) {\n  ...ComponentsList\n}\n\nfragment ComponentsList on Query {\n  components(after: $cursor, first: $count, search: $search) {\n    edges {\n      node {\n        id\n        name\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "fa8e804ce96076e79b6ff152a440b2f5";
+(node as any).hash = "0d231a9a1f42330633593aac6b4b0000";
 
 export default node;

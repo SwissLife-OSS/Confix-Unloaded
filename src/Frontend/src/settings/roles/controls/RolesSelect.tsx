@@ -5,19 +5,6 @@ import { graphql } from "babel-plugin-relay/macro";
 import { RolesSelectQuery } from "./__generated__/RolesSelectQuery.graphql";
 import { useDebounce } from "../../../shared/debounce";
 
-const searchRoles = graphql`
-  query RolesSelectQuery($search: String!) {
-    searchRoles(search: $search) {
-      edges {
-        node {
-          id
-          name
-        }
-      }
-    }
-  }
-`;
-
 export type RoleOption = { label: string; value: string };
 
 export const RolesSelect: React.FC<{
@@ -25,7 +12,6 @@ export const RolesSelect: React.FC<{
   onChange: (selected: RoleOption[]) => void;
 }> = ({ onChange, value }) => {
   const [stateValue, setValue] = useState<RoleOption[]>([]);
-  value = value ?? stateValue;
   const [options, setOptions] = useState<RoleOption[]>([]);
   const [isLoading, setIsLoading] = useState(options.length === 0);
   const env = useRelayEnvironment();
@@ -33,9 +19,24 @@ export const RolesSelect: React.FC<{
   const fetchData = useCallback(
     async (search: string) => {
       setIsLoading(true);
-      const data = await fetchQuery<RolesSelectQuery>(env, searchRoles, {
-        search,
-      }).toPromise();
+      const data = await fetchQuery<RolesSelectQuery>(
+        env,
+        graphql`
+          query RolesSelectQuery($search: String!) {
+            searchRoles(search: $search) {
+              edges {
+                node {
+                  id
+                  name
+                }
+              }
+            }
+          }
+        `,
+        {
+          search,
+        }
+      ).toPromise();
       setOptions(
         data?.searchRoles?.edges?.map((x) => ({
           value: x.node.id,
@@ -47,9 +48,10 @@ export const RolesSelect: React.FC<{
     [env]
   );
 
-  const debouncedSearch = useDebounce((search: string) => {
-    fetchData(search);
-  }, 500);
+  const debouncedSearch = useDebounce(
+    (search: string) => fetchData(search),
+    500
+  );
 
   const handleChange = useCallback(
     (ids: RoleOption[], t: any) => {
@@ -61,16 +63,14 @@ export const RolesSelect: React.FC<{
   );
 
   // initial data fetch
-  useEffect(() => {
-    fetchData("");
-  }, [fetchData]);
+  useEffect(() => void fetchData(""), [fetchData]);
 
   return (
     <Select<RoleOption[]>
       mode="multiple"
       allowClear
       style={{ width: "100%" }}
-      value={value}
+      value={value ?? stateValue}
       placeholder="Please select"
       filterOption={false}
       onChange={handleChange}

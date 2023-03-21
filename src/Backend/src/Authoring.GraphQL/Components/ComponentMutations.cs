@@ -7,15 +7,21 @@ public sealed class ComponentMutations
 {
     [Error(typeof(ValueSchemaViolation))]
     [Error(typeof(UnauthorizedOperationException))]
+    [Error(typeof(ComponentValidationFailed))]
     public async Task<Component> CreateComponentAsync(
         [Service] IComponentService service,
         string name,
-        string @namespace,
+        IReadOnlyList<ComponentScopeInput> scopes,
         [DefaultValue("type Component { text: String! }")] string schema,
         [GraphQLType(typeof(AnyType))] Dictionary<string, object?>? values,
         CancellationToken cancellationToken)
     {
-        return await service.CreateAsync(name, schema, @namespace, values, cancellationToken);
+        return await service.CreateAsync(
+            name,
+            schema,
+            scopes.Select(x => x.ToScope()).ToArray(),
+            values,
+            cancellationToken);
     }
 
     [Error(typeof(UnauthorizedOperationException))]
@@ -26,6 +32,20 @@ public sealed class ComponentMutations
         CancellationToken cancellationToken)
     {
         return await service.RenameAsync(id, name, cancellationToken);
+    }
+
+    [Error(typeof(UnauthorizedOperationException))]
+    [Error(typeof(ComponentValidationFailed))]
+    public async Task<Component> UpdateComponentScopes(
+        [Service] IComponentService service,
+        [ID(nameof(Component))] Guid id,
+        IReadOnlyList<ComponentScopeInput> scopes,
+        CancellationToken cancellationToken)
+    {
+        return await service.ChangeComponentScopeByIdAsync(
+            id,
+            scopes.Select(x => x.ToScope()).ToArray(),
+            cancellationToken);
     }
 
     [Error(typeof(UnauthorizedOperationException))]

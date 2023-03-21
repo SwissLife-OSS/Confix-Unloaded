@@ -12,36 +12,34 @@ import {
 import { useConnectionId } from "../../../../shared/useConnectionId";
 import { RemoveGroupDialogMutation } from "./__generated__/RemoveGroupDialogMutation.graphql";
 
-export const removeGroupDialog = graphql`
-  mutation RemoveGroupDialogMutation(
-    $input: RemoveGroupByIdInput!
-    $connectionIds: [ID!]!
-  ) {
-    removeGroupById(input: $input) {
-      group {
-        id @deleteEdge(connections: $connectionIds)
-        ...GroupsList_GroupEdge
-      }
-      errors {
-        __typename
-        ... on UserError {
-          message
-          code
-        }
-      }
-    }
-  }
-`;
-
 export const RemoveGroupDialog: React.FC<{
   open: boolean;
   onClose: (removed: boolean) => void;
   groupId: string;
   groupName: string;
 }> = ({ open, groupId, groupName, onClose }) => {
-  const [commit, isInFlight] =
-    useMutation<RemoveGroupDialogMutation>(removeGroupDialog);
+  const [commit, isInFlight] = useMutation<RemoveGroupDialogMutation>(graphql`
+    mutation RemoveGroupDialogMutation(
+      $input: RemoveGroupByIdInput!
+      $connectionIds: [ID!]!
+    ) {
+      removeGroupById(input: $input) {
+        group {
+          id @deleteEdge(connections: $connectionIds)
+        }
+        errors {
+          __typename
+          ... on UserError {
+            message
+            code
+          }
+        }
+      }
+    }
+  `);
+
   const connectionId = useConnectionId("Query_searchGroups");
+
   const handleRemoveGroup = useCallback(() => {
     pipeCommitFn(commit, [
       withSuccessMessage(
@@ -60,9 +58,9 @@ export const RemoveGroupDialog: React.FC<{
       },
     });
   }, [commit, groupId, onClose, groupName, connectionId]);
-  const handleClose = useCallback(() => {
-    onClose(false);
-  }, [onClose]);
+
+  const handleClose = useCallback(() => onClose(false), [onClose]);
+
   return (
     <Modal
       title={`Remove ${groupName}`}

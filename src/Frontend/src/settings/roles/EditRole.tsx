@@ -7,7 +7,6 @@ import { EditableBreadcrumbHeader } from "../../shared/EditablePageHeader";
 import { useToggle } from "../../shared/useToggle";
 import { RenameRoleDialog } from "./controls/dialogs/RenameRoleDialog";
 import React, { useState } from "react";
-import { EditRole_Role$key } from "./__generated__/EditRole_Role.graphql";
 import { css } from "@emotion/react";
 import { useParams } from "react-router";
 import {
@@ -23,52 +22,58 @@ import {
   withErrorNotifications,
   withSuccessMessage,
 } from "../../shared/pipeCommitFn";
-
-const roleByIdQuery = graphql`
-  query EditRoleQuery($id: ID!) {
-    roleById(id: $id) {
-      id
-      ...EditRole_Role
-    }
-  }
-`;
-const editRoleFragment = graphql`
-  fragment EditRole_Role on Role {
-    id
-    name
-    permissions {
-      scope
-      permissions {
-        isRead
-        isWrite
-        isClaim
-        isPublish
-        isDecrypt
-      }
-    }
-  }
-`;
+import { EditRole_Form$key } from "./__generated__/EditRole_Form.graphql";
+import { EditRole_Header$key } from "./__generated__/EditRole_Header.graphql";
 
 export const EditRole = () => {
   const { roleId = "" } = useParams();
-  const role = useLazyLoadQuery<EditRoleQuery>(roleByIdQuery, {
-    id: roleId,
-  });
-  const id = role.roleById?.id;
+  const query = useLazyLoadQuery<EditRoleQuery>(
+    graphql`
+      query EditRoleQuery($id: ID!) {
+        roleById(id: $id) {
+          id
+          ...EditRole_Form
+        }
+      }
+    `,
+    {
+      id: roleId,
+    }
+  );
+
+  const id = query.roleById?.id;
+
   if (!id) {
-    return <DetailView style={{ padding: 1 }}>Coult not find role </DetailView>;
+    return <DetailView style={{ padding: 1 }}>Could not find role </DetailView>;
   }
-  return <EditRoleForm key={id} data={role.roleById} id={id} />;
+
+  return <Form key={id} fragmentRef={query.roleById} />;
 };
 
-const EditRoleForm: React.FC<{
-  id: string;
-  data: NonNullable<EditRoleQuery["response"]["roleById"]>;
-}> = ({ data, id }) => {
-  const role = useFragment<EditRole_Role$key>(editRoleFragment, data);
-  const [permissions, setPermissions] = useState(() =>
-    mapPermissionsFromObjectType(role)
+const Form: React.FC<{
+  fragmentRef: EditRole_Form$key;
+}> = ({ fragmentRef }) => {
+  const data = useFragment(
+    graphql`
+      fragment EditRole_Form on Role {
+        id
+        name
+        permissions {
+          scope
+          permissions {
+            isRead
+            isWrite
+            isClaim
+            isPublish
+            isDecrypt
+          }
+        }
+        ...EditRole_Header
+      }
+    `,
+    fragmentRef
   );
+
   const [commit, isInFlight] =
     useMutation<EditRoleForm_ChangeRolePermissions_Mutation>(graphql`
       mutation EditRoleForm_ChangeRolePermissions_Mutation(
@@ -77,7 +82,7 @@ const EditRoleForm: React.FC<{
         changeRolePermissions(input: $input) {
           role {
             id
-            ...EditRole_Role
+            ...EditRole_Form
           }
           errors {
             ... on UserError {
@@ -88,16 +93,21 @@ const EditRoleForm: React.FC<{
         }
       }
     `);
+
+  const [permissions, setPermissions] = useState(() =>
+    mapPermissionsFromObjectType(data)
+  );
+
   const handleSavePermissions = useHandler(() => {
     pipeCommitFn(commit, [
       withSuccessMessage(
         (x) => x.changeRolePermissions?.role?.id,
-        `Updated permissions of ${role.name}`
+        `Updated permissions of ${data.name}`
       ),
       withErrorNotifications((x) => x.changeRolePermissions?.errors),
     ])({
       variables: {
-        input: { id: role.id, permissions: mapPermissionsToInput(permissions) },
+        input: { id: data.id, permissions: mapPermissionsToInput(permissions) },
       },
     });
   });
@@ -113,7 +123,7 @@ const EditRoleForm: React.FC<{
     >
       <Row>
         <Col xs={24}>
-          <Header name={role.name} id={role.id} />
+          <Header fragmentRef={data} />
         </Col>
       </Row>
       <PermissionsForm permissions={permissions} onChange={setPermissions} />
@@ -131,8 +141,21 @@ const EditRoleForm: React.FC<{
   );
 };
 
-const Header: React.FC<{ name: string; id: string }> = ({ name, id }) => {
+const Header: React.FC<{ fragmentRef: EditRole_Header$key }> = ({
+  fragmentRef,
+}) => {
+  const { name, id } = useFragment(
+    graphql`
+      fragment EditRole_Header on Role {
+        id
+        name
+      }
+    `,
+    fragmentRef
+  );
+
   const [isEdit, , enable, disable] = useToggle();
+
   return (
     <EditableBreadcrumbHeader onEdit={enable} title={name}>
       <RenameRoleDialog

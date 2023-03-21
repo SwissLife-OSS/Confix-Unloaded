@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d05116ec82d6c9dcf4effd9a6b2b3784>>
+ * @generated SignedSource<<9e75fd864cbfa098dc7edc912cd126c9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,22 +10,22 @@
 
 import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ApplicationsList_applications$data = {
+export type ApplicationsList$data = {
   readonly applications: {
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly id: string;
         readonly name: string;
         readonly namespace: string;
-        readonly " $fragmentSpreads": FragmentRefs<"ApplicationsList_applicationsEdge">;
+        readonly " $fragmentSpreads": FragmentRefs<"ApplicationsListItem">;
       };
     }> | null;
   } | null;
-  readonly " $fragmentType": "ApplicationsList_applications";
+  readonly " $fragmentType": "ApplicationsList";
 };
-export type ApplicationsList_applications$key = {
-  readonly " $data"?: ApplicationsList_applications$data;
-  readonly " $fragmentSpreads": FragmentRefs<"ApplicationsList_applications">;
+export type ApplicationsList$key = {
+  readonly " $data"?: ApplicationsList$data;
+  readonly " $fragmentSpreads": FragmentRefs<"ApplicationsList">;
 };
 
 const node: ReaderFragment = (function(){
@@ -44,7 +44,7 @@ return {
     },
     {
       "kind": "RootArgument",
-      "name": "where"
+      "name": "search"
     }
   ],
   "kind": "Fragment",
@@ -70,15 +70,15 @@ return {
       "operation": require('./ApplicationsListPaginationQuery.graphql')
     }
   },
-  "name": "ApplicationsList_applications",
+  "name": "ApplicationsList",
   "selections": [
     {
       "alias": "applications",
       "args": [
         {
           "kind": "Variable",
-          "name": "where",
-          "variableName": "where"
+          "name": "search",
+          "variableName": "search"
         }
       ],
       "concreteType": "ApplicationsConnection",
@@ -126,7 +126,7 @@ return {
                 {
                   "args": null,
                   "kind": "FragmentSpread",
-                  "name": "ApplicationsList_applicationsEdge"
+                  "name": "ApplicationsListItem"
                 },
                 {
                   "alias": null,
@@ -182,6 +182,6 @@ return {
 };
 })();
 
-(node as any).hash = "d7b4ad1923d9adae56e491423417c7a1";
+(node as any).hash = "4d02d05685c7ef620fea3571d1f05493";
 
 export default node;

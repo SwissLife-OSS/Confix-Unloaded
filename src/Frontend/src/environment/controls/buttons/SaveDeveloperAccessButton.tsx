@@ -54,6 +54,7 @@ export const SaveDeveloperAccessButton: React.FC<{
       },
     });
   }, [commit, environmentId, isAllowed]);
+
   return (
     <Button onClick={handleSave} loading={isInFlight} disabled={isInFlight}>
       Save

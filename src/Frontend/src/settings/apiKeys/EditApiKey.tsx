@@ -17,49 +17,50 @@ import {
   withSuccessMessage,
 } from "../../shared/pipeCommitFn";
 import { RoleScopeData, RoleScopeEditor } from "../shared/RoleScopeEdit";
-
-const apiKeyByIdQuery = graphql`
-  query EditApiKeyQuery($id: ID!) {
-    apiKeyById(id: $id) {
-      id
-      ...EditApiKey_ApiKey
-    }
-  }
-`;
-
-const editApiKeyFragment = graphql`
-  fragment EditApiKey_ApiKey on ApiKey {
-    id
-    name
-    roles {
-      namespace
-      roles {
-        id
-        name
-      }
-    }
-  }
-`;
+import { EditApiKey_RoleScopeSection$key } from "./__generated__/EditApiKey_RoleScopeSection.graphql";
+import { EditApiKey_Form$key } from "./__generated__/EditApiKey_Form.graphql";
+import { EditApiKey_Header$key } from "./__generated__/EditApiKey_Header.graphql";
 
 export const EditApiKey = () => {
   const { apiKeyId = "" } = useParams();
-  const apiKey = useLazyLoadQuery<EditApiKeyQuery>(apiKeyByIdQuery, {
-    id: apiKeyId,
-  });
-  const id = apiKey.apiKeyById?.id;
+  const data = useLazyLoadQuery<EditApiKeyQuery>(
+    graphql`
+      query EditApiKeyQuery($id: ID!) {
+        apiKeyById(id: $id) {
+          id
+          ...EditApiKey_Form
+        }
+      }
+    `,
+    {
+      id: apiKeyId,
+    }
+  );
+
+  const id = data.apiKeyById?.id;
+
   if (!id) {
     return (
       <DetailView style={{ padding: 1 }}>Coult not find apiKey </DetailView>
     );
   }
-  return <EditApiKeyForm data={apiKey.apiKeyById} id={id} key={id} />;
+
+  return <Form fragmentRef={data.apiKeyById} key={id} />;
 };
 
-const EditApiKeyForm: React.FC<{
-  id: string;
-  data: NonNullable<EditApiKeyQuery["response"]["apiKeyById"]>;
-}> = ({ data, id }) => {
-  const apiKey = useFragment<EditApiKey_ApiKey$key>(editApiKeyFragment, data);
+const Form: React.FC<{
+  fragmentRef: EditApiKey_Form$key;
+}> = ({ fragmentRef }) => {
+  const data = useFragment(
+    graphql`
+      fragment EditApiKey_Form on ApiKey {
+        ...EditApiKey_RoleScopeSection
+        ...EditApiKey_Header
+      }
+    `,
+    fragmentRef
+  );
+
   return (
     <DetailView
       style={{ padding: 1 }}
@@ -71,28 +72,35 @@ const EditApiKeyForm: React.FC<{
     >
       <Row>
         <Col xs={24}>
-          <Header name={apiKey.name} />
+          <Header fragmentRef={data} />
         </Col>
       </Row>
       <Row>
-        <RoleScopeSection $data={data} apiKeyId={apiKey.id} />
+        <RoleScopeSection fragmentRef={data} />
       </Row>
     </DetailView>
   );
 };
 
 const RoleScopeSection: React.FC<{
-  $data: EditApiKey_ApiKey$key;
-  apiKeyId: string;
-}> = ({ $data, apiKeyId }) => {
-  const apiKey = useFragment<EditApiKey_ApiKey$key>(editApiKeyFragment, $data);
-  const [data, setData] = useState((): RoleScopeData[] => {
-    return apiKey.roles.map<RoleScopeData>((x) => ({
-      key: x.namespace,
-      namespace: x.namespace,
-      roles: x.roles,
-    }));
-  });
+  fragmentRef: EditApiKey_RoleScopeSection$key;
+}> = ({ fragmentRef }) => {
+  const data = useFragment(
+    graphql`
+      fragment EditApiKey_RoleScopeSection on ApiKey {
+        id
+        name
+        roles {
+          namespace
+          roles {
+            id
+            name
+          }
+        }
+      }
+    `,
+    fragmentRef
+  );
 
   const [commit, isInFlight] =
     useMutation<EditApiKey_UpdateApiKeyRoles_Mutation>(graphql`
@@ -102,7 +110,13 @@ const RoleScopeSection: React.FC<{
         updateApiKey(input: $input) {
           apiKey {
             id
-            ...EditApiKey_ApiKey
+            roles {
+              namespace
+              roles {
+                id
+                name
+              }
+            }
           }
           errors {
             ... on UserError {
@@ -114,18 +128,26 @@ const RoleScopeSection: React.FC<{
       }
     `);
 
+  const [roleScope, setRoleScopes] = useState((): RoleScopeData[] => {
+    return data.roles.map<RoleScopeData>((x) => ({
+      key: x.namespace,
+      namespace: x.namespace,
+      roles: x.roles,
+    }));
+  });
+
   const handleSave = useHandler(() => {
     pipeCommitFn(commit, [
       withSuccessMessage(
         (x) => x.updateApiKey.apiKey?.id,
-        `Updated requirements of ${apiKey.name}`
+        `Updated requirements of ${data.name}`
       ),
       withErrorNotifications((x) => x.updateApiKey?.errors),
     ])({
       variables: {
         input: {
-          id: apiKeyId,
-          roles: data.map((x) => ({
+          id: data.id,
+          roles: roleScope.map((x) => ({
             namespace: x.namespace,
             roleIds: x.roles.map((r) => r.id),
           })),
@@ -136,7 +158,7 @@ const RoleScopeSection: React.FC<{
 
   return (
     <>
-      <RoleScopeEditor data={data} onChange={setData} />
+      <RoleScopeEditor data={roleScope} onChange={setRoleScopes} />
       <Col span={24}>
         <FormActions justify="end">
           <Button
@@ -153,6 +175,17 @@ const RoleScopeSection: React.FC<{
   );
 };
 
-const Header: React.FC<{ name: string }> = ({ name }) => {
+const Header: React.FC<{ fragmentRef: EditApiKey_Header$key }> = ({
+  fragmentRef,
+}) => {
+  const { name } = useFragment(
+    graphql`
+      fragment EditApiKey_Header on ApiKey {
+        name
+      }
+    `,
+    fragmentRef
+  );
+
   return <EditableBreadcrumbHeader title={name} isEditable={false} />;
 };

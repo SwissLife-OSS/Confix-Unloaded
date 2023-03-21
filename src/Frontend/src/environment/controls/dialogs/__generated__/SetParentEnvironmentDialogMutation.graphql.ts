@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d623dce43d600cedba57e95522a88f9d>>
+ * @generated SignedSource<<f23a7f72c4edd69a912aa7e6543080de>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,6 @@
 // @ts-nocheck
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
-import { FragmentRefs } from "relay-runtime";
 export type SetParentOfEnvironmentInput = {
   environmentId: string;
   parentId: string;
@@ -21,7 +20,10 @@ export type SetParentEnvironmentDialogMutation$data = {
   readonly setParentOfEnvironment: {
     readonly environment: {
       readonly id: string;
-      readonly " $fragmentSpreads": FragmentRefs<"EditEnvironment_Environment">;
+      readonly parent: {
+        readonly id: string;
+        readonly name: string;
+      } | null;
     } | null;
     readonly errors: ReadonlyArray<{
       readonly code?: string;
@@ -61,18 +63,49 @@ v2 = {
 v3 = {
   "alias": null,
   "args": null,
-  "kind": "ScalarField",
-  "name": "code",
+  "concreteType": "Environment",
+  "kind": "LinkedField",
+  "name": "environment",
+  "plural": false,
+  "selections": [
+    (v2/*: any*/),
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "Environment",
+      "kind": "LinkedField",
+      "name": "parent",
+      "plural": false,
+      "selections": [
+        (v2/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "name",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    }
+  ],
   "storageKey": null
 },
 v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "message",
+  "name": "code",
   "storageKey": null
 },
 v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "message",
+  "storageKey": null
+},
+v6 = {
   "kind": "InlineFragment",
   "selections": [
     {
@@ -82,13 +115,13 @@ v5 = {
       "name": "path",
       "storageKey": null
     },
-    (v3/*: any*/),
-    (v4/*: any*/)
+    (v4/*: any*/),
+    (v5/*: any*/)
   ],
   "type": "EnvironmentCycleDetectedError",
   "abstractKey": null
 },
-v6 = {
+v7 = {
   "kind": "InlineFragment",
   "selections": [
     {
@@ -98,18 +131,11 @@ v6 = {
       "name": "environmentId",
       "storageKey": null
     },
-    (v3/*: any*/),
-    (v4/*: any*/)
+    (v4/*: any*/),
+    (v5/*: any*/)
   ],
   "type": "EnvironmentNotFoundError",
   "abstractKey": null
-},
-v7 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "name",
-  "storageKey": null
 };
 return {
   "fragment": {
@@ -126,23 +152,7 @@ return {
         "name": "setParentOfEnvironment",
         "plural": false,
         "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "Environment",
-            "kind": "LinkedField",
-            "name": "environment",
-            "plural": false,
-            "selections": [
-              (v2/*: any*/),
-              {
-                "args": null,
-                "kind": "FragmentSpread",
-                "name": "EditEnvironment_Environment"
-              }
-            ],
-            "storageKey": null
-          },
+          (v3/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -151,8 +161,8 @@ return {
             "name": "errors",
             "plural": true,
             "selections": [
-              (v5/*: any*/),
-              (v6/*: any*/)
+              (v6/*: any*/),
+              (v7/*: any*/)
             ],
             "storageKey": null
           }
@@ -177,39 +187,7 @@ return {
         "name": "setParentOfEnvironment",
         "plural": false,
         "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "Environment",
-            "kind": "LinkedField",
-            "name": "environment",
-            "plural": false,
-            "selections": [
-              (v2/*: any*/),
-              (v7/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "allowDeveloperAccess",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "Environment",
-                "kind": "LinkedField",
-                "name": "parent",
-                "plural": false,
-                "selections": [
-                  (v2/*: any*/),
-                  (v7/*: any*/)
-                ],
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          },
+          (v3/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -225,8 +203,8 @@ return {
                 "name": "__typename",
                 "storageKey": null
               },
-              (v5/*: any*/),
-              (v6/*: any*/)
+              (v6/*: any*/),
+              (v7/*: any*/)
             ],
             "storageKey": null
           }
@@ -236,16 +214,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "b2a1c26249c120e9c74fa5ac64e83a8e",
+    "cacheID": "ebf5fede012aa325e91e94753ef9f54b",
     "id": null,
     "metadata": {},
     "name": "SetParentEnvironmentDialogMutation",
     "operationKind": "mutation",
-    "text": "mutation SetParentEnvironmentDialogMutation(\n  $input: SetParentOfEnvironmentInput!\n) {\n  setParentOfEnvironment(input: $input) {\n    environment {\n      id\n      ...EditEnvironment_Environment\n    }\n    errors {\n      __typename\n      ... on EnvironmentCycleDetectedError {\n        path\n        code\n        message\n      }\n      ... on EnvironmentNotFoundError {\n        environmentId\n        code\n        message\n      }\n    }\n  }\n}\n\nfragment EditEnvironment_Environment on Environment {\n  id\n  name\n  allowDeveloperAccess\n  parent {\n    id\n    name\n  }\n}\n"
+    "text": "mutation SetParentEnvironmentDialogMutation(\n  $input: SetParentOfEnvironmentInput!\n) {\n  setParentOfEnvironment(input: $input) {\n    environment {\n      id\n      parent {\n        id\n        name\n      }\n    }\n    errors {\n      __typename\n      ... on EnvironmentCycleDetectedError {\n        path\n        code\n        message\n      }\n      ... on EnvironmentNotFoundError {\n        environmentId\n        code\n        message\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "a8721a008fb26c79773c7e633d67d03e";
+(node as any).hash = "a1dfe04b42de720cba1ad8dd01264989";
 
 export default node;

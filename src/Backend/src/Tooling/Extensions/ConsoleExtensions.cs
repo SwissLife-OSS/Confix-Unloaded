@@ -1,10 +1,7 @@
 using System.Text.Json;
 using Confix.Tooling;
-using Confix.Tooling;
-using Spectre.Console;
 using Spectre.Console;
 using Spectre.Console.Json;
-using Spectre.Console.Rendering;
 using StrawberryShake;
 
 public static class ConsoleExtensions
@@ -46,10 +43,8 @@ public static class ConsoleExtensions
     /// </param>
     public static void WriteJson(this IAnsiConsole console, object? data)
     {
-        var serializedData = JsonSerializer.Serialize(data, new JsonSerializerOptions()
-        {
-            WriteIndented = true
-        });
+        var serializedData =
+            JsonSerializer.Serialize(data, new JsonSerializerOptions() { WriteIndented = true });
 
         var jsonText = new JsonText(serializedData);
 

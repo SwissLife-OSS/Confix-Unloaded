@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<64a6216c508eb96299531cd6ef409a90>>
+ * @generated SignedSource<<9d6652d6463a6422b4cf4525d007f6fd>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,7 @@ export type GroupsListQuery$variables = {
   search?: string | null;
 };
 export type GroupsListQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"GroupsList_Groups">;
+  readonly " $fragmentSpreads": FragmentRefs<"GroupsList">;
 };
 export type GroupsListQuery = {
   response: GroupsListQuery$data;
@@ -70,7 +70,7 @@ return {
       {
         "args": null,
         "kind": "FragmentSpread",
-        "name": "GroupsList_Groups"
+        "name": "GroupsList"
       }
     ],
     "type": "Query",
@@ -186,16 +186,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "613d71922f4a11a75ab1e1ab8e018854",
+    "cacheID": "c47f09a894f6a3321d646fc19eaa96b7",
     "id": null,
     "metadata": {},
     "name": "GroupsListQuery",
     "operationKind": "query",
-    "text": "query GroupsListQuery(\n  $cursor: String\n  $count: Int\n  $search: String\n) {\n  ...GroupsList_Groups\n}\n\nfragment GroupsList_GroupEdge on Group {\n  id\n  name\n}\n\nfragment GroupsList_Groups on Query {\n  searchGroups(after: $cursor, first: $count, search: $search) {\n    edges {\n      node {\n        id\n        name\n        ...GroupsList_GroupEdge\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query GroupsListQuery(\n  $cursor: String\n  $count: Int\n  $search: String\n) {\n  ...GroupsList\n}\n\nfragment GroupsList on Query {\n  searchGroups(after: $cursor, first: $count, search: $search) {\n    edges {\n      node {\n        id\n        name\n        ...GroupsList_ListItem\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment GroupsList_ListItem on Group {\n  id\n  name\n}\n"
   }
 };
 })();
 
-(node as any).hash = "a68e6a90dfc48d1ce777b21508a1bbe7";
+(node as any).hash = "6211bf18318b03c27dabad887ed17733";
 
 export default node;

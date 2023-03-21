@@ -1,5 +1,9 @@
+using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
+using C = MongoDB.Driver.Builders<Confix.Authoring.Component>;
+using CS = MongoDB.Driver.Builders<Confix.Authoring.ComponentScope>;
+using static Confix.Authoring.Store.Mongo.Builders;
 
 namespace Confix.Authoring.Store.Mongo;
 
@@ -28,9 +32,63 @@ internal sealed class ComponentStore : IComponentStore
             .ToListAsync(cancellationToken);
     }
 
-    public IQueryable<Component> Query()
+    public async Task<IReadOnlyList<Component>> Search(
+        int skip,
+        int take,
+        IEnumerable<string> namespaces,
+        Guid? applicationId,
+        Guid? applicationPartId,
+        string? search,
+        CancellationToken cancellationToken)
     {
-        return _dbContext.Components.AsQueryable();
+        var namespaceFilter = Filter<Component>()
+            .ElemMatch(x => x.Scopes,
+                And(
+                    Filter<ComponentScope>().In(x => x.Namespace, namespaces),
+                    Filter<ComponentScope>().Null(x => x.ApplicationId),
+                    Filter<ComponentScope>().Null(x => x.ApplicationPartId)
+                ));
+
+        var scopeFilter = namespaceFilter;
+
+        if (applicationId is not null)
+        {
+            var applicationIdFilter = Filter<Component>()
+                .ElemMatch(x => x.Scopes,
+                    And(
+                        Filter<ComponentScope>().In(x => x.Namespace, namespaces),
+                        Filter<ComponentScope>().Eq(x => x.ApplicationId, applicationId),
+                        Filter<ComponentScope>().Null(x => x.ApplicationPartId)
+                    ));
+
+            scopeFilter |= applicationIdFilter;
+
+            if (applicationPartId is not null)
+            {
+                scopeFilter |= Filter<Component>()
+                    .ElemMatch(x => x.Scopes,
+                        And(
+                            Filter<ComponentScope>().In(x => x.Namespace, namespaces),
+                            Filter<ComponentScope>().Eq(x => x.ApplicationId, applicationId),
+                            Filter<ComponentScope>()
+                                .Eq(x => x.ApplicationPartId, applicationPartId)
+                        ));
+            }
+        }
+
+        var filter = scopeFilter;
+
+        if (!string.IsNullOrEmpty(search))
+        {
+            filter &= Filter<Component>()
+                .Regex(x => x.Name, new BsonRegularExpression(search, "i"));
+        }
+
+        return await _dbContext.Components
+            .Find(filter)
+            .Skip(skip)
+            .Limit(take)
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<Component> AddAsync(Component component, CancellationToken cancellationToken)
@@ -52,4 +110,12 @@ internal sealed class ComponentStore : IComponentStore
 
         return component;
     }
+}
+
+public static class Builders
+{
+    public static FilterDefinitionBuilder<T> Filter<T>() => Builders<T>.Filter;
+
+    public static FilterDefinition<T> And<T>(params FilterDefinition<T>[] filters)
+        => Builders<T>.Filter.And(filters);
 }

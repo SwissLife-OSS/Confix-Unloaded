@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<054dee31d29c5ced1129215f91c8960c>>
+ * @generated SignedSource<<06a20a39c6c08f2eb18698d7dfd4f0a2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,7 @@ export type EnvironmentsListQuery$variables = {
   search?: string | null;
 };
 export type EnvironmentsListQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"EnvironmentsList_Environments">;
+  readonly " $fragmentSpreads": FragmentRefs<"EnvironmentsList">;
 };
 export type EnvironmentsListQuery = {
   response: EnvironmentsListQuery$data;
@@ -70,7 +70,7 @@ return {
       {
         "args": null,
         "kind": "FragmentSpread",
-        "name": "EnvironmentsList_Environments"
+        "name": "EnvironmentsList"
       }
     ],
     "type": "Query",
@@ -186,16 +186,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "9216bd483937aabf0deaf5dc8443e561",
+    "cacheID": "655e0796df71fab024d07d413f942e20",
     "id": null,
     "metadata": {},
     "name": "EnvironmentsListQuery",
     "operationKind": "query",
-    "text": "query EnvironmentsListQuery(\n  $cursor: String\n  $count: Int\n  $search: String\n) {\n  ...EnvironmentsList_Environments\n}\n\nfragment EnvironmentsList_EnvironmentEdge on Environment {\n  id\n  name\n}\n\nfragment EnvironmentsList_Environments on Query {\n  searchEnvironments(after: $cursor, first: $count, search: $search) {\n    edges {\n      node {\n        id\n        name\n        ...EnvironmentsList_EnvironmentEdge\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query EnvironmentsListQuery(\n  $cursor: String\n  $count: Int\n  $search: String\n) {\n  ...EnvironmentsList\n}\n\nfragment EnvironmentsList on Query {\n  searchEnvironments(after: $cursor, first: $count, search: $search) {\n    edges {\n      node {\n        id\n        name\n        ...EnvironmentsList_EnvironmentListItem\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment EnvironmentsList_EnvironmentListItem on Environment {\n  id\n  name\n}\n"
   }
 };
 })();
 
-(node as any).hash = "f60d52a2160a814630fcb1aed92b21ac";
+(node as any).hash = "8904f21c363d95d942ba5923c9b93560";
 
 export default node;

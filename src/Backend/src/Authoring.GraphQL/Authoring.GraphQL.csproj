@@ -21,7 +21,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Applications\Filters" />
     <Folder Include="Applications\Transport" />
+    <Folder Include="Components\Filter" />
     <Folder Include="Groups\Dataloader" />
     <Folder Include="Groups\Extensions" />
     <Folder Include="Roles\Extensions" />

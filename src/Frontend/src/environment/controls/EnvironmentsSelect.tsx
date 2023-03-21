@@ -5,19 +5,6 @@ import { graphql } from "babel-plugin-relay/macro";
 import { EnvironmentsSelectQuery } from "./__generated__/EnvironmentsSelectQuery.graphql";
 import { useDebounce } from "../../shared/debounce";
 
-const searchEnvironments = graphql`
-  query EnvironmentsSelectQuery($search: String!) {
-    searchEnvironments(search: $search) {
-      edges {
-        node {
-          id
-          name
-        }
-      }
-    }
-  }
-`;
-
 export type EnvironmentOption = { label: string; value: string };
 
 export const EnvironmentsSelect: React.FC<{
@@ -34,7 +21,18 @@ export const EnvironmentsSelect: React.FC<{
       setIsLoading(true);
       const data = await fetchQuery<EnvironmentsSelectQuery>(
         env,
-        searchEnvironments,
+        graphql`
+          query EnvironmentsSelectQuery($search: String!) {
+            searchEnvironments(search: $search) {
+              edges {
+                node {
+                  id
+                  name
+                }
+              }
+            }
+          }
+        `,
         { search }
       ).toPromise();
       setOptions(
@@ -62,9 +60,7 @@ export const EnvironmentsSelect: React.FC<{
   );
 
   // initial data fetch
-  useEffect(() => {
-    fetchData("");
-  }, [fetchData]);
+  useEffect(() => void fetchData(""), [fetchData]);
 
   return (
     <Select<EnvironmentOption[]>

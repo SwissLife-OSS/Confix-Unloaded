@@ -230,6 +230,13 @@ type ChangeRolePermissionsPayload {
   query: Query!
 }
 
+type ChangeScopeOfComponentChange implements ComponentChange & Change {
+  scopes: [ComponentScope!]!
+  kind: String!
+  component: Component
+  componentVersion: Int!
+}
+
 type ClaimRequirement {
   type: String!
   value: String!
@@ -283,7 +290,7 @@ type ClaimedVersionsEdge {
 type Component implements Node {
   id: ID!
   name: String!
-  namespace: String!
+  scopes: [ComponentScope!]!
   version: Int!
   state: ComponentState!
   changeLog: [ChangeLog!]!
@@ -305,6 +312,19 @@ type ComponentSchemaChange implements ComponentChange & Change {
   kind: String!
   component: Component
   componentVersion: Int!
+}
+
+type ComponentScope {
+  namespace: String!
+  applicationId: ID
+  applicationPartId: ID
+  application: Application
+  applicationPart: ApplicationPart
+}
+
+type ComponentValidationFailed implements UserError {
+  message: String!
+  code: String!
 }
 
 type ComponentValuesChange implements ComponentChange & Change {
@@ -493,6 +513,7 @@ type Mutation {
   updateApplicationPartComponentValues(input: UpdateApplicationPartComponentValuesInput!): UpdateApplicationPartComponentValuesPayload!
   createComponent(input: CreateComponentInput!): CreateComponentPayload!
   renameComponent(input: RenameComponentInput!): RenameComponentPayload!
+  updateComponentScopes(input: UpdateComponentScopesInput!): UpdateComponentScopesPayload!
   updateComponentSchema(input: UpdateComponentSchemaInput!): UpdateComponentSchemaPayload!
   updateComponentValues(input: UpdateComponentValuesInput!): UpdateComponentValuesPayload!
   createEnvironment(input: CreateEnvironmentInput!): CreateEnvironmentPayload!
@@ -615,12 +636,12 @@ type Query {
   apiKeys("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String): ApiKeysConnection
   apiKeyById(id: ID!): ApiKey
   "Get all application configurations."
-  applications("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: ApplicationFilterInput): ApplicationsConnection
+  applications(search: String "Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String): ApplicationsConnection
   "Get a specific application configuration by its ID."
   applicationById("The application ID." id: ID!): Application
   applicationPartById(id: ID!): ApplicationPart
   applicationPartComponentById(partComponentId: ID!): ApplicationPartComponent
-  components("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: ComponentFilterInput): ComponentsConnection
+  components(applicationId: ID applicationPartId: ID namespace: String search: String "Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String): ComponentsConnection
   componentById(id: ID!): Component
   searchEnvironments(search: String "Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String): SearchEnvironmentsConnection
   environmentById(id: ID!): Environment
@@ -907,6 +928,12 @@ type UpdateComponentSchemaPayload {
   query: Query!
 }
 
+type UpdateComponentScopesPayload {
+  component: Component
+  errors: [UpdateComponentScopesError!]
+  query: Query!
+}
+
 type UpdateComponentValuesPayload {
   component: Component
   errors: [UpdateComponentValuesError!]
@@ -991,7 +1018,7 @@ union CreateApiKeyError = UnauthorizedOperationError
 
 union CreateApplicationError = ApplicationNameTaken | UnauthorizedOperationError
 
-union CreateComponentError = ValueSchemaViolation | UnauthorizedOperationError
+union CreateComponentError = ValueSchemaViolation | UnauthorizedOperationError | ComponentValidationFailed
 
 union CreateEnvironmentError = EnvironmentNameCollisionError | UnauthorizedOperationError
 
@@ -1047,6 +1074,8 @@ union UpdateApplicationPartComponentValuesError = ApplicationPartComponentNotFou
 
 union UpdateComponentSchemaError = UnauthorizedOperationError | SchemaInvalidError
 
+union UpdateComponentScopesError = UnauthorizedOperationError | ComponentValidationFailed
+
 union UpdateComponentValuesError = ValueSchemaViolation | UnauthorizedOperationError
 
 union UpdateGroupRequirementsError = UnauthorizedOperationError
@@ -1061,13 +1090,6 @@ input AddComponentsToApplicationPartInput {
 input AddPartToApplicationInput {
   partName: String!
   applicationId: ID!
-}
-
-input ApplicationFilterInput {
-  and: [ApplicationFilterInput!]
-  or: [ApplicationFilterInput!]
-  name: StringOperationFilterInput
-  namespace: StringOperationFilterInput
 }
 
 input ChangeRolePermissionsInput {
@@ -1087,10 +1109,10 @@ input ClaimVersionInput {
   environmentName: String!
 }
 
-input ComponentFilterInput {
-  and: [ComponentFilterInput!]
-  or: [ComponentFilterInput!]
-  name: StringOperationFilterInput
+input ComponentScopeInput {
+  namespace: String!
+  applicationId: ID
+  applicationPartId: ID
 }
 
 input CreateApiKeyInput {
@@ -1106,7 +1128,7 @@ input CreateApplicationInput {
 
 input CreateComponentInput {
   name: String!
-  namespace: String!
+  scopes: [ComponentScopeInput!]!
   schema: String = "type Component { text: String! }"
   values: Any
 }
@@ -1241,21 +1263,6 @@ input SetParentOfEnvironmentInput {
   parentId: ID!
 }
 
-input StringOperationFilterInput {
-  and: [StringOperationFilterInput!]
-  or: [StringOperationFilterInput!]
-  eq: String
-  neq: String
-  contains: String
-  ncontains: String
-  in: [String]
-  nin: [String]
-  startsWith: String
-  nstartsWith: String
-  endsWith: String
-  nendsWith: String
-}
-
 input UpdateApiKeyInput {
   id: ID!
   roles: [RoleScopeInput!]!
@@ -1269,6 +1276,11 @@ input UpdateApplicationPartComponentValuesInput {
 input UpdateComponentSchemaInput {
   id: ID!
   schema: String!
+}
+
+input UpdateComponentScopesInput {
+  id: ID!
+  scopes: [ComponentScopeInput!]!
 }
 
 input UpdateComponentValuesInput {

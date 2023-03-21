@@ -6,10 +6,6 @@ import { useParams } from "react-router";
 import { EditApplicationPartComponent_GetById_Query } from "./__generated__/EditApplicationPartComponent_GetById_Query.graphql";
 import { Button, Col, Row, Tabs } from "antd";
 import { EditableBreadcrumbHeader } from "../shared/EditablePageHeader";
-import {
-  EditApplicationPartComponent_fragment$data,
-  EditApplicationPartComponent_fragment$key,
-} from "./__generated__/EditApplicationPartComponent_fragment.graphql";
 import { SectionHeader } from "../shared/SectionHeader";
 import { SchemaComponentEditor } from "./components/SchemaComponentEditor";
 import { css } from "@emotion/react";
@@ -22,105 +18,57 @@ import {
 import { DefaultSuspense } from "../shared/DefaultSuspense";
 import { CompareApplicationPartComponentVersions } from "./CompareApplicationPartComponentVersions";
 import { ButtonBar } from "../shared/ButtonBar";
-import { EditApplicationPartComponent_ChangeLog_Fragment$key } from "./__generated__/EditApplicationPartComponent_ChangeLog_Fragment.graphql";
 import { ChangeLog } from "../shared/ChangeLog";
 import { useTabSwitcher } from "../shared/useTabSwitcher";
 import { TabRow } from "../shared/TabRow";
-
-const applicationPartComponentQuery = graphql`
-  query EditApplicationPartComponent_GetById_Query($partComponentId: ID!) {
-    applicationPartComponentById(partComponentId: $partComponentId) {
-      ...EditApplicationPartComponent_fragment
-    }
-    globalVariableValues {
-      variable {
-        name
-      }
-    }
-  }
-`;
-
-const applicationPartComponentFragment = graphql`
-  fragment EditApplicationPartComponent_fragment on ApplicationPartComponent {
-    applicationPart {
-      name
-      application {
-        name
-        namespace
-      }
-      variableValues {
-        variable {
-          name
-        }
-      }
-      application {
-        variableValues {
-          variable {
-            name
-          }
-        }
-      }
-    }
-    definition {
-      id
-      name
-      state
-      schemaSdl
-      schema
-      values
-      defaults
-      schemaViolations {
-        path
-        code
-      }
-    }
-    version
-    values
-    ...EditApplicationPartComponent_ChangeLog_Fragment @defer
-  }
-`;
-
-const applicationPartComponentChangeLog = graphql`
-  fragment EditApplicationPartComponent_ChangeLog_Fragment on ApplicationPartComponent {
-    changeLog {
-      ...ChangeLog_fragment
-    }
-  }
-`;
-
-const updateComponentValuesMutation = graphql`
-  mutation EditApplicationPartComponent_UpdateComponentValues_Mutation(
-    $input: UpdateApplicationPartComponentValuesInput!
-  ) {
-    updateApplicationPartComponentValues(input: $input) {
-      component {
-        ...EditApplicationPartComponent_fragment
-      }
-      errors {
-        ... on UserError {
-          message
-          code
-        }
-      }
-    }
-  }
-`;
+import { EditApplicationPartComponent_EditConfiguration$key } from "./__generated__/EditApplicationPartComponent_EditConfiguration.graphql";
+import { EditApplicationPartComponent$key } from "./__generated__/EditApplicationPartComponent.graphql";
+import { EditApplicationPartComponent_ApplicationPartComponentChangeLog$key } from "./__generated__/EditApplicationPartComponent_ApplicationPartComponentChangeLog.graphql";
 
 export const EditApplicationPartComponent = () => {
   const { partComponentId = "" } = useParams();
-  const data = useLazyLoadQuery<EditApplicationPartComponent_GetById_Query>(
-    applicationPartComponentQuery,
+  const { tab, navigateToTab } = useTabSwitcher();
+
+  const query = useLazyLoadQuery<EditApplicationPartComponent_GetById_Query>(
+    graphql`
+      query EditApplicationPartComponent_GetById_Query($partComponentId: ID!) {
+        ...EditApplicationPartComponent
+      }
+    `,
     {
       partComponentId: partComponentId,
     },
     { fetchPolicy: "network-only" }
   );
-  const component = useFragment<EditApplicationPartComponent_fragment$key>(
-    applicationPartComponentFragment,
-    data.applicationPartComponentById
+
+  const data = useFragment<EditApplicationPartComponent$key>(
+    graphql`
+      fragment EditApplicationPartComponent on Query {
+        applicationPartComponentById(partComponentId: $partComponentId) {
+          applicationPart {
+            name
+            application {
+              name
+              namespace
+            }
+          }
+          definition {
+            name
+          }
+          version
+          ...EditApplicationPartComponent_ApplicationPartComponentChangeLog
+            @defer
+        }
+        ...EditApplicationPartComponent_EditConfiguration
+      }
+    `,
+    query
   );
-  const { tab, navigateToTab } = useTabSwitcher();
-  if (!component || !component.applicationPart?.application) {
+
+  if (
+    !data ||
+    !data.applicationPartComponentById?.applicationPart?.application
+  ) {
     return (
       <DetailView style={{ padding: 1 }}>
         Coult not find application part component
@@ -131,13 +79,13 @@ export const EditApplicationPartComponent = () => {
   const {
     definition,
     version,
+    applicationPart,
     applicationPart: {
-      name: applicationPartName,
-      application: { name: applicationName, namespace },
+      application,
+      application: { namespace },
     },
-  } = component;
+  } = data.applicationPartComponentById;
 
-  console.log({ tab });
   return (
     <DetailView
       css={css`
@@ -149,75 +97,110 @@ export const EditApplicationPartComponent = () => {
       <Row>
         <Col xs={24}>
           <Header
-            applicationName={applicationName}
+            applicationName={application.name}
             namespace={namespace ?? ""}
-            applicationPartName={applicationPartName}
+            applicationPartName={applicationPart.name}
             componentName={definition?.name ?? ""}
           />
         </Col>
       </Row>
       <Row>
         <Col xs={24}>
-          <SectionHeader
-            title={`Component ${definition?.name}`}
-          ></SectionHeader>
+          <SectionHeader title={`Component ${definition?.name}`} />
         </Col>
       </Row>
       <TabRow>
-        <Tabs
-          defaultActiveKey={tab}
-          key={tab}
-          onChange={navigateToTab}
-          items={[
-            {
-              key: "edit",
-              label: "Configuration",
-              children: (
-                <DefaultSuspense>
-                  <EditConfiguration
-                    partComponentId={partComponentId}
-                    component={component}
-                    globalVariableValues={data.globalVariableValues}
-                  />
-                </DefaultSuspense>
-              ),
-            },
-            {
-              key: "changelog",
-              label: "Change Log",
-              children: (
-                <DefaultSuspense>
-                  <ApplicationPartComponentChangeLog data={component} />
-                </DefaultSuspense>
-              ),
-            },
-            {
-              key: "compare",
-              label: "Compare Versions",
-              children: (
-                <DefaultSuspense>
-                  <CompareApplicationPartComponentVersions
-                    mostRecentVersion={version}
-                  />
-                </DefaultSuspense>
-              ),
-            },
-          ]}
-        />
+        <Tabs defaultActiveKey={tab} key={tab} onChange={navigateToTab}>
+          <Tabs.TabPane key="edit" tab="Configuration">
+            <DefaultSuspense>
+              <EditConfiguration
+                partComponentId={partComponentId}
+                fragmentRef={data}
+              />
+            </DefaultSuspense>
+          </Tabs.TabPane>
+          <Tabs.TabPane key="changelog" tab="Change Log">
+            <DefaultSuspense>
+              <ApplicationPartComponentChangeLog
+                fragmentRef={data.applicationPartComponentById}
+              />
+            </DefaultSuspense>
+          </Tabs.TabPane>
+          <Tabs.TabPane key="compare" tab="Compare Versions">
+            <DefaultSuspense>
+              <CompareApplicationPartComponentVersions
+                mostRecentVersion={version}
+              />
+            </DefaultSuspense>
+          </Tabs.TabPane>
+        </Tabs>
       </TabRow>
     </DetailView>
   );
 };
 
-export const EditConfiguration: React.FC<{
+const EditConfiguration: React.FC<{
   partComponentId: string;
-  component: EditApplicationPartComponent_fragment$data;
-  globalVariableValues: EditApplicationPartComponent_GetById_Query["response"]["globalVariableValues"];
-}> = ({ component, partComponentId, globalVariableValues }) => {
+  fragmentRef: EditApplicationPartComponent_EditConfiguration$key;
+}> = ({ fragmentRef, partComponentId }) => {
+  const data = useFragment<EditApplicationPartComponent_EditConfiguration$key>(
+    graphql`
+      fragment EditApplicationPartComponent_EditConfiguration on Query {
+        applicationPartComponentById(partComponentId: $partComponentId) {
+          applicationPart {
+            variableValues {
+              variable {
+                name
+              }
+            }
+            application {
+              variableValues {
+                variable {
+                  name
+                }
+              }
+            }
+          }
+          values
+          definition {
+            id
+            schemaSdl
+          }
+        }
+        globalVariableValues {
+          variable {
+            name
+          }
+        }
+      }
+    `,
+    fragmentRef
+  );
+
   const [commit, isInFlight] =
     useMutation<EditApplicationPartComponent_UpdateComponentValues_Mutation>(
-      updateComponentValuesMutation
+      graphql`
+        mutation EditApplicationPartComponent_UpdateComponentValues_Mutation(
+          $input: UpdateApplicationPartComponentValuesInput!
+        ) {
+          updateApplicationPartComponentValues(input: $input) {
+            component {
+              values
+            }
+            errors {
+              ... on UserError {
+                message
+                code
+              }
+            }
+          }
+        }
+      `
     );
+
+  const applicationPartComponent = data.applicationPartComponentById;
+  const applicationPart = data.applicationPartComponentById?.applicationPart;
+  const application = applicationPart?.application;
 
   const [componentValues, setComponentValues] = useState<
     Record<string, any> | undefined
@@ -243,23 +226,23 @@ export const EditConfiguration: React.FC<{
     return Array.from(
       new Set([
         ...[
-          ...globalVariableValues,
-          ...(component?.applicationPart?.variableValues ?? []),
-          ...(component?.applicationPart?.application?.variableValues ?? []),
+          ...data.globalVariableValues,
+          ...(applicationPart?.variableValues ?? []),
+          ...(application?.variableValues ?? []),
         ].map((x) => x.variable?.name ?? "-"),
       ])
     );
   }, [
-    component?.applicationPart?.application?.variableValues,
-    component?.applicationPart?.variableValues,
-    globalVariableValues,
+    application?.variableValues,
+    applicationPart?.variableValues,
+    data.globalVariableValues,
   ]);
 
-  if (!component || !component.applicationPart?.application) {
+  if (!applicationPartComponent) {
     throw new Error("Edit application part component was in invalid state");
   }
 
-  const { definition, values } = component;
+  const { definition, values } = applicationPartComponent;
 
   return (
     <>
@@ -301,12 +284,18 @@ const Header: React.FC<{
 );
 
 const ApplicationPartComponentChangeLog: React.FC<{
-  data: EditApplicationPartComponent_ChangeLog_Fragment$key;
-}> = ({ data }) => {
+  fragmentRef: EditApplicationPartComponent_ApplicationPartComponentChangeLog$key;
+}> = ({ fragmentRef }) => {
   const { changeLog } =
-    useFragment<EditApplicationPartComponent_ChangeLog_Fragment$key>(
-      applicationPartComponentChangeLog,
-      data
+    useFragment<EditApplicationPartComponent_ApplicationPartComponentChangeLog$key>(
+      graphql`
+        fragment EditApplicationPartComponent_ApplicationPartComponentChangeLog on ApplicationPartComponent {
+          changeLog {
+            ...ChangeLog
+          }
+        }
+      `,
+      fragmentRef
     );
 
   return <ChangeLog data={changeLog} />;

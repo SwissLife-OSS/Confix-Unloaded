@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9a6df3ca1756af049daa3898e8fbbf6d>>
+ * @generated SignedSource<<5744ddc7c5c7e3d83aeaed1fe8e1b5d8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,6 @@
 // @ts-nocheck
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
-import { FragmentRefs } from "relay-runtime";
 export type RemoveRoleByIdInput = {
   id: string;
 };
@@ -26,7 +25,6 @@ export type RemoveRoleDialogMutation$data = {
     }> | null;
     readonly role: {
       readonly id: string;
-      readonly " $fragmentSpreads": FragmentRefs<"RolesList_RoleEdge">;
     } | null;
   };
 };
@@ -125,12 +123,7 @@ return {
             "name": "role",
             "plural": false,
             "selections": [
-              (v3/*: any*/),
-              {
-                "args": null,
-                "kind": "FragmentSpread",
-                "name": "RolesList_RoleEdge"
-              }
+              (v3/*: any*/)
             ],
             "storageKey": null
           },
@@ -183,14 +176,6 @@ return {
                     "variableName": "connectionIds"
                   }
                 ]
-              },
-              (v3/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "name",
-                "storageKey": null
               }
             ],
             "storageKey": null
@@ -202,16 +187,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "11ac965190e954f02ac75d699958e925",
+    "cacheID": "a75328228d6e950f7d46cfa5c071e3b8",
     "id": null,
     "metadata": {},
     "name": "RemoveRoleDialogMutation",
     "operationKind": "mutation",
-    "text": "mutation RemoveRoleDialogMutation(\n  $input: RemoveRoleByIdInput!\n) {\n  removeRoleById(input: $input) {\n    role {\n      id\n      ...RolesList_RoleEdge\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment RolesList_RoleEdge on Role {\n  id\n  name\n}\n"
+    "text": "mutation RemoveRoleDialogMutation(\n  $input: RemoveRoleByIdInput!\n) {\n  removeRoleById(input: $input) {\n    role {\n      id\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "fbe7ac048c95a5d87a865f30f8fdf7aa";
+(node as any).hash = "77cf032e67ccb545dd189d3803c987f1";
 
 export default node;

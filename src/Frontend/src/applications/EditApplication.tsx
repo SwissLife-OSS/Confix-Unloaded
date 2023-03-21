@@ -1,22 +1,18 @@
 import * as React from "react";
-import {
-  useFragment,
-  useLazyLoadQuery,
-  useRefetchableFragment,
-} from "react-relay";
+import { useFragment } from "react-relay";
 import { DetailView } from "../shared/DetailView";
 import { graphql } from "babel-plugin-relay/macro";
-import { EditApplication_GetById_Query } from "./__generated__/EditApplication_GetById_Query.graphql";
+import { EditApplication_Query } from "./__generated__/EditApplication_Query.graphql";
 import { Button, Card, Col, Empty, List, Row, Tabs, Typography } from "antd";
 import styled from "@emotion/styled";
 import { EditableBreadcrumbHeader } from "../shared/EditablePageHeader";
 import { AddIcon, DeleteIcon, EditIcon } from "../icons/icons";
-import { EditApplication_part$key } from "./__generated__/EditApplication_part.graphql";
+import { EditApplication_ApplicationPartsDisplay$key } from "./__generated__/EditApplication_ApplicationPartsDisplay.graphql";
 import { ApplicationPartSectionHeader } from "./components/ApplicationPartSectionHeader";
 import {
-  EditApplication_Application_Fragment$data,
-  EditApplication_Application_Fragment$key,
-} from "./__generated__/EditApplication_Application_Fragment.graphql";
+  EditApplication$data,
+  EditApplication$key,
+} from "./__generated__/EditApplication.graphql";
 import { useToggle } from "../shared/useToggle";
 import { RemovePartFromApplicationDialog } from "./dialogs/RemovePartFromApplicationDialog";
 import { AddComponentsToApplicationPartDialog } from "./dialogs/AddComponentsToApplicationPartDialog";
@@ -25,75 +21,48 @@ import { useCallback, useEffect, useState } from "react";
 import { VariablesSelect } from "../variables/controls/VariableSelect";
 import { DefaultSuspense } from "../shared/DefaultSuspense";
 import { VariableEditor } from "../variables/controls/VariableEditor";
-import { EditApplicationRefetchApplicationQuery } from "./__generated__/EditApplicationRefetchApplicationQuery.graphql";
 import { VariableValueList } from "../variables/controls/VariableValueList";
-import { useSilentRefresh } from "../shared/useDefaultRefetch";
 import { generatePath, useLocation, useParams } from "react-router";
 import { Link } from "react-router-dom";
-import { EditApplication_VariableValues_Fragment$key } from "./__generated__/EditApplication_VariableValues_Fragment.graphql";
-import { EditApplication_ChangeLog_Fragment$key } from "./__generated__/EditApplication_ChangeLog_Fragment.graphql";
+import { EditApplication_Variables$key } from "./__generated__/EditApplication_Variables.graphql";
 import { ChangeLog } from "../shared/ChangeLog";
 import { useTabSwitcher } from "../shared/useTabSwitcher";
-
-const applicationByIdQuery = graphql`
-  query EditApplication_GetById_Query($id: ID!) {
-    applicationById(id: $id) {
-      ...EditApplication_Application_Fragment
-    }
-  }
-`;
-
-const applicationByIdFragment = graphql`
-  fragment EditApplication_Application_Fragment on Application
-  @refetchable(queryName: "EditApplicationRefetchApplicationQuery") {
-    id
-    name
-    namespace
-    parts {
-      ...EditApplication_part
-    }
-    ...EditApplication_VariableValues_Fragment @defer
-    ...EditApplication_ChangeLog_Fragment @defer
-    ...ApplicationPartSectionHeaderFragment
-  }
-`;
-
-const applicationVariableValuesFragment = graphql`
-  fragment EditApplication_VariableValues_Fragment on Application {
-    variableValues {
-      ...VariableValueList_values
-    }
-  }
-`;
-
-const applicationChangeLogFragment = graphql`
-  fragment EditApplication_ChangeLog_Fragment on Application {
-    changeLog {
-      ...ChangeLog_fragment
-    }
-  }
-`;
+import { EditApplication_ApplicationParts$key } from "./__generated__/EditApplication_ApplicationParts.graphql";
+import { EditApplication_ApplicationChangeLog$key } from "./__generated__/EditApplication_ApplicationChangeLog.graphql";
+import { useSilentRefreshQuery } from "../shared/useDefaultRefetch";
 
 export const EditApplication = () => {
   const route = useParams();
   const variables = { id: route.applicationId ?? "" };
   const { tab, navigateToTab } = useTabSwitcher();
-  const data = useLazyLoadQuery<EditApplication_GetById_Query>(
-    applicationByIdQuery,
-    variables
-  );
-  const [application, refetch] = useRefetchableFragment<
-    EditApplicationRefetchApplicationQuery,
-    EditApplication_Application_Fragment$key
-  >(applicationByIdFragment, data.applicationById);
-
-  const { refresh } = useSilentRefresh(
-    applicationByIdQuery,
-    refetch,
+  const { data: query, refresh } = useSilentRefreshQuery<EditApplication_Query>(
+    graphql`
+      query EditApplication_Query($id: ID!) {
+        applicationById(id: $id) {
+          ...EditApplication
+        }
+      }
+    `,
     variables
   );
 
-  if (!application?.id) {
+  const data = useFragment<EditApplication$key>(
+    graphql`
+      fragment EditApplication on Application
+      @refetchable(queryName: "EditApplication_RefetchQuery") {
+        id
+        name
+        namespace
+        ...EditApplication_Variables @defer
+        ...EditApplication_ApplicationChangeLog @defer
+        ...EditApplication_ApplicationParts
+        ...ApplicationPartSectionHeader
+      }
+    `,
+    query.applicationById
+  );
+
+  if (!data?.id) {
     return (
       <DetailView style={{ padding: 1 }}>Could not find application</DetailView>
     );
@@ -104,15 +73,15 @@ export const EditApplication = () => {
       <Row>
         <Col xs={24}>
           <Header
-            name={application.name}
-            namespace={application.namespace ?? ""}
-            id={application.id}
+            name={data.name}
+            namespace={data.namespace ?? ""}
+            id={data.id}
           />
         </Col>
       </Row>
       <Row>
         <Col xs={24}>
-          <ApplicationPartSectionHeader applicationKey={application} />
+          <ApplicationPartSectionHeader fragmentRef={data} />
         </Col>
         <Col xs={24}>
           <Tabs
@@ -123,14 +92,14 @@ export const EditApplication = () => {
               {
                 key: "edit",
                 label: "Parts",
-                children: <ApplicationParts application={application} />,
+                children: <ApplicationParts fragmentRef={data} />,
               },
               {
                 key: "variables",
                 label: "Variables",
                 children: (
                   <DefaultSuspense>
-                    <Variables data={application} refetch={refresh} />
+                    <Variables data={data} refetch={refresh} />
                   </DefaultSuspense>
                 ),
               },
@@ -139,7 +108,7 @@ export const EditApplication = () => {
                 label: "Change Log",
                 children: (
                   <DefaultSuspense>
-                    <ApplicationChangeLog data={application} />
+                    <ApplicationChangeLog fragmentRef={data} />
                   </DefaultSuspense>
                 ),
               },
@@ -154,27 +123,36 @@ export const EditApplication = () => {
 export type VariableOption = { label: string; value: string };
 
 const Variables: React.FC<{
-  data: EditApplication_Application_Fragment$data;
+  data: EditApplication$data;
   refetch: () => void;
 }> = ({ data, refetch }) => {
-  const { variableValues } =
-    useFragment<EditApplication_VariableValues_Fragment$key>(
-      applicationVariableValuesFragment,
-      data
-    );
   const { state } = useLocation();
+
+  const { variableValues } = useFragment<EditApplication_Variables$key>(
+    graphql`
+      fragment EditApplication_Variables on Application {
+        variableValues {
+          ...VariableValueList
+        }
+      }
+    `,
+    data
+  );
+
   const [selected, setSelected] = useState<VariableOption>(
     state?.variableOption
   );
-  useEffect(
-    () => state?.variableOption && setSelected(state?.variableOption),
-    [state?.variableOption]
-  );
+
   const handleVariableValueEditClick = useCallback(
     (id: string, name: string) => {
       setSelected({ label: name, value: id });
     },
     []
+  );
+
+  useEffect(
+    () => state?.variableOption && setSelected(state?.variableOption),
+    [state?.variableOption]
   );
 
   return (
@@ -214,19 +192,28 @@ const Variables: React.FC<{
 };
 
 const ApplicationParts: React.FC<{
-  application: EditApplication_Application_Fragment$data;
-}> = ({ application }) => {
-  if (application.parts.length === 0) {
+  fragmentRef: EditApplication_ApplicationParts$key;
+}> = ({ fragmentRef }) => {
+  const { parts, id } = useFragment(
+    graphql`
+      fragment EditApplication_ApplicationParts on Application {
+        id
+        parts {
+          ...EditApplication_ApplicationPartsDisplay
+        }
+      }
+    `,
+    fragmentRef
+  );
+
+  if (parts.length === 0) {
     return <Empty description="No Application Parts"></Empty>;
   } else {
     return (
       <Row gutter={[16, 16]}>
-        {(application.parts.map((x) => ({ ...x })) ?? []).map((item) => (
+        {(parts.map((x) => ({ ...x })) ?? []).map((item) => (
           <Col span={8}>
-            <ApplicationPartsDisplay
-              part={item}
-              applicationId={application.id}
-            />
+            <ApplicationPartsDisplay part={item} applicationId={id} />
           </Col>
         ))}
       </Row>
@@ -234,29 +221,33 @@ const ApplicationParts: React.FC<{
   }
 };
 
-const applicationPartFragment = graphql`
-  fragment EditApplication_part on ApplicationPart {
-    id
-    name
-    components {
-      definition {
-        id
-        name
-        state
-      }
-    }
-  }
-`;
-
 const ApplicationPartsDisplay: React.FC<{
   applicationId: string;
-  part: EditApplication_part$key;
+  part: EditApplication_ApplicationPartsDisplay$key;
 }> = ({ applicationId, part }) => {
   const [isRemoveDialogShown, , enableRemoveDialog, disableRemoveDialog] =
     useToggle();
   const [isAddComponentVisible, , enableAddComponent, disableAddComponent] =
     useToggle();
-  const { components, name, id } = useFragment(applicationPartFragment, part);
+  const applicationPart = useFragment(
+    graphql`
+      fragment EditApplication_ApplicationPartsDisplay on ApplicationPart {
+        id
+        name
+        components {
+          definition {
+            id
+            name
+            state
+          }
+        }
+        ...AddComponentsToApplicationPartDialog
+      }
+    `,
+    part
+  );
+  const { components, name, id } = applicationPart;
+
   const linkToPart = generatePath(`../:applicationId/parts/:partId/edit`, {
     applicationId,
     partId: id,
@@ -279,10 +270,7 @@ const ApplicationPartsDisplay: React.FC<{
           <List
             dataSource={components.map((x) => ({ ...x }))}
             renderItem={(item) => (
-              <ComponentListItem
-                name={item.definition?.name ?? ""}
-                id={item.definition?.id ?? ""}
-              />
+              <ComponentListItem name={item.definition?.name ?? ""} />
             )}
           />
         </CardBody>
@@ -294,19 +282,15 @@ const ApplicationPartsDisplay: React.FC<{
         onClose={disableRemoveDialog}
       />
       <AddComponentsToApplicationPartDialog
-        applicationPartName={name}
-        applicationPartId={id}
         open={isAddComponentVisible}
         onClose={disableAddComponent}
+        fragmentRef={applicationPart}
       />
     </>
   );
 };
 
-const ComponentListItem: React.FC<{ id: string; name: string }> = ({
-  id,
-  name,
-}) => {
+const ComponentListItem: React.FC<{ name: string }> = ({ name }) => {
   return (
     <List.Item>
       <List.Item.Meta title={name} />
@@ -342,11 +326,17 @@ const Header: React.FC<{ name: string; namespace: string; id: string }> = ({
 };
 
 const ApplicationChangeLog: React.FC<{
-  data: EditApplication_Application_Fragment$data;
-}> = ({ data }) => {
-  const { changeLog } = useFragment<EditApplication_ChangeLog_Fragment$key>(
-    applicationChangeLogFragment,
-    data
+  fragmentRef: EditApplication_ApplicationChangeLog$key;
+}> = ({ fragmentRef }) => {
+  const { changeLog } = useFragment(
+    graphql`
+      fragment EditApplication_ApplicationChangeLog on Application {
+        changeLog {
+          ...ChangeLog
+        }
+      }
+    `,
+    fragmentRef
   );
 
   return <ChangeLog data={changeLog} />;

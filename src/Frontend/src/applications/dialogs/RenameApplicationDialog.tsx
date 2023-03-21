@@ -13,23 +13,6 @@ import { useStringEventHanlder } from "../../shared/useEventListener";
 import { FieldInput } from "../../shared/FormField";
 import { RenameApplicationDialogMutation } from "./__generated__/RenameApplicationDialogMutation.graphql";
 
-const renameApplicationMutation = graphql`
-  mutation RenameApplicationDialogMutation($input: RenameApplicationInput!) {
-    renameApplication(input: $input) {
-      application {
-        id
-        ...ApplicationsList_applicationsEdge
-      }
-      errors {
-        ... on UserError {
-          message
-          code
-        }
-      }
-    }
-  }
-`;
-
 export const RenameApplicationDialog: React.FC<{
   open: boolean;
   onClose: () => void;
@@ -37,8 +20,26 @@ export const RenameApplicationDialog: React.FC<{
   id: string;
 }> = ({ open, name, id, onClose }) => {
   const [commit, isInFlight] = useMutation<RenameApplicationDialogMutation>(
-    renameApplicationMutation
+    graphql`
+      mutation RenameApplicationDialogMutation(
+        $input: RenameApplicationInput!
+      ) {
+        renameApplication(input: $input) {
+          application {
+            id
+            ...ApplicationsListItem
+          }
+          errors {
+            ... on UserError {
+              message
+              code
+            }
+          }
+        }
+      }
+    `
   );
+
   const [applicationName, setApplicationName] = useState(name);
   const handlePartNameChange = useStringEventHanlder(setApplicationName);
   const handleRename = useCallback(() => {
@@ -51,6 +52,7 @@ export const RenameApplicationDialog: React.FC<{
       withOnSuccess((x) => x.renameApplication.application?.id, onClose),
     ])({ variables: { input: { name: applicationName, id } } });
   }, [commit, id, applicationName, onClose]);
+
   return (
     <Modal
       title={`Rename Application ${name}`}
