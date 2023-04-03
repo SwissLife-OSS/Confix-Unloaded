@@ -1,4 +1,4 @@
-namespace Confix.Messaging.RabbitMQ;
+namespace Confix.Messaging.ServiceBus;
 
 public class ServiceBusOptions
 {
