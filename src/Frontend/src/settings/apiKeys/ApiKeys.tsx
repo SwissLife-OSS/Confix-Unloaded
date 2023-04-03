@@ -25,7 +25,7 @@ export const ApiKeys: React.FC = (props) => {
           </Link>
         </SidebarHeader>
         <DefaultSuspense>
-          <ApiKeysList onItemSelect={handleOnItemSelected} search={search} />
+          <ApiKeysList onItemSelect={handleOnItemSelected} />
         </DefaultSuspense>
       </FullSizeBox>
       <FullSizeBox

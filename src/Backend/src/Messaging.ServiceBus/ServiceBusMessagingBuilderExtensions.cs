@@ -3,7 +3,7 @@ using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
-namespace Confix.Messaging.RabbitMQ;
+namespace Confix.Messaging.ServiceBus;
 
 public static class ServiceBusMessagingBuilderExtensions
 {
