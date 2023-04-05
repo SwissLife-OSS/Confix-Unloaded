@@ -1,8 +1,5 @@
-using HotChocolate.Execution;
+using HotChocolate.Diagnostics;
 using HotChocolate.Execution.Configuration;
-using HotChocolate.Execution.Instrumentation;
-using HotChocolate.Execution.Processing;
-using HotChocolate.Resolvers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Confix.Authoring.GraphQL;
@@ -11,6 +8,7 @@ public static class GraphQlServiceCollectionExtensions
 {
     public static IServiceCollection AddAuthoringGraphQl(this IServiceCollection services)
     {
+        services.AddSingleton<ActivityEnricher, GraphQLActivityEnricher>();
         services.AddGraphQLServer().AddConfixSchema();
 
         return services;
@@ -39,7 +37,12 @@ public static class GraphQlServiceCollectionExtensions
             .AddErrorInterfaceType<IUserError>()
             .AddFiltering()
             .AddSorting()
-            .AddInstrumentation()
+            .AddInstrumentation(o =>
+            {
+                o.RenameRootActivity = true;
+                o.Scopes = ActivityScopes.Default;
+            })
+            .AddDiagnosticEventListener<ErrorLoggingDiagnosticEventListener>()
             .ModifyOptions(x =>
             {
                 x.EnableFlagEnums = true;
