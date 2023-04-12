@@ -21,12 +21,12 @@ internal sealed class DeveloperAccessAuthorizationRule : AuthorizationRule<Devel
         Permissions permissions,
         CancellationToken cancellationToken)
     {
-        if ((permissions & Permissions.Claim) == 0)
+        if (!permissions.HasFlag(Permissions.Read))
         {
             return new ValueTask<bool>(false);
         }
 
-        if (resource.Environment.AllowDeveloperAccess == false)
+        if (!resource.Environment.AllowDeveloperAccess)
         {
             return new ValueTask<bool>(false);
         }
