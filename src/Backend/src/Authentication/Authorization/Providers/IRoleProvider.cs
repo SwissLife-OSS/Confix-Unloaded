@@ -1,6 +1,6 @@
 namespace Confix.Authentication.Authorization;
 
-public interface IRoleProvider
+internal interface IRoleProvider
 {
     ValueTask<IReadOnlyDictionary<Guid, Role>> GetRoleMapAsync(CancellationToken cancellationToken);
 }

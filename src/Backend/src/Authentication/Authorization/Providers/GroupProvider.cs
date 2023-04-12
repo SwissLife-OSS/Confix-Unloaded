@@ -5,14 +5,15 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace Confix.Authentication.Authorization;
 
-public class GroupProvider : IGroupProvider
+internal class GroupProvider : IGroupProvider
 {
-    private readonly IMemoryCache _cache;
     private readonly TimeSpan _cacheExpiration = TimeSpan.FromMinutes(15);
 
-    private readonly IGroupStore _groupStore;
     private readonly object _userCacheLock = new();
-    private static readonly SemaphoreSlim _groupCacheSemaphore = new(1, 1);
+    private readonly SemaphoreSlim _groupCacheSemaphore = new(1, 1);
+
+    private readonly IMemoryCache _cache;
+    private readonly IGroupStore _groupStore;
 
     public GroupProvider(IMemoryCache cache, IGroupStore groupStore)
     {
@@ -67,15 +68,11 @@ public class GroupProvider : IGroupProvider
         await _groupCacheSemaphore.WaitAsync(cancellationToken);
         try
         {
-            var result = await _cache.GetOrCreateAsync(cacheKey, async (cacheEntry) =>
+            return await _cache.GetOrCreateAsync(cacheKey, async (cacheEntry) =>
                 {
                     cacheEntry.AbsoluteExpirationRelativeToNow = _cacheExpiration;
                     return await _groupStore.GetAllAsync(cancellationToken);
                 });
-            // reset roles because they might have changed
-            _cache.Remove(RoleProvider.CacheKey);
-
-            return result;
         }
         finally
         {

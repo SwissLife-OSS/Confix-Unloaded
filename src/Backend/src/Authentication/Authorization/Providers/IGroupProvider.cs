@@ -2,7 +2,7 @@ using System.Security.Claims;
 
 namespace Confix.Authentication.Authorization;
 
-public interface IGroupProvider
+internal interface IGroupProvider
 {
     ValueTask<IReadOnlyList<Group>> GetGroupsOfUserAsync(
         ClaimsPrincipal principal,
