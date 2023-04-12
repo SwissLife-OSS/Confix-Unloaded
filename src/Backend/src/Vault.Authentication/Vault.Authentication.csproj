@@ -13,8 +13,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Authentication\Authentication.csproj" />
+
     <ProjectReference Include="..\Vault.Abstractions\Vault.Abstractions.csproj" />
+    <ProjectReference Include="..\Common\Common.csproj" />
   </ItemGroup>
 
 </Project>
