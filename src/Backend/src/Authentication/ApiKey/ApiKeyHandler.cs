@@ -11,7 +11,7 @@ namespace Confix.Authentication.ApiKey;
 /// <summary>
 /// Inherited from <see cref="AuthenticationHandler{TOptions}"/> for api key authentication.
 /// </summary>
-public class ApiKeyHandler : AuthenticationHandler<ApiKeyOptions>
+internal class ApiKeyHandler : AuthenticationHandler<ApiKeyOptions>
 {
     private readonly IApiKeyProvider _apiKeyProvider;
 
