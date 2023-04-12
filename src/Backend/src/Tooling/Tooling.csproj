@@ -7,7 +7,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <ToolCommandName>textli</ToolCommandName>
+    <ToolCommandName>confix</ToolCommandName>
     <IsPackable>true</IsPackable>
     <PackAsTool>true</PackAsTool>
     <UseAppHost>false</UseAppHost>
