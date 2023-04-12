@@ -9,9 +9,10 @@ public class GroupProvider : IGroupProvider
 {
     private readonly IMemoryCache _cache;
     private readonly TimeSpan _cacheExpiration = TimeSpan.FromMinutes(15);
-    private static readonly SemaphoreSlim _groupSemaphore = new(1, 1);
+
     private readonly IGroupStore _groupStore;
-    private readonly object _userLock = new();
+    private readonly object _userCacheLock = new();
+    private static readonly SemaphoreSlim _groupCacheSemaphore = new(1, 1);
 
     public GroupProvider(IMemoryCache cache, IGroupStore groupStore)
     {
@@ -41,16 +42,15 @@ public class GroupProvider : IGroupProvider
 
         var groups = await GetGroupsAsync(cancellationToken);
 
-        lock (_userLock)
+        lock (_userCacheLock)
         {
             return _cache.GetOrCreate(cacheKey, (cacheEntry) =>
             {
-                var groupsForUser = groups
-                    .Where(x => x.Requirements.Any(r => r.Validate(principal)))
-                    .Concat(AuthorizationDefaults.DefaultGroups)
-                    .ToArray();
                 cacheEntry.AbsoluteExpirationRelativeToNow = _cacheExpiration;
-                return groupsForUser;
+                return groups
+                    .AsParallel()
+                    .Where(x => x.Requirements.Any(r => r.Validate(principal)))
+                    .ToArray();
             });
         }
     }
@@ -58,25 +58,28 @@ public class GroupProvider : IGroupProvider
     private async Task<IReadOnlyList<Group>> GetGroupsAsync(CancellationToken cancellationToken)
     {
         const string cacheKey = "group_service.groups";
-        return await _cache.GetOrCreateAsync(cacheKey, async (cacheEntry) =>
-        {
-            await _groupSemaphore.WaitAsync();
-            try
-            {
-                if (_cache.TryGetValue(cacheKey, out IReadOnlyList<Group> cachedResult))
-                {
-                    return cachedResult;
-                }
 
-                var resultFromStore = await _groupStore.GetAllAsync(cancellationToken);
-                cacheEntry.AbsoluteExpirationRelativeToNow = _cacheExpiration;
-                _cache.Remove(RoleProvider.CacheKey);
-                return resultFromStore;
-            }
-            finally
-            {
-                _groupSemaphore.Release();
-            }
-        });
+        if (_cache.TryGetValue(cacheKey, out IReadOnlyList<Group> cachedGroups))
+        {
+            return cachedGroups;
+        }
+
+        await _groupCacheSemaphore.WaitAsync(cancellationToken);
+        try
+        {
+            var result = await _cache.GetOrCreateAsync(cacheKey, async (cacheEntry) =>
+                {
+                    cacheEntry.AbsoluteExpirationRelativeToNow = _cacheExpiration;
+                    return await _groupStore.GetAllAsync(cancellationToken);
+                });
+            // reset roles because they might have changed
+            _cache.Remove(RoleProvider.CacheKey);
+
+            return result;
+        }
+        finally
+        {
+            _groupCacheSemaphore.Release();
+        }
     }
 }
