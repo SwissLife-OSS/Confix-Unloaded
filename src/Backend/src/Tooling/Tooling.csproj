@@ -7,18 +7,27 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <IsPackable>false</IsPackable>
+    <ToolCommandName>textli</ToolCommandName>
+    <IsPackable>true</IsPackable>
+    <PackAsTool>true</PackAsTool>
+    <UseAppHost>false</UseAppHost>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>Confix.Tooling</PackageId>
+    <RootNamespace>Confix.Tooling</RootNamespace>
+    <AssemblyName>Confix.Tooling</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.CommandLine" />
-    <PackageReference Include="Spectre.Console" />
-    <PackageReference Include="Spectre.Console.Json" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
-    <PackageReference Include="Microsoft.Extensions.Http" />
-    <PackageReference Include="StrawberryShake.Server" />
+    <PackageReference Include="System.CommandLine"/>
+    <PackageReference Include="Spectre.Console"/>
+    <PackageReference Include="Spectre.Console.Json"/>
+    <PackageReference Include="Microsoft.Extensions.Configuration"/>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json"/>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection"/>
+    <PackageReference Include="Microsoft.Extensions.Http"/>
+    <PackageReference Include="StrawberryShake.Server"/>
   </ItemGroup>
 
 </Project>
