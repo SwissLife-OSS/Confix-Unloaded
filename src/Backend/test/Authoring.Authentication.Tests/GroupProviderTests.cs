@@ -4,9 +4,7 @@ using System.Security.Claims;
 using FluentAssertions;
 using IdentityModel;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.DependencyInjection;
 using Moq;
-using Snapshooter.Xunit;
 using Xunit;
 
 namespace Confix.Authentication.Authorization.Tests;
