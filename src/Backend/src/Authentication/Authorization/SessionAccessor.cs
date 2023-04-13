@@ -34,7 +34,7 @@ public class SessionAccessor : ISessionAccessor
         {
             lock (sessionLock)
             {
-                lazySession ??= new (() => CreateSession(cancellationToken), true);
+                lazySession ??= new(() => CreateSession(cancellationToken), true);
             }
         }
 
@@ -66,7 +66,7 @@ public class SessionAccessor : ISessionAccessor
             await roleMapTask);
     }
 
-    private UserInfo GetUserInfo(ClaimsPrincipal user)
+    private static UserInfo GetUserInfo(ClaimsPrincipal user)
     {
         string? sub = user.FirstExisting(
             JwtClaimTypes.Subject,
