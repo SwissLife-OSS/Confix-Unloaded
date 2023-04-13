@@ -1,9 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
     <AssemblyName>Confix.Vault</AssemblyName>
     <RootNamespace>Confix.Vault</RootNamespace>
     <IsPackable>true</IsPackable>

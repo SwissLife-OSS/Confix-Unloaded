@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using System.Security.Authentication;
 using System.Security.Claims;
 using Confix.Authentication.ApiKey;
 using IdentityModel;
@@ -11,10 +12,9 @@ public class SessionAccessor : ISessionAccessor
     private readonly IHttpContextAccessor _accessor;
     private readonly IGroupProvider _groupProvider;
     private readonly IApiKeyProvider _apiKeyProvider;
-    private readonly object _lockObject = new();
     private readonly IRoleProvider _roleProvider;
-
-    private Holder? _session;
+    private Lazy<Task<ISession?>>? lazySession;
+    private readonly object sessionLock = new();
 
     public SessionAccessor(
         IHttpContextAccessor accessor,
@@ -30,18 +30,15 @@ public class SessionAccessor : ISessionAccessor
 
     public async ValueTask<ISession?> GetSession(CancellationToken cancellationToken)
     {
-        if (_session is null)
+        if (lazySession is null)
         {
-            lock (_lockObject)
+            lock (sessionLock)
             {
-                if (_session is null)
-                {
-                    _session = new Holder(CreateSession(cancellationToken));
-                }
+                lazySession ??= new (() => CreateSession(cancellationToken), true);
             }
         }
 
-        return await _session.Value.Get();
+        return await lazySession.Value.WaitAsync(cancellationToken);
     }
 
     private async Task<ISession?> CreateSession(CancellationToken cancellationToken)
@@ -53,7 +50,51 @@ public class SessionAccessor : ISessionAccessor
             return null;
         }
 
-        IReadOnlyList<Group> groups = Array.Empty<Group>();
+        var groupsTask = GetGroupsAsync(user, cancellationToken);
+        var roleMapTask = _roleProvider.GetRoleMapAsync(cancellationToken);
+        UserInfo userInfo = GetUserInfo(user);
+
+        var groups = await groupsTask;
+        if (!groups.Any())
+        {
+            return null;
+        }
+
+        return new Session(
+            userInfo,
+            groups,
+            await roleMapTask);
+    }
+
+    private UserInfo GetUserInfo(ClaimsPrincipal user)
+    {
+        string? sub = user.FirstExisting(
+            JwtClaimTypes.Subject,
+            ClaimTypes.NameIdentifier,
+            JwtClaimTypes.JwtId);
+
+        if (sub is null)
+        {
+            throw new AuthenticationException("Sub was not provided");
+        }
+
+        string name = user.FirstExisting(
+            JwtClaimTypes.Name,
+            JwtClaimTypes.PreferredUserName,
+            JwtClaimTypes.GivenName) ?? sub;
+        string? email = user.FirstExisting(
+            JwtClaimTypes.Email,
+            ClaimTypes.Upn,
+            JwtClaimTypes.PreferredUserName,
+            "upn");
+
+        return new(sub, name, email);
+    }
+
+    private async Task<IReadOnlyList<Group>> GetGroupsAsync(
+        ClaimsPrincipal user,
+        CancellationToken cancellationToken)
+    {
         if (user.Claims.FirstOrDefault(x => x.Type == ApiKeyDefaults.ApiKeyClaim) is
             { } apiKeyClaim)
         {
@@ -62,10 +103,10 @@ public class SessionAccessor : ISessionAccessor
 
             if (apiKey is null)
             {
-                return null;
+                return Array.Empty<Group>();
             }
 
-            groups = new[]
+            return new[]
             {
                 new Group(Guid.Empty,
                     "Api Key Auth",
@@ -73,40 +114,23 @@ public class SessionAccessor : ISessionAccessor
                     apiKey.Roles)
             };
         }
-        else
-        {
-            groups = await _groupProvider.GetGroupsOfUserAsync(context.User, cancellationToken);
-        }
 
-        var roleMap = await _roleProvider.GetRoleMapAsync(cancellationToken);
-
-        // apply defaults
-
-        var sub = context.User.FindFirstValue(JwtClaimTypes.Subject) ?? "Token";
-
-        return new Session(sub, groups, roleMap);
+        return await _groupProvider.GetGroupsOfUserAsync(user, cancellationToken);
     }
+}
 
-    private struct Holder
+file static class Extensions
+{
+    public static string? FirstExisting(this ClaimsPrincipal claimsPrincipal, params string[] claims)
     {
-        private Task<ISession?>? _task;
-
-        private ISession? _result;
-
-        public Holder(Task<ISession?> task)
+        foreach (string claim in claims)
         {
-            _task = task;
-        }
-
-        public async ValueTask<ISession?> Get()
-        {
-            if (_task is not null)
+            if (claimsPrincipal.FindFirstValue(claim) is { } value)
             {
-                _result = await _task;
-                _task = null;
+                return value;
             }
-
-            return _result;
         }
+
+        return null;
     }
 }
