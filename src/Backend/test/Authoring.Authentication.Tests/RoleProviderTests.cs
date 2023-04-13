@@ -45,7 +45,7 @@ public class RoleProviderTests
         var roleStore = new Mock<IRoleStore>();
         var roleProvider = new RoleProvider(cache, roleStore.Object);
 
-       var rolesFromStore = new[]
+        var rolesFromStore = new[]
         {
             new Role(
                 Guid.Parse("63C30F32-DEB1-4DFC-8D19-CD7767CE5A20"),
@@ -59,7 +59,7 @@ public class RoleProviderTests
             .Setup(rs => rs.GetAllAsync(cancellationToken))
             .ReturnsAsync(rolesFromStore);
 
-       // Act
+        // Act
         var result1 = await roleProvider.GetRoleMapAsync(cancellationToken);
         var result2 = await roleProvider.GetRoleMapAsync(cancellationToken);
 
