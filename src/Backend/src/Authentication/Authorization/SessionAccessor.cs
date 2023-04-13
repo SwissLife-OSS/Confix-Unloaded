@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Confix.Authentication.Authorization;
 
-public class SessionAccessor : ISessionAccessor
+internal class SessionAccessor : ISessionAccessor
 {
     private readonly IHttpContextAccessor _accessor;
     private readonly IGroupProvider _groupProvider;

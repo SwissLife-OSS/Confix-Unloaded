@@ -374,7 +374,7 @@ internal sealed class PublishingService : IPublishingService
 
         if (!await _authorizationService
                 .RuleFor<DeveloperAccessRequest>()
-                .IsAuthorizedAsync(new(env, app), Claim, cancellationToken))
+                .IsAuthorizedAsync(new(env, app), Read, cancellationToken))
         {
             throw new UnauthorizedOperationException();
         }
