@@ -10,14 +10,12 @@ internal class VariableProvider
     private const string _decryptionKey = "CONFIX_DECRYPTION_KEY";
     private const string _token = "CONFIX_TOKEN";
 
-    public string ResolveVaultUrl() => GetEnvironmentVariable(_vaultUrl)
-        ?? throw EnvironmentVariableNotFound(_vaultUrl);
+    public string? ResolveVaultUrl() => GetEnvironmentVariable(_vaultUrl);
 
     public string ResolverEnvironment() => GetEnvironmentVariable(_environment)
         ?? throw EnvironmentVariableNotFound(_environment);
 
-    public string ResolveDecryptionKey() => GetEnvironmentVariable(_decryptionKey)
-        ?? throw EnvironmentVariableNotFound(_decryptionKey);
+    public string? ResolveDecryptionKey() => GetEnvironmentVariable(_decryptionKey);
 
     public string? ResolveVaultToken()
     {

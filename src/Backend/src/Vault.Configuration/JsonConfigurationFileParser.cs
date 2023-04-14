@@ -4,16 +4,13 @@ using Microsoft.Extensions.Configuration;
 
 namespace Confix.Value.Configuration;
 
-/// <summary>
-/// This is the same implementen
-/// </summary>
 internal sealed class JsonConfigurationFileParser
 {
     private JsonConfigurationFileParser() { }
 
     private readonly Dictionary<string, string?> _data = new(StringComparer.OrdinalIgnoreCase);
 
-    private readonly Stack<string> _paths = new Stack<string>();
+    private readonly Stack<string> _paths = new();
 
     private IDictionary<string, string?> Parse(JsonDocument doc)
     {

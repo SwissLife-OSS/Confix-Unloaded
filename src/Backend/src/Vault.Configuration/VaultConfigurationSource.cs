@@ -12,7 +12,5 @@ public sealed class VaultConfigurationSource : IConfigurationSource
     }
 
     public IConfigurationProvider Build(IConfigurationBuilder builder)
-    {
-        return new VaultConfigurationProvider(this);
-    }
+        => new VaultConfigurationProvider(this);
 }
