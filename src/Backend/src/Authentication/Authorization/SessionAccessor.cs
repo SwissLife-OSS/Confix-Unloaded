@@ -13,8 +13,8 @@ internal class SessionAccessor : ISessionAccessor
     private readonly IGroupProvider _groupProvider;
     private readonly IApiKeyProvider _apiKeyProvider;
     private readonly IRoleProvider _roleProvider;
-    private Lazy<Task<ISession?>>? lazySession;
-    private readonly object sessionLock = new();
+    private Lazy<Task<ISession?>>? _lazySession;
+    private readonly object _sessionLock = new();
 
     public SessionAccessor(
         IHttpContextAccessor accessor,
@@ -30,15 +30,15 @@ internal class SessionAccessor : ISessionAccessor
 
     public async ValueTask<ISession?> GetSession(CancellationToken cancellationToken)
     {
-        if (lazySession is null)
+        if (_lazySession is null)
         {
-            lock (sessionLock)
+            lock (_sessionLock)
             {
-                lazySession ??= new(() => CreateSession(cancellationToken), true);
+                _lazySession ??= new(() => CreateSession(cancellationToken), true);
             }
         }
 
-        return await lazySession.Value.WaitAsync(cancellationToken);
+        return await _lazySession.Value.WaitAsync(cancellationToken);
     }
 
     private async Task<ISession?> CreateSession(CancellationToken cancellationToken)

@@ -1,0 +1,16 @@
+﻿{
+  "UserInfo": {
+    "Id": "some-sub",
+    "Name": "John",
+    "Email": "john@example.com"
+  },
+  "Groups": [
+    {
+      "Id": "00000000-0000-0000-0000-000000000000",
+      "Name": "Some Group",
+      "Requirements": [],
+      "Roles": []
+    }
+  ],
+  "Namespaces": []
+}
