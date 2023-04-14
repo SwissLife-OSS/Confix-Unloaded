@@ -8,7 +8,6 @@ using Confix.Authoring.Publishing.Stores;
 using Confix.Authoring.Store;
 using Confix.Common.Exceptions;
 using Confix.CryptoProviders;
-using Confix.CryptoProviders.AzureKeyVault;
 using GreenDonut;
 using static Confix.Authentication.Authorization.Permissions;
 

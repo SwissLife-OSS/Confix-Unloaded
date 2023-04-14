@@ -180,11 +180,7 @@ public class VaultConfigurationProvider : ConfigurationProvider
         // we use the vault client to load the configuration from the vault. The configuration
         // provider only has a synchronous interface so we need to use the GetAwaiter().GetResult().
         // Not nice but it works.
-        var client = VaultClientFactory.CreateClient(vaultToken);
-        var response = client
-            .GetAsync(applicationName, partName, environment, vaultToken, CancellationToken.None)
-            .GetAwaiter()
-            .GetResult();
+        var response = FetchVaultConfig(applicationName, partName, environment, vaultToken);
 
         if (response is not var (cypher, iv))
         {
@@ -202,6 +198,34 @@ public class VaultConfigurationProvider : ConfigurationProvider
             Console.WriteLine($"Could not load configuration with vault token: {ex.Message}");
 
             return null;
+        }
+
+        static CypherAndIv? FetchVaultConfig(
+            string applicationName,
+            string partName,
+            string environment,
+            string vaultToken)
+        {
+            try
+            {
+                var client = VaultClientFactory.CreateClient(vaultToken);
+                var ct = CancellationToken.None;
+                var response = client
+                    .GetAsync(applicationName, partName, environment, vaultToken, ct)
+                    .GetAwaiter()
+                    .GetResult();
+
+                if (response is null)
+                {
+                    return null;
+                }
+
+                return response.Deserialize<CypherAndIv>();
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 

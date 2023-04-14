@@ -13,14 +13,14 @@
 
 
   <ItemGroup>
-    <PackageReference Include="System.CommandLine"/>
-    <PackageReference Include="Spectre.Console"/>
-    <PackageReference Include="Spectre.Console.Json"/>
-    <PackageReference Include="Microsoft.Extensions.Configuration"/>
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json"/>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection"/>
-    <PackageReference Include="Microsoft.Extensions.Http"/>
-    <PackageReference Include="StrawberryShake.Server"/>
+    <PackageReference Include="System.CommandLine" />
+    <PackageReference Include="Spectre.Console" />
+    <PackageReference Include="Spectre.Console.Json" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="Microsoft.Extensions.Http" />
+    <PackageReference Include="StrawberryShake.Server" />
   </ItemGroup>
 
 </Project>
