@@ -345,3 +345,4 @@ tools/**
 appsettings.user.json
 
 **/*vaultconfig.json
+__mismatch__/

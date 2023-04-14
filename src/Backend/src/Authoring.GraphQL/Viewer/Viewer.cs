@@ -10,8 +10,8 @@ public sealed class Viewer
     {
         _session = session;
     }
-
-    public string Name => _session.Name;
+    
+    public string Name => _session.UserInfo.Name ?? _session.UserInfo.Email ?? _session.UserInfo.Id;
 
     public IReadOnlyList<Group> Groups => _session.Groups;
 

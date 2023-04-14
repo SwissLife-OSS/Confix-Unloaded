@@ -1,23 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <PackageId>Confix.Tooling</PackageId>
     <AssemblyName>Confix.Tooling</AssemblyName>
     <RootNamespace>Confix.Tooling</RootNamespace>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
     <ToolCommandName>confix</ToolCommandName>
     <IsPackable>true</IsPackable>
     <PackAsTool>true</PackAsTool>
     <UseAppHost>false</UseAppHost>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <PackageId>Confix.Tooling</PackageId>
-    <RootNamespace>Confix.Tooling</RootNamespace>
-    <AssemblyName>Confix.Tooling</AssemblyName>
-  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="System.CommandLine"/>

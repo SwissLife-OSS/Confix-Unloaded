@@ -1,0 +1,23 @@
+﻿{
+  "UserInfo": {
+    "Id": "some-sub",
+    "Name": "some-sub",
+    "Email": null
+  },
+  "Groups": [
+    {
+      "Id": "00000000-0000-0000-0000-000000000000",
+      "Name": "Api Key Auth",
+      "Requirements": [],
+      "Roles": [
+        {
+          "Namespace": "NameSpace",
+          "RoleIds": []
+        }
+      ]
+    }
+  ],
+  "Namespaces": [
+    "NameSpace"
+  ]
+}
