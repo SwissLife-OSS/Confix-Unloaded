@@ -28,11 +28,8 @@ Console.Write("Token: ");
 var token = ReadLine(cancellationToken);
 
 Console.WriteLine("Fetching...");
-using var response = await client.GetAsync(applicationName,
-    applicationPartName,
-    environmentName,
-    token,
-    cancellationToken);
+using var response = await client
+    .GetAsync(applicationName, applicationPartName, environmentName, token, cancellationToken);
 
 Console.WriteLine("Response...");
 
