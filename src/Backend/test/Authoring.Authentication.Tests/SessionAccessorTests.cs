@@ -41,6 +41,7 @@ public class SessionAccessorTests
         // Arrange
         var user = new ClaimsPrincipal(new ClaimsIdentity(new[]
         {
+            new Claim(JwtClaimTypes.Subject, "some-sub"),
             new Claim(ApiKeyDefaults.ApiKeyClaim, Guid.NewGuid().ToString())
         }, "test"));
         var groupProviderMock = new Mock<IGroupProvider>();
