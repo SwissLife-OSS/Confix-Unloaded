@@ -36,7 +36,7 @@ internal static class ConfixClientCommandLineBuilderExtensions
         void ConfigureClient(HttpClient client)
         {
             client.BaseAddress = builder.Uri;
-            client.DefaultRequestHeaders.Add("Authorization", apiKey);
+            client.DefaultRequestHeaders.Add("confix-api-key", apiKey);
         }
     }
 }
