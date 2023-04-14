@@ -3,9 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Confix.Value.Configuration;
 
-internal static class ConfixClientFactory
+internal static class AuthoringClientFactory
 {
-    public static IConfixClient CreateClient(string authoringUrl, string accessToken)
+    public static IAuthoringClient CreateClient(string authoringUrl, string accessToken)
     {
         var services = new ServiceCollection();
 
@@ -15,7 +15,7 @@ internal static class ConfixClientFactory
         }
 
         services
-            .AddConfixClient()
+            .AddAuthoringClient()
             .ConfigureHttpClient(x =>
             {
                 x.DefaultRequestHeaders.Authorization =
@@ -23,6 +23,7 @@ internal static class ConfixClientFactory
                 x.BaseAddress = uri;
             });
 
-        return services.BuildServiceProvider().GetRequiredService<IConfixClient>();
+        return services.BuildServiceProvider().GetRequiredService<IAuthoringClient>();
     }
 }
+

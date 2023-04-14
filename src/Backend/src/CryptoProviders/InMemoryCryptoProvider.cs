@@ -1,8 +1,9 @@
 using System.Security.Cryptography;
 
-namespace Confix.CryptoProviders.AzureKeyVault;
+namespace Confix.CryptoProviders;
 
 public sealed class InMemoryCryptoProvider
+
 {
     public InMemoryCryptoProvider(byte[] key)
     {

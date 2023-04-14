@@ -75,7 +75,7 @@ public sealed class VaultClient : IVaultClient
         await RequestAsync<RefreshConfigurationResponse>(client, request, cancellationToken);
     }
 
-    public async Task<JsonDocument?> GetAsync(
+    public async Task<CypherAndIv?> GetAsync(
         string applicationName,
         string applicationPartName,
         string environmentName,

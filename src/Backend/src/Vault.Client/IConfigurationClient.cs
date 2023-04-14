@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Confix.Vault.Abstractions;
+using Vault.Host.Configuration.Transport;
 
 namespace Confix.Vault.Client;
 
@@ -12,7 +13,7 @@ public interface IVaultClient
         string configuration,
         CancellationToken cancellationToken);
 
-    Task<JsonDocument?> GetAsync(
+    Task<CypherAndIv?> GetAsync(
         string applicationName,
         string applicationPartName,
         string environmentName,

@@ -1,4 +1,4 @@
-namespace Confix.CryptoProviders.AzureKeyVault;
+namespace Confix.CryptoProviders;
 
 public sealed class EncryptionKeyCryptoProvider : IEncryptor, IDecryptor
 {
