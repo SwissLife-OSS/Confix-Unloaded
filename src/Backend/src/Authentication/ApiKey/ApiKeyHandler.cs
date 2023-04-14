@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using System.Text.Encodings.Web;
+using IdentityModel;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -75,11 +76,12 @@ internal class ApiKeyHandler : AuthenticationHandler<ApiKeyOptions>
         return AuthenticateResult.Fail("No authenticated prinicipal set.");
     }
 
-    internal ClaimsPrincipal BuildClaimsPrincipal(ApiKey apiKey)
+    private ClaimsPrincipal BuildClaimsPrincipal(ApiKey apiKey)
     {
         var claimsList = new List<Claim>
         {
-            new(ApiKeyClaim, apiKey.Id.ToString(ApiKeyIdSerializationType))
+            new(ApiKeyClaim, apiKey.Id.ToString(ApiKeyIdSerializationType)),
+            new(ClaimTypes.NameIdentifier, "API Key: " + apiKey.Id)
         };
 
         return new ClaimsPrincipal(new ClaimsIdentity(claimsList, Scheme.Name));
