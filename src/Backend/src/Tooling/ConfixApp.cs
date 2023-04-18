@@ -9,6 +9,10 @@ internal sealed class ConfixCommandLine : CommandLineBuilder
 {
     public ConfixCommandLine() : base(new ConfixRootCommand())
     {
+        var console = AnsiConsole.Create(new AnsiConsoleSettings());
+
+        console.Profile.Width = 500;
+
         this.AddService(AnsiConsole.Console)
             .AddConfixClient()
             .UseDefaults()
