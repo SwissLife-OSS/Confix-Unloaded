@@ -176,7 +176,6 @@ public class VaultConfigurationProvider : ConfigurationProvider
         }
 
         Console.WriteLine("Loading configuration with vault token");
-
         var response = FetchVaultConfig(applicationName, partName, environment, vaultToken);
 
         if (response is not var (cypher, iv))
@@ -195,6 +194,34 @@ public class VaultConfigurationProvider : ConfigurationProvider
             Console.WriteLine($"Could not load configuration with vault token: {ex.Message}");
 
             return null;
+        }
+
+        static CypherAndIv? FetchVaultConfig(
+            string applicationName,
+            string partName,
+            string environment,
+            string vaultToken)
+        {
+            try
+            {
+                var client = VaultClientFactory.CreateClient(vaultToken);
+                var ct = CancellationToken.None;
+                var response = client
+                    .GetAsync(applicationName, partName, environment, vaultToken, ct)
+                    .GetAwaiter()
+                    .GetResult();
+
+                if (response is null)
+                {
+                    return null;
+                }
+
+                return response.Deserialize<CypherAndIv>();
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 
