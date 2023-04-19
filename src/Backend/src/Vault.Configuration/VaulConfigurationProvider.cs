@@ -36,7 +36,9 @@ public class VaultConfigurationProvider : ConfigurationProvider
         // with az login.
         data ??= LoadConfigurationFromAuthoring(applicationName, partName, environment);
 
-        var filepath = GetTokenFromFile(_source.Part.Name, _source.Part.PartName, environment);
+        var filepath =
+            CreateLocalConfigurationPath(_source.Part.Name, _source.Part.PartName, environment);
+
         var protector = CreateProtector();
 
         // If we were able to load the configuration we save it to the local file system as a cache.
@@ -58,8 +60,10 @@ public class VaultConfigurationProvider : ConfigurationProvider
     {
         // If the file does not exist we return null to indicate that we could not load the
         // configuration from the local file system.
-        if (File.Exists(filepath))
+        if (!File.Exists(filepath))
         {
+            Console.WriteLine($"Could not load configuration from file: File {filepath} not found");
+
             return null;
         }
 
@@ -86,7 +90,12 @@ public class VaultConfigurationProvider : ConfigurationProvider
     {
         if (File.Exists(filepath))
         {
+            Console.WriteLine($"Updating configuration in file {filepath}");
             File.Delete(filepath);
+        }
+        else
+        {
+            Console.WriteLine($"Creating configuration in file {filepath}");
         }
 
         File.WriteAllText(filepath, protector.Protect(JsonSerializer.Serialize(data)));
@@ -100,6 +109,7 @@ public class VaultConfigurationProvider : ConfigurationProvider
         // to load the configuration from the authoring we need a valid authoring url
         if (_provider.ResolveAuthoringUrl() is not { } authoringUrl)
         {
+            Console.WriteLine("Could not load configuration with az login: No authoring url found");
             return null;
         }
 
@@ -107,6 +117,7 @@ public class VaultConfigurationProvider : ConfigurationProvider
         // can't load the configuration.
         if (GetAzureCliToken() is not { } token)
         {
+            Console.WriteLine("Could not load configuration with az login: No token found");
             return null;
         }
 
@@ -159,6 +170,8 @@ public class VaultConfigurationProvider : ConfigurationProvider
         // load the configuration from the vault
         if (_provider.ResolveVaultToken() is not { } vaultToken)
         {
+            Console.WriteLine(
+                "Could not load configuration with vault token: No vault token found");
             return null;
         }
 
@@ -166,12 +179,15 @@ public class VaultConfigurationProvider : ConfigurationProvider
         // even try to load the configuration from the vault
         if (_provider.ResolveDecryptionKey() is not { } decryptionKey)
         {
+            Console.WriteLine(
+                "Could not load configuration with vault token: No decryption key found");
             return null;
         }
 
         // we need a vault url to load the configuration from the vault
         if (_provider.ResolveVaultUrl() is not { } vaultUrl)
         {
+            Console.WriteLine("Could not load configuration with vault token: No vault url found");
             return null;
         }
 
@@ -195,34 +211,6 @@ public class VaultConfigurationProvider : ConfigurationProvider
             Console.WriteLine($"Could not load configuration with vault token: {ex.Message}");
 
             return null;
-        }
-
-        static CypherAndIv? FetchVaultConfig(
-            string applicationName,
-            string partName,
-            string environment,
-            string vaultToken)
-        {
-            try
-            {
-                var client = VaultClientFactory.CreateClient(vaultToken);
-                var ct = CancellationToken.None;
-                var response = client
-                    .GetAsync(applicationName, partName, environment, vaultToken, ct)
-                    .GetAwaiter()
-                    .GetResult();
-
-                if (response is null)
-                {
-                    return null;
-                }
-
-                return response.Deserialize<CypherAndIv>();
-            }
-            catch
-            {
-                return null;
-            }
         }
     }
 
@@ -271,7 +259,10 @@ public class VaultConfigurationProvider : ConfigurationProvider
         .GetRequiredService<IDataProtectionProvider>()
         .CreateProtector("Confix_Token");
 
-    private static string GetTokenFromFile(string name, string partName, string environmentName)
+    private static string CreateLocalConfigurationPath(
+        string name,
+        string partName,
+        string environmentName)
         => Path.Combine(Directory.GetCurrentDirectory(),
             $"{name}_{partName}_{environmentName}_confix.vaultconfig.json");
 }
