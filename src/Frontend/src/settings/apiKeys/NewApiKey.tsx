@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Col, Input, message, Row, Tooltip } from "antd";
 import { useFragment, useMutation } from "react-relay";
 import { graphql } from "babel-plugin-relay/macro";
@@ -69,8 +69,8 @@ export const NewApiKey: React.FC = () => {
         withOnSuccess((x) => x.createApiKey.apiKeyWithSecret?.key.id, goToEdit),
         withOnSuccess(
           (x) => x.createApiKey.apiKeyWithSecret,
-          (value) => message.success(<SuccessMessage fragmentRef={value} />)
-        ),
+          (value) => message.success(<SuccessMessage secret={value.secret} />)
+        )
       ],
     }
   );
@@ -106,16 +106,8 @@ export const NewApiKey: React.FC = () => {
 };
 
 const SuccessMessage: React.FC<{
-  fragmentRef: NewApiKey_SuccessMessage$key;
-}> = ({ fragmentRef }) => {
-  const { secret } = useFragment(
-    graphql`
-      fragment NewApiKey_SuccessMessage on ApiKeyWithSecret {
-        secret
-      }
-    `,
-    fragmentRef
-  );
+  secret: string;
+}> = ({ secret }) => {
   return (
     <div style={{ minWidth: "300px" }}>
       Api key created! <br />
