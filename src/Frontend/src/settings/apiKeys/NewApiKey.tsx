@@ -29,6 +29,7 @@ export const NewApiKey: React.FC = () => {
               edgeTypeName: "ApiKeysEdge"
             ) {
             id
+            ...ApiKeysList_ApiKeyListItem
           }
           secret
         }

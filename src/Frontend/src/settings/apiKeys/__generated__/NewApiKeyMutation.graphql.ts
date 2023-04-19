@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5ab25ca5007089d2498ca089ce336ef4>>
+ * @generated SignedSource<<533c5ad0ef777374952edfd3615081aa>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,6 +9,7 @@
 // @ts-nocheck
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
+import { FragmentRefs } from "relay-runtime";
 export type CreateApiKeyInput = {
   name: string;
   roles: ReadonlyArray<RoleScopeInput>;
@@ -26,6 +27,7 @@ export type NewApiKeyMutation$data = {
     readonly apiKeyWithSecret: {
       readonly key: {
         readonly id: string;
+        readonly " $fragmentSpreads": FragmentRefs<"ApiKeysList_ApiKeyListItem">;
       };
       readonly secret: string;
     } | null;
@@ -61,19 +63,8 @@ v2 = [
 v3 = {
   "alias": null,
   "args": null,
-  "concreteType": "ApiKey",
-  "kind": "LinkedField",
-  "name": "key",
-  "plural": false,
-  "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    }
-  ],
+  "kind": "ScalarField",
+  "name": "id",
   "storageKey": null
 },
 v4 = {
@@ -130,7 +121,23 @@ return {
             "name": "apiKeyWithSecret",
             "plural": false,
             "selections": [
-              (v3/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "ApiKey",
+                "kind": "LinkedField",
+                "name": "key",
+                "plural": false,
+                "selections": [
+                  (v3/*: any*/),
+                  {
+                    "args": null,
+                    "kind": "FragmentSpread",
+                    "name": "ApiKeysList_ApiKeyListItem"
+                  }
+                ],
+                "storageKey": null
+              },
               (v4/*: any*/)
             ],
             "storageKey": null
@@ -179,7 +186,25 @@ return {
             "name": "apiKeyWithSecret",
             "plural": false,
             "selections": [
-              (v3/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "ApiKey",
+                "kind": "LinkedField",
+                "name": "key",
+                "plural": false,
+                "selections": [
+                  (v3/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "name",
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              },
               {
                 "alias": null,
                 "args": null,
@@ -230,16 +255,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "c23debe1d309a5a7164e0b8ac2545b02",
+    "cacheID": "f8b31dfaf2bf4a785255fcddbcfa2559",
     "id": null,
     "metadata": {},
     "name": "NewApiKeyMutation",
     "operationKind": "mutation",
-    "text": "mutation NewApiKeyMutation(\n  $input: CreateApiKeyInput!\n) {\n  createApiKey(input: $input) {\n    apiKeyWithSecret {\n      key {\n        id\n      }\n      secret\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n"
+    "text": "mutation NewApiKeyMutation(\n  $input: CreateApiKeyInput!\n) {\n  createApiKey(input: $input) {\n    apiKeyWithSecret {\n      key {\n        id\n        ...ApiKeysList_ApiKeyListItem\n      }\n      secret\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment ApiKeysList_ApiKeyListItem on ApiKey {\n  id\n  name\n}\n"
   }
 };
 })();
 
-(node as any).hash = "d2995436bed130f6243cd852d402e8a2";
+(node as any).hash = "9eaee305ae684980a761c1416422e0a0";
 
 export default node;

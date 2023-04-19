@@ -99,7 +99,7 @@ const ApiKeyListItem: React.FC<{
 
   const [isRemoveEnvVisible, , enableRemoveEnv, disableRemoveEnv] = useToggle();
 
-  const goToOverview = useGoTo("/");
+  const goToOverview = useGoTo("settings/apikeys");
 
   const handleClick = useCallback(() => onItemSelect(id), [onItemSelect, id]);
 
