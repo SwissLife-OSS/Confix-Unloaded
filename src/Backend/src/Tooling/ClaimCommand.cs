@@ -1,5 +1,4 @@
 using System.CommandLine;
-using System.Text.Json;
 using Confix.Tooling;
 using Confix.Tooling.Option;
 using Spectre.Console;
@@ -80,12 +79,12 @@ public sealed class ClaimCommand : Command
 
         if (useJson)
         {
-            Console.WriteLine(JsonSerializer.Serialize(new
+            console.WriteJson(new
             {
                 PublishdVersion = claimedVersion.PublishedApplicationPart?.Version,
                 Token = token,
                 DecryptionKey = decryptionKey
-            }));
+            });
 
             return ExitCodes.Success;
         }

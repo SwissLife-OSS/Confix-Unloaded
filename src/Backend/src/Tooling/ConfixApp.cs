@@ -13,7 +13,7 @@ internal sealed class ConfixCommandLine : CommandLineBuilder
 
         console.Profile.Width = 500;
 
-        this.AddService(AnsiConsole.Console)
+        this.AddService(console)
             .AddConfixClient()
             .UseDefaults()
             .AddMiddleware(ExceptionMiddleware, MiddlewareOrder.ExceptionHandler);
