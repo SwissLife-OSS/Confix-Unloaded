@@ -177,9 +177,6 @@ public class VaultConfigurationProvider : ConfigurationProvider
 
         Console.WriteLine("Loading configuration with vault token");
 
-        // we use the vault client to load the configuration from the vault. The configuration
-        // provider only has a synchronous interface so we need to use the GetAwaiter().GetResult().
-        // Not nice but it works.
         var response = FetchVaultConfig(applicationName, partName, environment, vaultToken);
 
         if (response is not var (cypher, iv))
@@ -199,33 +196,43 @@ public class VaultConfigurationProvider : ConfigurationProvider
 
             return null;
         }
+    }
 
-        static CypherAndIv? FetchVaultConfig(
-            string applicationName,
-            string partName,
-            string environment,
-            string vaultToken)
+    /// <summary>
+    /// we use the vault client to load the configuration from the vault. The configuration
+    /// provider only has a synchronous interface so we need to use the GetAwaiter().GetResult().
+    /// Not nice but it works.
+    /// </summary>
+    /// <param name="applicationName"></param>
+    /// <param name="partName"></param>
+    /// <param name="environment"></param>
+    /// <param name="vaultToken"></param>
+    /// <returns></returns>
+    private static CypherAndIv? FetchVaultConfig(
+        string applicationName,
+        string partName,
+        string environment,
+        string vaultToken)
+    {
+        try
         {
-            try
-            {
-                var client = VaultClientFactory.CreateClient(vaultToken);
-                var ct = CancellationToken.None;
-                var response = client
-                    .GetAsync(applicationName, partName, environment, vaultToken, ct)
-                    .GetAwaiter()
-                    .GetResult();
+            var client = VaultClientFactory.CreateClient(vaultToken);
+            var ct = CancellationToken.None;
+            var response = client
+                .GetAsync(applicationName, partName, environment, vaultToken, ct)
+                .GetAwaiter()
+                .GetResult();
 
-                if (response is null)
-                {
-                    return null;
-                }
-
-                return response.Deserialize<CypherAndIv>();
-            }
-            catch
+            if (response is null)
             {
                 return null;
             }
+
+            return response.Deserialize<CypherAndIv>();
+        }
+        catch
+        {
+            return null;
         }
     }
 
