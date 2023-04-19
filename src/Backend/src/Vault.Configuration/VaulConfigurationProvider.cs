@@ -193,7 +193,8 @@ public class VaultConfigurationProvider : ConfigurationProvider
 
         Console.WriteLine("Loading configuration with vault token");
 
-        var response = FetchVaultConfig(applicationName, partName, environment, vaultToken);
+        var response =
+            FetchVaultConfig(applicationName, partName, environment, vaultToken, vaultUrl);
 
         if (response is not var (cypher, iv))
         {
@@ -228,11 +229,12 @@ public class VaultConfigurationProvider : ConfigurationProvider
         string applicationName,
         string partName,
         string environment,
-        string vaultToken)
+        string vaultToken,
+        string vaultUrl)
     {
         try
         {
-            var client = VaultClientFactory.CreateClient(vaultToken);
+            var client = VaultClientFactory.CreateClient(vaultUrl);
             var ct = CancellationToken.None;
             var response = client
                 .GetAsync(applicationName, partName, environment, vaultToken, ct)
