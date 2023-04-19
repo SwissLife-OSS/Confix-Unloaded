@@ -31,7 +31,6 @@ export const NewApiKey: React.FC = () => {
             ) {
             id
           }
-          ...NewApiKey_SuccessMessage
           secret
         }
         errors {
