@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button, Col, Input, message, Row, Tooltip } from "antd";
-import { useFragment, useMutation } from "react-relay";
+import { useMutation } from "react-relay";
 import { graphql } from "babel-plugin-relay/macro";
 import { DetailView } from "../../shared/DetailView";
 import { FormActions, Field } from "../../shared/FormField";
@@ -14,7 +14,6 @@ import { useGoTo } from "../../shared/useGoTo";
 import { NewApiKeyMutation } from "./__generated__/NewApiKeyMutation.graphql";
 import { RoleScopeData, RoleScopeEditor } from "../shared/RoleScopeEdit";
 import { CopyOutlined } from "@ant-design/icons";
-import { NewApiKey_SuccessMessage$key } from "./__generated__/NewApiKey_SuccessMessage.graphql";
 
 export const NewApiKey: React.FC = () => {
   const [commit, isInFlight] = useMutation<NewApiKeyMutation>(graphql`
@@ -69,7 +68,7 @@ export const NewApiKey: React.FC = () => {
         withOnSuccess(
           (x) => x.createApiKey.apiKeyWithSecret,
           (value) => message.success(<SuccessMessage secret={value.secret} />)
-        )
+        ),
       ],
     }
   );
