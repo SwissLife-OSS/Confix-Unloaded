@@ -177,7 +177,6 @@ public class VaultConfigurationProvider : ConfigurationProvider
 
         Console.WriteLine("Loading configuration with vault token");
 
-
         var response = FetchVaultConfig(applicationName, partName, environment, vaultToken);
 
         if (response is not var (cypher, iv))

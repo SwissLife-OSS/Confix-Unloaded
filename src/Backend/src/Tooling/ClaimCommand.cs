@@ -80,12 +80,12 @@ public sealed class ClaimCommand : Command
 
         if (useJson)
         {
-            Console.WriteLine(JsonSerializer.Serialize(new
+            console.WriteJson(new
             {
                 PublishdVersion = claimedVersion.PublishedApplicationPart?.Version,
                 Token = token,
                 DecryptionKey = decryptionKey
-            }));
+            });
 
             return ExitCodes.Success;
         }
