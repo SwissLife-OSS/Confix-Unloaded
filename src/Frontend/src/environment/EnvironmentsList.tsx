@@ -105,7 +105,7 @@ const EnvironmentListItem: React.FC<{
 
   const [isRemoveEnvVisible, , enableRemoveEnv, disableRemoveEnv] = useToggle();
 
-  const goToOverview = useGoTo("/");
+  const goToOverview = useGoTo("/environments");
   const handleClick = useCallback(() => onItemSelect(id), [onItemSelect, id]);
   const handleOnClose = useCallback(
     (removed: boolean) => {

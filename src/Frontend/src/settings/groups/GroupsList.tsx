@@ -99,7 +99,7 @@ const GroupListItem: React.FC<{
 
   const [isRemoveEnvVisible, , enableRemoveEnv, disableRemoveEnv] = useToggle();
 
-  const goToOverview = useGoTo("/");
+  const goToOverview = useGoTo("settings/groups");
 
   const handleClick = useCallback(() => onItemSelect(id), [onItemSelect, id]);
   const handleOnClose = useCallback(
