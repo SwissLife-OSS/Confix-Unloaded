@@ -2,8 +2,8 @@ module.exports = {
   schema: "./schema.graphql",
   schemaExtensions: [],
   src: "./src",
-  eagerEsModules: false,
-  noFutureProofEnums: true,
+  eagerEsModules: true,
+  noFutureProofEnums: false,
   language: "typescript",
   artifactDirectory: 'src/__generated__',
 };
