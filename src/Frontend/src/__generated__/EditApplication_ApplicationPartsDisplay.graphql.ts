@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<967a039361cb1bd5eb352c451e9426e1>>
+ * @generated SignedSource<<5030e8c0265747dd782c7560d95938e1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,9 +9,9 @@
 // @ts-nocheck
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
-export type ComponentState = "ACTIVE" | "DEPRECATED" | "%future added value";
+export type ComponentState = "ACTIVE" | "DEPRECATED";
 import { FragmentRefs } from "relay-runtime";
-export type EditApplication_part$data = {
+export type EditApplication_ApplicationPartsDisplay$data = {
   readonly components: ReadonlyArray<{
     readonly definition: {
       readonly id: string;
@@ -21,11 +21,12 @@ export type EditApplication_part$data = {
   }>;
   readonly id: string;
   readonly name: string;
-  readonly " $fragmentType": "EditApplication_part";
+  readonly " $fragmentSpreads": FragmentRefs<"AddComponentsToApplicationPartDialog">;
+  readonly " $fragmentType": "EditApplication_ApplicationPartsDisplay";
 };
-export type EditApplication_part$key = {
-  readonly " $data"?: EditApplication_part$data;
-  readonly " $fragmentSpreads": FragmentRefs<"EditApplication_part">;
+export type EditApplication_ApplicationPartsDisplay$key = {
+  readonly " $data"?: EditApplication_ApplicationPartsDisplay$data;
+  readonly " $fragmentSpreads": FragmentRefs<"EditApplication_ApplicationPartsDisplay">;
 };
 
 const node: ReaderFragment = (function(){
@@ -47,7 +48,7 @@ return {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "EditApplication_part",
+  "name": "EditApplication_ApplicationPartsDisplay",
   "selections": [
     (v0/*: any*/),
     (v1/*: any*/),
@@ -81,6 +82,11 @@ return {
         }
       ],
       "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "AddComponentsToApplicationPartDialog"
     }
   ],
   "type": "ApplicationPart",
@@ -88,6 +94,6 @@ return {
 };
 })();
 
-(node as any).hash = "974d0a32a784c888788cbcce64c0c4f9";
+(node as any).hash = "1f6f52f67aa32222bdfe12b5056d9447";
 
 export default node;

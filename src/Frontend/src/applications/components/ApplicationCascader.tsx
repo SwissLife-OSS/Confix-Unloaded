@@ -1,14 +1,16 @@
 import * as React from "react";
-import { useFragment, useRefetchableFragment } from "react-relay";
-import { graphql } from "babel-plugin-relay/macro";
+
 import { useCallback, useMemo } from "react";
-import { ApplicationCascader$key } from "./__generated__/ApplicationCascader.graphql";
-import { ApplicationCascader_Namespaces$key } from "./__generated__/ApplicationCascader_Namespaces.graphql";
-import { ApplicationCascader_ApplicationPagination_Query } from "./__generated__/ApplicationCascader_ApplicationPagination_Query.graphql";
-import { ApplicationCascader_Applications$key } from "./__generated__/ApplicationCascader_Applications.graphql";
+import { useFragment, useRefetchableFragment } from "react-relay";
+
+import { ApplicationCascader$key } from "@generated/ApplicationCascader.graphql";
+import { ApplicationCascader_ApplicationPagination_Query } from "@generated/ApplicationCascader_ApplicationPagination_Query.graphql";
+import { ApplicationCascader_Applications$key } from "@generated/ApplicationCascader_Applications.graphql";
+import { ApplicationCascader_Namespaces$key } from "@generated/ApplicationCascader_Namespaces.graphql";
 import { Cascader } from "antd";
 import { DefaultOptionType } from "antd/lib/cascader";
 import { MultipleCascaderProps } from "rc-cascader/lib/Cascader";
+import { graphql } from "babel-plugin-relay/macro";
 
 type Result = [string] | [string, string] | [string, string, string];
 

@@ -1,20 +1,21 @@
-import React from "react";
 import { Button, Col, Row } from "antd";
-import { useLazyLoadQuery, useMutation } from "react-relay";
-import { DetailView } from "../shared/DetailView";
 import { FormActions, FormEditor, FormField } from "../shared/FormField";
-import { graphql } from "babel-plugin-relay/macro";
-import { NewComponentMutation } from "./__generated__/NewComponentMutation.graphql";
+import { useLazyLoadQuery, useMutation } from "react-relay";
 import {
   withErrorNotifications,
   withOnSuccess,
   withSuccessMessage,
 } from "../shared/pipeCommitFn";
+
+import { ApplicationCascader } from "../applications/components/ApplicationCascader";
+import { DetailView } from "../shared/DetailView";
+import { NewComponentMutation } from "@generated/NewComponentMutation.graphql";
+import { NewComponent_Query } from "@generated/NewComponent_Query.graphql";
+import React from "react";
+import { graphql } from "babel-plugin-relay/macro";
+import { useCommitForm } from "../shared/useCommitForm";
 import { useConnectionId } from "../shared/useConnectionId";
 import { useGoTo } from "../shared/useGoTo";
-import { useCommitForm } from "../shared/useCommitForm";
-import { ApplicationCascader } from "../applications/components/ApplicationCascader";
-import { NewComponent_Query } from "./__generated__/NewComponent_Query.graphql";
 
 const newComponentMutation = graphql`
   mutation NewComponentMutation(

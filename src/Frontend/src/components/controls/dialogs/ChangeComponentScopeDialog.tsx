@@ -1,15 +1,17 @@
 import * as React from "react";
-import { useFragment, useMutation } from "react-relay";
-import { graphql } from "babel-plugin-relay/macro";
-import { Modal } from "antd";
+
 import {
   pipeCommitFn,
-  withSuccessMessage,
   withOnSuccess,
+  withSuccessMessage,
 } from "../../../shared/pipeCommitFn";
-import { ChangeComponentScopeDialogMutation } from "./__generated__/ChangeComponentScopeDialogMutation.graphql";
+import { useFragment, useMutation } from "react-relay";
+
 import { ApplicationCascader } from "../../../applications/components/ApplicationCascader";
-import { ChangeComponentScopeDialog$key } from "./__generated__/ChangeComponentScopeDialog.graphql";
+import { ChangeComponentScopeDialog$key } from "@generated/ChangeComponentScopeDialog.graphql";
+import { ChangeComponentScopeDialogMutation } from "@generated/ChangeComponentScopeDialogMutation.graphql";
+import { Modal } from "antd";
+import { graphql } from "babel-plugin-relay/macro";
 import { withSilentSuspense } from "../../../shared/withSilentSuspense";
 
 type Result = [string] | [string, string] | [string, string, string];

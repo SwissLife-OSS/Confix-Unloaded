@@ -1,25 +1,26 @@
-import { useFragment, useLazyLoadQuery, useMutation } from "react-relay";
 import { Button, Col, Row } from "antd";
-import { DetailView } from "../../shared/DetailView";
-import { graphql } from "babel-plugin-relay/macro";
-import { EditApiKeyQuery } from "./__generated__/EditApiKeyQuery.graphql";
-import { EditableBreadcrumbHeader } from "../../shared/EditablePageHeader";
 import React, { useState } from "react";
-import { EditApiKey_ApiKey$key } from "./__generated__/EditApiKey_ApiKey.graphql";
-import { css } from "@emotion/react";
-import { useParams } from "react-router";
-import { useHandler } from "../../shared/useHandler";
-import { FormActions } from "../../shared/FormField";
-import { EditApiKey_UpdateApiKeyRoles_Mutation } from "./__generated__/EditApiKey_UpdateApiKeyRoles_Mutation.graphql";
+import { RoleScopeData, RoleScopeEditor } from "../shared/RoleScopeEdit";
 import {
   pipeCommitFn,
   withErrorNotifications,
   withSuccessMessage,
 } from "../../shared/pipeCommitFn";
-import { RoleScopeData, RoleScopeEditor } from "../shared/RoleScopeEdit";
-import { EditApiKey_RoleScopeSection$key } from "./__generated__/EditApiKey_RoleScopeSection.graphql";
-import { EditApiKey_Form$key } from "./__generated__/EditApiKey_Form.graphql";
-import { EditApiKey_Header$key } from "./__generated__/EditApiKey_Header.graphql";
+import { useFragment, useLazyLoadQuery, useMutation } from "react-relay";
+
+import { DetailView } from "../../shared/DetailView";
+import { EditApiKeyQuery } from "@generated/EditApiKeyQuery.graphql";
+import { EditApiKey_ApiKey$key } from "@generated/EditApiKey_ApiKey.graphql";
+import { EditApiKey_Form$key } from "@generated/EditApiKey_Form.graphql";
+import { EditApiKey_Header$key } from "@generated/EditApiKey_Header.graphql";
+import { EditApiKey_RoleScopeSection$key } from "@generated/EditApiKey_RoleScopeSection.graphql";
+import { EditApiKey_UpdateApiKeyRoles_Mutation } from "@generated/EditApiKey_UpdateApiKeyRoles_Mutation.graphql";
+import { EditableBreadcrumbHeader } from "../../shared/EditablePageHeader";
+import { FormActions } from "../../shared/FormField";
+import { css } from "@emotion/react";
+import { graphql } from "babel-plugin-relay/macro";
+import { useHandler } from "../../shared/useHandler";
+import { useParams } from "react-router";
 
 export const EditApiKey = () => {
   const { apiKeyId = "" } = useParams();

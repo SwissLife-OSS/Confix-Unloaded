@@ -1,14 +1,15 @@
-import React, { useCallback } from "react";
 import { Checkbox, Col, Row } from "antd";
-import { CheckboxChangeEvent } from "antd/lib/checkbox";
 import {
   PermissionInput,
   PermissionsFlagsInput,
-} from "../../__generated__/NewRoleMutation.graphql";
-import { Scope } from "../../__generated__/EditRole_Role.graphql";
+} from "../.@generated/NewRoleMutation.graphql";
+import React, { useCallback } from "react";
+
+import { CheckboxChangeEvent } from "antd/lib/checkbox";
+import { EditRole_Form$data } from "../.@generated/EditRole_Form.graphql";
+import { Scope } from "../.@generated/EditRole_Role.graphql";
 import { noop } from "../../../../shared/noop";
 import styled from "@emotion/styled";
-import { EditRole_Form$data } from "../../__generated__/EditRole_Form.graphql";
 
 export interface Permissions {
   identity: {

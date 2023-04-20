@@ -1,18 +1,19 @@
-import { useCallback } from "react";
 import {
+  useFragment,
   useLazyLoadQuery,
   usePaginationFragment,
-  useFragment,
 } from "react-relay";
-import { graphql } from "babel-plugin-relay/macro";
-import { config } from "../config";
-import { InfiniteScrollList } from "../shared/InfiniteScrollList";
-import { VariablesListQuery } from "./__generated__/VariablesListQuery.graphql";
-import { VariablesList_ListItem$key } from "./__generated__/VariablesList_ListItem.graphql";
-import { VariablesList$key } from "./__generated__/VariablesList.graphql";
-import styled from "@emotion/styled";
-import { List } from "antd";
+
 import { Colors } from "../shared/colors";
+import { InfiniteScrollList } from "../shared/InfiniteScrollList";
+import { List } from "antd";
+import { VariablesList$key } from "@generated/VariablesList.graphql";
+import { VariablesListQuery } from "@generated/VariablesListQuery.graphql";
+import { VariablesList_ListItem$key } from "@generated/VariablesList_ListItem.graphql";
+import { config } from "../config";
+import { graphql } from "babel-plugin-relay/macro";
+import styled from "@emotion/styled";
+import { useCallback } from "react";
 
 export const VariablesList: React.FC<{
   selectedVariableId?: string;

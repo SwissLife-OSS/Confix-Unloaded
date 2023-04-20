@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f8f68e59fe0781e90834429e8dc39b6e>>
+ * @generated SignedSource<<9e634fe20818ac0c45f2b2fea5fe3b20>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,7 +10,7 @@
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type Scope = "APPLICATION" | "COMPONENT" | "CONFIGURATION" | "ENVIRONMENT" | "IDENTITY" | "VARIABLE" | "%future added value";
+export type Scope = "APPLICATION" | "COMPONENT" | "CONFIGURATION" | "ENVIRONMENT" | "IDENTITY" | "VARIABLE";
 export type CreateRoleInput = {
   name: string;
   permissions: ReadonlyArray<PermissionInput>;

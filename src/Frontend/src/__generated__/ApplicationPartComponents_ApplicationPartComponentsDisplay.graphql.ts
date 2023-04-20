@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1de50ee78145dde332619438d2c5b443>>
+ * @generated SignedSource<<1e796fba8de8bec10ee6104b579b264c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,20 +9,20 @@
 // @ts-nocheck
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
-export type ComponentState = "ACTIVE" | "DEPRECATED" | "%future added value";
+export type ComponentState = "ACTIVE" | "DEPRECATED";
 import { FragmentRefs } from "relay-runtime";
-export type ApplicationPartComponents_component$data = {
+export type ApplicationPartComponents_ApplicationPartComponentsDisplay$data = {
   readonly definition: {
     readonly id: string;
     readonly name: string;
     readonly state: ComponentState;
   } | null;
   readonly id: string;
-  readonly " $fragmentType": "ApplicationPartComponents_component";
+  readonly " $fragmentType": "ApplicationPartComponents_ApplicationPartComponentsDisplay";
 };
-export type ApplicationPartComponents_component$key = {
-  readonly " $data"?: ApplicationPartComponents_component$data;
-  readonly " $fragmentSpreads": FragmentRefs<"ApplicationPartComponents_component">;
+export type ApplicationPartComponents_ApplicationPartComponentsDisplay$key = {
+  readonly " $data"?: ApplicationPartComponents_ApplicationPartComponentsDisplay$data;
+  readonly " $fragmentSpreads": FragmentRefs<"ApplicationPartComponents_ApplicationPartComponentsDisplay">;
 };
 
 const node: ReaderFragment = (function(){
@@ -37,7 +37,7 @@ return {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "ApplicationPartComponents_component",
+  "name": "ApplicationPartComponents_ApplicationPartComponentsDisplay",
   "selections": [
     (v0/*: any*/),
     {
@@ -72,6 +72,6 @@ return {
 };
 })();
 
-(node as any).hash = "b8133dd74bbad449f59e51e1e56de479";
+(node as any).hash = "c7f8ad3f829b1f980fc1a3d7ebeb28c1";
 
 export default node;

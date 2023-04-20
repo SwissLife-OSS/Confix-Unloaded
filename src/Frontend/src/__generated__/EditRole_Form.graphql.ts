@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1c32ed17dce9bd30073015232ab5666a>>
+ * @generated SignedSource<<15839a020c1aabeb77f7c466b53323dd>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 // @ts-nocheck
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
-export type Scope = "APPLICATION" | "COMPONENT" | "CONFIGURATION" | "ENVIRONMENT" | "IDENTITY" | "VARIABLE" | "%future added value";
+export type Scope = "APPLICATION" | "COMPONENT" | "CONFIGURATION" | "ENVIRONMENT" | "IDENTITY" | "VARIABLE";
 import { FragmentRefs } from "relay-runtime";
 export type EditRole_Form$data = {
   readonly id: string;

@@ -1,9 +1,10 @@
+import { pipeCommitFn, withSuccessMessage } from "../../../shared/pipeCommitFn";
+
+import { Button } from "antd";
 import React from "react";
+import { SaveDeveloperAccessButtonMutation } from "@generated/SaveDeveloperAccessButtonMutation.graphql";
 import { graphql } from "babel-plugin-relay/macro";
 import { useMutation } from "react-relay";
-import { SaveDeveloperAccessButtonMutation } from "./__generated__/SaveDeveloperAccessButtonMutation.graphql";
-import { Button } from "antd";
-import { pipeCommitFn, withSuccessMessage } from "../../../shared/pipeCommitFn";
 
 export const SaveDeveloperAccessButton: React.FC<{
   isAllowed: boolean;

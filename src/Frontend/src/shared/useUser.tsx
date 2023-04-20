@@ -1,10 +1,12 @@
-import { graphql } from "babel-plugin-relay/macro";
-import { useMemo } from "react";
-import { useLazyLoadQuery } from "react-relay";
 import {
-  useUser_Me_Query,
   Scope as QueryScope,
-} from "./__generated__/useUser_Me_Query.graphql";
+  useUser_Me_Query,
+} from "@generated/useUser_Me_Query.graphql";
+
+import { graphql } from "babel-plugin-relay/macro";
+import { useLazyLoadQuery } from "react-relay";
+import { useMemo } from "react";
+
 interface User {
   name: string;
   groups: NonNullable<useUser_Me_Query["response"]["me"]>["groups"];

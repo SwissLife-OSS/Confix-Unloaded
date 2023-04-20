@@ -1,9 +1,10 @@
 import { Select, SelectProps, Spin } from "antd";
+import { fetchQuery, useRelayEnvironment } from "react-relay";
 import { useCallback, useEffect, useState } from "react";
-import { useRelayEnvironment, fetchQuery } from "react-relay";
+
+import { VariableSelectQuery } from "@generated/VariableSelectQuery.graphql";
 import { graphql } from "babel-plugin-relay/macro";
 import { useDebounce } from "../../shared/debounce";
-import { VariableSelectQuery } from "./__generated__/VariableSelectQuery.graphql";
 
 const searchVariables = graphql`
   query VariableSelectQuery($search: String) {

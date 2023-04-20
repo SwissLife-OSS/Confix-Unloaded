@@ -1,16 +1,18 @@
 import * as React from "react";
-import { useMutation } from "react-relay";
-import { graphql } from "babel-plugin-relay/macro";
-import { useCallback } from "react";
+
 import { Alert, Modal } from "antd";
-import { useConnectionId } from "../../../shared/useConnectionId";
 import {
   pipeCommitFn,
-  withSuccessMessage,
   withErrorNotifications,
   withOnSuccess,
+  withSuccessMessage,
 } from "../../../shared/pipeCommitFn";
-import { RemoveEnvironmentDialogMutation } from "./__generated__/RemoveEnvironmentDialogMutation.graphql";
+
+import { RemoveEnvironmentDialogMutation } from "@generated/RemoveEnvironmentDialogMutation.graphql";
+import { graphql } from "babel-plugin-relay/macro";
+import { useCallback } from "react";
+import { useConnectionId } from "../../../shared/useConnectionId";
+import { useMutation } from "react-relay";
 
 export const RemoveEnvironmentDialog: React.FC<{
   open: boolean;

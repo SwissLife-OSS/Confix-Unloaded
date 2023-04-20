@@ -1,23 +1,24 @@
-import { useCallback } from "react";
+import { Button, List } from "antd";
 import {
+  useFragment,
   useLazyLoadQuery,
   usePaginationFragment,
-  useFragment,
 } from "react-relay";
+
+import { Colors } from "../../shared/colors";
+import { DeleteIcon } from "../../icons/icons";
+import { InfiniteScrollList } from "../../shared/InfiniteScrollList";
+import { RemoveRoleDialog } from "./controls/dialogs/RemoveRoleDialog";
+import { RolesList$key } from "@generated/RolesList.graphql";
+import { RolesListPaginationQuery } from "@generated/RolesListPaginationQuery.graphql";
+import { RolesListQuery } from "@generated/RolesListQuery.graphql";
+import { RolesList_RoleListItem$key } from "@generated/RolesList_RoleListItem.graphql";
+import { config } from "../../config";
 import { graphql } from "babel-plugin-relay/macro";
 import styled from "@emotion/styled";
-import { List, Button } from "antd";
-import { config } from "../../config";
-import { DeleteIcon } from "../../icons/icons";
-import { Colors } from "../../shared/colors";
-import { InfiniteScrollList } from "../../shared/InfiniteScrollList";
+import { useCallback } from "react";
 import { useGoTo } from "../../shared/useGoTo";
 import { useToggle } from "../../shared/useToggle";
-import { RolesListQuery } from "./__generated__/RolesListQuery.graphql";
-import { RemoveRoleDialog } from "./controls/dialogs/RemoveRoleDialog";
-import { RolesListPaginationQuery } from "./__generated__/RolesListPaginationQuery.graphql";
-import { RolesList$key } from "./__generated__/RolesList.graphql";
-import { RolesList_RoleListItem$key } from "./__generated__/RolesList_RoleListItem.graphql";
 
 export const RolesList: React.FC<{
   selectedRoleId?: string;

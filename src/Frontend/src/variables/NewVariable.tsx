@@ -1,14 +1,15 @@
-import React from "react";
 import { Button, Col, Row } from "antd";
-import { useMutation } from "react-relay";
-import { DetailView } from "../shared/DetailView";
 import { FormActions, FormCheckbox, FormField } from "../shared/FormField";
-import { graphql } from "babel-plugin-relay/macro";
 import { withOnSuccess, withSuccessMessage } from "../shared/pipeCommitFn";
+
+import { DetailView } from "../shared/DetailView";
+import { NewVariableMutation } from "@generated/NewVariableMutation.graphql";
+import React from "react";
+import { graphql } from "babel-plugin-relay/macro";
+import { useCommitForm } from "../shared/useCommitForm";
 import { useConnectionId } from "../shared/useConnectionId";
 import { useGoTo } from "../shared/useGoTo";
-import { useCommitForm } from "../shared/useCommitForm";
-import { NewVariableMutation } from "./__generated__/NewVariableMutation.graphql";
+import { useMutation } from "react-relay";
 
 export const NewVariable: React.FC = () => {
   const [commit, isInFlight] = useMutation<NewVariableMutation>(graphql`

@@ -1,9 +1,10 @@
 import * as React from "react";
-import { graphql } from "babel-plugin-relay/macro";
-import { DeployedEnvironmentsOverview$key } from "./__generated__/DeployedEnvironmentsOverview.graphql";
-import { useFragment } from "react-relay";
+
+import { DeployedEnvironmentsOverview$key } from "@generated/DeployedEnvironmentsOverview.graphql";
 import { Steps } from "antd";
 import { ensureDate } from "../../shared/ensureDate";
+import { graphql } from "babel-plugin-relay/macro";
+import { useFragment } from "react-relay";
 
 export const DeployedEnvironmentsOverview: React.FC<{
   fragmentRef: DeployedEnvironmentsOverview$key;

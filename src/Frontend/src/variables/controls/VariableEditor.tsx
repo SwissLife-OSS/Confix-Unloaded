@@ -1,27 +1,28 @@
-import { Button, message, Row } from "antd";
-import { graphql } from "babel-plugin-relay/macro";
+import { Button, Row, message } from "antd";
 import React, { useCallback, useEffect, useState } from "react";
 import {
-  useLazyLoadQuery,
-  useMutation,
-  usePaginationFragment,
-} from "react-relay";
-import { FieldInputGroup } from "../../shared/FormField";
+  VariableEditorQuery,
+  VariableEditorQuery$data,
+} from "@generated/VariableEditorQuery.graphql";
 import {
   pipeCommitFn,
   withOnCompleted,
   withSuccessMessage,
 } from "../../shared/pipeCommitFn";
-import { QueryOptions } from "../../shared/QueryOptions";
-import { useStringEventHanlder } from "../../shared/useEventListener";
-import { VariableEditorDeleteVariableValueMutation } from "./__generated__/VariableEditorDeleteVariableValueMutation.graphql";
 import {
-  VariableEditorQuery,
-  VariableEditorQuery$data,
-} from "./__generated__/VariableEditorQuery.graphql";
-import { VariableEditorSaveVariableMutation } from "./__generated__/VariableEditorSaveVariableMutation.graphql";
-import { VariableEditor_useEnvironments$key } from "./__generated__/VariableEditor_useEnvironments.graphql";
-import { VariableEditor_useEnvironmentsPaginationQuery } from "./__generated__/VariableEditor_useEnvironmentsPaginationQuery.graphql";
+  useLazyLoadQuery,
+  useMutation,
+  usePaginationFragment,
+} from "react-relay";
+
+import { FieldInputGroup } from "../../shared/FormField";
+import { QueryOptions } from "../../shared/QueryOptions";
+import { VariableEditorDeleteVariableValueMutation } from "@generated/VariableEditorDeleteVariableValueMutation.graphql";
+import { VariableEditorSaveVariableMutation } from "@generated/VariableEditorSaveVariableMutation.graphql";
+import { VariableEditor_useEnvironments$key } from "@generated/VariableEditor_useEnvironments.graphql";
+import { VariableEditor_useEnvironmentsPaginationQuery } from "@generated/VariableEditor_useEnvironmentsPaginationQuery.graphql";
+import { graphql } from "babel-plugin-relay/macro";
+import { useStringEventHanlder } from "../../shared/useEventListener";
 
 const variableEditorQuery = graphql`
   query VariableEditorQuery(

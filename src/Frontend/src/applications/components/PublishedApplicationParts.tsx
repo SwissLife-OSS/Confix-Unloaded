@@ -1,18 +1,20 @@
 import * as React from "react";
-import { usePaginationFragment } from "react-relay";
-import { graphql } from "babel-plugin-relay/macro";
-import { Lookup } from "../../shared/hacks";
-import { formatDate } from "../../shared/formatDate";
+
 import { Divider, Empty, Skeleton, SkeletonProps, Table, Tag } from "antd";
-import { useCallback, useEffect, useRef } from "react";
-import { distinct } from "../../shared/distinct";
-import { ColorTag } from "../../shared/ColorTag";
-import InfiniteScroll from "react-infinite-scroll-component";
-import { useIntersectionObserver } from "../../shared/useIntersectionObserver";
 import {
   PublishedApplicationParts$data,
   PublishedApplicationParts$key,
-} from "./__generated__/PublishedApplicationParts.graphql";
+} from "@generated/PublishedApplicationParts.graphql";
+import { useCallback, useEffect, useRef } from "react";
+
+import { ColorTag } from "../../shared/ColorTag";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { Lookup } from "../../shared/hacks";
+import { distinct } from "../../shared/distinct";
+import { formatDate } from "../../shared/formatDate";
+import { graphql } from "babel-plugin-relay/macro";
+import { useIntersectionObserver } from "../../shared/useIntersectionObserver";
+import { usePaginationFragment } from "react-relay";
 
 type Value = Lookup<
   PublishedApplicationParts$data,

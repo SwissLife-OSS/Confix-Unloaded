@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<116e91886941abf72e7afcc4b8cb4b08>>
+ * @generated SignedSource<<4668b4fface802c8e900a83d30ca1f90>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 // @ts-nocheck
 
 import { ConcreteRequest, Query } from 'relay-runtime';
-export type Scope = "APPLICATION" | "COMPONENT" | "CONFIGURATION" | "ENVIRONMENT" | "IDENTITY" | "VARIABLE" | "%future added value";
+export type Scope = "APPLICATION" | "COMPONENT" | "CONFIGURATION" | "ENVIRONMENT" | "IDENTITY" | "VARIABLE";
 export type useUser_Me_Query$variables = {};
 export type useUser_Me_Query$data = {
   readonly me: {

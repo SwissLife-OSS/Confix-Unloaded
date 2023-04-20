@@ -1,19 +1,20 @@
-import React from "react";
-import { useMutation } from "react-relay";
-import { DetailView } from "../shared/DetailView";
-import { FormActions, FormField, TagSelectField } from "../shared/FormField";
-import { graphql } from "babel-plugin-relay/macro";
-import { NewApplicationMutation } from "./__generated__/NewApplicationMutation.graphql";
 import { Button, Col, Row } from "antd";
+import { FormActions, FormField, TagSelectField } from "../shared/FormField";
 import {
   withErrorNotifications,
   withOnSuccess,
   withSuccessMessage,
 } from "../shared/pipeCommitFn";
+
+import { Connections } from "../Connections";
+import { DetailView } from "../shared/DetailView";
+import { NewApplicationMutation } from "@generated/NewApplicationMutation.graphql";
+import React from "react";
+import { graphql } from "babel-plugin-relay/macro";
+import { useCommitForm } from "../shared/useCommitForm";
 import { useConnectionId } from "../shared/useConnectionId";
 import { useGoTo } from "../shared/useGoTo";
-import { Connections } from "../Connections";
-import { useCommitForm } from "../shared/useCommitForm";
+import { useMutation } from "react-relay";
 
 export const NewApplication: React.FC = () => {
   const [commit, isInFlight] = useMutation<NewApplicationMutation>(

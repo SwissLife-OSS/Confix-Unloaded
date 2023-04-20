@@ -3,6 +3,7 @@ module.exports = {
   schemaExtensions: [],
   src: "./src",
   eagerEsModules: false,
-  noFutureProofEnums: false,
+  noFutureProofEnums: true,
   language: "typescript",
+  artifactDirectory: 'src/__generated__',
 };

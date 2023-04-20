@@ -1,22 +1,23 @@
-import { useFragment, useLazyLoadQuery } from "react-relay";
 import { Button, Checkbox, Col, Row, Typography } from "antd";
-import { DetailView } from "../shared/DetailView";
-import { graphql } from "babel-plugin-relay/macro";
-import { EditEnvironmentQuery } from "./__generated__/EditEnvironmentQuery.graphql";
-import { EditableBreadcrumbHeader } from "../shared/EditablePageHeader";
-import { useToggle } from "../shared/useToggle";
-import { RenameEnvironmentDialog } from "./controls/dialogs/RenameEnvironmentDialog";
 import React, { useCallback, useState } from "react";
-import { EditEnvironment_EditEnvironmentForm$key } from "./__generated__/EditEnvironment_EditEnvironmentForm.graphql";
-import { css } from "@emotion/react";
-import { useParams } from "react-router";
-import { FieldInputGroup } from "../shared/FormField";
-import { SetParentEnvironmentDialog } from "./controls/dialogs/SetParentEnvironmentDialog";
+import { useFragment, useLazyLoadQuery } from "react-relay";
+
 import { CheckboxChangeEvent } from "antd/lib/checkbox";
+import { DetailView } from "../shared/DetailView";
+import { EditEnvironmentQuery } from "@generated/EditEnvironmentQuery.graphql";
+import { EditEnvironment_EditEnvironmentForm$key } from "@generated/EditEnvironment_EditEnvironmentForm.graphql";
+import { EditEnvironment_Header$key } from "@generated/EditEnvironment_Header.graphql";
+import { EditEnvironment_IsDeveloperAccessAllowedFrom$key } from "@generated/EditEnvironment_IsDeveloperAccessAllowedFrom.graphql";
+import { EditEnvironment_ParentEnvironement$key } from "@generated/EditEnvironment_ParentEnvironement.graphql";
+import { EditableBreadcrumbHeader } from "../shared/EditablePageHeader";
+import { FieldInputGroup } from "../shared/FormField";
+import { RenameEnvironmentDialog } from "./controls/dialogs/RenameEnvironmentDialog";
 import { SaveDeveloperAccessButton } from "./controls/buttons/SaveDeveloperAccessButton";
-import { EditEnvironment_IsDeveloperAccessAllowedFrom$key } from "./__generated__/EditEnvironment_IsDeveloperAccessAllowedFrom.graphql";
-import { EditEnvironment_ParentEnvironement$key } from "./__generated__/EditEnvironment_ParentEnvironement.graphql";
-import { EditEnvironment_Header$key } from "./__generated__/EditEnvironment_Header.graphql";
+import { SetParentEnvironmentDialog } from "./controls/dialogs/SetParentEnvironmentDialog";
+import { css } from "@emotion/react";
+import { graphql } from "babel-plugin-relay/macro";
+import { useParams } from "react-router";
+import { useToggle } from "../shared/useToggle";
 
 const { Title } = Typography;
 

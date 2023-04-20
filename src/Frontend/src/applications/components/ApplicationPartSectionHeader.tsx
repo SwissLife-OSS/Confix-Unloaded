@@ -1,10 +1,11 @@
 import * as React from "react";
-import { useFragment } from "react-relay";
-import { graphql } from "babel-plugin-relay/macro";
-import { SectionHeader } from "../../shared/SectionHeader";
-import { useToggle } from "../../shared/useToggle";
+
 import { AddPartToApplicationDialog } from "../dialogs/AddPartToApplicationDialog";
-import { ApplicationPartSectionHeader$key } from "./__generated__/ApplicationPartSectionHeader.graphql";
+import { ApplicationPartSectionHeader$key } from "@generated/ApplicationPartSectionHeader.graphql";
+import { SectionHeader } from "../../shared/SectionHeader";
+import { graphql } from "babel-plugin-relay/macro";
+import { useFragment } from "react-relay";
+import { useToggle } from "../../shared/useToggle";
 
 export const ApplicationPartSectionHeader: React.FC<{
   children?: React.ReactElement;

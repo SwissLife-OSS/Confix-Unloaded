@@ -1,14 +1,16 @@
 import * as React from "react";
-import { useFragment } from "react-relay";
-import { graphql } from "babel-plugin-relay/macro";
+
 import { Button, Card, Col, Descriptions, Empty, Row } from "antd";
-import styled from "@emotion/styled";
-import { generatePath, Link } from "react-router-dom";
-import { EditIcon, DeleteIcon } from "../../icons/icons";
-import { useToggle } from "../../shared/useToggle";
+import { DeleteIcon, EditIcon } from "../../icons/icons";
+import { Link, generatePath } from "react-router-dom";
+
+import { ApplicationPartComponents$key } from "@generated/ApplicationPartComponents.graphql";
+import { ApplicationPartComponents_ApplicationPartComponentsDisplay$key } from "@generated/ApplicationPartComponents_ApplicationPartComponentsDisplay.graphql";
 import { RemoveComponentFromApplicationPartDialog } from "../dialogs/RemoveComponentFromApplicationPartDialog";
-import { ApplicationPartComponents$key } from "./__generated__/ApplicationPartComponents.graphql";
-import { ApplicationPartComponents_ApplicationPartComponentsDisplay$key } from "./__generated__/ApplicationPartComponents_ApplicationPartComponentsDisplay.graphql";
+import { graphql } from "babel-plugin-relay/macro";
+import styled from "@emotion/styled";
+import { useFragment } from "react-relay";
+import { useToggle } from "../../shared/useToggle";
 
 export const ApplicationPartComponents: React.FC<{
   applicationId: string;

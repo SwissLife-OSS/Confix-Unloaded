@@ -1,35 +1,36 @@
-import { DownOutlined } from "@ant-design/icons";
-import { css } from "@emotion/react";
 import { Button, Dropdown, Menu, Table, Tag } from "antd";
-import { ItemType } from "antd/lib/menu/hooks/useItems";
-import { graphql } from "babel-plugin-relay/macro";
-import React, { useCallback, useContext, useState } from "react";
-import { useFragment } from "react-relay";
-import { useNavigate } from "react-router";
-import { Link } from "react-router-dom";
-import { generateComparePartComponentVersionPath } from "../applications/CompareApplicationPartComponentVersions";
-import { formatDate } from "./formatDate";
-import { ChangeLog_AddComponentToApplicationPartChange$key } from "./__generated__/ChangeLog_AddComponentToApplicationPartChange.graphql";
-import { ChangeLog_AddPartToApplicationChange$key } from "./__generated__/ChangeLog_AddPartToApplicationChange.graphql";
-import { ChangeLog_ApplicationPartComponentValuesChange$key } from "./__generated__/ChangeLog_ApplicationPartComponentValuesChange.graphql";
-import { ChangeLog_ComponentSchemaChange$key } from "./__generated__/ChangeLog_ComponentSchemaChange.graphql";
-import { ChangeLog_ComponentValuesChange$key } from "./__generated__/ChangeLog_ComponentValuesChange.graphql";
-import { ChangeLog_CreateComponentChange$key } from "./__generated__/ChangeLog_CreateComponentChange.graphql";
-import { ChangeLog_CreateVariableChange$key } from "./__generated__/ChangeLog_CreateVariableChange.graphql";
-import { ChangeLog_DeleteVariableValueChange$key } from "./__generated__/ChangeLog_DeleteVariableValueChange.graphql";
 import {
   ChangeLog$data,
   ChangeLog$key,
-} from "./__generated__/ChangeLog.graphql";
-import { ChangeLog_PublishedApplicationPartChange$key } from "./__generated__/ChangeLog_PublishedApplicationPartChange.graphql";
-import { ChangeLog_RemoveComponentChange$key } from "./__generated__/ChangeLog_RemoveComponentChange.graphql";
-import { ChangeLog_RemoveComponentFromApplicationPartChange$key } from "./__generated__/ChangeLog_RemoveComponentFromApplicationPartChange.graphql";
-import { ChangeLog_RemovePartFromApplicationChange$key } from "./__generated__/ChangeLog_RemovePartFromApplicationChange.graphql";
-import { ChangeLog_RenameApplicationChange$key } from "./__generated__/ChangeLog_RenameApplicationChange.graphql";
-import { ChangeLog_RenameApplicationPartChange$key } from "./__generated__/ChangeLog_RenameApplicationPartChange.graphql";
-import { ChangeLog_RenameComponentChange$key } from "./__generated__/ChangeLog_RenameComponentChange.graphql";
-import { ChangeLog_RenameVariableChange$key } from "./__generated__/ChangeLog_RenameVariableChange.graphql";
-import { ChangeLog_VariableValueChange$key } from "./__generated__/ChangeLog_VariableValueChange.graphql";
+} from "@generated/ChangeLog.graphql";
+import React, { useCallback, useContext, useState } from "react";
+
+import { ChangeLog_AddComponentToApplicationPartChange$key } from "@generated/ChangeLog_AddComponentToApplicationPartChange.graphql";
+import { ChangeLog_AddPartToApplicationChange$key } from "@generated/ChangeLog_AddPartToApplicationChange.graphql";
+import { ChangeLog_ApplicationPartComponentValuesChange$key } from "@generated/ChangeLog_ApplicationPartComponentValuesChange.graphql";
+import { ChangeLog_ComponentSchemaChange$key } from "@generated/ChangeLog_ComponentSchemaChange.graphql";
+import { ChangeLog_ComponentValuesChange$key } from "@generated/ChangeLog_ComponentValuesChange.graphql";
+import { ChangeLog_CreateComponentChange$key } from "@generated/ChangeLog_CreateComponentChange.graphql";
+import { ChangeLog_CreateVariableChange$key } from "@generated/ChangeLog_CreateVariableChange.graphql";
+import { ChangeLog_DeleteVariableValueChange$key } from "@generated/ChangeLog_DeleteVariableValueChange.graphql";
+import { ChangeLog_PublishedApplicationPartChange$key } from "@generated/ChangeLog_PublishedApplicationPartChange.graphql";
+import { ChangeLog_RemoveComponentChange$key } from "@generated/ChangeLog_RemoveComponentChange.graphql";
+import { ChangeLog_RemoveComponentFromApplicationPartChange$key } from "@generated/ChangeLog_RemoveComponentFromApplicationPartChange.graphql";
+import { ChangeLog_RemovePartFromApplicationChange$key } from "@generated/ChangeLog_RemovePartFromApplicationChange.graphql";
+import { ChangeLog_RenameApplicationChange$key } from "@generated/ChangeLog_RenameApplicationChange.graphql";
+import { ChangeLog_RenameApplicationPartChange$key } from "@generated/ChangeLog_RenameApplicationPartChange.graphql";
+import { ChangeLog_RenameComponentChange$key } from "@generated/ChangeLog_RenameComponentChange.graphql";
+import { ChangeLog_RenameVariableChange$key } from "@generated/ChangeLog_RenameVariableChange.graphql";
+import { ChangeLog_VariableValueChange$key } from "@generated/ChangeLog_VariableValueChange.graphql";
+import { DownOutlined } from "@ant-design/icons";
+import { ItemType } from "antd/lib/menu/hooks/useItems";
+import { Link } from "react-router-dom";
+import { css } from "@emotion/react";
+import { formatDate } from "./formatDate";
+import { generateComparePartComponentVersionPath } from "../applications/CompareApplicationPartComponentVersions";
+import { graphql } from "babel-plugin-relay/macro";
+import { useFragment } from "react-relay";
+import { useNavigate } from "react-router";
 
 const columns = [
   {

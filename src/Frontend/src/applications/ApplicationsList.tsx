@@ -1,30 +1,31 @@
+import { AddIcon, DeleteIcon } from "../icons/icons";
+import { Button, List } from "antd";
 import React, { useCallback, useMemo } from "react";
 import {
+  useFragment,
   useLazyLoadQuery,
   usePaginationFragment,
-  useFragment,
 } from "react-relay";
-import { config } from "../config";
-import { InfiniteScrollList } from "../shared/InfiniteScrollList";
-import { ApplicationsListQuery } from "./__generated__/ApplicationsListQuery.graphql";
-import { ApplicationsList$key } from "./__generated__/ApplicationsList.graphql";
-import { graphql } from "babel-plugin-relay/macro";
-import { ApplicationsListItem$key } from "./__generated__/ApplicationsListItem.graphql";
-import styled from "@emotion/styled";
-import { Button, List } from "antd";
-import { Colors } from "../shared/colors";
-import { AddIcon, DeleteIcon } from "../icons/icons";
-import { useToggle } from "../shared/useToggle";
-import { AddPartToApplicationDialog } from "./dialogs/AddPartToApplicationDialog";
-import { RemovePartFromApplicationDialog } from "./dialogs/RemovePartFromApplicationDialog";
+
 import { AddComponentsToApplicationPartDialog } from "./dialogs/AddComponentsToApplicationPartDialog";
+import { AddPartToApplicationDialog } from "./dialogs/AddPartToApplicationDialog";
+import { ApplicationsList$key } from "@generated/ApplicationsList.graphql";
+import { ApplicationsListItem$key } from "@generated/ApplicationsListItem.graphql";
+import { ApplicationsListItem_ApplicationPart$key } from "@generated/ApplicationsListItem_ApplicationPart.graphql";
+import { ApplicationsListItem_Component$key } from "@generated/ApplicationsListItem_Component.graphql";
+import { ApplicationsListItem_DefaultListItem$key } from "@generated/ApplicationsListItem_DefaultListItem.graphql";
+import { ApplicationsListItem_SelectedListItem$key } from "@generated/ApplicationsListItem_SelectedListItem.graphql";
+import { ApplicationsListQuery } from "@generated/ApplicationsListQuery.graphql";
+import { Colors } from "../shared/colors";
+import { InfiniteScrollList } from "../shared/InfiniteScrollList";
 import { RemoveComponentFromApplicationPartDialog } from "./dialogs/RemoveComponentFromApplicationPartDialog";
+import { RemovePartFromApplicationDialog } from "./dialogs/RemovePartFromApplicationDialog";
+import { config } from "../config";
+import { graphql } from "babel-plugin-relay/macro";
+import styled from "@emotion/styled";
 import { useGoTo } from "../shared/useGoTo";
 import { useHref } from "react-router";
-import { ApplicationsListItem_DefaultListItem$key } from "./__generated__/ApplicationsListItem_DefaultListItem.graphql";
-import { ApplicationsListItem_SelectedListItem$key } from "./__generated__/ApplicationsListItem_SelectedListItem.graphql";
-import { ApplicationsListItem_ApplicationPart$key } from "./__generated__/ApplicationsListItem_ApplicationPart.graphql";
-import { ApplicationsListItem_Component$key } from "./__generated__/ApplicationsListItem_Component.graphql";
+import { useToggle } from "../shared/useToggle";
 
 export const ApplicationList: React.FC<{
   selectedApplicationId?: string;

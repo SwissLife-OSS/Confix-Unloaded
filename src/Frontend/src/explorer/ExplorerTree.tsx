@@ -1,18 +1,3 @@
-import React, { MouseEventHandler, useCallback, useState } from "react";
-import {
-  useFragment,
-  useLazyLoadQuery,
-  usePaginationFragment,
-} from "react-relay";
-import { graphql } from "babel-plugin-relay/macro";
-import { config } from "../config";
-import { ExplorerTreeQuery } from "./__generated__/ExplorerTreeQuery.graphql";
-import {
-  ExplorerTree_Applications$data,
-  ExplorerTree_Applications$key,
-} from "./__generated__/ExplorerTree_Applications.graphql";
-import { Divider, Skeleton, TreeDataNode } from "antd";
-import { chunkBy } from "../shared/chunkBy";
 import {
   ApplicationIcon,
   ApplicationPartIcon,
@@ -21,24 +6,40 @@ import {
   NotCollapsedIcon,
   VariablesIcon,
 } from "../icons/icons";
-import InfiniteScroll from "react-infinite-scroll-component";
-import styled from "@emotion/styled";
-import { css } from "@emotion/react";
-import { ExplorerTree_Application$key } from "./__generated__/ExplorerTree_Application.graphql";
+import { ColorTag, TagBar } from "../shared/ColorTag";
+import { Divider, Skeleton, TreeDataNode } from "antd";
 import {
   ExplorerTree_ApplicationDetails$data,
   ExplorerTree_ApplicationDetails$key,
-} from "./__generated__/ExplorerTree_ApplicationDetails.graphql";
+} from "@generated/ExplorerTree_ApplicationDetails.graphql";
 import {
   ExplorerTree_ApplicationPart$data,
   ExplorerTree_ApplicationPart$key,
-} from "./__generated__/ExplorerTree_ApplicationPart.graphql";
+} from "@generated/ExplorerTree_ApplicationPart.graphql";
+import {
+  ExplorerTree_Applications$data,
+  ExplorerTree_Applications$key,
+} from "@generated/ExplorerTree_Applications.graphql";
+import React, { MouseEventHandler, useCallback, useState } from "react";
+import {
+  useFragment,
+  useLazyLoadQuery,
+  usePaginationFragment,
+} from "react-relay";
+
 import { DefaultSuspense } from "../shared/DefaultSuspense";
-import { useLoadNextChain } from "../shared/useLoadNextChain";
-import { useGoTo } from "../shared/useGoTo";
-import { useMultiplexer } from "../shared/useMultiplexer";
-import { ColorTag, TagBar } from "../shared/ColorTag";
+import { ExplorerTreeQuery } from "@generated/ExplorerTreeQuery.graphql";
+import { ExplorerTree_Application$key } from "@generated/ExplorerTree_Application.graphql";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { chunkBy } from "../shared/chunkBy";
+import { config } from "../config";
+import { css } from "@emotion/react";
 import { generatePath } from "react-router-dom";
+import { graphql } from "babel-plugin-relay/macro";
+import styled from "@emotion/styled";
+import { useGoTo } from "../shared/useGoTo";
+import { useLoadNextChain } from "../shared/useLoadNextChain";
+import { useMultiplexer } from "../shared/useMultiplexer";
 
 const exploreTreeQuery = graphql`
   query ExplorerTreeQuery($cursor: String, $count: Int) {

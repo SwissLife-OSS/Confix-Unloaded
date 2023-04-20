@@ -1,10 +1,11 @@
-import { useCallback } from "react";
 import { useLazyLoadQuery, usePaginationFragment } from "react-relay";
-import { graphql } from "babel-plugin-relay/macro";
-import { config } from "../config";
+
+import { ComponentsList$key } from "@generated/ComponentsList.graphql";
+import { ComponentsListQuery } from "@generated/ComponentsListQuery.graphql";
 import { InfiniteScrollList } from "../shared/InfiniteScrollList";
-import { ComponentsListQuery } from "./__generated__/ComponentsListQuery.graphql";
-import { ComponentsList$key } from "./__generated__/ComponentsList.graphql";
+import { config } from "../config";
+import { graphql } from "babel-plugin-relay/macro";
+import { useCallback } from "react";
 
 export const ComponentsList: React.FC<{
   onItemSelect: (item: string) => void;

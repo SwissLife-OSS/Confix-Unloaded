@@ -1,23 +1,24 @@
-import React, { useState } from "react";
 import { Button, Col, Row } from "antd";
-import { useMutation } from "react-relay";
-import { graphql } from "babel-plugin-relay/macro";
-import { DetailView } from "../../shared/DetailView";
-import { FormField, FormActions } from "../../shared/FormField";
+import { FormActions, FormField } from "../../shared/FormField";
+import {
+  PermissionsForm,
+  createDefaultPermissions,
+  mapPermissionsToInput,
+} from "./controls/forms/PermissionForm";
+import React, { useState } from "react";
 import {
   withErrorNotifications,
   withOnSuccess,
   withSuccessMessage,
 } from "../../shared/pipeCommitFn";
+
+import { DetailView } from "../../shared/DetailView";
+import { NewRoleMutation } from "@generated/NewRoleMutation.graphql";
+import { graphql } from "babel-plugin-relay/macro";
 import { useCommitForm } from "../../shared/useCommitForm";
 import { useConnectionId } from "../../shared/useConnectionId";
 import { useGoTo } from "../../shared/useGoTo";
-import { NewRoleMutation } from "./__generated__/NewRoleMutation.graphql";
-import {
-  createDefaultPermissions,
-  mapPermissionsToInput,
-  PermissionsForm,
-} from "./controls/forms/PermissionForm";
+import { useMutation } from "react-relay";
 
 export const NewRole: React.FC = () => {
   const [commit, isInFlight] = useMutation<NewRoleMutation>(graphql`

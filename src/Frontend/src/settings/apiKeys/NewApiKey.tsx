@@ -1,19 +1,20 @@
+import { Button, Col, Input, Row, Tooltip, message } from "antd";
+import { Field, FormActions } from "../../shared/FormField";
 import React, { useState } from "react";
-import { Button, Col, Input, message, Row, Tooltip } from "antd";
-import { useMutation } from "react-relay";
-import { graphql } from "babel-plugin-relay/macro";
-import { DetailView } from "../../shared/DetailView";
-import { FormActions, Field } from "../../shared/FormField";
+import { RoleScopeData, RoleScopeEditor } from "../shared/RoleScopeEdit";
 import {
   withErrorNotifications,
   withOnSuccess,
 } from "../../shared/pipeCommitFn";
+
+import { CopyOutlined } from "@ant-design/icons";
+import { DetailView } from "../../shared/DetailView";
+import { NewApiKeyMutation } from "@generated/NewApiKeyMutation.graphql";
+import { graphql } from "babel-plugin-relay/macro";
 import { useCommitForm } from "../../shared/useCommitForm";
 import { useConnectionId } from "../../shared/useConnectionId";
 import { useGoTo } from "../../shared/useGoTo";
-import { NewApiKeyMutation } from "./__generated__/NewApiKeyMutation.graphql";
-import { RoleScopeData, RoleScopeEditor } from "../shared/RoleScopeEdit";
-import { CopyOutlined } from "@ant-design/icons";
+import { useMutation } from "react-relay";
 
 export const NewApiKey: React.FC = () => {
   const [commit, isInFlight] = useMutation<NewApiKeyMutation>(graphql`

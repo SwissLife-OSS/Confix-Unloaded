@@ -1,8 +1,9 @@
 import { Select, Spin } from "antd";
+import { fetchQuery, useRelayEnvironment } from "react-relay";
 import { useCallback, useEffect, useState } from "react";
-import { useRelayEnvironment, fetchQuery } from "react-relay";
+
+import { RolesSelectQuery } from "@generated/RolesSelectQuery.graphql";
 import { graphql } from "babel-plugin-relay/macro";
-import { RolesSelectQuery } from "./__generated__/RolesSelectQuery.graphql";
 import { useDebounce } from "../../../shared/debounce";
 
 export type RoleOption = { label: string; value: string };
