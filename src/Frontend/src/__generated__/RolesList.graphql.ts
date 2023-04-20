@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7dfaf54cbc2b128df025ec89f65154a2>>
+ * @generated SignedSource<<0c4d404798c3c3c6b13f9067ddb6f58f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -26,8 +26,6 @@ export type RolesList$key = {
   readonly " $data"?: RolesList$data;
   readonly " $fragmentSpreads": FragmentRefs<"RolesList">;
 };
-
-import RolesListPaginationQuery_graphql from './RolesListPaginationQuery.graphql';
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -68,7 +66,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": RolesListPaginationQuery_graphql
+      "operation": require('./RolesListPaginationQuery.graphql')
     }
   },
   "name": "RolesList",

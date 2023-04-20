@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e18154efe1a97860f06bb17f29e2365d>>
+ * @generated SignedSource<<54bb46b65900f2f5ca87582eed8327cf>>
  * @relayHash a2909a3b0de86280971ed27bea2e232f
  * @lightSyntaxTransform
  * @nogrep
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID a2909a3b0de86280971ed27bea2e232f
+// @relayRequestID a6afa0703ba0b7424b290d5af94351eb72fac957843d12bb1177f2af636b8470
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type UpdateApiKeyInput = {
@@ -213,7 +213,7 @@ return {
     ]
   },
   "params": {
-    "id": "a2909a3b0de86280971ed27bea2e232f",
+    "id": "a6afa0703ba0b7424b290d5af94351eb72fac957843d12bb1177f2af636b8470",
     "metadata": {},
     "name": "EditApiKey_UpdateApiKeyRoles_Mutation",
     "operationKind": "mutation",

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7f2de42b24e3e5f5fde7815f39a0c9f6>>
+ * @generated SignedSource<<342cbf91da180b249349760aed6b9cd1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -27,8 +27,6 @@ export type ApplicationsList$key = {
   readonly " $data"?: ApplicationsList$data;
   readonly " $fragmentSpreads": FragmentRefs<"ApplicationsList">;
 };
-
-import ApplicationsListPaginationQuery_graphql from './ApplicationsListPaginationQuery.graphql';
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -69,7 +67,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": ApplicationsListPaginationQuery_graphql
+      "operation": require('./ApplicationsListPaginationQuery.graphql')
     }
   },
   "name": "ApplicationsList",

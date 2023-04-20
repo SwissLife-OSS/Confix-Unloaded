@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c93b8a879bba371bba481ae220d3aaa9>>
+ * @generated SignedSource<<173ffa70c17ddf9a8dbfdc65e3b63d20>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -25,8 +25,6 @@ export type ExplorerTree_Applications$key = {
   readonly " $data"?: ExplorerTree_Applications$data;
   readonly " $fragmentSpreads": FragmentRefs<"ExplorerTree_Applications">;
 };
-
-import ExplorerTreePaginationQuery_graphql from './ExplorerTreePaginationQuery.graphql';
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -63,7 +61,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": ExplorerTreePaginationQuery_graphql
+      "operation": require('./ExplorerTreePaginationQuery.graphql')
     }
   },
   "name": "ExplorerTree_Applications",

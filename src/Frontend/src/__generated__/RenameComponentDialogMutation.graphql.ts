@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d2f1b4dd9a4d2f1aa6eb788791dc71cf>>
+ * @generated SignedSource<<4b32096c796f6cd36c1559efdc8d3ab3>>
  * @relayHash 7b3c13b1f51a454b363f74e3c8c48a61
  * @lightSyntaxTransform
  * @nogrep
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 7b3c13b1f51a454b363f74e3c8c48a61
+// @relayRequestID 5206534d69bf7df0b21e48564e39ad73a4c168a71f5f054ad86bbe39e7605998
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type RenameComponentInput = {
@@ -102,7 +102,7 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "7b3c13b1f51a454b363f74e3c8c48a61",
+    "id": "5206534d69bf7df0b21e48564e39ad73a4c168a71f5f054ad86bbe39e7605998",
     "metadata": {},
     "name": "RenameComponentDialogMutation",
     "operationKind": "mutation",

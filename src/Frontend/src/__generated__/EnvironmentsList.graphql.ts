@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<03c751abd2a743a3651cfcf249eb95dd>>
+ * @generated SignedSource<<bf6a220e6b89818df08f26517b5183af>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -26,8 +26,6 @@ export type EnvironmentsList$key = {
   readonly " $data"?: EnvironmentsList$data;
   readonly " $fragmentSpreads": FragmentRefs<"EnvironmentsList">;
 };
-
-import EnvironmentsListPaginationQuery_graphql from './EnvironmentsListPaginationQuery.graphql';
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -68,7 +66,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": EnvironmentsListPaginationQuery_graphql
+      "operation": require('./EnvironmentsListPaginationQuery.graphql')
     }
   },
   "name": "EnvironmentsList",

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2eb53cb92a313e374a922045c0535f55>>
+ * @generated SignedSource<<b1cb88aafaedf67c6dafc17d72bc8a21>>
  * @relayHash d17fabcfa72ad7a67dda358cbcf9f64e
  * @lightSyntaxTransform
  * @nogrep
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID d17fabcfa72ad7a67dda358cbcf9f64e
+// @relayRequestID c6cc01cb48ec12896ebd74c62f41b14c351cc5b4743e6777d6d8b920bfa7edfd
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type RemoveGroupByIdInput = {
@@ -190,7 +190,7 @@ return {
     ]
   },
   "params": {
-    "id": "d17fabcfa72ad7a67dda358cbcf9f64e",
+    "id": "c6cc01cb48ec12896ebd74c62f41b14c351cc5b4743e6777d6d8b920bfa7edfd",
     "metadata": {},
     "name": "RemoveGroupDialogMutation",
     "operationKind": "mutation",

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<925dee3e292a168ab5a1254365353f9d>>
+ * @generated SignedSource<<02d99edd9b1fcfdda639d3b6318f9384>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -26,8 +26,6 @@ export type EditVariable_ApplicationSelector$key = {
   readonly " $data"?: EditVariable_ApplicationSelector$data;
   readonly " $fragmentSpreads": FragmentRefs<"EditVariable_ApplicationSelector">;
 };
-
-import EditVariable_ApplicationSelector_Query_graphql from './EditVariable_ApplicationSelector_Query.graphql';
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -71,7 +69,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": EditVariable_ApplicationSelector_Query_graphql
+      "operation": require('./EditVariable_ApplicationSelector_Query.graphql')
     }
   },
   "name": "EditVariable_ApplicationSelector",

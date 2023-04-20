@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3f420d8973ba585157119db9f435d140>>
+ * @generated SignedSource<<816b145eacc1c6a4939a97accd5d3236>>
  * @relayHash 4f5dc330a515619802ac08cdf51cf591
  * @lightSyntaxTransform
  * @nogrep
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 4f5dc330a515619802ac08cdf51cf591
+// @relayRequestID a5cf781baf041dda7238a52298d5becb7d41470a16f4c45153efe10e65b2b345
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type UpdateComponentScopesInput = {
@@ -178,7 +178,7 @@ return {
     "selections": (v4/*: any*/)
   },
   "params": {
-    "id": "4f5dc330a515619802ac08cdf51cf591",
+    "id": "a5cf781baf041dda7238a52298d5becb7d41470a16f4c45153efe10e65b2b345",
     "metadata": {},
     "name": "ChangeComponentScopeDialogMutation",
     "operationKind": "mutation",
