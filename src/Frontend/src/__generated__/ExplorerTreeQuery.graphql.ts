@@ -1,5 +1,6 @@
 /**
- * @generated SignedSource<<37f33be6e8127994ed790e53b42b4b2e>>
+ * @generated SignedSource<<3dfc860f9551856ff94e619db5496c69>>
+ * @relayHash 1554187ead3cf72bd1664c40f807ed94
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -7,6 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+
+// @relayRequestID 1554187ead3cf72bd1664c40f807ed94
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -262,12 +265,11 @@ return {
     ]
   },
   "params": {
-    "cacheID": "1554187ead3cf72bd1664c40f807ed94",
-    "id": null,
+    "id": "1554187ead3cf72bd1664c40f807ed94",
     "metadata": {},
     "name": "ExplorerTreeQuery",
     "operationKind": "query",
-    "text": "query ExplorerTreeQuery(\n  $cursor: String\n  $count: Int\n) {\n  ...ExplorerTree_Applications\n}\n\nfragment ExplorerTree_Application on Application {\n  id\n  name\n  ...ExplorerTree_ApplicationDetails @defer(label: \"ExplorerTree_Application$defer$ExplorerTree_ApplicationDetails\")\n}\n\nfragment ExplorerTree_ApplicationDetails on Application {\n  variableValues {\n    id\n    environment {\n      id\n      name\n    }\n    variable {\n      id\n      name\n    }\n  }\n  parts {\n    id\n    name\n    ...ExplorerTree_ApplicationPart @defer(label: \"ExplorerTree_ApplicationDetails$defer$ExplorerTree_ApplicationPart\")\n  }\n}\n\nfragment ExplorerTree_ApplicationPart on ApplicationPart {\n  id\n  name\n  variableValues {\n    id\n    environment {\n      id\n      name\n    }\n    variable {\n      id\n      name\n    }\n  }\n  components {\n    id\n    definition {\n      id\n      name\n    }\n  }\n}\n\nfragment ExplorerTree_Applications on Query {\n  applications(after: $cursor, first: $count) {\n    edges {\n      node {\n        id\n        ...ExplorerTree_Application\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": null
   }
 };
 })();

@@ -1,5 +1,6 @@
 /**
- * @generated SignedSource<<b0ad96371a6183e8cc90c9e991393b1a>>
+ * @generated SignedSource<<a92ad115eb4410aa7536f27e8246a98d>>
+ * @relayHash 97b99f2d810597f71e2d1eaf1565cf1f
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -7,6 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+
+// @relayRequestID 97b99f2d810597f71e2d1eaf1565cf1f
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -262,12 +265,11 @@ return {
     ]
   },
   "params": {
-    "cacheID": "97b99f2d810597f71e2d1eaf1565cf1f",
-    "id": null,
+    "id": "97b99f2d810597f71e2d1eaf1565cf1f",
     "metadata": {},
     "name": "EditRoleForm_ChangeRolePermissions_Mutation",
     "operationKind": "mutation",
-    "text": "mutation EditRoleForm_ChangeRolePermissions_Mutation(\n  $input: ChangeRolePermissionsInput!\n) {\n  changeRolePermissions(input: $input) {\n    role {\n      id\n      ...EditRole_Form\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment EditRole_Form on Role {\n  id\n  name\n  permissions {\n    scope\n    permissions {\n      isRead\n      isWrite\n      isClaim\n      isPublish\n      isDecrypt\n    }\n  }\n  ...EditRole_Header\n}\n\nfragment EditRole_Header on Role {\n  id\n  name\n}\n"
+    "text": null
   }
 };
 })();

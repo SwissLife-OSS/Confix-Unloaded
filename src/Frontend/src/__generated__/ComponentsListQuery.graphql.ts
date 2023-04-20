@@ -1,5 +1,6 @@
 /**
- * @generated SignedSource<<366efa95be13a36c290a5569799b7e1b>>
+ * @generated SignedSource<<58f61133ee6fc44e69af2eb9a7bf1129>>
+ * @relayHash 1b4a992778065f7a31d447f5b624f351
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -7,6 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+
+// @relayRequestID 1b4a992778065f7a31d447f5b624f351
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -186,12 +189,11 @@ return {
     ]
   },
   "params": {
-    "cacheID": "1b4a992778065f7a31d447f5b624f351",
-    "id": null,
+    "id": "1b4a992778065f7a31d447f5b624f351",
     "metadata": {},
     "name": "ComponentsListQuery",
     "operationKind": "query",
-    "text": "query ComponentsListQuery(\n  $cursor: String\n  $count: Int\n  $search: String\n) {\n  ...ComponentsList\n}\n\nfragment ComponentsList on Query {\n  components(after: $cursor, first: $count, search: $search) {\n    edges {\n      node {\n        id\n        name\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": null
   }
 };
 })();

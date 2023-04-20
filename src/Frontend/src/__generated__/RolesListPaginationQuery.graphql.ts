@@ -1,5 +1,6 @@
 /**
- * @generated SignedSource<<227784a3cac08384e04117126028bd37>>
+ * @generated SignedSource<<f7cb77b666382d405961253ae7ac1d98>>
+ * @relayHash 693a465e85f1db9eeeb794cf042eb98b
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -7,6 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+
+// @relayRequestID 693a465e85f1db9eeeb794cf042eb98b
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -180,12 +183,11 @@ return {
     ]
   },
   "params": {
-    "cacheID": "693a465e85f1db9eeeb794cf042eb98b",
-    "id": null,
+    "id": "693a465e85f1db9eeeb794cf042eb98b",
     "metadata": {},
     "name": "RolesListPaginationQuery",
     "operationKind": "query",
-    "text": "query RolesListPaginationQuery(\n  $count: Int\n  $cursor: String\n  $search: String\n) {\n  ...RolesList\n}\n\nfragment RolesList on Query {\n  searchRoles(after: $cursor, first: $count, search: $search) {\n    edges {\n      node {\n        id\n        name\n        ...RolesList_RoleListItem\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment RolesList_RoleListItem on Role {\n  id\n  name\n}\n"
+    "text": null
   }
 };
 })();

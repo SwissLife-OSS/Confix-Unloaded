@@ -1,5 +1,6 @@
 /**
- * @generated SignedSource<<ed58bb87749de1e67f98a5844776993a>>
+ * @generated SignedSource<<e4f94ed216fef82057a8fb2616a34416>>
+ * @relayHash 9d518894012b4c14cbd868a77ee1b4d8
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -7,6 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+
+// @relayRequestID 9d518894012b4c14cbd868a77ee1b4d8
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -233,12 +236,11 @@ return {
     ]
   },
   "params": {
-    "cacheID": "9d518894012b4c14cbd868a77ee1b4d8",
-    "id": null,
+    "id": "9d518894012b4c14cbd868a77ee1b4d8",
     "metadata": {},
     "name": "EditVariable_ApplicationSelector_Query",
     "operationKind": "query",
-    "text": "query EditVariable_ApplicationSelector_Query(\n  $count: Int = 20\n  $cursor: String\n  $search: String\n) {\n  ...EditVariable_ApplicationSelector_3PfUTl\n}\n\nfragment EditVariable_ApplicationPartSelector on Application {\n  id\n  parts {\n    id\n    name\n    components {\n      id\n      definition {\n        name\n        id\n      }\n    }\n  }\n}\n\nfragment EditVariable_ApplicationSelector_3PfUTl on Query {\n  applications(after: $cursor, first: $count, search: $search) {\n    edges {\n      node {\n        id\n        name\n        ...EditVariable_ApplicationPartSelector\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": null
   }
 };
 })();

@@ -1,5 +1,6 @@
 /**
- * @generated SignedSource<<df1d5b74c4d01b5461bb105924de27df>>
+ * @generated SignedSource<<cfa6579a67fc9742eb10d93feb84067b>>
+ * @relayHash 4fe0458844e03fd131f11450283384c5
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -7,6 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+
+// @relayRequestID 4fe0458844e03fd131f11450283384c5
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 export type RolesSelectQuery$variables = {
@@ -108,12 +111,11 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "4fe0458844e03fd131f11450283384c5",
-    "id": null,
+    "id": "4fe0458844e03fd131f11450283384c5",
     "metadata": {},
     "name": "RolesSelectQuery",
     "operationKind": "query",
-    "text": "query RolesSelectQuery(\n  $search: String!\n) {\n  searchRoles(search: $search) {\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": null
   }
 };
 })();

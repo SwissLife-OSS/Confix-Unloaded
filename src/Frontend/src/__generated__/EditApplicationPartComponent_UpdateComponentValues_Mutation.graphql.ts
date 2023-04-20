@@ -1,5 +1,6 @@
 /**
- * @generated SignedSource<<840e48beac215339ec80e77abe928b4b>>
+ * @generated SignedSource<<eb2a28054255bd5660b0a3df51830736>>
+ * @relayHash 148e1dda2330a3ca039ede258e15ce3b
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -7,6 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+
+// @relayRequestID 148e1dda2330a3ca039ede258e15ce3b
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type UpdateApplicationPartComponentValuesInput = {
@@ -179,12 +182,11 @@ return {
     ]
   },
   "params": {
-    "cacheID": "148e1dda2330a3ca039ede258e15ce3b",
-    "id": null,
+    "id": "148e1dda2330a3ca039ede258e15ce3b",
     "metadata": {},
     "name": "EditApplicationPartComponent_UpdateComponentValues_Mutation",
     "operationKind": "mutation",
-    "text": "mutation EditApplicationPartComponent_UpdateComponentValues_Mutation(\n  $input: UpdateApplicationPartComponentValuesInput!\n) {\n  updateApplicationPartComponentValues(input: $input) {\n    component {\n      values\n      id\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n"
+    "text": null
   }
 };
 })();

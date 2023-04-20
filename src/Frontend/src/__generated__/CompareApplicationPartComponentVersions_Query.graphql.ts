@@ -1,5 +1,6 @@
 /**
- * @generated SignedSource<<1ee6ecac687222d90e0d540b04d983f0>>
+ * @generated SignedSource<<ed9af2d7a9b0211bde8151b0745eaa04>>
+ * @relayHash 7e9f8ff03c5b1c1111f3c11e8137c580
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -7,6 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+
+// @relayRequestID 7e9f8ff03c5b1c1111f3c11e8137c580
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 export type CompareApplicationPartComponentVersions_Query$variables = {
@@ -219,12 +222,11 @@ return {
     ]
   },
   "params": {
-    "cacheID": "7e9f8ff03c5b1c1111f3c11e8137c580",
-    "id": null,
+    "id": "7e9f8ff03c5b1c1111f3c11e8137c580",
     "metadata": {},
     "name": "CompareApplicationPartComponentVersions_Query",
     "operationKind": "query",
-    "text": "query CompareApplicationPartComponentVersions_Query(\n  $partComponentId: ID!\n  $from: Int!\n  $to: Int!\n) {\n  applicationPartComponentById(partComponentId: $partComponentId) {\n    version\n    fromValues: values(version: $from)\n    toValues: values(version: $to)\n    changeLog {\n      change {\n        __typename\n        ... on ApplicationPartComponentValuesChange {\n          partComponentVersion\n        }\n      }\n      id\n    }\n    id\n  }\n}\n"
+    "text": null
   }
 };
 })();

@@ -1,5 +1,6 @@
 /**
- * @generated SignedSource<<e2e42fdc284ad29273f0c54d798bb59c>>
+ * @generated SignedSource<<c61e50af5bf8b8e6bc03bbbc73ce33ff>>
+ * @relayHash fcf304dad48732491f505c7b75182e0e
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -7,6 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+
+// @relayRequestID fcf304dad48732491f505c7b75182e0e
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -246,12 +249,11 @@ return {
     ]
   },
   "params": {
-    "cacheID": "fcf304dad48732491f505c7b75182e0e",
-    "id": null,
+    "id": "fcf304dad48732491f505c7b75182e0e",
     "metadata": {},
     "name": "RenameApplicationDialogMutation",
     "operationKind": "mutation",
-    "text": "mutation RenameApplicationDialogMutation(\n  $input: RenameApplicationInput!\n) {\n  renameApplication(input: $input) {\n    application {\n      id\n      ...ApplicationsListItem\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment AddComponentsToApplicationPartDialog on ApplicationPart {\n  id\n  name\n  application {\n    id\n    namespace\n  }\n}\n\nfragment ApplicationsListItem on Application {\n  id\n  ...ApplicationsListItem_DefaultListItem\n  ...ApplicationsListItem_SelectedListItem\n}\n\nfragment ApplicationsListItem_ApplicationPart on ApplicationPart {\n  id\n  name\n  components {\n    definition {\n      id\n    }\n    ...ApplicationsListItem_Component\n    id\n  }\n  ...AddComponentsToApplicationPartDialog\n}\n\nfragment ApplicationsListItem_Component on ApplicationPartComponent {\n  id\n  definition {\n    id\n    name\n  }\n}\n\nfragment ApplicationsListItem_DefaultListItem on Application {\n  id\n  name\n  namespace\n  parts {\n    name\n    id\n  }\n}\n\nfragment ApplicationsListItem_SelectedListItem on Application {\n  id\n  name\n  namespace\n  parts {\n    id\n    ...ApplicationsListItem_ApplicationPart\n  }\n}\n"
+    "text": null
   }
 };
 })();

@@ -1,5 +1,6 @@
 /**
- * @generated SignedSource<<3d68bc20f0e1d7977bddf3a97d04a898>>
+ * @generated SignedSource<<5275a155102ecfd2b1a1fecd5b385343>>
+ * @relayHash 5220ffd195b95d3fb848440396dd1947
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -7,6 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+
+// @relayRequestID 5220ffd195b95d3fb848440396dd1947
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type UpdateComponentValuesInput = {
@@ -248,12 +251,11 @@ return {
     ]
   },
   "params": {
-    "cacheID": "5220ffd195b95d3fb848440396dd1947",
-    "id": null,
+    "id": "5220ffd195b95d3fb848440396dd1947",
     "metadata": {},
     "name": "EditComponentUpdateMutation",
     "operationKind": "mutation",
-    "text": "mutation EditComponentUpdateMutation(\n  $valuesInput: UpdateComponentValuesInput!\n  $schemaInput: UpdateComponentSchemaInput!\n) {\n  updateComponentSchema(input: $schemaInput) {\n    component {\n      id\n      schema\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        message\n        code\n      }\n    }\n  }\n  updateComponentValues(input: $valuesInput) {\n    component {\n      id\n      values\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n"
+    "text": null
   }
 };
 })();

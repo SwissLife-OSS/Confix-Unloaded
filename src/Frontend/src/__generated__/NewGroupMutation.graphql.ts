@@ -1,5 +1,6 @@
 /**
- * @generated SignedSource<<75342b8b600378cf48d21cdf0cf04af6>>
+ * @generated SignedSource<<44f57bbaa6f9ed49e1b2d8415f6b4555>>
+ * @relayHash f9fa1031591e572ab85257cdc6f72b4a
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -7,6 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+
+// @relayRequestID f9fa1031591e572ab85257cdc6f72b4a
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -229,12 +232,11 @@ return {
     ]
   },
   "params": {
-    "cacheID": "f9fa1031591e572ab85257cdc6f72b4a",
-    "id": null,
+    "id": "f9fa1031591e572ab85257cdc6f72b4a",
     "metadata": {},
     "name": "NewGroupMutation",
     "operationKind": "mutation",
-    "text": "mutation NewGroupMutation(\n  $input: CreateGroupInput!\n) {\n  createGroup(input: $input) {\n    group {\n      id\n      ...GroupsList_ListItem\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment GroupsList_ListItem on Group {\n  id\n  name\n}\n"
+    "text": null
   }
 };
 })();

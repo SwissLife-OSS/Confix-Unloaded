@@ -1,5 +1,6 @@
 /**
- * @generated SignedSource<<116e91886941abf72e7afcc4b8cb4b08>>
+ * @generated SignedSource<<06e5bff845017b46d2c1df6f6e302c90>>
+ * @relayHash d62f0c05ae8c2678f1b9eff85e42cb6c
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -7,6 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+
+// @relayRequestID d62f0c05ae8c2678f1b9eff85e42cb6c
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 export type Scope = "APPLICATION" | "COMPONENT" | "CONFIGURATION" | "ENVIRONMENT" | "IDENTITY" | "VARIABLE" | "%future added value";
@@ -253,12 +256,11 @@ return {
     ]
   },
   "params": {
-    "cacheID": "d62f0c05ae8c2678f1b9eff85e42cb6c",
-    "id": null,
+    "id": "d62f0c05ae8c2678f1b9eff85e42cb6c",
     "metadata": {},
     "name": "useUser_Me_Query",
     "operationKind": "query",
-    "text": "query useUser_Me_Query {\n  me {\n    name\n    namespaces\n    groups {\n      roles {\n        namespace\n        roles {\n          name\n          permissions {\n            scope\n            permissions {\n              isRead\n              isWrite\n              isClaim\n              isPublish\n              isDecrypt\n            }\n          }\n          id\n        }\n      }\n      id\n    }\n  }\n}\n"
+    "text": null
   }
 };
 })();

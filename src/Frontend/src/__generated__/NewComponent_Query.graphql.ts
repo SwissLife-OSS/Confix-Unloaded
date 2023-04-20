@@ -1,5 +1,6 @@
 /**
- * @generated SignedSource<<d1654cef7840da339efedcba2b95db61>>
+ * @generated SignedSource<<fae9176ef47b72f277cd7b3210af4285>>
+ * @relayHash 1dba5e0ac4778eb2824b028e63816b0d
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -7,6 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+
+// @relayRequestID 1dba5e0ac4778eb2824b028e63816b0d
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -155,12 +158,11 @@ return {
     ]
   },
   "params": {
-    "cacheID": "1dba5e0ac4778eb2824b028e63816b0d",
-    "id": null,
+    "id": "1dba5e0ac4778eb2824b028e63816b0d",
     "metadata": {},
     "name": "NewComponent_Query",
     "operationKind": "query",
-    "text": "query NewComponent_Query(\n  $search: String\n) {\n  ...ApplicationCascader_40zwac\n}\n\nfragment ApplicationCascader_40zwac on Query {\n  ...ApplicationCascader_Namespaces\n  ...ApplicationCascader_Applications_40zwac\n}\n\nfragment ApplicationCascader_Applications_40zwac on Query {\n  applications(first: 50, search: $search) {\n    edges {\n      node {\n        namespace\n        id\n        name\n        parts {\n          id\n          name\n        }\n      }\n    }\n  }\n}\n\nfragment ApplicationCascader_Namespaces on Query {\n  me {\n    namespaces\n  }\n}\n"
+    "text": null
   }
 };
 })();

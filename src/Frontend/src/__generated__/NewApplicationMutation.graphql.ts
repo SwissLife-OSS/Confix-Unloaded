@@ -1,5 +1,6 @@
 /**
- * @generated SignedSource<<e88094dd2e7ab9c0f9a9e75313d2bc2a>>
+ * @generated SignedSource<<1b7f9c8874489765c27264e9d8a7a7ee>>
+ * @relayHash af918b5576e5a958848488a240eeaeb7
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -7,6 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+
+// @relayRequestID af918b5576e5a958848488a240eeaeb7
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -278,12 +281,11 @@ return {
     ]
   },
   "params": {
-    "cacheID": "af918b5576e5a958848488a240eeaeb7",
-    "id": null,
+    "id": "af918b5576e5a958848488a240eeaeb7",
     "metadata": {},
     "name": "NewApplicationMutation",
     "operationKind": "mutation",
-    "text": "mutation NewApplicationMutation(\n  $input: CreateApplicationInput!\n) {\n  createApplication(input: $input) {\n    application {\n      id\n      ...ApplicationsListItem\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment AddComponentsToApplicationPartDialog on ApplicationPart {\n  id\n  name\n  application {\n    id\n    namespace\n  }\n}\n\nfragment ApplicationsListItem on Application {\n  id\n  ...ApplicationsListItem_DefaultListItem\n  ...ApplicationsListItem_SelectedListItem\n}\n\nfragment ApplicationsListItem_ApplicationPart on ApplicationPart {\n  id\n  name\n  components {\n    definition {\n      id\n    }\n    ...ApplicationsListItem_Component\n    id\n  }\n  ...AddComponentsToApplicationPartDialog\n}\n\nfragment ApplicationsListItem_Component on ApplicationPartComponent {\n  id\n  definition {\n    id\n    name\n  }\n}\n\nfragment ApplicationsListItem_DefaultListItem on Application {\n  id\n  name\n  namespace\n  parts {\n    name\n    id\n  }\n}\n\nfragment ApplicationsListItem_SelectedListItem on Application {\n  id\n  name\n  namespace\n  parts {\n    id\n    ...ApplicationsListItem_ApplicationPart\n  }\n}\n"
+    "text": null
   }
 };
 })();

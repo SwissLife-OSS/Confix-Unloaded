@@ -1,5 +1,6 @@
 /**
- * @generated SignedSource<<00b40175c6116294e8def8427f5d9957>>
+ * @generated SignedSource<<529e8a80332201c3074c6c70bd8a49db>>
+ * @relayHash b9be59602a1e934e51d29e708f44f056
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -7,6 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+
+// @relayRequestID b9be59602a1e934e51d29e708f44f056
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type SetDeveloperAccessOfEnvironmentInput = {
@@ -199,12 +202,11 @@ return {
     ]
   },
   "params": {
-    "cacheID": "b9be59602a1e934e51d29e708f44f056",
-    "id": null,
+    "id": "b9be59602a1e934e51d29e708f44f056",
     "metadata": {},
     "name": "SaveDeveloperAccessButtonMutation",
     "operationKind": "mutation",
-    "text": "mutation SaveDeveloperAccessButtonMutation(\n  $input: SetDeveloperAccessOfEnvironmentInput!\n) {\n  setDeveloperAccessOfEnvironment(input: $input) {\n    environment {\n      id\n      allowDeveloperAccess\n    }\n    errors {\n      __typename\n      ... on EnvironmentNotFoundError {\n        environmentId\n        code\n        message\n      }\n      ... on UnauthorizedOperationError {\n        code\n        message\n      }\n      ... on UserError {\n        __isUserError: __typename\n        code\n        message\n      }\n    }\n  }\n}\n"
+    "text": null
   }
 };
 })();

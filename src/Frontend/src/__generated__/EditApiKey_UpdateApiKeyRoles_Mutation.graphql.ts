@@ -1,5 +1,6 @@
 /**
- * @generated SignedSource<<fefd5cea7b95f5d8dfd47ff4eb12a50e>>
+ * @generated SignedSource<<e18154efe1a97860f06bb17f29e2365d>>
+ * @relayHash a2909a3b0de86280971ed27bea2e232f
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -7,6 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+
+// @relayRequestID a2909a3b0de86280971ed27bea2e232f
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type UpdateApiKeyInput = {
@@ -210,12 +213,11 @@ return {
     ]
   },
   "params": {
-    "cacheID": "a2909a3b0de86280971ed27bea2e232f",
-    "id": null,
+    "id": "a2909a3b0de86280971ed27bea2e232f",
     "metadata": {},
     "name": "EditApiKey_UpdateApiKeyRoles_Mutation",
     "operationKind": "mutation",
-    "text": "mutation EditApiKey_UpdateApiKeyRoles_Mutation(\n  $input: UpdateApiKeyInput!\n) {\n  updateApiKey(input: $input) {\n    apiKey {\n      id\n      roles {\n        namespace\n        roles {\n          id\n          name\n        }\n      }\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        code\n        message\n      }\n    }\n  }\n}\n"
+    "text": null
   }
 };
 })();

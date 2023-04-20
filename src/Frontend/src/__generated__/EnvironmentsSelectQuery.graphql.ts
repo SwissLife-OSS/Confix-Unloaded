@@ -1,5 +1,6 @@
 /**
- * @generated SignedSource<<bad1619ae7e2bd27fcf1fb7005c3bc28>>
+ * @generated SignedSource<<947faf9f35ef4067165c6220ddbb63ec>>
+ * @relayHash e8132324e5692bee4117bc4012db90dd
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -7,6 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+
+// @relayRequestID e8132324e5692bee4117bc4012db90dd
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 export type EnvironmentsSelectQuery$variables = {
@@ -108,12 +111,11 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "e8132324e5692bee4117bc4012db90dd",
-    "id": null,
+    "id": "e8132324e5692bee4117bc4012db90dd",
     "metadata": {},
     "name": "EnvironmentsSelectQuery",
     "operationKind": "query",
-    "text": "query EnvironmentsSelectQuery(\n  $search: String!\n) {\n  searchEnvironments(search: $search) {\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": null
   }
 };
 })();

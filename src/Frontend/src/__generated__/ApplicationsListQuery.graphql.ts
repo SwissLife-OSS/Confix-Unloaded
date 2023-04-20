@@ -1,5 +1,6 @@
 /**
- * @generated SignedSource<<66255d829a237d7101f112ae8cf70e29>>
+ * @generated SignedSource<<ce5abc115ace49eeab6a3cb2cea6960a>>
+ * @relayHash a7311a2069081b0c48fb89f27dedbbaa
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -7,6 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+
+// @relayRequestID a7311a2069081b0c48fb89f27dedbbaa
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -247,12 +250,11 @@ return {
     ]
   },
   "params": {
-    "cacheID": "a7311a2069081b0c48fb89f27dedbbaa",
-    "id": null,
+    "id": "a7311a2069081b0c48fb89f27dedbbaa",
     "metadata": {},
     "name": "ApplicationsListQuery",
     "operationKind": "query",
-    "text": "query ApplicationsListQuery(\n  $cursor: String\n  $count: Int\n  $search: String\n) {\n  ...ApplicationsList\n}\n\nfragment AddComponentsToApplicationPartDialog on ApplicationPart {\n  id\n  name\n  application {\n    id\n    namespace\n  }\n}\n\nfragment ApplicationsList on Query {\n  applications(after: $cursor, first: $count, search: $search) {\n    edges {\n      node {\n        id\n        name\n        namespace\n        ...ApplicationsListItem\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment ApplicationsListItem on Application {\n  id\n  ...ApplicationsListItem_DefaultListItem\n  ...ApplicationsListItem_SelectedListItem\n}\n\nfragment ApplicationsListItem_ApplicationPart on ApplicationPart {\n  id\n  name\n  components {\n    definition {\n      id\n    }\n    ...ApplicationsListItem_Component\n    id\n  }\n  ...AddComponentsToApplicationPartDialog\n}\n\nfragment ApplicationsListItem_Component on ApplicationPartComponent {\n  id\n  definition {\n    id\n    name\n  }\n}\n\nfragment ApplicationsListItem_DefaultListItem on Application {\n  id\n  name\n  namespace\n  parts {\n    name\n    id\n  }\n}\n\nfragment ApplicationsListItem_SelectedListItem on Application {\n  id\n  name\n  namespace\n  parts {\n    id\n    ...ApplicationsListItem_ApplicationPart\n  }\n}\n"
+    "text": null
   }
 };
 })();

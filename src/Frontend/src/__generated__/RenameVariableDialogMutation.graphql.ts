@@ -1,5 +1,6 @@
 /**
- * @generated SignedSource<<2661b77d19126013ca733a467e484307>>
+ * @generated SignedSource<<9baf1135242f2bd180190ce68c8f726a>>
+ * @relayHash 17d5b40c675e96a240e2bcb090028ad7
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -7,6 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+
+// @relayRequestID 17d5b40c675e96a240e2bcb090028ad7
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type RenameVariableInput = {
@@ -99,12 +102,11 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "17d5b40c675e96a240e2bcb090028ad7",
-    "id": null,
+    "id": "17d5b40c675e96a240e2bcb090028ad7",
     "metadata": {},
     "name": "RenameVariableDialogMutation",
     "operationKind": "mutation",
-    "text": "mutation RenameVariableDialogMutation(\n  $input: RenameVariableInput!\n) {\n  renameVariable(input: $input) {\n    variable {\n      id\n      name\n    }\n  }\n}\n"
+    "text": null
   }
 };
 })();

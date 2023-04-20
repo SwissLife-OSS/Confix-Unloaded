@@ -1,5 +1,6 @@
 /**
- * @generated SignedSource<<9d6652d6463a6422b4cf4525d007f6fd>>
+ * @generated SignedSource<<204bed476b235460c08b8767ff72e392>>
+ * @relayHash c47f09a894f6a3321d646fc19eaa96b7
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -7,6 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+
+// @relayRequestID c47f09a894f6a3321d646fc19eaa96b7
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -186,12 +189,11 @@ return {
     ]
   },
   "params": {
-    "cacheID": "c47f09a894f6a3321d646fc19eaa96b7",
-    "id": null,
+    "id": "c47f09a894f6a3321d646fc19eaa96b7",
     "metadata": {},
     "name": "GroupsListQuery",
     "operationKind": "query",
-    "text": "query GroupsListQuery(\n  $cursor: String\n  $count: Int\n  $search: String\n) {\n  ...GroupsList\n}\n\nfragment GroupsList on Query {\n  searchGroups(after: $cursor, first: $count, search: $search) {\n    edges {\n      node {\n        id\n        name\n        ...GroupsList_ListItem\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment GroupsList_ListItem on Group {\n  id\n  name\n}\n"
+    "text": null
   }
 };
 })();

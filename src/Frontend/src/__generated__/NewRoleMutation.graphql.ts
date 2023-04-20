@@ -1,5 +1,6 @@
 /**
- * @generated SignedSource<<f8f68e59fe0781e90834429e8dc39b6e>>
+ * @generated SignedSource<<d73a05f7496fc70c09616f72684b3608>>
+ * @relayHash cb1415fbf322a1537f30a1334c2deecf
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -7,6 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+
+// @relayRequestID cb1415fbf322a1537f30a1334c2deecf
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -232,12 +235,11 @@ return {
     ]
   },
   "params": {
-    "cacheID": "cb1415fbf322a1537f30a1334c2deecf",
-    "id": null,
+    "id": "cb1415fbf322a1537f30a1334c2deecf",
     "metadata": {},
     "name": "NewRoleMutation",
     "operationKind": "mutation",
-    "text": "mutation NewRoleMutation(\n  $input: CreateRoleInput!\n) {\n  createRole(input: $input) {\n    role {\n      id\n      name\n      ...RolesList_RoleListItem\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment RolesList_RoleListItem on Role {\n  id\n  name\n}\n"
+    "text": null
   }
 };
 })();

@@ -1,5 +1,6 @@
 /**
- * @generated SignedSource<<07475c6c232ff5af82efaacc8b6ea6fc>>
+ * @generated SignedSource<<3f420d8973ba585157119db9f435d140>>
+ * @relayHash 4f5dc330a515619802ac08cdf51cf591
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -7,6 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+
+// @relayRequestID 4f5dc330a515619802ac08cdf51cf591
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type UpdateComponentScopesInput = {
@@ -175,12 +178,11 @@ return {
     "selections": (v4/*: any*/)
   },
   "params": {
-    "cacheID": "4f5dc330a515619802ac08cdf51cf591",
-    "id": null,
+    "id": "4f5dc330a515619802ac08cdf51cf591",
     "metadata": {},
     "name": "ChangeComponentScopeDialogMutation",
     "operationKind": "mutation",
-    "text": "mutation ChangeComponentScopeDialogMutation(\n  $input: UpdateComponentScopesInput!\n) {\n  updateComponentScopes(input: $input) {\n    component {\n      id\n      name\n      scopes {\n        namespace\n        applicationId\n        applicationPartId\n        application {\n          id\n          name\n        }\n        applicationPart {\n          id\n          name\n        }\n      }\n    }\n  }\n}\n"
+    "text": null
   }
 };
 })();

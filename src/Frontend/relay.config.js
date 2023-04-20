@@ -5,5 +5,9 @@ module.exports = {
   eagerEsModules: true,
   noFutureProofEnums: false,
   language: "typescript",
-  artifactDirectory: 'src/__generated__',
+  artifactDirectory: "src/__generated__",
+  persistConfig: {
+    file: "./persisted_queries.json",
+    algorithm: "SHA256",
+  },
 };

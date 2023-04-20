@@ -1,5 +1,6 @@
 /**
- * @generated SignedSource<<e2c7b1279cc702b776587a51e6f51018>>
+ * @generated SignedSource<<aad74e661ca63a6871ae42be448da56d>>
+ * @relayHash 4a2099fe01acecfda537932b40f1d993
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -7,6 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+
+// @relayRequestID 4a2099fe01acecfda537932b40f1d993
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -123,12 +126,11 @@ return {
     ]
   },
   "params": {
-    "cacheID": "4a2099fe01acecfda537932b40f1d993",
-    "id": null,
+    "id": "4a2099fe01acecfda537932b40f1d993",
     "metadata": {},
     "name": "EditEnvironmentQuery",
     "operationKind": "query",
-    "text": "query EditEnvironmentQuery(\n  $id: ID!\n) {\n  environmentById(id: $id) {\n    id\n    ...EditEnvironment_EditEnvironmentForm\n  }\n}\n\nfragment EditEnvironment_EditEnvironmentForm on Environment {\n  id\n  name\n  ...EditEnvironment_ParentEnvironement\n  ...EditEnvironment_IsDeveloperAccessAllowedFrom\n  ...EditEnvironment_Header\n}\n\nfragment EditEnvironment_Header on Environment {\n  id\n  name\n}\n\nfragment EditEnvironment_IsDeveloperAccessAllowedFrom on Environment {\n  id\n  allowDeveloperAccess\n}\n\nfragment EditEnvironment_ParentEnvironement on Environment {\n  id\n  name\n  parent {\n    id\n    name\n  }\n}\n"
+    "text": null
   }
 };
 })();

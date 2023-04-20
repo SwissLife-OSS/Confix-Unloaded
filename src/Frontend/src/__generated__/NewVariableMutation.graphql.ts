@@ -1,5 +1,6 @@
 /**
- * @generated SignedSource<<2633418ef124ed8929f11291c1d5560e>>
+ * @generated SignedSource<<02e1c8549b0963b490dc91e28a50dd95>>
+ * @relayHash 7f0e6e9f8e37b720490bab3446d06544
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -7,6 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+
+// @relayRequestID 7f0e6e9f8e37b720490bab3446d06544
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type CreateVariableInput = {
@@ -146,12 +149,11 @@ return {
     ]
   },
   "params": {
-    "cacheID": "7f0e6e9f8e37b720490bab3446d06544",
-    "id": null,
+    "id": "7f0e6e9f8e37b720490bab3446d06544",
     "metadata": {},
     "name": "NewVariableMutation",
     "operationKind": "mutation",
-    "text": "mutation NewVariableMutation(\n  $input: CreateVariableInput!\n) {\n  createVariable(input: $input) {\n    variable {\n      id\n      name\n    }\n  }\n}\n"
+    "text": null
   }
 };
 })();

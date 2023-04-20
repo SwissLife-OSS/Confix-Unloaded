@@ -1,5 +1,6 @@
 /**
- * @generated SignedSource<<4d473ffe0d0fc153bf07b094ba8cc26f>>
+ * @generated SignedSource<<4ba2d285328334f19f0f0e2936947260>>
+ * @relayHash e5577e1f6bd787d665f4f37ab4f29bcf
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -7,6 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+
+// @relayRequestID e5577e1f6bd787d665f4f37ab4f29bcf
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type PublishApplicationPartByIdInput = {
@@ -142,12 +145,11 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "e5577e1f6bd787d665f4f37ab4f29bcf",
-    "id": null,
+    "id": "e5577e1f6bd787d665f4f37ab4f29bcf",
     "metadata": {},
     "name": "PublishApplicationPartDialogMutation",
     "operationKind": "mutation",
-    "text": "mutation PublishApplicationPartDialogMutation(\n  $input: PublishApplicationPartByIdInput!\n) {\n  publishApplicationPartById(input: $input) {\n    publishedApplicationPart {\n      id\n      version\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n"
+    "text": null
   }
 };
 })();

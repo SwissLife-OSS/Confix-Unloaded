@@ -1,5 +1,6 @@
 /**
- * @generated SignedSource<<11810fead6826fae6433363707f75741>>
+ * @generated SignedSource<<13c7c3a114a979c48223346199cf9582>>
+ * @relayHash 12048afc12af5fcebc78edf925f4d375
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -7,6 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+
+// @relayRequestID 12048afc12af5fcebc78edf925f4d375
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type RenameEnvironmentInput = {
@@ -99,12 +102,11 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "12048afc12af5fcebc78edf925f4d375",
-    "id": null,
+    "id": "12048afc12af5fcebc78edf925f4d375",
     "metadata": {},
     "name": "RenameEnvironmentDialogMutation",
     "operationKind": "mutation",
-    "text": "mutation RenameEnvironmentDialogMutation(\n  $input: RenameEnvironmentInput!\n) {\n  renameEnvironment(input: $input) {\n    environment {\n      id\n      name\n    }\n  }\n}\n"
+    "text": null
   }
 };
 })();

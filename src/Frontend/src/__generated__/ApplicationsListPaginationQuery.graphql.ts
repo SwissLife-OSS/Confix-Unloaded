@@ -1,5 +1,6 @@
 /**
- * @generated SignedSource<<fcb7e7f3f63f3a0327d39b386a4bedbe>>
+ * @generated SignedSource<<bf334497760cb8fa269e983b28e28f04>>
+ * @relayHash bc646b5c97522b9cf18c5dae35409786
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -7,6 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+
+// @relayRequestID bc646b5c97522b9cf18c5dae35409786
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -241,12 +244,11 @@ return {
     ]
   },
   "params": {
-    "cacheID": "bc646b5c97522b9cf18c5dae35409786",
-    "id": null,
+    "id": "bc646b5c97522b9cf18c5dae35409786",
     "metadata": {},
     "name": "ApplicationsListPaginationQuery",
     "operationKind": "query",
-    "text": "query ApplicationsListPaginationQuery(\n  $count: Int\n  $cursor: String\n  $search: String\n) {\n  ...ApplicationsList\n}\n\nfragment AddComponentsToApplicationPartDialog on ApplicationPart {\n  id\n  name\n  application {\n    id\n    namespace\n  }\n}\n\nfragment ApplicationsList on Query {\n  applications(after: $cursor, first: $count, search: $search) {\n    edges {\n      node {\n        id\n        name\n        namespace\n        ...ApplicationsListItem\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment ApplicationsListItem on Application {\n  id\n  ...ApplicationsListItem_DefaultListItem\n  ...ApplicationsListItem_SelectedListItem\n}\n\nfragment ApplicationsListItem_ApplicationPart on ApplicationPart {\n  id\n  name\n  components {\n    definition {\n      id\n    }\n    ...ApplicationsListItem_Component\n    id\n  }\n  ...AddComponentsToApplicationPartDialog\n}\n\nfragment ApplicationsListItem_Component on ApplicationPartComponent {\n  id\n  definition {\n    id\n    name\n  }\n}\n\nfragment ApplicationsListItem_DefaultListItem on Application {\n  id\n  name\n  namespace\n  parts {\n    name\n    id\n  }\n}\n\nfragment ApplicationsListItem_SelectedListItem on Application {\n  id\n  name\n  namespace\n  parts {\n    id\n    ...ApplicationsListItem_ApplicationPart\n  }\n}\n"
+    "text": null
   }
 };
 })();

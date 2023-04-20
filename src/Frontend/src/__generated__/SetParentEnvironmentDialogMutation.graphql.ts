@@ -1,5 +1,6 @@
 /**
- * @generated SignedSource<<f23a7f72c4edd69a912aa7e6543080de>>
+ * @generated SignedSource<<d256d4530cfb14b1f678e422d69f8bd8>>
+ * @relayHash ebf5fede012aa325e91e94753ef9f54b
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -7,6 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+
+// @relayRequestID ebf5fede012aa325e91e94753ef9f54b
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type SetParentOfEnvironmentInput = {
@@ -214,12 +217,11 @@ return {
     ]
   },
   "params": {
-    "cacheID": "ebf5fede012aa325e91e94753ef9f54b",
-    "id": null,
+    "id": "ebf5fede012aa325e91e94753ef9f54b",
     "metadata": {},
     "name": "SetParentEnvironmentDialogMutation",
     "operationKind": "mutation",
-    "text": "mutation SetParentEnvironmentDialogMutation(\n  $input: SetParentOfEnvironmentInput!\n) {\n  setParentOfEnvironment(input: $input) {\n    environment {\n      id\n      parent {\n        id\n        name\n      }\n    }\n    errors {\n      __typename\n      ... on EnvironmentCycleDetectedError {\n        path\n        code\n        message\n      }\n      ... on EnvironmentNotFoundError {\n        environmentId\n        code\n        message\n      }\n    }\n  }\n}\n"
+    "text": null
   }
 };
 })();

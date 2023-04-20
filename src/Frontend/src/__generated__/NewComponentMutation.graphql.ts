@@ -1,5 +1,6 @@
 /**
- * @generated SignedSource<<104671ca618404013aca759145ab9094>>
+ * @generated SignedSource<<083ec475fea34a25c4165dbb61d27210>>
+ * @relayHash 165c30db38f50235a280042f06b5708b
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -7,6 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+
+// @relayRequestID 165c30db38f50235a280042f06b5708b
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type CreateComponentInput = {
@@ -207,12 +210,11 @@ return {
     ]
   },
   "params": {
-    "cacheID": "165c30db38f50235a280042f06b5708b",
-    "id": null,
+    "id": "165c30db38f50235a280042f06b5708b",
     "metadata": {},
     "name": "NewComponentMutation",
     "operationKind": "mutation",
-    "text": "mutation NewComponentMutation(\n  $input: CreateComponentInput!\n) {\n  createComponent(input: $input) {\n    component {\n      id\n      name\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n"
+    "text": null
   }
 };
 })();

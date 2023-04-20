@@ -1,5 +1,6 @@
 /**
- * @generated SignedSource<<40e62559433255b58f7bdffe99e24ac6>>
+ * @generated SignedSource<<33df0bace0dc1bfde6ea5d2cdb1872a9>>
+ * @relayHash cdb9e0778d21d5ba533b3196d5f5f17c
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -7,6 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+
+// @relayRequestID cdb9e0778d21d5ba533b3196d5f5f17c
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -166,12 +169,11 @@ return {
     ]
   },
   "params": {
-    "cacheID": "cdb9e0778d21d5ba533b3196d5f5f17c",
-    "id": null,
+    "id": "cdb9e0778d21d5ba533b3196d5f5f17c",
     "metadata": {},
     "name": "EditRoleQuery",
     "operationKind": "query",
-    "text": "query EditRoleQuery(\n  $id: ID!\n) {\n  roleById(id: $id) {\n    id\n    ...EditRole_Form\n  }\n}\n\nfragment EditRole_Form on Role {\n  id\n  name\n  permissions {\n    scope\n    permissions {\n      isRead\n      isWrite\n      isClaim\n      isPublish\n      isDecrypt\n    }\n  }\n  ...EditRole_Header\n}\n\nfragment EditRole_Header on Role {\n  id\n  name\n}\n"
+    "text": null
   }
 };
 })();

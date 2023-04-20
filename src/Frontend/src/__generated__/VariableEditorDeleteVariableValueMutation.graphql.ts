@@ -1,5 +1,6 @@
 /**
- * @generated SignedSource<<f11e8054acd9d9a16c1cf58d68c09ba6>>
+ * @generated SignedSource<<150cb560b1beadb99331df1b543d7a96>>
+ * @relayHash 62a91288ebb43ae99a3664aad0603418
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -7,6 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+
+// @relayRequestID 62a91288ebb43ae99a3664aad0603418
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type DeleteVariableValueInput = {
@@ -153,12 +156,11 @@ return {
     ]
   },
   "params": {
-    "cacheID": "62a91288ebb43ae99a3664aad0603418",
-    "id": null,
+    "id": "62a91288ebb43ae99a3664aad0603418",
     "metadata": {},
     "name": "VariableEditorDeleteVariableValueMutation",
     "operationKind": "mutation",
-    "text": "mutation VariableEditorDeleteVariableValueMutation(\n  $input: DeleteVariableValueInput!\n) {\n  deleteVariableValue(input: $input) {\n    value {\n      variable {\n        id\n        values {\n          id\n          value\n        }\n      }\n      id\n    }\n  }\n}\n"
+    "text": null
   }
 };
 })();

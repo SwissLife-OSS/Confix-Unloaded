@@ -1,5 +1,6 @@
 /**
- * @generated SignedSource<<c3470e530aeff9e181d4a447560e1b89>>
+ * @generated SignedSource<<fe41091094a3b0ecaf7ec822288114f3>>
+ * @relayHash 0b6b18c087606c0db70ff725282c5a7a
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -7,6 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+
+// @relayRequestID 0b6b18c087606c0db70ff725282c5a7a
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type RenameRoleInput = {
@@ -99,12 +102,11 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "0b6b18c087606c0db70ff725282c5a7a",
-    "id": null,
+    "id": "0b6b18c087606c0db70ff725282c5a7a",
     "metadata": {},
     "name": "RenameRoleDialogMutation",
     "operationKind": "mutation",
-    "text": "mutation RenameRoleDialogMutation(\n  $input: RenameRoleInput!\n) {\n  renameRole(input: $input) {\n    role {\n      id\n      name\n    }\n  }\n}\n"
+    "text": null
   }
 };
 })();

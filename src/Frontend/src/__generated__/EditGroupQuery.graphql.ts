@@ -1,5 +1,6 @@
 /**
- * @generated SignedSource<<38e8c39b528ded94ef69a9b2cfd2b223>>
+ * @generated SignedSource<<92a1de6b58bbf5faca85109bbf73ce6d>>
+ * @relayHash 60aaf24cb338a10057ad75dd80cb30c0
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -7,6 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+
+// @relayRequestID 60aaf24cb338a10057ad75dd80cb30c0
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -173,12 +176,11 @@ return {
     ]
   },
   "params": {
-    "cacheID": "60aaf24cb338a10057ad75dd80cb30c0",
-    "id": null,
+    "id": "60aaf24cb338a10057ad75dd80cb30c0",
     "metadata": {},
     "name": "EditGroupQuery",
     "operationKind": "query",
-    "text": "query EditGroupQuery(\n  $id: ID!\n) {\n  groupById(id: $id) {\n    id\n    ...EditGroup_Form\n  }\n}\n\nfragment EditGroup_Form on Group {\n  ...EditGroup_RoleScopeSection\n  ...EditGroup_Header\n  ...EditGroup_RequirementsSection\n}\n\nfragment EditGroup_Header on Group {\n  id\n  name\n}\n\nfragment EditGroup_RequirementsSection on Group {\n  id\n  name\n  requirements {\n    __typename\n    ... on ClaimRequirement {\n      __typename\n      type\n      value\n    }\n  }\n}\n\nfragment EditGroup_RoleScopeSection on Group {\n  id\n  name\n  roles {\n    namespace\n    roles {\n      id\n      name\n    }\n  }\n}\n"
+    "text": null
   }
 };
 })();

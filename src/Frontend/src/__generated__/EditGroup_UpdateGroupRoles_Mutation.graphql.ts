@@ -1,5 +1,6 @@
 /**
- * @generated SignedSource<<b8c0667089a02558484a0df0cfe61128>>
+ * @generated SignedSource<<898fcee1aff4276cda8b96f4e9e20db4>>
+ * @relayHash cdafe066fdb43aaf4a2ec10ed45ddd9d
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -7,6 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+
+// @relayRequestID cdafe066fdb43aaf4a2ec10ed45ddd9d
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -222,12 +225,11 @@ return {
     ]
   },
   "params": {
-    "cacheID": "cdafe066fdb43aaf4a2ec10ed45ddd9d",
-    "id": null,
+    "id": "cdafe066fdb43aaf4a2ec10ed45ddd9d",
     "metadata": {},
     "name": "EditGroup_UpdateGroupRoles_Mutation",
     "operationKind": "mutation",
-    "text": "mutation EditGroup_UpdateGroupRoles_Mutation(\n  $input: UpdateGroupRolesInput!\n) {\n  updateGroupRoles(input: $input) {\n    group {\n      id\n      ...EditGroup_RoleScopeSection\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        code\n        message\n      }\n    }\n  }\n}\n\nfragment EditGroup_RoleScopeSection on Group {\n  id\n  name\n  roles {\n    namespace\n    roles {\n      id\n      name\n    }\n  }\n}\n"
+    "text": null
   }
 };
 })();

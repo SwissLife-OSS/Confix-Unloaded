@@ -1,5 +1,6 @@
 /**
- * @generated SignedSource<<cd436e3c3fd463adc846ee821a2b7eca>>
+ * @generated SignedSource<<4ec8034b685c33334932bbdd2a501cfa>>
+ * @relayHash 8bac2ea914ba0a1cd027bc9a7852e6ce
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -7,6 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+
+// @relayRequestID 8bac2ea914ba0a1cd027bc9a7852e6ce
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type CreateEnvironmentInput = {
@@ -199,12 +202,11 @@ return {
     ]
   },
   "params": {
-    "cacheID": "8bac2ea914ba0a1cd027bc9a7852e6ce",
-    "id": null,
+    "id": "8bac2ea914ba0a1cd027bc9a7852e6ce",
     "metadata": {},
     "name": "NewEnvironmentMutation",
     "operationKind": "mutation",
-    "text": "mutation NewEnvironmentMutation(\n  $input: CreateEnvironmentInput!\n) {\n  createEnvironment(input: $input) {\n    environment {\n      id\n      name\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n"
+    "text": null
   }
 };
 })();

@@ -1,5 +1,6 @@
 /**
- * @generated SignedSource<<bbb902f47f6a8c7d89887c3358f3cea6>>
+ * @generated SignedSource<<301b5e8349127195c82778992690a53e>>
+ * @relayHash 4bb8c24cfefe85b255c3529a5e108776
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -7,6 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+
+// @relayRequestID 4bb8c24cfefe85b255c3529a5e108776
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type SaveVariableValueInput = {
@@ -103,12 +106,11 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "4bb8c24cfefe85b255c3529a5e108776",
-    "id": null,
+    "id": "4bb8c24cfefe85b255c3529a5e108776",
     "metadata": {},
     "name": "VariableEditorSaveVariableMutation",
     "operationKind": "mutation",
-    "text": "mutation VariableEditorSaveVariableMutation(\n  $input: SaveVariableValueInput!\n) {\n  saveVariableValue(input: $input) {\n    value {\n      id\n      value\n    }\n  }\n}\n"
+    "text": null
   }
 };
 })();

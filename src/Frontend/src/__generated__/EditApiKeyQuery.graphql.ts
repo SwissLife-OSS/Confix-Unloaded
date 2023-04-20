@@ -1,5 +1,6 @@
 /**
- * @generated SignedSource<<8a4538ed943063a0628c2156da8dba8c>>
+ * @generated SignedSource<<2e85d88bf2598c893792f4fadb5e374b>>
+ * @relayHash 1592c6401b8e3fedfd70775a382d1ea6
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -7,6 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+
+// @relayRequestID 1592c6401b8e3fedfd70775a382d1ea6
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -134,12 +137,11 @@ return {
     ]
   },
   "params": {
-    "cacheID": "1592c6401b8e3fedfd70775a382d1ea6",
-    "id": null,
+    "id": "1592c6401b8e3fedfd70775a382d1ea6",
     "metadata": {},
     "name": "EditApiKeyQuery",
     "operationKind": "query",
-    "text": "query EditApiKeyQuery(\n  $id: ID!\n) {\n  apiKeyById(id: $id) {\n    id\n    ...EditApiKey_Form\n  }\n}\n\nfragment EditApiKey_Form on ApiKey {\n  ...EditApiKey_RoleScopeSection\n  ...EditApiKey_Header\n}\n\nfragment EditApiKey_Header on ApiKey {\n  name\n}\n\nfragment EditApiKey_RoleScopeSection on ApiKey {\n  id\n  name\n  roles {\n    namespace\n    roles {\n      id\n      name\n    }\n  }\n}\n"
+    "text": null
   }
 };
 })();

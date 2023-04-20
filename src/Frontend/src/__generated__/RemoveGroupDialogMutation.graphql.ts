@@ -1,5 +1,6 @@
 /**
- * @generated SignedSource<<08177055f854c1949dd1c715179b9b91>>
+ * @generated SignedSource<<2eb53cb92a313e374a922045c0535f55>>
+ * @relayHash d17fabcfa72ad7a67dda358cbcf9f64e
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -7,6 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+
+// @relayRequestID d17fabcfa72ad7a67dda358cbcf9f64e
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type RemoveGroupByIdInput = {
@@ -187,12 +190,11 @@ return {
     ]
   },
   "params": {
-    "cacheID": "d17fabcfa72ad7a67dda358cbcf9f64e",
-    "id": null,
+    "id": "d17fabcfa72ad7a67dda358cbcf9f64e",
     "metadata": {},
     "name": "RemoveGroupDialogMutation",
     "operationKind": "mutation",
-    "text": "mutation RemoveGroupDialogMutation(\n  $input: RemoveGroupByIdInput!\n) {\n  removeGroupById(input: $input) {\n    group {\n      id\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n"
+    "text": null
   }
 };
 })();

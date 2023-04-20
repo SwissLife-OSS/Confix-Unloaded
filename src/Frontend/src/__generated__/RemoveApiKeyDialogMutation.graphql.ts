@@ -1,5 +1,6 @@
 /**
- * @generated SignedSource<<15bf38519b800cccf3020d8d66aa8e29>>
+ * @generated SignedSource<<458c1ecfb74518478bdf469f487686d6>>
+ * @relayHash d4eb374cd146d0ca090c0255cf1cd98e
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -7,6 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+
+// @relayRequestID d4eb374cd146d0ca090c0255cf1cd98e
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type RemoveApiKeyByIdInput = {
@@ -187,12 +190,11 @@ return {
     ]
   },
   "params": {
-    "cacheID": "d4eb374cd146d0ca090c0255cf1cd98e",
-    "id": null,
+    "id": "d4eb374cd146d0ca090c0255cf1cd98e",
     "metadata": {},
     "name": "RemoveApiKeyDialogMutation",
     "operationKind": "mutation",
-    "text": "mutation RemoveApiKeyDialogMutation(\n  $input: RemoveApiKeyByIdInput!\n) {\n  removeApiKeyById(input: $input) {\n    apiKey {\n      id\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n"
+    "text": null
   }
 };
 })();

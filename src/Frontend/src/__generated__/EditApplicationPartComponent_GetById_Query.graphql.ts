@@ -1,5 +1,6 @@
 /**
- * @generated SignedSource<<c1e8896444a96e26816ff4a7860aa145>>
+ * @generated SignedSource<<802bac7941556f26e78393217a73f21c>>
+ * @relayHash bd6dc00d89432f407c382f2356e2569f
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -7,6 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+
+// @relayRequestID bd6dc00d89432f407c382f2356e2569f
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -560,12 +563,11 @@ return {
     ]
   },
   "params": {
-    "cacheID": "bd6dc00d89432f407c382f2356e2569f",
-    "id": null,
+    "id": "bd6dc00d89432f407c382f2356e2569f",
     "metadata": {},
     "name": "EditApplicationPartComponent_GetById_Query",
     "operationKind": "query",
-    "text": "query EditApplicationPartComponent_GetById_Query(\n  $partComponentId: ID!\n) {\n  ...EditApplicationPartComponent\n}\n\nfragment ChangeLog on ChangeLog {\n  id\n  modifiedAt\n  modifiedBy {\n    email\n  }\n  change {\n    kind\n    __typename\n    ...ChangeLog_RenameApplicationChange\n    ...ChangeLog_RenameApplicationPartChange\n    ...ChangeLog_AddComponentToApplicationPartChange\n    ...ChangeLog_AddPartToApplicationChange\n    ...ChangeLog_RemoveComponentFromApplicationPartChange\n    ...ChangeLog_RemovePartFromApplicationChange\n    ...ChangeLog_ApplicationPartComponentValuesChange\n    ...ChangeLog_ComponentSchemaChange\n    ...ChangeLog_ComponentValuesChange\n    ...ChangeLog_CreateComponentChange\n    ...ChangeLog_RemoveComponentChange\n    ...ChangeLog_RenameComponentChange\n    ...ChangeLog_CreateVariableChange\n    ...ChangeLog_DeleteVariableValueChange\n    ...ChangeLog_RenameVariableChange\n    ...ChangeLog_VariableValueChange\n    ...ChangeLog_PublishedApplicationPartChange\n    ... on ApplicationChange {\n      __isApplicationChange: __typename\n      versionOfApp: applicationVersion\n    }\n    ... on ApplicationPartChange {\n      __isApplicationPartChange: __typename\n      versionOfPart: partVersion\n    }\n    ... on ApplicationPartComponentChange {\n      __isApplicationPartComponentChange: __typename\n      versionOfPartComponent: partComponentVersion\n    }\n    ... on ComponentChange {\n      __isComponentChange: __typename\n      versionOfComponent: componentVersion\n    }\n    ... on VariableChange {\n      __isVariableChange: __typename\n      versionOfVariable: variableVersion\n    }\n  }\n}\n\nfragment ChangeLog_AddComponentToApplicationPartChange on AddComponentToApplicationPartChange {\n  addedComponent {\n    definition {\n      name\n      id\n    }\n    id\n  }\n}\n\nfragment ChangeLog_AddPartToApplicationChange on AddPartToApplicationChange {\n  addedPart {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_ApplicationPartComponentValuesChange on ApplicationPartComponentValuesChange {\n  part {\n    id\n  }\n  application {\n    id\n  }\n  partComponent {\n    id\n    version\n  }\n  partComponentVersion\n}\n\nfragment ChangeLog_ComponentSchemaChange on ComponentSchemaChange {\n  kind\n}\n\nfragment ChangeLog_ComponentValuesChange on ComponentValuesChange {\n  kind\n}\n\nfragment ChangeLog_CreateComponentChange on CreateComponentChange {\n  component {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_CreateVariableChange on CreateVariableChange {\n  variable {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_DeleteVariableValueChange on DeleteVariableValueChange {\n  variable {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_PublishedApplicationPartChange on PublishedApplicationPartChange {\n  partVersion\n  part {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_RemoveComponentChange on RemoveComponentChange {\n  component {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_RemoveComponentFromApplicationPartChange on RemoveComponentFromApplicationPartChange {\n  removedComponent {\n    definition {\n      name\n      id\n    }\n    id\n  }\n}\n\nfragment ChangeLog_RemovePartFromApplicationChange on RemovePartFromApplicationChange {\n  removedPart {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_RenameApplicationChange on RenameApplicationChange {\n  name\n}\n\nfragment ChangeLog_RenameApplicationPartChange on RenameApplicationPartChange {\n  name\n}\n\nfragment ChangeLog_RenameComponentChange on RenameComponentChange {\n  component {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_RenameVariableChange on RenameVariableChange {\n  variable {\n    name\n    id\n  }\n}\n\nfragment ChangeLog_VariableValueChange on VariableValueChange {\n  variable {\n    name\n    id\n  }\n}\n\nfragment EditApplicationPartComponent on Query {\n  applicationPartComponentById(partComponentId: $partComponentId) {\n    applicationPart {\n      name\n      application {\n        name\n        namespace\n        id\n      }\n      id\n    }\n    definition {\n      name\n      id\n    }\n    version\n    ...EditApplicationPartComponent_ApplicationPartComponentChangeLog @defer(label: \"EditApplicationPartComponent$defer$EditApplicationPartComponent_ApplicationPartComponentChangeLog\")\n    id\n  }\n  ...EditApplicationPartComponent_EditConfiguration\n}\n\nfragment EditApplicationPartComponent_ApplicationPartComponentChangeLog on ApplicationPartComponent {\n  changeLog {\n    ...ChangeLog\n    id\n  }\n}\n\nfragment EditApplicationPartComponent_EditConfiguration on Query {\n  applicationPartComponentById(partComponentId: $partComponentId) {\n    applicationPart {\n      variableValues {\n        variable {\n          name\n          id\n        }\n        id\n      }\n      application {\n        variableValues {\n          variable {\n            name\n            id\n          }\n          id\n        }\n        id\n      }\n      id\n    }\n    values\n    definition {\n      id\n      schemaSdl\n    }\n    id\n  }\n  globalVariableValues {\n    variable {\n      name\n      id\n    }\n    id\n  }\n}\n"
+    "text": null
   }
 };
 })();

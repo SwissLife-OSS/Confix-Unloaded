@@ -1,5 +1,6 @@
 /**
- * @generated SignedSource<<5744ddc7c5c7e3d83aeaed1fe8e1b5d8>>
+ * @generated SignedSource<<473f722456f8032d86ae195bfe1507d3>>
+ * @relayHash a75328228d6e950f7d46cfa5c071e3b8
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -7,6 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+
+// @relayRequestID a75328228d6e950f7d46cfa5c071e3b8
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type RemoveRoleByIdInput = {
@@ -187,12 +190,11 @@ return {
     ]
   },
   "params": {
-    "cacheID": "a75328228d6e950f7d46cfa5c071e3b8",
-    "id": null,
+    "id": "a75328228d6e950f7d46cfa5c071e3b8",
     "metadata": {},
     "name": "RemoveRoleDialogMutation",
     "operationKind": "mutation",
-    "text": "mutation RemoveRoleDialogMutation(\n  $input: RemoveRoleByIdInput!\n) {\n  removeRoleById(input: $input) {\n    role {\n      id\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n"
+    "text": null
   }
 };
 })();

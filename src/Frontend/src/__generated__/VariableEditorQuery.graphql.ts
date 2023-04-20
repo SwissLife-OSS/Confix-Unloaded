@@ -1,5 +1,6 @@
 /**
- * @generated SignedSource<<e726e5d02b8fa88a9a64bf40bb807b46>>
+ * @generated SignedSource<<9ca41f2e75bd093d72200e5b9bc70121>>
+ * @relayHash 37064fc35fe43476b5521645fd849eb8
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -7,6 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+
+// @relayRequestID 37064fc35fe43476b5521645fd849eb8
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -288,12 +291,11 @@ return {
     ]
   },
   "params": {
-    "cacheID": "37064fc35fe43476b5521645fd849eb8",
-    "id": null,
+    "id": "37064fc35fe43476b5521645fd849eb8",
     "metadata": {},
     "name": "VariableEditorQuery",
     "operationKind": "query",
-    "text": "query VariableEditorQuery(\n  $variableId: ID!\n  $applicationId: ID\n  $applicationPartId: ID\n) {\n  variableValues(variableId: $variableId, applicationId: $applicationId, applicationPartId: $applicationPartId) {\n    id\n    application {\n      id\n      name\n    }\n    variable {\n      id\n      name\n      isSecret\n    }\n    environment {\n      id\n      name\n    }\n    applicationPart {\n      id\n      name\n    }\n    value\n  }\n  ...VariableEditor_useEnvironments\n}\n\nfragment VariableEditor_useEnvironments on Query {\n  searchEnvironments(first: 50) {\n    edges {\n      node {\n        id\n        name\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": null
   }
 };
 })();

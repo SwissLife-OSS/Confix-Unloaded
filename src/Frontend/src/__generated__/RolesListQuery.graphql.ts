@@ -1,5 +1,6 @@
 /**
- * @generated SignedSource<<40606aea8002989e8d779a22c3dc652c>>
+ * @generated SignedSource<<c969a13b7f6fbf703b7d030ef0eab3c3>>
+ * @relayHash 61e0d5dad6f516727af4c1aea94cee9b
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -7,6 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+
+// @relayRequestID 61e0d5dad6f516727af4c1aea94cee9b
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -186,12 +189,11 @@ return {
     ]
   },
   "params": {
-    "cacheID": "61e0d5dad6f516727af4c1aea94cee9b",
-    "id": null,
+    "id": "61e0d5dad6f516727af4c1aea94cee9b",
     "metadata": {},
     "name": "RolesListQuery",
     "operationKind": "query",
-    "text": "query RolesListQuery(\n  $cursor: String\n  $count: Int\n  $search: String\n) {\n  ...RolesList\n}\n\nfragment RolesList on Query {\n  searchRoles(after: $cursor, first: $count, search: $search) {\n    edges {\n      node {\n        id\n        name\n        ...RolesList_RoleListItem\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment RolesList_RoleListItem on Role {\n  id\n  name\n}\n"
+    "text": null
   }
 };
 })();

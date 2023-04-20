@@ -1,5 +1,6 @@
 /**
- * @generated SignedSource<<e0e3e990232e5db051254bd2b41315e3>>
+ * @generated SignedSource<<180532e128366d1ee3b23572b8c9c245>>
+ * @relayHash 779c8a2d3bf75c505370dcd889dd863b
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -7,6 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+
+// @relayRequestID 779c8a2d3bf75c505370dcd889dd863b
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type RenameGroupInput = {
@@ -99,12 +102,11 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "779c8a2d3bf75c505370dcd889dd863b",
-    "id": null,
+    "id": "779c8a2d3bf75c505370dcd889dd863b",
     "metadata": {},
     "name": "RenameGroupDialogMutation",
     "operationKind": "mutation",
-    "text": "mutation RenameGroupDialogMutation(\n  $input: RenameGroupInput!\n) {\n  renameGroup(input: $input) {\n    group {\n      id\n      name\n    }\n  }\n}\n"
+    "text": null
   }
 };
 })();

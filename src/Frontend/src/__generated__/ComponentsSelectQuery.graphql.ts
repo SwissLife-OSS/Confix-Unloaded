@@ -1,5 +1,6 @@
 /**
- * @generated SignedSource<<214ee19436f9f8b22415ea544453dcf8>>
+ * @generated SignedSource<<b8ec13f5877abac24f694b47dfad58d8>>
+ * @relayHash 36ebeb037f6dbc968a55908e6cef901a
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -7,6 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+
+// @relayRequestID 36ebeb037f6dbc968a55908e6cef901a
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 export type ComponentsSelectQuery$variables = {
@@ -149,12 +152,11 @@ return {
     "selections": (v4/*: any*/)
   },
   "params": {
-    "cacheID": "36ebeb037f6dbc968a55908e6cef901a",
-    "id": null,
+    "id": "36ebeb037f6dbc968a55908e6cef901a",
     "metadata": {},
     "name": "ComponentsSelectQuery",
     "operationKind": "query",
-    "text": "query ComponentsSelectQuery(\n  $search: String\n  $applicationId: ID\n  $applicationPartId: ID\n  $namespace: String\n) {\n  components(search: $search, applicationId: $applicationId, applicationPartId: $applicationPartId, namespace: $namespace) {\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": null
   }
 };
 })();

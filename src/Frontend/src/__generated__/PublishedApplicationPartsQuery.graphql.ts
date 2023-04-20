@@ -1,5 +1,6 @@
 /**
- * @generated SignedSource<<4baeb8b1cb006e5f960cac4642dff62c>>
+ * @generated SignedSource<<017ac9c8ef7732456d80c86c857f191f>>
+ * @relayHash 06c87499a5a33976e7fd59a237608650
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -7,6 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+
+// @relayRequestID 06c87499a5a33976e7fd59a237608650
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -300,12 +303,11 @@ return {
     ]
   },
   "params": {
-    "cacheID": "06c87499a5a33976e7fd59a237608650",
-    "id": null,
+    "id": "06c87499a5a33976e7fd59a237608650",
     "metadata": {},
     "name": "PublishedApplicationPartsQuery",
     "operationKind": "query",
-    "text": "query PublishedApplicationPartsQuery(\n  $count: Int = 20\n  $cursor: String\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...PublishedApplicationParts_1G22uz\n    id\n  }\n}\n\nfragment PublishedApplicationParts_1G22uz on ApplicationPart {\n  publishedVersions(first: $count, after: $cursor) {\n    edges {\n      node {\n        id\n        publishedAt\n        part {\n          name\n          id\n        }\n        publishedBy {\n          email\n        }\n        version\n        claimsVersions {\n          tag\n          environment {\n            name\n            id\n          }\n          id\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  id\n}\n"
+    "text": null
   }
 };
 })();

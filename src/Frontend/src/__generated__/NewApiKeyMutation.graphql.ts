@@ -1,5 +1,6 @@
 /**
- * @generated SignedSource<<533c5ad0ef777374952edfd3615081aa>>
+ * @generated SignedSource<<98d0b07adecf0397c558e8383cb992f3>>
+ * @relayHash f8b31dfaf2bf4a785255fcddbcfa2559
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -7,6 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+
+// @relayRequestID f8b31dfaf2bf4a785255fcddbcfa2559
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -255,12 +258,11 @@ return {
     ]
   },
   "params": {
-    "cacheID": "f8b31dfaf2bf4a785255fcddbcfa2559",
-    "id": null,
+    "id": "f8b31dfaf2bf4a785255fcddbcfa2559",
     "metadata": {},
     "name": "NewApiKeyMutation",
     "operationKind": "mutation",
-    "text": "mutation NewApiKeyMutation(\n  $input: CreateApiKeyInput!\n) {\n  createApiKey(input: $input) {\n    apiKeyWithSecret {\n      key {\n        id\n        ...ApiKeysList_ApiKeyListItem\n      }\n      secret\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        message\n        code\n      }\n    }\n  }\n}\n\nfragment ApiKeysList_ApiKeyListItem on ApiKey {\n  id\n  name\n}\n"
+    "text": null
   }
 };
 })();

@@ -1,5 +1,6 @@
 /**
- * @generated SignedSource<<76f5fe11852233ebfcd2957ff716a7ff>>
+ * @generated SignedSource<<6ff0a62a98f659b2c9c892deea67416a>>
+ * @relayHash b9c33abe9bcfbb204f23206b0e83886d
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -7,6 +8,8 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
+
+// @relayRequestID b9c33abe9bcfbb204f23206b0e83886d
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -227,12 +230,11 @@ return {
     ]
   },
   "params": {
-    "cacheID": "b9c33abe9bcfbb204f23206b0e83886d",
-    "id": null,
+    "id": "b9c33abe9bcfbb204f23206b0e83886d",
     "metadata": {},
     "name": "EditGroup_UpdateGroupRequirements_Mutation",
     "operationKind": "mutation",
-    "text": "mutation EditGroup_UpdateGroupRequirements_Mutation(\n  $input: UpdateGroupRequirementsInput!\n) {\n  updateGroupRequirements(input: $input) {\n    group {\n      id\n      ...EditGroup_RequirementsSection\n    }\n    errors {\n      __typename\n      ... on UserError {\n        __isUserError: __typename\n        code\n        message\n      }\n    }\n  }\n}\n\nfragment EditGroup_RequirementsSection on Group {\n  id\n  name\n  requirements {\n    __typename\n    ... on ClaimRequirement {\n      __typename\n      type\n      value\n    }\n  }\n}\n"
+    "text": null
   }
 };
 })();
