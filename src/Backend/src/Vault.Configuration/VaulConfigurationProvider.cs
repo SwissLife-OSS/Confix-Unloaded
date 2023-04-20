@@ -203,7 +203,7 @@ public class VaultConfigurationProvider : ConfigurationProvider
 
         try
         {
-            var decrypted = InMemoryCryptoProvider.From(decryptionKey).DecryptAsync(cypher, iv);
+            var decrypted = InMemoryCryptoProvider.From(decryptionKey).DecryptAsync(iv, cypher);
 
             return JsonConfigurationFileParser.ParseJson(JsonDocument.Parse(decrypted));
         }
