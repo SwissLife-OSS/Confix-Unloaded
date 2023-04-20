@@ -3,6 +3,7 @@
 import { defineConfig } from "vite";
 import path from "path";
 import react from "@vitejs/plugin-react";
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
@@ -11,7 +12,7 @@ export default defineConfig({
       babel: {
         plugins: ["@emotion/babel-plugin", "babel-plugin-relay"],
       },
-    }),
+    })
   ],
   resolve: {
     alias: {
@@ -25,6 +26,9 @@ export default defineConfig({
       output: {
         manualChunks: {
           react: ["react", "react-router-dom", "react-dom"],
+          prettier: ["prettier"],
+          relay: ["react-relay", "relay-runtime"],
+          antd: ["antd"],
         },
       },
     },
