@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5187659d5f469d701082540736d72f13>>
+ * @generated SignedSource<<b4f474d4ed558ab969c99708c487ea93>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -25,6 +25,8 @@ export type ComponentsList$key = {
   readonly " $data"?: ComponentsList$data;
   readonly " $fragmentSpreads": FragmentRefs<"ComponentsList">;
 };
+
+import ComponentsListPaginationQuery_graphql from './ComponentsListPaginationQuery.graphql';
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -65,7 +67,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./ComponentsListPaginationQuery.graphql')
+      "operation": ComponentsListPaginationQuery_graphql
     }
   },
   "name": "ComponentsList",

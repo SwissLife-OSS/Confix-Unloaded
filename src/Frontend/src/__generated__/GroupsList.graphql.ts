@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8eb878192c5939b72e17307bd6ff402d>>
+ * @generated SignedSource<<fd1de68a5862a2cbe584fc4ff244fd65>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -26,6 +26,8 @@ export type GroupsList$key = {
   readonly " $data"?: GroupsList$data;
   readonly " $fragmentSpreads": FragmentRefs<"GroupsList">;
 };
+
+import GroupsListPaginationQuery_graphql from './GroupsListPaginationQuery.graphql';
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -66,7 +68,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./GroupsListPaginationQuery.graphql')
+      "operation": GroupsListPaginationQuery_graphql
     }
   },
   "name": "GroupsList",

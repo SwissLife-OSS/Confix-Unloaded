@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ac609f0fff844601dc1832d0c480fac1>>
+ * @generated SignedSource<<fa262b3dad00faa20c58f829c4828261>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -26,6 +26,8 @@ export type VariablesList$key = {
   readonly " $data"?: VariablesList$data;
   readonly " $fragmentSpreads": FragmentRefs<"VariablesList">;
 };
+
+import VariablesListPaginationQuery_graphql from './VariablesListPaginationQuery.graphql';
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -66,7 +68,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./VariablesListPaginationQuery.graphql')
+      "operation": VariablesListPaginationQuery_graphql
     }
   },
   "name": "VariablesList",

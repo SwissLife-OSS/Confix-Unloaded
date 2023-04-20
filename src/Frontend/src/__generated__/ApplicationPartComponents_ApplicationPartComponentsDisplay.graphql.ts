@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1e796fba8de8bec10ee6104b579b264c>>
+ * @generated SignedSource<<a045f08050864404a9262655be4d231a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 // @ts-nocheck
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
-export type ComponentState = "ACTIVE" | "DEPRECATED";
+export type ComponentState = "ACTIVE" | "DEPRECATED" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type ApplicationPartComponents_ApplicationPartComponentsDisplay$data = {
   readonly definition: {

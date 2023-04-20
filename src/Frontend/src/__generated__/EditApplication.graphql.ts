@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<eb2bb8ac803d60b3ba66515886b7e568>>
+ * @generated SignedSource<<47517451516fe744ecb983d0680132a8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,6 +22,8 @@ export type EditApplication$key = {
   readonly " $fragmentSpreads": FragmentRefs<"EditApplication">;
 };
 
+import EditApplication_RefetchQuery_graphql from './EditApplication_RefetchQuery.graphql';
+
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
@@ -31,7 +33,7 @@ const node: ReaderFragment = {
       "fragmentPathInResult": [
         "node"
       ],
-      "operation": require('./EditApplication_RefetchQuery.graphql'),
+      "operation": EditApplication_RefetchQuery_graphql,
       "identifierField": "id"
     }
   },
