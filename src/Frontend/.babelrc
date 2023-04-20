@@ -9,6 +9,15 @@
     ]
   ],
   "plugins": [
-    "@emotion/babel-plugin"
+    "@emotion/babel-plugin",
+    [
+      "module-resolver",
+      {
+        "root": ["."],
+        "alias": {
+          "@generated": "./src/__generated__"
+        }
+      }
+    ]
   ]
 }
