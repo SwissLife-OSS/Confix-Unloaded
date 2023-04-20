@@ -70,6 +70,7 @@
     "get-graphql-schema": "^2.1.2",
     "graphql": "^15.0.1",
     "prettier": "^2.5.0",
-    "relay-compiler": "^14.1.0"
+    "relay-compiler": "^14.1.0",
+    "vite-plugin-relay": "^2.0.0"
   }
 }
