@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<06e5bff845017b46d2c1df6f6e302c90>>
+ * @generated SignedSource<<120337aa28d3296dbe50bb16120e5b30>>
  * @relayHash d62f0c05ae8c2678f1b9eff85e42cb6c
  * @lightSyntaxTransform
  * @nogrep
@@ -12,7 +12,7 @@
 // @relayRequestID d62f0c05ae8c2678f1b9eff85e42cb6c
 
 import { ConcreteRequest, Query } from 'relay-runtime';
-export type Scope = "APPLICATION" | "COMPONENT" | "CONFIGURATION" | "ENVIRONMENT" | "IDENTITY" | "VARIABLE" | "%future added value";
+export type Scope = "APPLICATION" | "COMPONENT" | "CONFIGURATION" | "ENVIRONMENT" | "IDENTITY" | "VARIABLE";
 export type useUser_Me_Query$variables = {};
 export type useUser_Me_Query$data = {
   readonly me: {
