@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<18d6e553874cac3f1f5d52da3c54be6a>>
+ * @generated SignedSource<<44f57bbaa6f9ed49e1b2d8415f6b4555>>
  * @relayHash f9fa1031591e572ab85257cdc6f72b4a
  * @lightSyntaxTransform
  * @nogrep
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 6c98846af5c9d177e16d5e636c0181188f3c1edaa2c9e19bfaa5be431ab270bb
+// @relayRequestID f9fa1031591e572ab85257cdc6f72b4a
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -232,7 +232,7 @@ return {
     ]
   },
   "params": {
-    "id": "6c98846af5c9d177e16d5e636c0181188f3c1edaa2c9e19bfaa5be431ab270bb",
+    "id": "f9fa1031591e572ab85257cdc6f72b4a",
     "metadata": {},
     "name": "NewGroupMutation",
     "operationKind": "mutation",

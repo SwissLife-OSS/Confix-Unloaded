@@ -7,7 +7,6 @@ module.exports = {
   language: "typescript",
   artifactDirectory: "src/__generated__",
   persistConfig: {
-    file: "./persisted_queries.json",
-    algorithm: "SHA256",
+    file: "../Backend/src/Authoring.GraphQL/persisted_queries.json",
   },
 };

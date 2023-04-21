@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a2dd10bcfdc5c3f428abac4cc2f194de>>
+ * @generated SignedSource<<92a1de6b58bbf5faca85109bbf73ce6d>>
  * @relayHash 60aaf24cb338a10057ad75dd80cb30c0
  * @lightSyntaxTransform
  * @nogrep
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID bcf1246e70bab7a9127fac4e2ec9f9d598702a58bbec774cb8226abc83174cd2
+// @relayRequestID 60aaf24cb338a10057ad75dd80cb30c0
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -176,7 +176,7 @@ return {
     ]
   },
   "params": {
-    "id": "bcf1246e70bab7a9127fac4e2ec9f9d598702a58bbec774cb8226abc83174cd2",
+    "id": "60aaf24cb338a10057ad75dd80cb30c0",
     "metadata": {},
     "name": "EditGroupQuery",
     "operationKind": "query",

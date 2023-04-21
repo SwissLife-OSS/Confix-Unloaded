@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<61a63df891ef709de2e7ad3fee903971>>
+ * @generated SignedSource<<06cd9faebc6964e6a5f420a404b17a17>>
  * @relayHash 72f78a96391d14d0dedf756471fefcf3
  * @lightSyntaxTransform
  * @nogrep
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 9c50be09fb93e5ca8634522bdedb84d48d83eb19a1d2bbf6a5a8ae779acaea3d
+// @relayRequestID 72f78a96391d14d0dedf756471fefcf3
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type RemoveEnvironmentByIdInput = {
@@ -200,7 +200,7 @@ return {
     ]
   },
   "params": {
-    "id": "9c50be09fb93e5ca8634522bdedb84d48d83eb19a1d2bbf6a5a8ae779acaea3d",
+    "id": "72f78a96391d14d0dedf756471fefcf3",
     "metadata": {},
     "name": "RemoveEnvironmentDialogMutation",
     "operationKind": "mutation",
