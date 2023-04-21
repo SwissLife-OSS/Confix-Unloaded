@@ -1,4 +1,5 @@
 using HotChocolate.Diagnostics;
+using HotChocolate.Execution;
 using HotChocolate.Execution.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -43,12 +44,15 @@ public static class GraphQlServiceCollectionExtensions
                 o.Scopes = ActivityScopes.Default;
             })
             .AddDiagnosticEventListener<ErrorLoggingDiagnosticEventListener>()
+            .ConfigureSchemaServices(x => x.AddSingleton<IReadStoredQueries, RelayFileSystemQueryStorage>())
             .ModifyOptions(x =>
             {
                 x.EnableFlagEnums = true;
                 x.EnableOneOf = true;
                 x.EnableDefer = true;
-            });
+            })
+            .ModifyRequestOptions(o => o.OnlyAllowPersistedQueries = true)
+            .UsePersistedQueryPipeline();
 
         return builder;
     }
