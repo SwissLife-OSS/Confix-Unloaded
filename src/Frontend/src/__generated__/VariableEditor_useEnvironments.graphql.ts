@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d1d9b6c7bb2508d6eddde30b8b31c137>>
+ * @generated SignedSource<<fe72ffff241f380e6092a19dbed8b4f4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -25,6 +25,8 @@ export type VariableEditor_useEnvironments$key = {
   readonly " $data"?: VariableEditor_useEnvironments$data;
   readonly " $fragmentSpreads": FragmentRefs<"VariableEditor_useEnvironments">;
 };
+
+import VariableEditor_useEnvironmentsPaginationQuery_graphql from './VariableEditor_useEnvironmentsPaginationQuery.graphql';
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -63,7 +65,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./VariableEditor_useEnvironmentsPaginationQuery.graphql')
+      "operation": VariableEditor_useEnvironmentsPaginationQuery_graphql
     }
   },
   "name": "VariableEditor_useEnvironments",

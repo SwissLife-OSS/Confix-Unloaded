@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<487dbbacfd96de28acfadbe79d7a1784>>
+ * @generated SignedSource<<0054fdd4450168600b3cc75e797f2b1b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -31,6 +31,8 @@ export type ApplicationCascader_Applications$key = {
   readonly " $fragmentSpreads": FragmentRefs<"ApplicationCascader_Applications">;
 };
 
+import ApplicationCascader_ApplicationPagination_Query_graphql from './ApplicationCascader_ApplicationPagination_Query.graphql';
+
 const node: ReaderFragment = (function(){
 var v0 = {
   "alias": null,
@@ -59,7 +61,7 @@ return {
     "refetch": {
       "connection": null,
       "fragmentPathInResult": [],
-      "operation": require('./ApplicationCascader_ApplicationPagination_Query.graphql')
+      "operation": ApplicationCascader_ApplicationPagination_Query_graphql
     }
   },
   "name": "ApplicationCascader_Applications",

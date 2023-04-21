@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<85fc1848b8135a05c9c81b1ce03f65a7>>
+ * @generated SignedSource<<533920fba8c6c5903c95339b0d80519a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -39,6 +39,8 @@ export type PublishedApplicationParts$key = {
   readonly " $data"?: PublishedApplicationParts$data;
   readonly " $fragmentSpreads": FragmentRefs<"PublishedApplicationParts">;
 };
+
+import PublishedApplicationPartsQuery_graphql from './PublishedApplicationPartsQuery.graphql';
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -95,7 +97,7 @@ return {
       "fragmentPathInResult": [
         "node"
       ],
-      "operation": require('./PublishedApplicationPartsQuery.graphql'),
+      "operation": PublishedApplicationPartsQuery_graphql,
       "identifierField": "id"
     }
   },

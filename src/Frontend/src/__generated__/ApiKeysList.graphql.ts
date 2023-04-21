@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b6ae6890cd02188e65de338809f30cf8>>
+ * @generated SignedSource<<cf45d72c6af5cd1e6d77d216cdfbb92d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -26,6 +26,8 @@ export type ApiKeysList$key = {
   readonly " $data"?: ApiKeysList$data;
   readonly " $fragmentSpreads": FragmentRefs<"ApiKeysList">;
 };
+
+import ApiKeysListPaginationQuery_graphql from './ApiKeysListPaginationQuery.graphql';
 
 const node: ReaderFragment = (function(){
 var v0 = [
@@ -62,7 +64,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./ApiKeysListPaginationQuery.graphql')
+      "operation": ApiKeysListPaginationQuery_graphql
     }
   },
   "name": "ApiKeysList",
