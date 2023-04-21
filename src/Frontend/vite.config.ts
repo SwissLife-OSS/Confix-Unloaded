@@ -9,6 +9,7 @@ import relay from "vite-plugin-relay";
 export default defineConfig({
   plugins: [
     react({
+      jsxRuntime: "automatic",
       jsxImportSource: "@emotion/react",
       babel: {
         plugins: ["@emotion/babel-plugin", "babel-plugin-relay"],
@@ -24,15 +25,5 @@ export default defineConfig({
   },
   build: {
     outDir: "build",
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          react: ["react", "react-router-dom", "react-dom"],
-          prettier: ["prettier"],
-          relay: ["react-relay", "relay-runtime"],
-          antd: ["antd"],
-        },
-      },
-    },
   },
 });
