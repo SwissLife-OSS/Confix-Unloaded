@@ -13,7 +13,7 @@
     "date-fns": "^2.27.0",
     "formik": "^2.2.9",
     "graphql-2-json-schema": "^0.9.0",
-    "meros": "^1.1.4",
+    "meros": "^1.2.1",
     "monaco-editor": "^0.30.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
