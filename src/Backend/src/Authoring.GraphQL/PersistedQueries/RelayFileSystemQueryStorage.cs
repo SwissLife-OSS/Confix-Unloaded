@@ -1,25 +1,27 @@
+using System.Reflection;
 using System.Text.Json;
 using HotChocolate.Execution;
 using HotChocolate.Language;
 
 namespace Confix.Authoring.GraphQL;
 
-internal sealed class RelayFileSystemQueryStorage
- : IReadStoredQueries
+internal sealed class RelayFileSystemQueryStorage : IReadStoredQueries
 {
-    private const string _file = "persisted/queries.json";
+    private const string PERSISTED_QUERIES_JSON = "Confix.Authoring.GraphQL.PersistedQueries.persisted_queries.json";
     private readonly Dictionary<string, QueryDocument> _lookup = new();
 
-    /// <summary>
-       /// Initializes a new instance of the class.
-       /// </summary>
     public RelayFileSystemQueryStorage()
     {
-        var assembly = typeof(RelayFileSystemQueryStorage).Assembly;
-        using var s = assembly.GetManifestResourceStream(assembly.GetManifestResourceNames()[0]);
+        LoadQueries();
+    }
 
-        if (s is not null &&
-            JsonSerializer.Deserialize<Dictionary<string, string>>(s) is { } queries)
+    private void LoadQueries()
+    {
+        Assembly assembly = typeof(RelayFileSystemQueryStorage).Assembly;
+        using Stream? jsonStream = assembly.GetManifestResourceStream(PERSISTED_QUERIES_JSON);
+
+        if (jsonStream is not null &&
+            JsonSerializer.Deserialize<Dictionary<string, string>>(jsonStream) is { } queries)
         {
             foreach (var (key, query) in queries)
             {

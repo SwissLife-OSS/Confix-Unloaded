@@ -1,6 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <AssemblyName>Confix.Authoring.GraphQL.Tests</AssemblyName>
+    <RootNamespace>Confix.Authoring.GraphQL.Tests</RootNamespace>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
@@ -24,6 +26,7 @@
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" />
     <PackageReference Include="Snapshooter.Xunit" />
+    <PackageReference Include="FluentAssertions" />
   </ItemGroup>
 
 </Project>
