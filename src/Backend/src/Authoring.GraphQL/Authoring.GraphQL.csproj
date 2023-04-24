@@ -33,6 +33,12 @@
   </ItemGroup>
 
   <ItemGroup>
-      <EmbeddedResource Include="PersistedQueries/persisted_queries.json" Pack="true" CopyToOutputDirectory="Always" />
+    <EmbeddedResource Include="../../../Frontend/persisted_queries.json" Pack="true" CopyToOutputDirectory="Always">
+      <LogicalName>Confix.Authoring.GraphQL.Persisted.UI</LogicalName>
+    </EmbeddedResource>
+
+      <EmbeddedResource Include="../Tooling/persisted/queries.json" Pack="true" CopyToOutputDirectory="Always">
+      <LogicalName>Confix.Authoring.GraphQL.Persisted.Tooling</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

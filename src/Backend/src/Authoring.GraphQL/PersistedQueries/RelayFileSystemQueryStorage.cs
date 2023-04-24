@@ -7,18 +7,18 @@ namespace Confix.Authoring.GraphQL;
 
 internal sealed class RelayFileSystemQueryStorage : IReadStoredQueries
 {
-    private const string PERSISTED_QUERIES_JSON = "Confix.Authoring.GraphQL.PersistedQueries.persisted_queries.json";
     private readonly Dictionary<string, QueryDocument> _lookup = new();
 
     public RelayFileSystemQueryStorage()
     {
-        LoadQueries();
+        LoadQueries("Confix.Authoring.GraphQL.Persisted.UI");
+        LoadQueries("Confix.Authoring.GraphQL.Persisted.Tooling");
     }
 
-    private void LoadQueries()
+    private void LoadQueries(string resourceName)
     {
         Assembly assembly = typeof(RelayFileSystemQueryStorage).Assembly;
-        using Stream? jsonStream = assembly.GetManifestResourceStream(PERSISTED_QUERIES_JSON);
+        using Stream? jsonStream = assembly.GetManifestResourceStream(resourceName);
 
         if (jsonStream is not null &&
             JsonSerializer.Deserialize<Dictionary<string, string>>(jsonStream) is { } queries)
