@@ -1,5 +1,6 @@
 import {
   FetchFunction,
+  GraphQLResponse,
   Observable,
 } from "relay-runtime";
 
@@ -76,7 +77,7 @@ export const fetchGraphQL:FetchFunction = (operation, variables) => {
                 }
 
                 if ("data" in part.body) {
-                  sink.next(part.body);
+                  sink.next(part.body as GraphQLResponse);
                 } else if ("errors" in part.body) {
                   // If any exceptions occurred when processing the request,
                   // throw an error to indicate to the developer what went wrong.
