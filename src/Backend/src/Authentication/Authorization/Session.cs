@@ -24,50 +24,26 @@ public class Session : ISession
             .SelectMany(x => x.Roles)
             .Select(x => x.Namespace)
             .ToHashSet();
-            
+
+    public IReadOnlySet<string> NamespacesWithAccess(Scope scope, Permissions permission)
+    {
+        return Namespaces.AsParallel().Where(n => HasPermission(n, scope, permission)).ToHashSet();
+    }
+
     public bool HasPermission(string @namespace, Scope scope, Permissions permission)
     {
         var grant = new Grant(@namespace, scope, permission);
 
-        return _grantCache.GetOrAdd(grant, _ => HasPermissionCheck());
-
-        bool HasPermissionCheck()
-        {
-            foreach (var group in Groups)
-            {
-                foreach (var roleScope in group.Roles)
-                {
-                    if (roleScope.Namespace != @namespace &&
-                        roleScope.Namespace is not WellKnownNamespaces.Global)
-                    {
-                        continue;
-                    }
-
-                    foreach (var roleId in roleScope.RoleIds)
-                    {
-                        if (!_roleMap.TryGetValue(roleId, out var role))
-                        {
-                            continue;
-                        }
-
-                        foreach (var rolePermission in role.Permissions)
-                        {
-                            if (rolePermission.Scope != scope)
-                            {
-                                continue;
-                            }
-
-                            if (rolePermission.Permissions.HasFlag(permission))
-                            {
-                                return true;
-                            }
-                        }
-                    }
-                }
-            }
-
-            return false;
-        }
+        return _grantCache.GetOrAdd(grant, HasGrant);
     }
+
+    private bool HasGrant(Grant grant) => Groups
+        .SelectMany(group => group.Roles)
+        .Where(roleScope => roleScope.Namespace == grant.Namespace || roleScope.Namespace is WellKnownNamespaces.Global)
+        .SelectMany(roleScope => roleScope.RoleIds)
+        .Select(roleId => _roleMap.GetValueOrDefault(roleId))
+        .SelectMany(role => role?.Permissions ?? Array.Empty<Permission>())
+        .Any(rolePermission => rolePermission.Scope == grant.Scope && rolePermission.Permissions.HasFlag(grant.Permission));
+
     private readonly record struct Grant(string Namespace, Scope Scope, Permissions Permission);
 }
