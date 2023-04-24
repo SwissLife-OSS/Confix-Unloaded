@@ -16,9 +16,9 @@ internal sealed class RelayFileSystemQueryStorage
     public RelayFileSystemQueryStorage()
     {
         var assembly = typeof(RelayFileSystemQueryStorage).Assembly;
-        using var s = assembly.GetManifestResourceStream(assembly.GetManifestResourceNames()[0])!;
+        using var s = assembly.GetManifestResourceStream(assembly.GetManifestResourceNames()[0]);
 
-        if (File.Exists(_file) &&
+        if (s is not null &&
             JsonSerializer.Deserialize<Dictionary<string, string>>(s) is { } queries)
         {
             foreach (var (key, query) in queries)
@@ -30,8 +30,8 @@ internal sealed class RelayFileSystemQueryStorage
 
     /// <inheritdoc />
     public Task<QueryDocument?> TryReadQueryAsync(
-  string queryId,
-  CancellationToken cancellationToken = default)
+        string queryId,
+        CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(queryId))
         {

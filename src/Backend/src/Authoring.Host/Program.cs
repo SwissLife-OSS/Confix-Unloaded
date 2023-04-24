@@ -9,6 +9,11 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration
+    .AddJsonFile("appsettings.json")
+    .AddJsonFile("appsettings.user.json", true)
+    .AddJsonFile("appsettings.Development.json", true);
+
 builder.Services
     .AddConfixAuthoringServer()
     .UseMongoDbStores()
