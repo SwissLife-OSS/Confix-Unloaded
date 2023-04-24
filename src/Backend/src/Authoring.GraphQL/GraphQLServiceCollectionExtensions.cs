@@ -52,13 +52,7 @@ public static class GraphQlServiceCollectionExtensions
                 x.EnableOneOf = true;
                 x.EnableDefer = true;
             })
-            .ModifyRequestOptions(o =>
-            {
-                if (!Debugger.IsAttached)
-                {
-                    o.OnlyAllowPersistedQueries = true;
-                }
-            })
+            .ModifyRequestOptions(o => o.OnlyAllowPersistedQueries = !Debugger.IsAttached)
             .UsePersistedQueryPipeline();
 
         return builder;
