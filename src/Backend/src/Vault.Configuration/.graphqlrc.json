@@ -6,24 +6,7 @@
       "name": "AuthoringClient",
       "url": "http://localhost:5000/graphql/",
       "dependencyInjection": true,
-      "strictSchemaValidation": true,
-      "hashAlgorithm": "md5",
-      "useSingleFile": true,
-      "requestStrategy": "Default",
-      "outputDirectoryName": "Generated",
-      "noStore": false,
-      "emitGeneratedCode": false,
-      "razorComponents": false,
-      "records": {
-        "inputs": true,
-        "entities": false
-      },
-      "transportProfiles": [
-        {
-          "default": "Http",
-          "subscription": "WebSocket"
-        }
-      ]
+      "noStore": true
     }
   }
 }

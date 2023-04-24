@@ -13,7 +13,6 @@
     <PackageReference Include="HotChocolate.AspNetCore.Authorization" />
     <PackageReference Include="HotChocolate.Data" />
     <PackageReference Include="HotChocolate.Diagnostics" />
-    <PackageReference Include="HotChocolate.PersistedQueries.FileSystem" />
   </ItemGroup>
 
   <ItemGroup>
@@ -36,9 +35,11 @@
     <EmbeddedResource Include="../../../Frontend/persisted_queries.json" Pack="true" CopyToOutputDirectory="Always">
       <LogicalName>Confix.Authoring.GraphQL.Persisted.UI</LogicalName>
     </EmbeddedResource>
-
-      <EmbeddedResource Include="../Tooling/persisted/queries.json" Pack="true" CopyToOutputDirectory="Always">
+    <EmbeddedResource Include="../Tooling/persisted/queries.json" Pack="true" CopyToOutputDirectory="Always">
       <LogicalName>Confix.Authoring.GraphQL.Persisted.Tooling</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="../Vault.Configuration/persisted/queries.json" Pack="true" CopyToOutputDirectory="Always">
+      <LogicalName>Confix.Authoring.GraphQL.Persisted.Vault</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
 </Project>

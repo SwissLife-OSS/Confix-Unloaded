@@ -13,6 +13,7 @@ internal sealed class RelayFileSystemQueryStorage : IReadStoredQueries
     {
         LoadQueries("Confix.Authoring.GraphQL.Persisted.UI");
         LoadQueries("Confix.Authoring.GraphQL.Persisted.Tooling");
+        LoadQueries("Confix.Authoring.GraphQL.Persisted.Vault");
     }
 
     private void LoadQueries(string resourceName)
