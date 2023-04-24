@@ -5,11 +5,11 @@ using HotChocolate.Language;
 
 namespace Confix.Authoring.GraphQL;
 
-internal sealed class RelayFileSystemQueryStorage : IReadStoredQueries
+internal sealed class RelayResourceManifestQueryStorage : IReadStoredQueries
 {
     private readonly Dictionary<string, QueryDocument> _lookup = new();
 
-    public RelayFileSystemQueryStorage()
+    public RelayResourceManifestQueryStorage()
     {
         LoadQueries("Confix.Authoring.GraphQL.Persisted.UI");
         LoadQueries("Confix.Authoring.GraphQL.Persisted.Tooling");
@@ -18,7 +18,7 @@ internal sealed class RelayFileSystemQueryStorage : IReadStoredQueries
 
     private void LoadQueries(string resourceName)
     {
-        Assembly assembly = typeof(RelayFileSystemQueryStorage).Assembly;
+        Assembly assembly = typeof(RelayResourceManifestQueryStorage).Assembly;
         using Stream? jsonStream = assembly.GetManifestResourceStream(resourceName);
 
         if (jsonStream is not null &&
