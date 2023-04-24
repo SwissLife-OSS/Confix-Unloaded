@@ -1,15 +1,17 @@
 import * as React from "react";
-import { useMutation } from "react-relay";
-import { graphql } from "babel-plugin-relay/macro";
-import { Modal } from "antd";
-import { FieldInput } from "../../../shared/FormField";
+
 import {
   pipeCommitFn,
-  withSuccessMessage,
   withOnSuccess,
+  withSuccessMessage,
 } from "../../../shared/pipeCommitFn";
+
+import { FieldInput } from "../../../shared/FormField";
+import { Modal } from "antd";
+import { RenameComponentDialogMutation } from "@generated/RenameComponentDialogMutation.graphql";
+import { graphql } from "babel-plugin-relay/macro";
+import { useMutation } from "react-relay";
 import { useStringEventHanlder } from "../../../shared/useEventListener";
-import { RenameComponentDialogMutation } from "./__generated__/RenameComponentDialogMutation.graphql";
 
 export const RenameComponentDialog: React.FC<{
   open: boolean;

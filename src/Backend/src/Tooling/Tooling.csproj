@@ -9,8 +9,9 @@
     <IsPackable>true</IsPackable>
     <PackAsTool>true</PackAsTool>
     <UseAppHost>false</UseAppHost>
+    <GraphQLPersistedQueryOutput>persisted</GraphQLPersistedQueryOutput>
+    <GraphQLPersistedQueryFormat>relay</GraphQLPersistedQueryFormat>
   </PropertyGroup>
-
 
   <ItemGroup>
     <PackageReference Include="System.CommandLine" />

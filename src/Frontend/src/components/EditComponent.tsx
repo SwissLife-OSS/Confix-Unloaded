@@ -1,37 +1,38 @@
-import { useFragment, useLazyLoadQuery, useMutation } from "react-relay";
 import { Button, Col, Row, Space, Tabs, Tag } from "antd";
-import { DetailView } from "../shared/DetailView";
-import { graphql } from "babel-plugin-relay/macro";
-import { EditComponentQuery } from "./__generated__/EditComponentQuery.graphql";
+import {
+  EditComponentUpdateMutation,
+  EditComponentUpdateMutation$data,
+} from "@generated/EditComponentUpdateMutation.graphql";
+import React, { useState } from "react";
 import {
   pipeCommitFn,
   withErrorNotifications,
   withSuccessMessage,
 } from "../shared/pipeCommitFn";
+import { useFragment, useLazyLoadQuery, useMutation } from "react-relay";
+
+import { ButtonBar } from "../shared/ButtonBar";
+import { ChangeComponentScopeDialog } from "./controls/dialogs/ChangeComponentScopeDialog";
+import { ChangeLog } from "../shared/ChangeLog";
+import { DefaultSuspense } from "../shared/DefaultSuspense";
+import { DetailView } from "../shared/DetailView";
+import { EditComponent$key } from "@generated/EditComponent.graphql";
+import { EditComponentQuery } from "@generated/EditComponentQuery.graphql";
+import { EditComponent_AvailableIn$key } from "@generated/EditComponent_AvailableIn.graphql";
+import { EditComponent_AvailableIn_Query$key } from "@generated/EditComponent_AvailableIn_Query.graphql";
+import { EditComponent_ComponentChangeLog$key } from "@generated/EditComponent_ComponentChangeLog.graphql";
+import { EditComponent_EditComponentForm$key } from "@generated/EditComponent_EditComponentForm.graphql";
+import { EditIcon } from "../icons/icons";
 import { EditableBreadcrumbHeader } from "../shared/EditablePageHeader";
-import { useToggle } from "../shared/useToggle";
 import { RenameComponentDialog } from "./controls/dialogs/RenameComponentDialog";
 import { SchemaComponentEditor } from "../applications/components/SchemaComponentEditor";
-import {
-  EditComponentUpdateMutation,
-  EditComponentUpdateMutation$data,
-} from "./__generated__/EditComponentUpdateMutation.graphql";
-import React, { useState } from "react";
-import { css } from "@emotion/react";
 import { SectionHeader } from "../shared/SectionHeader";
+import { TabRow } from "../shared/TabRow";
+import { css } from "@emotion/react";
+import { graphql } from "babel-plugin-relay/macro";
 import { useParams } from "react-router";
 import { useTabSwitcher } from "../shared/useTabSwitcher";
-import { DefaultSuspense } from "../shared/DefaultSuspense";
-import { ChangeLog } from "../shared/ChangeLog";
-import { TabRow } from "../shared/TabRow";
-import { ButtonBar } from "../shared/ButtonBar";
-import { EditComponent_AvailableIn$key } from "./__generated__/EditComponent_AvailableIn.graphql";
-import { EditIcon } from "../icons/icons";
-import { ChangeComponentScopeDialog } from "./controls/dialogs/ChangeComponentScopeDialog";
-import { EditComponent$key } from "./__generated__/EditComponent.graphql";
-import { EditComponent_EditComponentForm$key } from "./__generated__/EditComponent_EditComponentForm.graphql";
-import { EditComponent_ComponentChangeLog$key } from "./__generated__/EditComponent_ComponentChangeLog.graphql";
-import { EditComponent_AvailableIn_Query$key } from "./__generated__/EditComponent_AvailableIn_Query.graphql";
+import { useToggle } from "../shared/useToggle";
 
 export const EditComponent = () => {
   const { id: componentId = "" } = useParams();

@@ -1,8 +1,9 @@
 import { Select, Spin } from "antd";
+import { fetchQuery, useRelayEnvironment } from "react-relay";
 import { useCallback, useEffect, useState } from "react";
-import { useRelayEnvironment, fetchQuery } from "react-relay";
+
+import { EnvironmentsSelectQuery } from "@generated/EnvironmentsSelectQuery.graphql";
 import { graphql } from "babel-plugin-relay/macro";
-import { EnvironmentsSelectQuery } from "./__generated__/EnvironmentsSelectQuery.graphql";
 import { useDebounce } from "../../shared/debounce";
 
 export type EnvironmentOption = { label: string; value: string };

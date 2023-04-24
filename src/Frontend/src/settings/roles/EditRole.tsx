@@ -1,29 +1,30 @@
-import { useFragment, useLazyLoadQuery, useMutation } from "react-relay";
 import { Button, Col, Row } from "antd";
-import { DetailView } from "../../shared/DetailView";
-import { graphql } from "babel-plugin-relay/macro";
-import { EditRoleQuery } from "./__generated__/EditRoleQuery.graphql";
-import { EditableBreadcrumbHeader } from "../../shared/EditablePageHeader";
-import { useToggle } from "../../shared/useToggle";
-import { RenameRoleDialog } from "./controls/dialogs/RenameRoleDialog";
-import React, { useState } from "react";
-import { css } from "@emotion/react";
-import { useParams } from "react-router";
 import {
+  PermissionsForm,
   mapPermissionsFromObjectType,
   mapPermissionsToInput,
-  PermissionsForm,
 } from "./controls/forms/PermissionForm";
-import { EditRoleForm_ChangeRolePermissions_Mutation } from "./__generated__/EditRoleForm_ChangeRolePermissions_Mutation.graphql";
-import { useHandler } from "../../shared/useHandler";
-import { FormActions } from "../../shared/FormField";
+import React, { useState } from "react";
 import {
   pipeCommitFn,
   withErrorNotifications,
   withSuccessMessage,
 } from "../../shared/pipeCommitFn";
-import { EditRole_Form$key } from "./__generated__/EditRole_Form.graphql";
-import { EditRole_Header$key } from "./__generated__/EditRole_Header.graphql";
+import { useFragment, useLazyLoadQuery, useMutation } from "react-relay";
+
+import { DetailView } from "../../shared/DetailView";
+import { EditRoleForm_ChangeRolePermissions_Mutation } from "@generated/EditRoleForm_ChangeRolePermissions_Mutation.graphql";
+import { EditRoleQuery } from "@generated/EditRoleQuery.graphql";
+import { EditRole_Form$key } from "@generated/EditRole_Form.graphql";
+import { EditRole_Header$key } from "@generated/EditRole_Header.graphql";
+import { EditableBreadcrumbHeader } from "../../shared/EditablePageHeader";
+import { FormActions } from "../../shared/FormField";
+import { RenameRoleDialog } from "./controls/dialogs/RenameRoleDialog";
+import { css } from "@emotion/react";
+import { graphql } from "babel-plugin-relay/macro";
+import { useHandler } from "../../shared/useHandler";
+import { useParams } from "react-router";
+import { useToggle } from "../../shared/useToggle";
 
 export const EditRole = () => {
   const { roleId = "" } = useParams();

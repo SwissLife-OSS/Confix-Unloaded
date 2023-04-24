@@ -31,4 +31,15 @@
     <Folder Include="Vault.Authentication" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Include="../../../Frontend/persisted_queries.json" Pack="true" CopyToOutputDirectory="Always">
+      <LogicalName>Confix.Authoring.GraphQL.Persisted.UI</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="../Tooling/persisted/queries.json" Pack="true" CopyToOutputDirectory="Always">
+      <LogicalName>Confix.Authoring.GraphQL.Persisted.Tooling</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="../Vault.Configuration/persisted/queries.json" Pack="true" CopyToOutputDirectory="Always">
+      <LogicalName>Confix.Authoring.GraphQL.Persisted.Vault</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
 </Project>

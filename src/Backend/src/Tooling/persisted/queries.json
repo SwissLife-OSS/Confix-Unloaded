@@ -1,0 +1,3 @@
+{
+  "a3239eccea76f7eaa99c3e4bf24d3722": "mutation ClaimApplicationPart($input: ClaimVersionInput!) { claimVersion(input: $input) { __typename errors { __typename ... Error } result { __typename version { __typename ... ClaimedVersion } decryptionKey token } } } fragment Error on UserError { message code } fragment ClaimedVersion on ClaimedVersion { id tag claimedAt publishedApplicationPart { __typename version } }"
+}

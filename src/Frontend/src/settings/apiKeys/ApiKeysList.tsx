@@ -1,22 +1,23 @@
-import { useCallback } from "react";
+import { Button, List } from "antd";
 import {
+  useFragment,
   useLazyLoadQuery,
   usePaginationFragment,
-  useFragment,
 } from "react-relay";
+
+import { ApiKeysList$key } from "@generated/ApiKeysList.graphql";
+import { ApiKeysListQuery } from "@generated/ApiKeysListQuery.graphql";
+import { ApiKeysList_ApiKeyListItem$key } from "@generated/ApiKeysList_ApiKeyListItem.graphql";
+import { Colors } from "../../shared/colors";
+import { DeleteIcon } from "../../icons/icons";
+import { InfiniteScrollList } from "../../shared/InfiniteScrollList";
+import { RemoveApiKeyDialog } from "./controls/dialogs/RemoveApiKeyDialog";
+import { config } from "../../config";
 import { graphql } from "babel-plugin-relay/macro";
 import styled from "@emotion/styled";
-import { List, Button } from "antd";
-import { config } from "../../config";
-import { DeleteIcon } from "../../icons/icons";
-import { Colors } from "../../shared/colors";
-import { InfiniteScrollList } from "../../shared/InfiniteScrollList";
+import { useCallback } from "react";
 import { useGoTo } from "../../shared/useGoTo";
 import { useToggle } from "../../shared/useToggle";
-import { ApiKeysListQuery } from "./__generated__/ApiKeysListQuery.graphql";
-import { ApiKeysList$key } from "./__generated__/ApiKeysList.graphql";
-import { ApiKeysList_ApiKeyListItem$key } from "./__generated__/ApiKeysList_ApiKeyListItem.graphql";
-import { RemoveApiKeyDialog } from "./controls/dialogs/RemoveApiKeyDialog";
 
 export const ApiKeysList: React.FC<{
   selectedApiKeyId?: string;

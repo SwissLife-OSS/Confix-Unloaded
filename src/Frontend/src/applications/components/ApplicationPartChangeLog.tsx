@@ -1,9 +1,10 @@
 import * as React from "react";
-import { useFragment } from "react-relay";
+
+import { ApplicationPartChangeLog$key } from "@generated/ApplicationPartChangeLog.graphql";
+import { ChangeLog } from "../../shared/ChangeLog";
 import { graphql } from "babel-plugin-relay/macro";
 import styled from "@emotion/styled";
-import { ChangeLog } from "../../shared/ChangeLog";
-import { ApplicationPartChangeLog$key } from "./__generated__/ApplicationPartChangeLog.graphql";
+import { useFragment } from "react-relay";
 
 export const ApplicationPartChangeLog: React.FC<{
   fragmentRef: ApplicationPartChangeLog$key;

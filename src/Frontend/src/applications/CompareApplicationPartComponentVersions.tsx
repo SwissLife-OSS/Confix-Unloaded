@@ -1,12 +1,13 @@
 import React, { useMemo } from "react";
-import { useLazyLoadQuery } from "react-relay";
-import { graphql } from "babel-plugin-relay/macro";
 import { generatePath, useNavigate, useParams } from "react-router";
-import { CompareApplicationPartComponentVersions_Query } from "./__generated__/CompareApplicationPartComponentVersions_Query.graphql";
-import { Select } from "antd";
+
+import { CompareApplicationPartComponentVersions_Query } from "@generated/CompareApplicationPartComponentVersions_Query.graphql";
 import { ComponentDiffEditor } from "./components/ComponentDiffEditor";
-import { useSearchQuery } from "../shared/useQuery";
+import { Select } from "antd";
+import { graphql } from "babel-plugin-relay/macro";
 import { useHandler } from "../shared/useHandler";
+import { useLazyLoadQuery } from "react-relay";
+import { useSearchQuery } from "../shared/useQuery";
 
 export const generateComparePartComponentVersionPath = (
   applicationId: string,

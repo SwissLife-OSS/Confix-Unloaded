@@ -1,10 +1,11 @@
-import { useFragment } from "react-relay";
-import { graphql } from "babel-plugin-relay/macro";
-import { List, Button } from "antd";
-import { useMemo } from "react";
+import { Button, List } from "antd";
+
 import { ColorTag } from "../../shared/ColorTag";
+import { VariableValueList$key } from "@generated/VariableValueList.graphql";
+import { graphql } from "babel-plugin-relay/macro";
 import { groupBy } from "../../shared/groupBy";
-import { VariableValueList$key } from "./__generated__/VariableValueList.graphql";
+import { useFragment } from "react-relay";
+import { useMemo } from "react";
 
 export const VariableValueList: React.FC<{
   data: VariableValueList$key;

@@ -1,6 +1,5 @@
 import * as React from "react";
-import { useMutation } from "react-relay";
-import { graphql } from "babel-plugin-relay/macro";
+
 import {
   pipeCommitFn,
   withErrorNotifications,
@@ -8,10 +7,13 @@ import {
   withSuccessMessage,
 } from "../../shared/pipeCommitFn";
 import { useCallback, useState } from "react";
-import { Modal } from "antd";
-import { useStringEventHanlder } from "../../shared/useEventListener";
+
 import { FieldInput } from "../../shared/FormField";
-import { RenameApplicationDialogMutation } from "./__generated__/RenameApplicationDialogMutation.graphql";
+import { Modal } from "antd";
+import { RenameApplicationDialogMutation } from "@generated/RenameApplicationDialogMutation.graphql";
+import { graphql } from "babel-plugin-relay/macro";
+import { useMutation } from "react-relay";
+import { useStringEventHanlder } from "../../shared/useEventListener";
 
 export const RenameApplicationDialog: React.FC<{
   open: boolean;

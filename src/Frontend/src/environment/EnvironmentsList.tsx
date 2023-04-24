@@ -1,22 +1,23 @@
-import { useCallback } from "react";
+import { Button, List } from "antd";
 import {
+  useFragment,
   useLazyLoadQuery,
   usePaginationFragment,
-  useFragment,
 } from "react-relay";
-import { graphql } from "babel-plugin-relay/macro";
-import { config } from "../config";
-import { InfiniteScrollList } from "../shared/InfiniteScrollList";
-import { EnvironmentsListQuery } from "./__generated__/EnvironmentsListQuery.graphql";
-import { EnvironmentsList_EnvironmentListItem$key } from "./__generated__/EnvironmentsList_EnvironmentListItem.graphql";
-import { EnvironmentsList$key } from "./__generated__/EnvironmentsList.graphql";
-import styled from "@emotion/styled";
-import { Button, List } from "antd";
-import { DeleteIcon } from "../icons/icons";
+
 import { Colors } from "../shared/colors";
-import { useToggle } from "../shared/useToggle";
+import { DeleteIcon } from "../icons/icons";
+import { EnvironmentsList$key } from "@generated/EnvironmentsList.graphql";
+import { EnvironmentsListQuery } from "@generated/EnvironmentsListQuery.graphql";
+import { EnvironmentsList_EnvironmentListItem$key } from "@generated/EnvironmentsList_EnvironmentListItem.graphql";
+import { InfiniteScrollList } from "../shared/InfiniteScrollList";
 import { RemoveEnvironmentDialog } from "./controls/dialogs/RemoveEnvironmentDialog";
+import { config } from "../config";
+import { graphql } from "babel-plugin-relay/macro";
+import styled from "@emotion/styled";
+import { useCallback } from "react";
 import { useGoTo } from "../shared/useGoTo";
+import { useToggle } from "../shared/useToggle";
 
 export const EnvironmentsList: React.FC<{
   selectedEnvironmentId?: string;

@@ -1,39 +1,41 @@
 import * as React from "react";
-import { useFragment } from "react-relay";
-import { DetailView } from "../shared/DetailView";
-import { graphql } from "babel-plugin-relay/macro";
-import { useParams } from "react-router";
+
+import {
+  ApplicationPartChangeLog,
+  Title,
+} from "./components/ApplicationPartChangeLog";
 import { Col, Empty, Row, Tabs, Typography } from "antd";
 import {
   EditableBreadcrumbHeader,
   HeaderButton,
 } from "../shared/EditablePageHeader";
-import { PublishIcon } from "../icons/icons";
-import { useToggle } from "../shared/useToggle";
-import { RenameApplicationPartDialog } from "./dialogs/RenameApplicationPartDialog";
 import {
   VariableOption,
   VariablesSelect,
 } from "../variables/controls/VariableSelect";
-import { DefaultSuspense } from "../shared/DefaultSuspense";
 import { useCallback, useEffect, useState } from "react";
+
+import { ApplicationPartComponents } from "./components/ApplicationPartComponents";
+import { DefaultSuspense } from "../shared/DefaultSuspense";
+import { DeployedEnvironmentsOverview } from "./components/DeployedEnvironmentsOverview";
+import { DetailView } from "../shared/DetailView";
+import { EditApplicationPart$key } from "@generated/EditApplicationPart.graphql";
+import { EditApplicationPartQuery } from "@generated/EditApplicationPartQuery.graphql";
+import { EditApplicationPart_DeployedEnvironments$key } from "@generated/EditApplicationPart_DeployedEnvironments.graphql";
+import { EditApplicationPart_Variable$key } from "@generated/EditApplicationPart_Variable.graphql";
+import { PublishApplicationPartDialog } from "./dialogs/PublishApplicationPartDialog";
+import { PublishIcon } from "../icons/icons";
+import { PublishedApplicationParts } from "./components/PublishedApplicationParts";
+import { RenameApplicationPartDialog } from "./dialogs/RenameApplicationPartDialog";
 import { VariableEditor } from "../variables/controls/VariableEditor";
 import { VariableValueList } from "../variables/controls/VariableValueList";
-import { useSilentRefreshQuery } from "../shared/useDefaultRefetch";
+import { graphql } from "babel-plugin-relay/macro";
+import { useFragment } from "react-relay";
 import { useLocation } from "react-router-dom";
+import { useParams } from "react-router";
+import { useSilentRefreshQuery } from "../shared/useDefaultRefetch";
 import { useTabSwitcher } from "../shared/useTabSwitcher";
-import { PublishApplicationPartDialog } from "./dialogs/PublishApplicationPartDialog";
-import { EditApplicationPart_DeployedEnvironments$key } from "./__generated__/EditApplicationPart_DeployedEnvironments.graphql";
-import { DeployedEnvironmentsOverview } from "./components/DeployedEnvironmentsOverview";
-import {
-  Title,
-  ApplicationPartChangeLog,
-} from "./components/ApplicationPartChangeLog";
-import { ApplicationPartComponents } from "./components/ApplicationPartComponents";
-import { PublishedApplicationParts } from "./components/PublishedApplicationParts";
-import { EditApplicationPart_Variable$key } from "./__generated__/EditApplicationPart_Variable.graphql";
-import { EditApplicationPart$key } from "./__generated__/EditApplicationPart.graphql";
-import { EditApplicationPartQuery } from "./__generated__/EditApplicationPartQuery.graphql";
+import { useToggle } from "../shared/useToggle";
 
 export const EditApplicationPart = () => {
   const { applicationId = "", id: applicationPartId = "" } = useParams();

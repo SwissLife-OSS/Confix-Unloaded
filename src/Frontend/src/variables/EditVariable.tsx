@@ -1,33 +1,34 @@
+import { CheckIcon, NotCheckIcon } from "../icons/icons";
+import { Col, Descriptions, Empty, Row, Select, Spin, Tabs } from "antd";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   useFragment,
   useLazyLoadQuery,
   useRefetchableFragment,
 } from "react-relay";
-import { Col, Descriptions, Empty, Row, Select, Spin, Tabs } from "antd";
+
+import { ChangeLog } from "../shared/ChangeLog";
+import { DefaultSuspense } from "../shared/DefaultSuspense";
 import { DetailView } from "../shared/DetailView";
-import { graphql } from "babel-plugin-relay/macro";
-import { EditVariableQuery } from "./__generated__/EditVariableQuery.graphql";
+import { EditVariable$key } from "@generated/EditVariable.graphql";
+import { EditVariableQuery } from "@generated/EditVariableQuery.graphql";
+import { EditVariable_ApplicationPartSelector$key } from "@generated/EditVariable_ApplicationPartSelector.graphql";
+import { EditVariable_ApplicationSelector$key } from "@generated/EditVariable_ApplicationSelector.graphql";
+import { EditVariable_ApplicationSelector_Query } from "@generated/EditVariable_ApplicationSelector_Query.graphql";
+import { EditVariable_EditVariableForm$key } from "@generated/EditVariable_EditVariableForm.graphql";
+import { EditVariable_VariableChangeLog$key } from "@generated/EditVariable_VariableChangeLog.graphql";
 import { EditableBreadcrumbHeader } from "../shared/EditablePageHeader";
-import { useToggle } from "../shared/useToggle";
-import { RenameVariableDialog } from "./controls/dialogs/RenameVariableDialog";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { css } from "@emotion/react";
-import { CheckIcon, NotCheckIcon } from "../icons/icons";
 import { Field } from "../shared/FormField";
+import { RenameVariableDialog } from "./controls/dialogs/RenameVariableDialog";
+import { TabRow } from "../shared/TabRow";
+import { VariableEditor } from "./controls/VariableEditor";
+import { css } from "@emotion/react";
+import { graphql } from "babel-plugin-relay/macro";
 import { useDebounce } from "../shared/debounce";
 import { useMultiplexer } from "../shared/useMultiplexer";
-import { VariableEditor } from "./controls/VariableEditor";
-import { DefaultSuspense } from "../shared/DefaultSuspense";
 import { useParams } from "react-router";
-import { TabRow } from "../shared/TabRow";
 import { useTabSwitcher } from "../shared/useTabSwitcher";
-import { ChangeLog } from "../shared/ChangeLog";
-import { EditVariable$key } from "./__generated__/EditVariable.graphql";
-import { EditVariable_EditVariableForm$key } from "./__generated__/EditVariable_EditVariableForm.graphql";
-import { EditVariable_VariableChangeLog$key } from "./__generated__/EditVariable_VariableChangeLog.graphql";
-import { EditVariable_ApplicationSelector_Query } from "./__generated__/EditVariable_ApplicationSelector_Query.graphql";
-import { EditVariable_ApplicationPartSelector$key } from "./__generated__/EditVariable_ApplicationPartSelector.graphql";
-import { EditVariable_ApplicationSelector$key } from "./__generated__/EditVariable_ApplicationSelector.graphql";
+import { useToggle } from "../shared/useToggle";
 
 export const EditVariable = () => {
   const { variableId = "" } = useParams();

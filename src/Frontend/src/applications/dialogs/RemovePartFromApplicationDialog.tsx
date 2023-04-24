@@ -1,15 +1,17 @@
 import * as React from "react";
-import { useMutation } from "react-relay";
-import { graphql } from "babel-plugin-relay/macro";
+
+import { Alert, Modal } from "antd";
 import {
   pipeCommitFn,
   withErrorNotifications,
   withOnSuccess,
   withSuccessMessage,
 } from "../../shared/pipeCommitFn";
+
+import { RemovePartFromApplicationDialogMutation } from "@generated/RemovePartFromApplicationDialogMutation.graphql";
+import { graphql } from "babel-plugin-relay/macro";
 import { useCallback } from "react";
-import { Alert, Modal } from "antd";
-import { RemovePartFromApplicationDialogMutation } from "./__generated__/RemovePartFromApplicationDialogMutation.graphql";
+import { useMutation } from "react-relay";
 
 export const RemovePartFromApplicationDialog: React.FC<{
   open: boolean;

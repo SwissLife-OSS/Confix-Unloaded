@@ -1,35 +1,37 @@
 import * as React from "react";
-import { useFragment } from "react-relay";
-import { DetailView } from "../shared/DetailView";
-import { graphql } from "babel-plugin-relay/macro";
-import { EditApplication_Query } from "./__generated__/EditApplication_Query.graphql";
-import { Button, Card, Col, Empty, List, Row, Tabs, Typography } from "antd";
-import styled from "@emotion/styled";
-import { EditableBreadcrumbHeader } from "../shared/EditablePageHeader";
+
 import { AddIcon, DeleteIcon, EditIcon } from "../icons/icons";
-import { EditApplication_ApplicationPartsDisplay$key } from "./__generated__/EditApplication_ApplicationPartsDisplay.graphql";
-import { ApplicationPartSectionHeader } from "./components/ApplicationPartSectionHeader";
+import { Button, Card, Col, Empty, List, Row, Tabs, Typography } from "antd";
 import {
   EditApplication$data,
   EditApplication$key,
-} from "./__generated__/EditApplication.graphql";
-import { useToggle } from "../shared/useToggle";
-import { RemovePartFromApplicationDialog } from "./dialogs/RemovePartFromApplicationDialog";
-import { AddComponentsToApplicationPartDialog } from "./dialogs/AddComponentsToApplicationPartDialog";
-import { RenameApplicationDialog } from "./dialogs/RenameApplicationDialog";
+} from "@generated/EditApplication.graphql";
+import { generatePath, useLocation, useParams } from "react-router";
 import { useCallback, useEffect, useState } from "react";
-import { VariablesSelect } from "../variables/controls/VariableSelect";
+
+import { AddComponentsToApplicationPartDialog } from "./dialogs/AddComponentsToApplicationPartDialog";
+import { ApplicationPartSectionHeader } from "./components/ApplicationPartSectionHeader";
+import { ChangeLog } from "../shared/ChangeLog";
 import { DefaultSuspense } from "../shared/DefaultSuspense";
+import { DetailView } from "../shared/DetailView";
+import { EditApplication_ApplicationChangeLog$key } from "@generated/EditApplication_ApplicationChangeLog.graphql";
+import { EditApplication_ApplicationParts$key } from "@generated/EditApplication_ApplicationParts.graphql";
+import { EditApplication_ApplicationPartsDisplay$key } from "@generated/EditApplication_ApplicationPartsDisplay.graphql";
+import { EditApplication_Query } from "@generated/EditApplication_Query.graphql";
+import { EditApplication_Variables$key } from "@generated/EditApplication_Variables.graphql";
+import { EditableBreadcrumbHeader } from "../shared/EditablePageHeader";
+import { Link } from "react-router-dom";
+import { RemovePartFromApplicationDialog } from "./dialogs/RemovePartFromApplicationDialog";
+import { RenameApplicationDialog } from "./dialogs/RenameApplicationDialog";
 import { VariableEditor } from "../variables/controls/VariableEditor";
 import { VariableValueList } from "../variables/controls/VariableValueList";
-import { generatePath, useLocation, useParams } from "react-router";
-import { Link } from "react-router-dom";
-import { EditApplication_Variables$key } from "./__generated__/EditApplication_Variables.graphql";
-import { ChangeLog } from "../shared/ChangeLog";
-import { useTabSwitcher } from "../shared/useTabSwitcher";
-import { EditApplication_ApplicationParts$key } from "./__generated__/EditApplication_ApplicationParts.graphql";
-import { EditApplication_ApplicationChangeLog$key } from "./__generated__/EditApplication_ApplicationChangeLog.graphql";
+import { VariablesSelect } from "../variables/controls/VariableSelect";
+import { graphql } from "babel-plugin-relay/macro";
+import styled from "@emotion/styled";
+import { useFragment } from "react-relay";
 import { useSilentRefreshQuery } from "../shared/useDefaultRefetch";
+import { useTabSwitcher } from "../shared/useTabSwitcher";
+import { useToggle } from "../shared/useToggle";
 
 export const EditApplication = () => {
   const route = useParams();

@@ -1,16 +1,18 @@
 import * as React from "react";
-import { useMutation } from "react-relay";
-import { graphql } from "babel-plugin-relay/macro";
-import { Modal } from "antd";
-import { RenameGroupDialogMutation } from "./__generated__/RenameGroupDialogMutation.graphql";
-import { FieldInput } from "../../../../shared/FormField";
+
 import {
   pipeCommitFn,
-  withSuccessMessage,
   withOnSuccess,
+  withSuccessMessage,
 } from "../../../../shared/pipeCommitFn";
-import { useStringEventHanlder } from "../../../../shared/useEventListener";
 import { useCallback, useState } from "react";
+
+import { FieldInput } from "../../../../shared/FormField";
+import { Modal } from "antd";
+import { RenameGroupDialogMutation } from "@generated/RenameGroupDialogMutation.graphql";
+import { graphql } from "babel-plugin-relay/macro";
+import { useMutation } from "react-relay";
+import { useStringEventHanlder } from "../../../../shared/useEventListener";
 
 export const RenameGroupDialog: React.FC<{
   open: boolean;

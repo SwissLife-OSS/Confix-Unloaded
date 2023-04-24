@@ -4,6 +4,8 @@
     <AssemblyName>Confix.Vault.Configuration</AssemblyName>
     <RootNamespace>Confix.Value.Configuration</RootNamespace>
     <IsPackable>true</IsPackable>
+    <GraphQLPersistedQueryOutput>persisted</GraphQLPersistedQueryOutput>
+    <GraphQLPersistedQueryFormat>relay</GraphQLPersistedQueryFormat>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,16 +1,18 @@
 import * as React from "react";
-import { useMutation } from "react-relay";
-import { graphql } from "babel-plugin-relay/macro";
-import { useCallback } from "react";
+
 import { Alert, Modal } from "antd";
 import {
   pipeCommitFn,
-  withSuccessMessage,
   withErrorNotifications,
   withOnSuccess,
+  withSuccessMessage,
 } from "../../../../shared/pipeCommitFn";
+
+import { RemoveRoleDialogMutation } from "@generated/RemoveRoleDialogMutation.graphql";
+import { graphql } from "babel-plugin-relay/macro";
+import { useCallback } from "react";
 import { useConnectionId } from "../../../../shared/useConnectionId";
-import { RemoveRoleDialogMutation } from "./__generated__/RemoveRoleDialogMutation.graphql";
+import { useMutation } from "react-relay";
 
 export const RemoveRoleDialog: React.FC<{
   open: boolean;

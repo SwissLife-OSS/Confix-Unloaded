@@ -1,6 +1,9 @@
 import * as React from "react";
-import { useFragment, useMutation } from "react-relay";
-import { graphql } from "babel-plugin-relay/macro";
+
+import {
+  ComponentOption,
+  ComponentsSelect,
+} from "../../components/controls/ComponentsSelect";
 import {
   pipeCommitFn,
   withErrorNotifications,
@@ -8,13 +11,12 @@ import {
   withSuccessMessage,
 } from "../../shared/pipeCommitFn";
 import { useCallback, useState } from "react";
+import { useFragment, useMutation } from "react-relay";
+
+import { AddComponentsToApplicationPartDialog$key } from "@generated/AddComponentsToApplicationPartDialog.graphql";
+import { AddComponentsToApplicationPartDialogMutation } from "@generated/AddComponentsToApplicationPartDialogMutation.graphql";
 import { Modal } from "antd";
-import { AddComponentsToApplicationPartDialogMutation } from "./__generated__/AddComponentsToApplicationPartDialogMutation.graphql";
-import {
-  ComponentOption,
-  ComponentsSelect,
-} from "../../components/controls/ComponentsSelect";
-import { AddComponentsToApplicationPartDialog$key } from "./__generated__/AddComponentsToApplicationPartDialog.graphql";
+import { graphql } from "babel-plugin-relay/macro";
 
 export const AddComponentsToApplicationPartDialog: React.FC<{
   open: boolean;

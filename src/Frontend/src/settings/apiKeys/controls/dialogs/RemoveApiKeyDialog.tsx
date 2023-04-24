@@ -1,16 +1,18 @@
 import * as React from "react";
-import { useMutation } from "react-relay";
-import { graphql } from "babel-plugin-relay/macro";
-import { useCallback } from "react";
+
 import { Alert, Modal } from "antd";
 import {
   pipeCommitFn,
-  withSuccessMessage,
   withErrorNotifications,
   withOnSuccess,
+  withSuccessMessage,
 } from "../../../../shared/pipeCommitFn";
+
+import { RemoveApiKeyDialogMutation } from "@generated/RemoveApiKeyDialogMutation.graphql";
+import { graphql } from "babel-plugin-relay/macro";
+import { useCallback } from "react";
 import { useConnectionId } from "../../../../shared/useConnectionId";
-import { RemoveApiKeyDialogMutation } from "./__generated__/RemoveApiKeyDialogMutation.graphql";
+import { useMutation } from "react-relay";
 
 export const RemoveApiKeyDialog: React.FC<{
   open: boolean;

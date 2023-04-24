@@ -1,73 +1,173 @@
+import {
+  FetchFunction,
+  GraphQLResponse,
+  Observable,
+} from "relay-runtime";
+
+import { Part } from "meros";
 import { config } from "./config";
 import { meros } from "meros/browser";
-import type { FetchFunction } from "relay-runtime";
-import { Observable } from "relay-runtime";
 
-export const fetchGraphQL: FetchFunction = (
-  params,
-  variables,
-  _cacheConfig
-) => {
+const isAsyncIterable = (value: any) =>
+  typeof Object(value)[Symbol.asyncIterator] === "function";
+
+const ErrorMessages = {
+  FAILED_FETCH: "Failed to fetch",
+  ERROR_FETCH: "Error in fetch",
+  UNWORKABLE_FETCH: "Unworkable fetch",
+  SOCKET_CLOSED: "Socket closed",
+  GRAPHQL_ERRORS: "GraphQL error",
+};
+
+class NetworkError extends Error {
+  constructor(message: string, options: any) {
+    super(message, options);
+
+    this.name = "NetworkError";
+
+    if (options) {
+      const { cause, ...meta } = options;
+
+      Object.assign(this, meta);
+    }
+  }
+}
+
+export const fetchGraphQL:FetchFunction = (operation, variables) => {
   return Observable.create((sink) => {
+    const init: RequestInit = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept:
+          "application/graphql-response+json;charset=utf-8, multipart/mixed;charset=utf-8",
+      },
+      body: JSON.stringify({
+        id: operation.id ?? undefined,
+        query: operation.text ?? undefined,
+        variables,
+      }),
+    };
+
     (async () => {
+      const request = new Request(config.graphql.api, init);
+
       try {
-        const response = await fetch(config.graphql.api, {
-          body: JSON.stringify({
-            query: params.text,
-            variables,
-          }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-          method: "POST",
-        });
+        const response = await fetch(request);
 
-        const parts = await meros<ExecutionPatchResult>(response);
+        // Status code in range 200-299 inclusive (2xx).
+        if (response.ok) {
+          try {
+            const parts = await meros(response);
 
-        if (isAsyncIterable(parts)) {
-          for await (const part of parts) {
-            if (!part.json) {
-              sink.error(new Error("Failed to parse part as json."));
-              break;
+            if (isAsyncIterable(parts)) {
+              for await (const part of parts as AsyncGenerator<
+                Part<object, string>,
+                any,
+                unknown
+              >) {
+                if (!part.json) {
+                  sink.error(
+                    new NetworkError(ErrorMessages.UNWORKABLE_FETCH, {
+                      request,
+                      response,
+                    })
+                  );
+                  break;
+                }
+
+                if ("data" in part.body) {
+                  sink.next(part.body as GraphQLResponse);
+                } else if ("errors" in part.body) {
+                  // If any exceptions occurred when processing the request,
+                  // throw an error to indicate to the developer what went wrong.
+                  sink.error(
+                    new NetworkError(ErrorMessages.GRAPHQL_ERRORS, {
+                      request,
+                      response,
+                      errors: part.body.errors,
+                    })
+                  );
+                  break;
+                }
+
+                if ("incremental" in part.body) {
+                  for (const chunk of (part.body as any).incremental) {
+                    if ("data" in chunk) {
+                      sink.next({
+                        ...chunk,
+                        hasNext: (part.body as any).hasNext,
+                      });
+                    } else {
+                      if (chunk.items) {
+                        // All but the non-final path segments refers to the location
+                        // of the list field containing the `@stream` directive.
+                        // The final segment of the path list is an integer.
+                        //
+                        // Note: We must "copy" to avoid mutations.
+                        const location = chunk.path.slice(0, -1);
+                        let index = chunk.path.at(-1);
+
+                        for (const item of chunk.items) {
+                          sink.next({
+                            ...chunk,
+                            path: location.concat(index++),
+                            data: item,
+                            hasNext: (part.body as any).hasNext,
+                          });
+                        }
+                      } else {
+                        sink.next({
+                          ...chunk,
+                          data: chunk.items,
+                          hasNext: (part.body as any).hasNext,
+                        });
+                      }
+                    }
+                  }
+                }
+              }
+            } else {
+              const json = await response.json();
+
+              if ("data" in json) {
+                sink.next(json);
+              } else if ("errors" in json) {
+                // If any exceptions occurred when processing the request,
+                // throw an error to indicate to the developer what went wrong.
+                sink.error(
+                  new NetworkError(ErrorMessages.GRAPHQL_ERRORS, {
+                    request,
+                    response,
+                    errors: json.errors,
+                  })
+                );
+              }
             }
 
-            // @ts-ignore
-            sink.next(part.body);
+            sink.complete();
+          } catch (err) {
+            sink.error(
+              new NetworkError(ErrorMessages.UNWORKABLE_FETCH, {
+                cause: err,
+                request,
+                response,
+              }),
+              true
+            );
           }
         } else {
-          sink.next(await parts.json());
+          sink.error(
+            new NetworkError(ErrorMessages.ERROR_FETCH, { request, response })
+          );
         }
-
-        sink.complete();
-      } catch (error) {
-        sink.error(error as Error);
+      } catch (err) {
+        sink.error(
+          new NetworkError(ErrorMessages.FAILED_FETCH, { cause: err, request }),
+          true
+        );
       }
     })();
   });
 };
 
-export interface ObjMap<T> {
-  [key: string]: T;
-}
-
-// this is part of graphql@16, which doesn't yet work with relay
-export interface ExecutionPatchResult<
-  TData = ObjMap<unknown> | unknown,
-  TExtensions = ObjMap<unknown>
-> {
-  errors?: ReadonlyArray<any>; // GraphQLError
-  data?: TData | null;
-  path?: ReadonlyArray<string | number>;
-  label?: string;
-  hasNext: boolean;
-  extensions?: TExtensions;
-}
-
-function isAsyncIterable(input: unknown): input is AsyncIterable<unknown> {
-  return (
-    typeof input === "object" &&
-    input !== null &&
-    ((input as any)[Symbol.toStringTag] === "AsyncGenerator" ||
-      Symbol.asyncIterator in input)
-  );
-}

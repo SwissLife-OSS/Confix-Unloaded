@@ -1,29 +1,30 @@
-import React, { useCallback, useMemo, useState } from "react";
-import { useFragment, useLazyLoadQuery, useMutation } from "react-relay";
-import { DetailView } from "../shared/DetailView";
-import { graphql } from "babel-plugin-relay/macro";
-import { useParams } from "react-router";
-import { EditApplicationPartComponent_GetById_Query } from "./__generated__/EditApplicationPartComponent_GetById_Query.graphql";
 import { Button, Col, Row, Tabs } from "antd";
-import { EditableBreadcrumbHeader } from "../shared/EditablePageHeader";
-import { SectionHeader } from "../shared/SectionHeader";
-import { SchemaComponentEditor } from "./components/SchemaComponentEditor";
-import { css } from "@emotion/react";
-import { EditApplicationPartComponent_UpdateComponentValues_Mutation } from "./__generated__/EditApplicationPartComponent_UpdateComponentValues_Mutation.graphql";
+import React, { useCallback, useMemo, useState } from "react";
 import {
   pipeCommitFn,
-  withSuccessMessage,
   withErrorNotifications,
+  withSuccessMessage,
 } from "../shared/pipeCommitFn";
-import { DefaultSuspense } from "../shared/DefaultSuspense";
-import { CompareApplicationPartComponentVersions } from "./CompareApplicationPartComponentVersions";
+import { useFragment, useLazyLoadQuery, useMutation } from "react-relay";
+
 import { ButtonBar } from "../shared/ButtonBar";
 import { ChangeLog } from "../shared/ChangeLog";
-import { useTabSwitcher } from "../shared/useTabSwitcher";
+import { CompareApplicationPartComponentVersions } from "./CompareApplicationPartComponentVersions";
+import { DefaultSuspense } from "../shared/DefaultSuspense";
+import { DetailView } from "../shared/DetailView";
+import { EditApplicationPartComponent$key } from "@generated/EditApplicationPartComponent.graphql";
+import { EditApplicationPartComponent_ApplicationPartComponentChangeLog$key } from "@generated/EditApplicationPartComponent_ApplicationPartComponentChangeLog.graphql";
+import { EditApplicationPartComponent_EditConfiguration$key } from "@generated/EditApplicationPartComponent_EditConfiguration.graphql";
+import { EditApplicationPartComponent_GetById_Query } from "@generated/EditApplicationPartComponent_GetById_Query.graphql";
+import { EditApplicationPartComponent_UpdateComponentValues_Mutation } from "@generated/EditApplicationPartComponent_UpdateComponentValues_Mutation.graphql";
+import { EditableBreadcrumbHeader } from "../shared/EditablePageHeader";
+import { SchemaComponentEditor } from "./components/SchemaComponentEditor";
+import { SectionHeader } from "../shared/SectionHeader";
 import { TabRow } from "../shared/TabRow";
-import { EditApplicationPartComponent_EditConfiguration$key } from "./__generated__/EditApplicationPartComponent_EditConfiguration.graphql";
-import { EditApplicationPartComponent$key } from "./__generated__/EditApplicationPartComponent.graphql";
-import { EditApplicationPartComponent_ApplicationPartComponentChangeLog$key } from "./__generated__/EditApplicationPartComponent_ApplicationPartComponentChangeLog.graphql";
+import { css } from "@emotion/react";
+import { graphql } from "babel-plugin-relay/macro";
+import { useParams } from "react-router";
+import { useTabSwitcher } from "../shared/useTabSwitcher";
 
 export const EditApplicationPartComponent = () => {
   const { partComponentId = "" } = useParams();

@@ -1,18 +1,19 @@
-import React from "react";
 import { Button, Col, Row } from "antd";
-import { useMutation } from "react-relay";
-import { graphql } from "babel-plugin-relay/macro";
-import { DetailView } from "../../shared/DetailView";
-import { FormField, FormActions } from "../../shared/FormField";
+import { FormActions, FormField } from "../../shared/FormField";
 import {
   withErrorNotifications,
   withOnSuccess,
   withSuccessMessage,
 } from "../../shared/pipeCommitFn";
+
+import { DetailView } from "../../shared/DetailView";
+import { NewGroupMutation } from "@generated/NewGroupMutation.graphql";
+import React from "react";
+import { graphql } from "babel-plugin-relay/macro";
 import { useCommitForm } from "../../shared/useCommitForm";
 import { useConnectionId } from "../../shared/useConnectionId";
 import { useGoTo } from "../../shared/useGoTo";
-import { NewGroupMutation } from "./__generated__/NewGroupMutation.graphql";
+import { useMutation } from "react-relay";
 
 export const NewGroup: React.FC = () => {
   const [commit, isInFlight] = useMutation<NewGroupMutation>(graphql`

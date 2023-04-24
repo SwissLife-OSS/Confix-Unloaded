@@ -1,22 +1,23 @@
-import { useCallback } from "react";
+import { Button, List } from "antd";
 import {
+  useFragment,
   useLazyLoadQuery,
   usePaginationFragment,
-  useFragment,
 } from "react-relay";
+
+import { Colors } from "../../shared/colors";
+import { DeleteIcon } from "../../icons/icons";
+import { GroupsList$key } from "@generated/GroupsList.graphql";
+import { GroupsListQuery } from "@generated/GroupsListQuery.graphql";
+import { GroupsList_ListItem$key } from "@generated/GroupsList_ListItem.graphql";
+import { InfiniteScrollList } from "../../shared/InfiniteScrollList";
+import { RemoveGroupDialog } from "./controls/dialogs/RemoveGroupDialog";
+import { config } from "../../config";
 import { graphql } from "babel-plugin-relay/macro";
 import styled from "@emotion/styled";
-import { List, Button } from "antd";
-import { config } from "../../config";
-import { DeleteIcon } from "../../icons/icons";
-import { Colors } from "../../shared/colors";
-import { InfiniteScrollList } from "../../shared/InfiniteScrollList";
+import { useCallback } from "react";
 import { useGoTo } from "../../shared/useGoTo";
 import { useToggle } from "../../shared/useToggle";
-import { GroupsListQuery } from "./__generated__/GroupsListQuery.graphql";
-import { GroupsList$key } from "./__generated__/GroupsList.graphql";
-import { GroupsList_ListItem$key } from "./__generated__/GroupsList_ListItem.graphql";
-import { RemoveGroupDialog } from "./controls/dialogs/RemoveGroupDialog";
 
 export const GroupsList: React.FC<{
   selectedGroupId?: string;

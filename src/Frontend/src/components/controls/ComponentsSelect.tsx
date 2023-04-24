@@ -1,8 +1,9 @@
 import { Select, Spin } from "antd";
+import { fetchQuery, useRelayEnvironment } from "react-relay";
 import { useCallback, useEffect, useState } from "react";
-import { useRelayEnvironment, fetchQuery } from "react-relay";
+
+import { ComponentsSelectQuery } from "@generated/ComponentsSelectQuery.graphql";
 import { graphql } from "babel-plugin-relay/macro";
-import { ComponentsSelectQuery } from "./__generated__/ComponentsSelectQuery.graphql";
 import { useDebounce } from "../../shared/debounce";
 
 export type ComponentOption = { label: string; value: string };

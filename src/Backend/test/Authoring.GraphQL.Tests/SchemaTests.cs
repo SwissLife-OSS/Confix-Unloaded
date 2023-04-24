@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Snapshooter.Xunit;
 using Xunit;
 
-namespace Confix.Authoring.GraphQL;
+namespace Confix.Authoring.GraphQL.Tests;
 
 public class SchemaTests
 {
