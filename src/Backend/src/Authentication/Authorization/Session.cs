@@ -38,12 +38,23 @@ public class Session : ISession
     }
 
     private bool HasGrant(Grant grant) => Groups
+        .AsParallel()
         .SelectMany(group => group.Roles)
         .Where(roleScope => roleScope.Namespace == grant.Namespace || roleScope.Namespace is WellKnownNamespaces.Global)
         .SelectMany(roleScope => roleScope.RoleIds)
         .Select(roleId => _roleMap.GetValueOrDefault(roleId))
-        .SelectMany(role => role?.Permissions ?? Array.Empty<Permission>())
-        .Any(rolePermission => rolePermission.Scope == grant.Scope && rolePermission.Permissions.HasFlag(grant.Permission));
+        .Any(role => role.GrantsPermissionFor(grant.Scope, grant.Permission));
 
     private readonly record struct Grant(string Namespace, Scope Scope, Permissions Permission);
+}
+
+file static class Extensions
+{
+    public static bool GrantsPermissionFor(
+        this Role? role,
+        Scope scope,
+        Permissions permission)
+        => role?.Permissions.Any(rolePermission =>
+            rolePermission.Scope == scope
+            && rolePermission.Permissions.HasFlag(permission)) ?? false;
 }
