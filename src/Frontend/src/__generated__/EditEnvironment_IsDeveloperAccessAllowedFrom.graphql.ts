@@ -8,43 +8,43 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import {Fragment, ReaderFragment} from 'relay-runtime';
-import {FragmentRefs} from 'relay-runtime';
+import { Fragment, ReaderFragment } from 'relay-runtime';
+import { FragmentRefs } from "relay-runtime";
 export type EditEnvironment_IsDeveloperAccessAllowedFrom$data = {
   readonly allowDeveloperAccess: boolean;
   readonly id: string;
-  readonly ' $fragmentType': 'EditEnvironment_IsDeveloperAccessAllowedFrom';
+  readonly " $fragmentType": "EditEnvironment_IsDeveloperAccessAllowedFrom";
 };
 export type EditEnvironment_IsDeveloperAccessAllowedFrom$key = {
-  readonly ' $data'?: EditEnvironment_IsDeveloperAccessAllowedFrom$data;
-  readonly ' $fragmentSpreads': FragmentRefs<'EditEnvironment_IsDeveloperAccessAllowedFrom'>;
+  readonly " $data"?: EditEnvironment_IsDeveloperAccessAllowedFrom$data;
+  readonly " $fragmentSpreads": FragmentRefs<"EditEnvironment_IsDeveloperAccessAllowedFrom">;
 };
 
 const node: ReaderFragment = {
-  argumentDefinitions: [],
-  kind: 'Fragment',
-  metadata: null,
-  name: 'EditEnvironment_IsDeveloperAccessAllowedFrom',
-  selections: [
+  "argumentDefinitions": [],
+  "kind": "Fragment",
+  "metadata": null,
+  "name": "EditEnvironment_IsDeveloperAccessAllowedFrom",
+  "selections": [
     {
-      alias: null,
-      args: null,
-      kind: 'ScalarField',
-      name: 'id',
-      storageKey: null,
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "id",
+      "storageKey": null
     },
     {
-      alias: null,
-      args: null,
-      kind: 'ScalarField',
-      name: 'allowDeveloperAccess',
-      storageKey: null,
-    },
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "allowDeveloperAccess",
+      "storageKey": null
+    }
   ],
-  type: 'Environment',
-  abstractKey: null,
+  "type": "Environment",
+  "abstractKey": null
 };
 
-(node as any).hash = '607363ee87342251af992d8187b435bf';
+(node as any).hash = "607363ee87342251af992d8187b435bf";
 
 export default node;

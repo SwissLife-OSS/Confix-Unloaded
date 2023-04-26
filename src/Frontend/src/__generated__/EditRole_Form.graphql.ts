@@ -8,15 +8,9 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import {Fragment, ReaderFragment} from 'relay-runtime';
-export type Scope =
-  | 'APPLICATION'
-  | 'COMPONENT'
-  | 'CONFIGURATION'
-  | 'ENVIRONMENT'
-  | 'IDENTITY'
-  | 'VARIABLE';
-import {FragmentRefs} from 'relay-runtime';
+import { Fragment, ReaderFragment } from 'relay-runtime';
+export type Scope = "APPLICATION" | "COMPONENT" | "CONFIGURATION" | "ENVIRONMENT" | "IDENTITY" | "VARIABLE";
+import { FragmentRefs } from "relay-runtime";
 export type EditRole_Form$data = {
   readonly id: string;
   readonly name: string;
@@ -30,108 +24,108 @@ export type EditRole_Form$data = {
     };
     readonly scope: Scope;
   }>;
-  readonly ' $fragmentSpreads': FragmentRefs<'EditRole_Header'>;
-  readonly ' $fragmentType': 'EditRole_Form';
+  readonly " $fragmentSpreads": FragmentRefs<"EditRole_Header">;
+  readonly " $fragmentType": "EditRole_Form";
 };
 export type EditRole_Form$key = {
-  readonly ' $data'?: EditRole_Form$data;
-  readonly ' $fragmentSpreads': FragmentRefs<'EditRole_Form'>;
+  readonly " $data"?: EditRole_Form$data;
+  readonly " $fragmentSpreads": FragmentRefs<"EditRole_Form">;
 };
 
 const node: ReaderFragment = {
-  argumentDefinitions: [],
-  kind: 'Fragment',
-  metadata: null,
-  name: 'EditRole_Form',
-  selections: [
+  "argumentDefinitions": [],
+  "kind": "Fragment",
+  "metadata": null,
+  "name": "EditRole_Form",
+  "selections": [
     {
-      alias: null,
-      args: null,
-      kind: 'ScalarField',
-      name: 'id',
-      storageKey: null,
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "id",
+      "storageKey": null
     },
     {
-      alias: null,
-      args: null,
-      kind: 'ScalarField',
-      name: 'name',
-      storageKey: null,
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "name",
+      "storageKey": null
     },
     {
-      alias: null,
-      args: null,
-      concreteType: 'Permission',
-      kind: 'LinkedField',
-      name: 'permissions',
-      plural: true,
-      selections: [
+      "alias": null,
+      "args": null,
+      "concreteType": "Permission",
+      "kind": "LinkedField",
+      "name": "permissions",
+      "plural": true,
+      "selections": [
         {
-          alias: null,
-          args: null,
-          kind: 'ScalarField',
-          name: 'scope',
-          storageKey: null,
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "scope",
+          "storageKey": null
         },
         {
-          alias: null,
-          args: null,
-          concreteType: 'PermissionsFlags',
-          kind: 'LinkedField',
-          name: 'permissions',
-          plural: false,
-          selections: [
+          "alias": null,
+          "args": null,
+          "concreteType": "PermissionsFlags",
+          "kind": "LinkedField",
+          "name": "permissions",
+          "plural": false,
+          "selections": [
             {
-              alias: null,
-              args: null,
-              kind: 'ScalarField',
-              name: 'isRead',
-              storageKey: null,
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "isRead",
+              "storageKey": null
             },
             {
-              alias: null,
-              args: null,
-              kind: 'ScalarField',
-              name: 'isWrite',
-              storageKey: null,
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "isWrite",
+              "storageKey": null
             },
             {
-              alias: null,
-              args: null,
-              kind: 'ScalarField',
-              name: 'isClaim',
-              storageKey: null,
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "isClaim",
+              "storageKey": null
             },
             {
-              alias: null,
-              args: null,
-              kind: 'ScalarField',
-              name: 'isPublish',
-              storageKey: null,
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "isPublish",
+              "storageKey": null
             },
             {
-              alias: null,
-              args: null,
-              kind: 'ScalarField',
-              name: 'isDecrypt',
-              storageKey: null,
-            },
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "isDecrypt",
+              "storageKey": null
+            }
           ],
-          storageKey: null,
-        },
+          "storageKey": null
+        }
       ],
-      storageKey: null,
+      "storageKey": null
     },
     {
-      args: null,
-      kind: 'FragmentSpread',
-      name: 'EditRole_Header',
-    },
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "EditRole_Header"
+    }
   ],
-  type: 'Role',
-  abstractKey: null,
+  "type": "Role",
+  "abstractKey": null
 };
 
-(node as any).hash = '9bb30d2121bf8ed0f0b6c59597eaa4a3';
+(node as any).hash = "9bb30d2121bf8ed0f0b6c59597eaa4a3";
 
 export default node;

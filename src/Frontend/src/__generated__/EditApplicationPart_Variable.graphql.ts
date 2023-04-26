@@ -8,70 +8,72 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import {Fragment, ReaderFragment} from 'relay-runtime';
-import {FragmentRefs} from 'relay-runtime';
+import { Fragment, ReaderFragment } from 'relay-runtime';
+import { FragmentRefs } from "relay-runtime";
 export type EditApplicationPart_Variable$data = {
   readonly application: {
     readonly id: string;
   } | null;
   readonly id: string;
   readonly variableValues: ReadonlyArray<{
-    readonly ' $fragmentSpreads': FragmentRefs<'VariableValueList'>;
+    readonly " $fragmentSpreads": FragmentRefs<"VariableValueList">;
   }>;
-  readonly ' $fragmentType': 'EditApplicationPart_Variable';
+  readonly " $fragmentType": "EditApplicationPart_Variable";
 };
 export type EditApplicationPart_Variable$key = {
-  readonly ' $data'?: EditApplicationPart_Variable$data;
-  readonly ' $fragmentSpreads': FragmentRefs<'EditApplicationPart_Variable'>;
+  readonly " $data"?: EditApplicationPart_Variable$data;
+  readonly " $fragmentSpreads": FragmentRefs<"EditApplicationPart_Variable">;
 };
 
-const node: ReaderFragment = (function () {
-  var v0 = {
-    alias: null,
-    args: null,
-    kind: 'ScalarField',
-    name: 'id',
-    storageKey: null,
-  };
-  return {
-    argumentDefinitions: [],
-    kind: 'Fragment',
-    metadata: null,
-    name: 'EditApplicationPart_Variable',
-    selections: [
-      v0 /*: any*/,
-      {
-        alias: null,
-        args: null,
-        concreteType: 'Application',
-        kind: 'LinkedField',
-        name: 'application',
-        plural: false,
-        selections: [v0 /*: any*/],
-        storageKey: null,
-      },
-      {
-        alias: null,
-        args: null,
-        concreteType: 'VariableValue',
-        kind: 'LinkedField',
-        name: 'variableValues',
-        plural: true,
-        selections: [
-          {
-            args: null,
-            kind: 'FragmentSpread',
-            name: 'VariableValueList',
-          },
-        ],
-        storageKey: null,
-      },
-    ],
-    type: 'ApplicationPart',
-    abstractKey: null,
-  };
+const node: ReaderFragment = (function(){
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+};
+return {
+  "argumentDefinitions": [],
+  "kind": "Fragment",
+  "metadata": null,
+  "name": "EditApplicationPart_Variable",
+  "selections": [
+    (v0/*: any*/),
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "Application",
+      "kind": "LinkedField",
+      "name": "application",
+      "plural": false,
+      "selections": [
+        (v0/*: any*/)
+      ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "VariableValue",
+      "kind": "LinkedField",
+      "name": "variableValues",
+      "plural": true,
+      "selections": [
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "VariableValueList"
+        }
+      ],
+      "storageKey": null
+    }
+  ],
+  "type": "ApplicationPart",
+  "abstractKey": null
+};
 })();
 
-(node as any).hash = '2ec46eb4f46e33e492917e63a02db39a';
+(node as any).hash = "2ec46eb4f46e33e492917e63a02db39a";
 
 export default node;

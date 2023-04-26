@@ -11,7 +11,7 @@
 
 // @relayRequestID e5577e1f6bd787d665f4f37ab4f29bcf
 
-import {ConcreteRequest, Mutation} from 'relay-runtime';
+import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type PublishApplicationPartByIdInput = {
   applicationPartId: string;
 };
@@ -36,124 +36,124 @@ export type PublishApplicationPartDialogMutation = {
   variables: PublishApplicationPartDialogMutation$variables;
 };
 
-const node: ConcreteRequest = (function () {
-  var v0 = [
+const node: ConcreteRequest = (function(){
+var v0 = [
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "input"
+  }
+],
+v1 = [
+  {
+    "alias": null,
+    "args": [
       {
-        defaultValue: null,
-        kind: 'LocalArgument',
-        name: 'input',
-      },
+        "kind": "Variable",
+        "name": "input",
+        "variableName": "input"
+      }
     ],
-    v1 = [
+    "concreteType": "PublishApplicationPartByIdPayload",
+    "kind": "LinkedField",
+    "name": "publishApplicationPartById",
+    "plural": false,
+    "selections": [
       {
-        alias: null,
-        args: [
+        "alias": null,
+        "args": null,
+        "concreteType": "PublishedApplicationPart",
+        "kind": "LinkedField",
+        "name": "publishedApplicationPart",
+        "plural": false,
+        "selections": [
           {
-            kind: 'Variable',
-            name: 'input',
-            variableName: 'input',
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "id",
+            "storageKey": null
           },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "version",
+            "storageKey": null
+          }
         ],
-        concreteType: 'PublishApplicationPartByIdPayload',
-        kind: 'LinkedField',
-        name: 'publishApplicationPartById',
-        plural: false,
-        selections: [
-          {
-            alias: null,
-            args: null,
-            concreteType: 'PublishedApplicationPart',
-            kind: 'LinkedField',
-            name: 'publishedApplicationPart',
-            plural: false,
-            selections: [
-              {
-                alias: null,
-                args: null,
-                kind: 'ScalarField',
-                name: 'id',
-                storageKey: null,
-              },
-              {
-                alias: null,
-                args: null,
-                kind: 'ScalarField',
-                name: 'version',
-                storageKey: null,
-              },
-            ],
-            storageKey: null,
-          },
-          {
-            alias: null,
-            args: null,
-            concreteType: null,
-            kind: 'LinkedField',
-            name: 'errors',
-            plural: true,
-            selections: [
-              {
-                alias: null,
-                args: null,
-                kind: 'ScalarField',
-                name: '__typename',
-                storageKey: null,
-              },
-              {
-                kind: 'InlineFragment',
-                selections: [
-                  {
-                    alias: null,
-                    args: null,
-                    kind: 'ScalarField',
-                    name: 'message',
-                    storageKey: null,
-                  },
-                  {
-                    alias: null,
-                    args: null,
-                    kind: 'ScalarField',
-                    name: 'code',
-                    storageKey: null,
-                  },
-                ],
-                type: 'UserError',
-                abstractKey: '__isUserError',
-              },
-            ],
-            storageKey: null,
-          },
-        ],
-        storageKey: null,
+        "storageKey": null
       },
-    ];
-  return {
-    fragment: {
-      argumentDefinitions: v0 /*: any*/,
-      kind: 'Fragment',
-      metadata: null,
-      name: 'PublishApplicationPartDialogMutation',
-      selections: v1 /*: any*/,
-      type: 'Mutation',
-      abstractKey: null,
-    },
-    kind: 'Request',
-    operation: {
-      argumentDefinitions: v0 /*: any*/,
-      kind: 'Operation',
-      name: 'PublishApplicationPartDialogMutation',
-      selections: v1 /*: any*/,
-    },
-    params: {
-      id: 'e5577e1f6bd787d665f4f37ab4f29bcf',
-      metadata: {},
-      name: 'PublishApplicationPartDialogMutation',
-      operationKind: 'mutation',
-      text: null,
-    },
-  };
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": null,
+        "kind": "LinkedField",
+        "name": "errors",
+        "plural": true,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "__typename",
+            "storageKey": null
+          },
+          {
+            "kind": "InlineFragment",
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "message",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "code",
+                "storageKey": null
+              }
+            ],
+            "type": "UserError",
+            "abstractKey": "__isUserError"
+          }
+        ],
+        "storageKey": null
+      }
+    ],
+    "storageKey": null
+  }
+];
+return {
+  "fragment": {
+    "argumentDefinitions": (v0/*: any*/),
+    "kind": "Fragment",
+    "metadata": null,
+    "name": "PublishApplicationPartDialogMutation",
+    "selections": (v1/*: any*/),
+    "type": "Mutation",
+    "abstractKey": null
+  },
+  "kind": "Request",
+  "operation": {
+    "argumentDefinitions": (v0/*: any*/),
+    "kind": "Operation",
+    "name": "PublishApplicationPartDialogMutation",
+    "selections": (v1/*: any*/)
+  },
+  "params": {
+    "id": "e5577e1f6bd787d665f4f37ab4f29bcf",
+    "metadata": {},
+    "name": "PublishApplicationPartDialogMutation",
+    "operationKind": "mutation",
+    "text": null
+  }
+};
 })();
 
-(node as any).hash = '488def53c17799a8c21008264ce3ef1f';
+(node as any).hash = "488def53c17799a8c21008264ce3ef1f";
 
 export default node;

@@ -8,33 +8,33 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import {Fragment, ReaderFragment} from 'relay-runtime';
-import {FragmentRefs} from 'relay-runtime';
+import { Fragment, ReaderFragment } from 'relay-runtime';
+import { FragmentRefs } from "relay-runtime";
 export type EditComponent_AvailableIn_Query$data = {
-  readonly ' $fragmentSpreads': FragmentRefs<'ChangeComponentScopeDialog'>;
-  readonly ' $fragmentType': 'EditComponent_AvailableIn_Query';
+  readonly " $fragmentSpreads": FragmentRefs<"ChangeComponentScopeDialog">;
+  readonly " $fragmentType": "EditComponent_AvailableIn_Query";
 };
 export type EditComponent_AvailableIn_Query$key = {
-  readonly ' $data'?: EditComponent_AvailableIn_Query$data;
-  readonly ' $fragmentSpreads': FragmentRefs<'EditComponent_AvailableIn_Query'>;
+  readonly " $data"?: EditComponent_AvailableIn_Query$data;
+  readonly " $fragmentSpreads": FragmentRefs<"EditComponent_AvailableIn_Query">;
 };
 
 const node: ReaderFragment = {
-  argumentDefinitions: [],
-  kind: 'Fragment',
-  metadata: null,
-  name: 'EditComponent_AvailableIn_Query',
-  selections: [
+  "argumentDefinitions": [],
+  "kind": "Fragment",
+  "metadata": null,
+  "name": "EditComponent_AvailableIn_Query",
+  "selections": [
     {
-      args: null,
-      kind: 'FragmentSpread',
-      name: 'ChangeComponentScopeDialog',
-    },
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "ChangeComponentScopeDialog"
+    }
   ],
-  type: 'Query',
-  abstractKey: null,
+  "type": "Query",
+  "abstractKey": null
 };
 
-(node as any).hash = '9e590bf0a8efde8260310708564162dc';
+(node as any).hash = "9e590bf0a8efde8260310708564162dc";
 
 export default node;

@@ -11,7 +11,7 @@
 
 // @relayRequestID 17d5b40c675e96a240e2bcb090028ad7
 
-import {ConcreteRequest, Mutation} from 'relay-runtime';
+import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type RenameVariableInput = {
   id: string;
   name: string;
@@ -32,85 +32,85 @@ export type RenameVariableDialogMutation = {
   variables: RenameVariableDialogMutation$variables;
 };
 
-const node: ConcreteRequest = (function () {
-  var v0 = [
+const node: ConcreteRequest = (function(){
+var v0 = [
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "input"
+  }
+],
+v1 = [
+  {
+    "alias": null,
+    "args": [
       {
-        defaultValue: null,
-        kind: 'LocalArgument',
-        name: 'input',
-      },
+        "kind": "Variable",
+        "name": "input",
+        "variableName": "input"
+      }
     ],
-    v1 = [
+    "concreteType": "RenameVariablePayload",
+    "kind": "LinkedField",
+    "name": "renameVariable",
+    "plural": false,
+    "selections": [
       {
-        alias: null,
-        args: [
+        "alias": null,
+        "args": null,
+        "concreteType": "Variable",
+        "kind": "LinkedField",
+        "name": "variable",
+        "plural": false,
+        "selections": [
           {
-            kind: 'Variable',
-            name: 'input',
-            variableName: 'input',
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "id",
+            "storageKey": null
           },
-        ],
-        concreteType: 'RenameVariablePayload',
-        kind: 'LinkedField',
-        name: 'renameVariable',
-        plural: false,
-        selections: [
           {
-            alias: null,
-            args: null,
-            concreteType: 'Variable',
-            kind: 'LinkedField',
-            name: 'variable',
-            plural: false,
-            selections: [
-              {
-                alias: null,
-                args: null,
-                kind: 'ScalarField',
-                name: 'id',
-                storageKey: null,
-              },
-              {
-                alias: null,
-                args: null,
-                kind: 'ScalarField',
-                name: 'name',
-                storageKey: null,
-              },
-            ],
-            storageKey: null,
-          },
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "name",
+            "storageKey": null
+          }
         ],
-        storageKey: null,
-      },
-    ];
-  return {
-    fragment: {
-      argumentDefinitions: v0 /*: any*/,
-      kind: 'Fragment',
-      metadata: null,
-      name: 'RenameVariableDialogMutation',
-      selections: v1 /*: any*/,
-      type: 'Mutation',
-      abstractKey: null,
-    },
-    kind: 'Request',
-    operation: {
-      argumentDefinitions: v0 /*: any*/,
-      kind: 'Operation',
-      name: 'RenameVariableDialogMutation',
-      selections: v1 /*: any*/,
-    },
-    params: {
-      id: '17d5b40c675e96a240e2bcb090028ad7',
-      metadata: {},
-      name: 'RenameVariableDialogMutation',
-      operationKind: 'mutation',
-      text: null,
-    },
-  };
+        "storageKey": null
+      }
+    ],
+    "storageKey": null
+  }
+];
+return {
+  "fragment": {
+    "argumentDefinitions": (v0/*: any*/),
+    "kind": "Fragment",
+    "metadata": null,
+    "name": "RenameVariableDialogMutation",
+    "selections": (v1/*: any*/),
+    "type": "Mutation",
+    "abstractKey": null
+  },
+  "kind": "Request",
+  "operation": {
+    "argumentDefinitions": (v0/*: any*/),
+    "kind": "Operation",
+    "name": "RenameVariableDialogMutation",
+    "selections": (v1/*: any*/)
+  },
+  "params": {
+    "id": "17d5b40c675e96a240e2bcb090028ad7",
+    "metadata": {},
+    "name": "RenameVariableDialogMutation",
+    "operationKind": "mutation",
+    "text": null
+  }
+};
 })();
 
-(node as any).hash = '9ea97b861c34882cb976467c51d2aa31';
+(node as any).hash = "9ea97b861c34882cb976467c51d2aa31";
 
 export default node;

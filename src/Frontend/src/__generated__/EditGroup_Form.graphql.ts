@@ -8,47 +8,43 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import {Fragment, ReaderFragment} from 'relay-runtime';
-import {FragmentRefs} from 'relay-runtime';
+import { Fragment, ReaderFragment } from 'relay-runtime';
+import { FragmentRefs } from "relay-runtime";
 export type EditGroup_Form$data = {
-  readonly ' $fragmentSpreads': FragmentRefs<
-    | 'EditGroup_Header'
-    | 'EditGroup_RequirementsSection'
-    | 'EditGroup_RoleScopeSection'
-  >;
-  readonly ' $fragmentType': 'EditGroup_Form';
+  readonly " $fragmentSpreads": FragmentRefs<"EditGroup_Header" | "EditGroup_RequirementsSection" | "EditGroup_RoleScopeSection">;
+  readonly " $fragmentType": "EditGroup_Form";
 };
 export type EditGroup_Form$key = {
-  readonly ' $data'?: EditGroup_Form$data;
-  readonly ' $fragmentSpreads': FragmentRefs<'EditGroup_Form'>;
+  readonly " $data"?: EditGroup_Form$data;
+  readonly " $fragmentSpreads": FragmentRefs<"EditGroup_Form">;
 };
 
 const node: ReaderFragment = {
-  argumentDefinitions: [],
-  kind: 'Fragment',
-  metadata: null,
-  name: 'EditGroup_Form',
-  selections: [
+  "argumentDefinitions": [],
+  "kind": "Fragment",
+  "metadata": null,
+  "name": "EditGroup_Form",
+  "selections": [
     {
-      args: null,
-      kind: 'FragmentSpread',
-      name: 'EditGroup_RoleScopeSection',
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "EditGroup_RoleScopeSection"
     },
     {
-      args: null,
-      kind: 'FragmentSpread',
-      name: 'EditGroup_Header',
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "EditGroup_Header"
     },
     {
-      args: null,
-      kind: 'FragmentSpread',
-      name: 'EditGroup_RequirementsSection',
-    },
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "EditGroup_RequirementsSection"
+    }
   ],
-  type: 'Group',
-  abstractKey: null,
+  "type": "Group",
+  "abstractKey": null
 };
 
-(node as any).hash = '750c7d46640d81984fab71f13fb98a8f';
+(node as any).hash = "750c7d46640d81984fab71f13fb98a8f";
 
 export default node;
