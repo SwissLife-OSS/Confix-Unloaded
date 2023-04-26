@@ -1,14 +1,14 @@
-import React from "react";
-import { Route, Routes } from "react-router-dom";
-import { FullSizeBox } from "../shared/FullSizeBox";
-import { Page } from "../shared/Page";
-import { DefaultSuspense } from "../shared/DefaultSuspense";
-import { Tabs } from "antd";
-import { useTabSwitcher } from "../shared/useTabSwitcher";
-import { css } from "@emotion/react";
-import { Groups } from "./groups/Groups";
-import { Roles } from "./roles/Roles";
-import { ApiKeys } from "./apiKeys/ApiKeys";
+import React from 'react';
+import {Route, Routes} from 'react-router-dom';
+import {FullSizeBox} from '../shared/FullSizeBox';
+import {Page} from '../shared/Page';
+import {DefaultSuspense} from '../shared/DefaultSuspense';
+import {Tabs} from 'antd';
+import {useTabSwitcher} from '../shared/useTabSwitcher';
+import {css} from '@emotion/react';
+import {Groups} from './groups/Groups';
+import {Roles} from './roles/Roles';
+import {ApiKeys} from './apiKeys/ApiKeys';
 
 export const Settings: React.FC = (props) => {
   return (
@@ -32,7 +32,7 @@ export const SettingsRoutes: React.VFC = () => (
 );
 
 const SettingsTabs: React.FC = (props) => {
-  const { tab, navigateToTab } = useTabSwitcher();
+  const {tab, navigateToTab} = useTabSwitcher();
   return (
     <Tabs
       defaultActiveKey={tab}
@@ -40,8 +40,8 @@ const SettingsTabs: React.FC = (props) => {
       onChange={navigateToTab}
       items={[
         {
-          key: "groups",
-          label: "Groups",
+          key: 'groups',
+          label: 'Groups',
           children: (
             <DefaultSuspense>
               <Groups />
@@ -49,8 +49,8 @@ const SettingsTabs: React.FC = (props) => {
           ),
         },
         {
-          key: "roles",
-          label: "Roles",
+          key: 'roles',
+          label: 'Roles',
           children: (
             <DefaultSuspense>
               <Roles />
@@ -58,8 +58,8 @@ const SettingsTabs: React.FC = (props) => {
           ),
         },
         {
-          key: "apikeys",
-          label: "Api Keys",
+          key: 'apikeys',
+          label: 'Api Keys',
           children: (
             <DefaultSuspense>
               <ApiKeys />

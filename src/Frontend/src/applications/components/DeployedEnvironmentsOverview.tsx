@@ -1,14 +1,14 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { DeployedEnvironmentsOverview$key } from "@generated/DeployedEnvironmentsOverview.graphql";
-import { Steps } from "antd";
-import { ensureDate } from "../../shared/ensureDate";
-import { graphql } from "babel-plugin-relay/macro";
-import { useFragment } from "react-relay";
+import {DeployedEnvironmentsOverview$key} from '@generated/DeployedEnvironmentsOverview.graphql';
+import {Steps} from 'antd';
+import {ensureDate} from '../../shared/ensureDate';
+import {graphql} from 'babel-plugin-relay/macro';
+import {useFragment} from 'react-relay';
 
 export const DeployedEnvironmentsOverview: React.FC<{
   fragmentRef: DeployedEnvironmentsOverview$key;
-}> = ({ fragmentRef }) => {
+}> = ({fragmentRef}) => {
   const data = useFragment(
     graphql`
       fragment DeployedEnvironmentsOverview on DeployedEnvironment
@@ -42,7 +42,7 @@ export const DeployedEnvironmentsOverview: React.FC<{
         }
       }
     `,
-    fragmentRef
+    fragmentRef,
   ).filter((x) => !!x.environment);
 
   const allDeployedIds = new Set(data.map((x) => x.environment!.id));
@@ -63,7 +63,7 @@ export const DeployedEnvironmentsOverview: React.FC<{
     for (let i = 0; i < environments.length; i++) {
       for (const child of data.filter(
         // eslint-disable-next-line no-loop-func
-        (x) => x.environment?.parent?.id === environments[i].environment?.id
+        (x) => x.environment?.parent?.id === environments[i].environment?.id,
       )) {
         environments.push(child);
       }
@@ -73,13 +73,13 @@ export const DeployedEnvironmentsOverview: React.FC<{
   const newestDeployments = data
     .flatMap(
       (x) =>
-        x.claimedVersions?.nodes?.map((y) => y.publishedApplicationPart) ?? []
+        x.claimedVersions?.nodes?.map((y) => y.publishedApplicationPart) ?? [],
     )
     .filter((x) => !!x)
     .sort(
       (a, b) =>
         ensureDate(b!.publishedAt).getTime() -
-        ensureDate(a!.publishedAt).getTime()
+        ensureDate(a!.publishedAt).getTime(),
     );
 
   const newestDeployment = newestDeployments[0];
@@ -90,24 +90,24 @@ export const DeployedEnvironmentsOverview: React.FC<{
         <Steps progressDot>
           {x.map((x) => {
             const isFinished = x?.claimedVersions?.nodes?.find(
-              (x) => x.publishedApplicationPart?.id === newestDeployment?.id
+              (x) => x.publishedApplicationPart?.id === newestDeployment?.id,
             );
             const mostRecentVersion = x.claimedVersions?.nodes
               ?.filter((x) => !!x.publishedApplicationPart?.publishedAt)
               .sort(
                 (a, b) =>
                   ensureDate(
-                    b.publishedApplicationPart!.publishedAt
+                    b.publishedApplicationPart!.publishedAt,
                   ).getTime() -
-                  ensureDate(a.publishedApplicationPart!.publishedAt).getTime()
+                  ensureDate(a.publishedApplicationPart!.publishedAt).getTime(),
               )[0];
             return (
               <Steps.Step
-                status={isFinished ? "finish" : "wait"}
+                status={isFinished ? 'finish' : 'wait'}
                 title={x.environment?.name}
                 subTitle={
                   <>
-                    Deployed Version{" "}
+                    Deployed Version{' '}
                     {mostRecentVersion?.publishedApplicationPart?.version}
                   </>
                 }

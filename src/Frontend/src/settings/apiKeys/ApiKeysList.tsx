@@ -1,28 +1,28 @@
-import { Button, List } from "antd";
+import {Button, List} from 'antd';
 import {
   useFragment,
   useLazyLoadQuery,
   usePaginationFragment,
-} from "react-relay";
+} from 'react-relay';
 
-import { ApiKeysList$key } from "@generated/ApiKeysList.graphql";
-import { ApiKeysListQuery } from "@generated/ApiKeysListQuery.graphql";
-import { ApiKeysList_ApiKeyListItem$key } from "@generated/ApiKeysList_ApiKeyListItem.graphql";
-import { Colors } from "../../shared/colors";
-import { DeleteIcon } from "../../icons/icons";
-import { InfiniteScrollList } from "../../shared/InfiniteScrollList";
-import { RemoveApiKeyDialog } from "./controls/dialogs/RemoveApiKeyDialog";
-import { config } from "../../config";
-import { graphql } from "babel-plugin-relay/macro";
-import styled from "@emotion/styled";
-import { useCallback } from "react";
-import { useGoTo } from "../../shared/useGoTo";
-import { useToggle } from "../../shared/useToggle";
+import {ApiKeysList$key} from '@generated/ApiKeysList.graphql';
+import {ApiKeysListQuery} from '@generated/ApiKeysListQuery.graphql';
+import {ApiKeysList_ApiKeyListItem$key} from '@generated/ApiKeysList_ApiKeyListItem.graphql';
+import {Colors} from '../../shared/colors';
+import {DeleteIcon} from '../../icons/icons';
+import {InfiniteScrollList} from '../../shared/InfiniteScrollList';
+import {RemoveApiKeyDialog} from './controls/dialogs/RemoveApiKeyDialog';
+import {config} from '../../config';
+import {graphql} from 'babel-plugin-relay/macro';
+import styled from '@emotion/styled';
+import {useCallback} from 'react';
+import {useGoTo} from '../../shared/useGoTo';
+import {useToggle} from '../../shared/useToggle';
 
 export const ApiKeysList: React.FC<{
   selectedApiKeyId?: string;
   onItemSelect: (item: string) => void;
-}> = ({ onItemSelect, selectedApiKeyId }) => {
+}> = ({onItemSelect, selectedApiKeyId}) => {
   const query = useLazyLoadQuery<ApiKeysListQuery>(
     graphql`
       query ApiKeysListQuery($cursor: String, $count: Int) {
@@ -31,7 +31,7 @@ export const ApiKeysList: React.FC<{
     `,
     {
       count: config.pagination.pageSize,
-    }
+    },
   );
 
   const {
@@ -55,14 +55,14 @@ export const ApiKeysList: React.FC<{
         }
       }
     `,
-    query
+    query,
   );
 
   const data = connection?.apiKeys?.edges?.map((x) => x.node) ?? [];
 
   const handleOnItemSelected = useCallback(
     (id: string) => onItemSelect(id),
-    [onItemSelect]
+    [onItemSelect],
   );
 
   return (
@@ -87,20 +87,20 @@ const ApiKeyListItem: React.FC<{
   selected: boolean;
   onItemSelect: (envId: string) => void;
   fragmentRef: ApiKeysList_ApiKeyListItem$key;
-}> = ({ onItemSelect, fragmentRef, selected }) => {
-  const { id, name } = useFragment<ApiKeysList_ApiKeyListItem$key>(
+}> = ({onItemSelect, fragmentRef, selected}) => {
+  const {id, name} = useFragment<ApiKeysList_ApiKeyListItem$key>(
     graphql`
       fragment ApiKeysList_ApiKeyListItem on ApiKey {
         id
         name
       }
     `,
-    fragmentRef
+    fragmentRef,
   );
 
   const [isRemoveEnvVisible, , enableRemoveEnv, disableRemoveEnv] = useToggle();
 
-  const goToOverview = useGoTo("settings/apikeys");
+  const goToOverview = useGoTo('settings/apikeys');
 
   const handleClick = useCallback(() => onItemSelect(id), [onItemSelect, id]);
 
@@ -111,7 +111,7 @@ const ApiKeyListItem: React.FC<{
         goToOverview();
       }
     },
-    [goToOverview, disableRemoveEnv]
+    [goToOverview, disableRemoveEnv],
   );
 
   return (
@@ -128,9 +128,9 @@ const ApiKeyListItem: React.FC<{
   );
 };
 
-const ListItem = styled(List.Item)<{ selected: boolean }>`
+const ListItem = styled(List.Item)<{selected: boolean}>`
   cursor: pointer;
-  background-color: ${(props) => (props.selected ? Colors.gray[5] : "inherit")};
+  background-color: ${(props) => (props.selected ? Colors.gray[5] : 'inherit')};
   :hover {
     background-color: ${Colors.gray[2]};
   }

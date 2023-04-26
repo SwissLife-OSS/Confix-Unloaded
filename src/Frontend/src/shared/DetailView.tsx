@@ -1,20 +1,20 @@
-import React, { Suspense } from "react";
-import { Spin, Typography } from "antd";
-import { css } from "@emotion/react";
-import { Colors } from "./colors";
+import React, {Suspense} from 'react';
+import {Spin, Typography} from 'antd';
+import {css} from '@emotion/react';
+import {Colors} from './colors';
 
 export const DetailView: React.FC<
   React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
-> = ({ children, style, ...rest }) => (
+> = ({children, style, ...rest}) => (
   <Suspense fallback={<PageLoader />}>
-    <div {...rest} style={{ ...style, flex: 1 }}>
+    <div {...rest} style={{...style, flex: 1}}>
       {children}
     </div>
   </Suspense>
 );
 
-export const PageLoader: React.FC<{ message?: string }> = ({
-  message = "Loading...",
+export const PageLoader: React.FC<{message?: string}> = ({
+  message = 'Loading...',
 }) => (
   <div
     css={css`
@@ -34,7 +34,7 @@ export const PageLoader: React.FC<{ message?: string }> = ({
       `}
     >
       <Spin />
-      <Typography css={{ color: Colors.text.secondaryText }}>
+      <Typography css={{color: Colors.text.secondaryText}}>
         {message}
       </Typography>
     </div>

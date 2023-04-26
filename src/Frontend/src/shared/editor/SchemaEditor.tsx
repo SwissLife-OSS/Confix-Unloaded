@@ -1,21 +1,21 @@
-import { css } from "@emotion/react";
-import Editor from "@monaco-editor/react";
-import { editor } from "monaco-editor";
-import { useCallback, useRef } from "react";
-import { formatGraphQL, reportGraphQLFormatError } from "../formatGraphQL";
-import { noop } from "../noop";
-import { defaultEditorOptions } from "./defaultEditorOptions";
+import {css} from '@emotion/react';
+import Editor from '@monaco-editor/react';
+import {editor} from 'monaco-editor';
+import {useCallback, useRef} from 'react';
+import {formatGraphQL, reportGraphQLFormatError} from '../formatGraphQL';
+import {noop} from '../noop';
+import {defaultEditorOptions} from './defaultEditorOptions';
 
 export type SchemaEditorConfiguration = ReturnType<typeof useSchemaEditorRef>;
 
-const readonlyOptions = { ...defaultEditorOptions, readOnly: true };
+const readonlyOptions = {...defaultEditorOptions, readOnly: true};
 
 export const useSchemaEditorRef = () => {
   const ref = useRef<editor.IStandaloneCodeEditor | undefined>();
   const format = useCallback(() => {
     if (ref.current) {
       ref.current.setValue(
-        formatGraphQL(ref.current.getValue(), reportGraphQLFormatError)
+        formatGraphQL(ref.current.getValue(), reportGraphQLFormatError),
       );
     }
   }, []);
@@ -26,7 +26,7 @@ export const useSchemaEditorRef = () => {
 
   const getValue = () => ref.current?.getValue();
 
-  return { ref, onMount, format, getValue };
+  return {ref, onMount, format, getValue};
 };
 
 export const SchemaEditor: React.FC<{
@@ -35,7 +35,7 @@ export const SchemaEditor: React.FC<{
   readonly?: boolean;
   onChange?: (value: string | undefined) => void;
 }> = ({
-  configuration: { onMount },
+  configuration: {onMount},
   schema,
   readonly = false,
   onChange = noop,

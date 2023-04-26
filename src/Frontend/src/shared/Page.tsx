@@ -1,14 +1,14 @@
-import React from "react";
-import { css } from "@emotion/react";
-import { PageHeader } from "antd";
-import { config } from "../config";
-import logo from "../images/logo.png";
+import React from 'react';
+import {css} from '@emotion/react';
+import {PageHeader} from 'antd';
+import {config} from '../config';
+import logo from '../images/logo.png';
 
 export const Page: React.FC<{
   title: string;
   subTitle?: string;
   children: React.ReactElement | React.ReactElement[];
-}> = ({ title, subTitle = "", children }) => {
+}> = ({title, subTitle = '', children}) => {
   return (
     <>
       <PageHeader

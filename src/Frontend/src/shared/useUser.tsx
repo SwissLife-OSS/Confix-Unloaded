@@ -1,26 +1,26 @@
 import {
   Scope as QueryScope,
   useUser_Me_Query,
-} from "@generated/useUser_Me_Query.graphql";
+} from '@generated/useUser_Me_Query.graphql';
 
-import { graphql } from "babel-plugin-relay/macro";
-import { useLazyLoadQuery } from "react-relay";
-import { useMemo } from "react";
+import {graphql} from 'babel-plugin-relay/macro';
+import {useLazyLoadQuery} from 'react-relay';
+import {useMemo} from 'react';
 
 interface User {
   name: string;
-  groups: NonNullable<useUser_Me_Query["response"]["me"]>["groups"];
+  groups: NonNullable<useUser_Me_Query['response']['me']>['groups'];
   hasPermission: (
     scope: Scope,
     namespace: string,
-    permission: Permission
+    permission: Permission,
   ) => boolean;
 }
 export type Scope = QueryScope;
 
 export type Permission = keyof NonNullable<
-  useUser_Me_Query["response"]["me"]
->["groups"][number]["roles"][number]["roles"][number]["permissions"][number]["permissions"];
+  useUser_Me_Query['response']['me']
+>['groups'][number]['roles'][number]['roles'][number]['permissions'][number]['permissions'];
 
 export const useUser = (): User => {
   const data = useLazyLoadQuery<useUser_Me_Query>(
@@ -50,10 +50,10 @@ export const useUser = (): User => {
         }
       }
     `,
-    {}
+    {},
   );
 
-  const hasPermission = useMemo<User["hasPermission"]>(() => {
+  const hasPermission = useMemo<User['hasPermission']>(() => {
     const cache = new Map<string, boolean>();
     return (scope, namespace, permission) => {
       const groups = data!.me!.groups;
@@ -66,7 +66,7 @@ export const useUser = (): User => {
               continue;
             }
             for (const role of roleScope.roles) {
-              for (const { permissions } of role.permissions) {
+              for (const {permissions} of role.permissions) {
                 if (permissions[permission]) {
                   cache.set(identifier, permissions[permission]);
                   return permissions[permission];
@@ -86,19 +86,19 @@ export const useUser = (): User => {
     throw new NotLoggedInError();
   }
 
-  return { name: data.me.name, groups: data.me.groups, hasPermission };
+  return {name: data.me.name, groups: data.me.groups, hasPermission};
 };
 
-const NotLoggedInErrorName = "NotLoggedInError";
+const NotLoggedInErrorName = 'NotLoggedInError';
 
 class NotLoggedInError extends Error {
   name: string = NotLoggedInErrorName;
-  message: string = "The current user is not logged in";
+  message: string = 'The current user is not logged in';
 }
 
 export const isNotLoggedInError = (error: Error): error is NotLoggedInError =>
   error.name === NotLoggedInErrorName;
 
 export const Namespaces = {
-  Global: "Global",
+  Global: 'Global',
 } as const;

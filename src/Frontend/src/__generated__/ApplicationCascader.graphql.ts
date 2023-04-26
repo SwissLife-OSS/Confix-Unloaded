@@ -8,50 +8,52 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Fragment, ReaderFragment } from 'relay-runtime';
-import { FragmentRefs } from "relay-runtime";
+import {Fragment, ReaderFragment} from 'relay-runtime';
+import {FragmentRefs} from 'relay-runtime';
 export type ApplicationCascader$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"ApplicationCascader_Applications" | "ApplicationCascader_Namespaces">;
-  readonly " $fragmentType": "ApplicationCascader";
+  readonly ' $fragmentSpreads': FragmentRefs<
+    'ApplicationCascader_Applications' | 'ApplicationCascader_Namespaces'
+  >;
+  readonly ' $fragmentType': 'ApplicationCascader';
 };
 export type ApplicationCascader$key = {
-  readonly " $data"?: ApplicationCascader$data;
-  readonly " $fragmentSpreads": FragmentRefs<"ApplicationCascader">;
+  readonly ' $data'?: ApplicationCascader$data;
+  readonly ' $fragmentSpreads': FragmentRefs<'ApplicationCascader'>;
 };
 
 const node: ReaderFragment = {
-  "argumentDefinitions": [
+  argumentDefinitions: [
     {
-      "defaultValue": null,
-      "kind": "LocalArgument",
-      "name": "search"
-    }
+      defaultValue: null,
+      kind: 'LocalArgument',
+      name: 'search',
+    },
   ],
-  "kind": "Fragment",
-  "metadata": null,
-  "name": "ApplicationCascader",
-  "selections": [
+  kind: 'Fragment',
+  metadata: null,
+  name: 'ApplicationCascader',
+  selections: [
     {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "ApplicationCascader_Namespaces"
+      args: null,
+      kind: 'FragmentSpread',
+      name: 'ApplicationCascader_Namespaces',
     },
     {
-      "args": [
+      args: [
         {
-          "kind": "Variable",
-          "name": "search",
-          "variableName": "search"
-        }
+          kind: 'Variable',
+          name: 'search',
+          variableName: 'search',
+        },
       ],
-      "kind": "FragmentSpread",
-      "name": "ApplicationCascader_Applications"
-    }
+      kind: 'FragmentSpread',
+      name: 'ApplicationCascader_Applications',
+    },
   ],
-  "type": "Query",
-  "abstractKey": null
+  type: 'Query',
+  abstractKey: null,
 };
 
-(node as any).hash = "52358c8ecd819df6c1156a74f4ae49ac";
+(node as any).hash = '52358c8ecd819df6c1156a74f4ae49ac';
 
 export default node;

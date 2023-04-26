@@ -1,18 +1,18 @@
-import * as React from "react";
+import * as React from 'react';
 
 import {
   pipeCommitFn,
   withOnSuccess,
   withSuccessMessage,
-} from "../../../shared/pipeCommitFn";
-import { useFragment, useMutation } from "react-relay";
+} from '../../../shared/pipeCommitFn';
+import {useFragment, useMutation} from 'react-relay';
 
-import { ApplicationCascader } from "../../../applications/components/ApplicationCascader";
-import { ChangeComponentScopeDialog$key } from "@generated/ChangeComponentScopeDialog.graphql";
-import { ChangeComponentScopeDialogMutation } from "@generated/ChangeComponentScopeDialogMutation.graphql";
-import { Modal } from "antd";
-import { graphql } from "babel-plugin-relay/macro";
-import { withSilentSuspense } from "../../../shared/withSilentSuspense";
+import {ApplicationCascader} from '../../../applications/components/ApplicationCascader';
+import {ChangeComponentScopeDialog$key} from '@generated/ChangeComponentScopeDialog.graphql';
+import {ChangeComponentScopeDialogMutation} from '@generated/ChangeComponentScopeDialogMutation.graphql';
+import {Modal} from 'antd';
+import {graphql} from 'babel-plugin-relay/macro';
+import {withSilentSuspense} from '../../../shared/withSilentSuspense';
 
 type Result = [string] | [string, string] | [string, string, string];
 
@@ -23,7 +23,7 @@ export const ChangeComponentScopeDialog: React.FC<{
   id: string;
   fragmentRef: ChangeComponentScopeDialog$key;
 }> = withSilentSuspense(
-  ({ fragmentRef, open, id, scopes: initialScopes, onClose }) => {
+  ({fragmentRef, open, id, scopes: initialScopes, onClose}) => {
     const [commit, isInFlight] =
       useMutation<ChangeComponentScopeDialogMutation>(
         graphql`
@@ -50,17 +50,17 @@ export const ChangeComponentScopeDialog: React.FC<{
               }
             }
           }
-        `
+        `,
       );
 
     const data = useFragment(
       graphql`
         fragment ChangeComponentScopeDialog on Query
-        @argumentDefinitions(search: { type: "String", defaultValue: null }) {
+        @argumentDefinitions(search: {type: "String", defaultValue: null}) {
           ...ApplicationCascader @arguments(search: $search)
         }
       `,
-      fragmentRef
+      fragmentRef,
     );
 
     const [scopes, setScope] = React.useState<Result[]>(initialScopes);
@@ -68,7 +68,7 @@ export const ChangeComponentScopeDialog: React.FC<{
       pipeCommitFn(commit, [
         withSuccessMessage(
           (x) => x.updateComponentScopes.component?.id,
-          "Changes scopes of component"
+          'Changes scopes of component',
         ),
         withOnSuccess((x) => x.updateComponentScopes.component?.id, onClose),
       ])({
@@ -101,5 +101,5 @@ export const ChangeComponentScopeDialog: React.FC<{
         />
       </Modal>
     );
-  }
+  },
 );

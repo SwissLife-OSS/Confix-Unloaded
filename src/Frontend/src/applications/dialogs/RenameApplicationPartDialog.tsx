@@ -1,26 +1,26 @@
-import * as React from "react";
+import * as React from 'react';
 
 import {
   pipeCommitFn,
   withErrorNotifications,
   withOnSuccess,
   withSuccessMessage,
-} from "../../shared/pipeCommitFn";
-import { useCallback, useState } from "react";
+} from '../../shared/pipeCommitFn';
+import {useCallback, useState} from 'react';
 
-import { FieldInput } from "../../shared/FormField";
-import { Modal } from "antd";
-import { RenameApplicationPartDialogMutation } from "@generated/RenameApplicationPartDialogMutation.graphql";
-import { graphql } from "babel-plugin-relay/macro";
-import { useMutation } from "react-relay";
-import { useStringEventHanlder } from "../../shared/useEventListener";
+import {FieldInput} from '../../shared/FormField';
+import {Modal} from 'antd';
+import {RenameApplicationPartDialogMutation} from '@generated/RenameApplicationPartDialogMutation.graphql';
+import {graphql} from 'babel-plugin-relay/macro';
+import {useMutation} from 'react-relay';
+import {useStringEventHanlder} from '../../shared/useEventListener';
 
 export const RenameApplicationPartDialog: React.FC<{
   open: boolean;
   onClose: () => void;
   applicationPartName: string;
   applicationPartId: string;
-}> = ({ open, applicationPartName, applicationPartId, onClose }) => {
+}> = ({open, applicationPartName, applicationPartId, onClose}) => {
   const [commit, isInFlight] = useMutation<RenameApplicationPartDialogMutation>(
     graphql`
       mutation RenameApplicationPartDialogMutation(
@@ -42,7 +42,7 @@ export const RenameApplicationPartDialog: React.FC<{
           }
         }
       }
-    `
+    `,
   );
 
   const [applicationName, setApplicationPartName] =
@@ -52,16 +52,16 @@ export const RenameApplicationPartDialog: React.FC<{
     pipeCommitFn(commit, [
       withSuccessMessage(
         (x) => x.renameApplicationPart.applicationPart?.application?.id,
-        "Renamed ApplicationPart"
+        'Renamed ApplicationPart',
       ),
       withErrorNotifications((x) => x.renameApplicationPart?.errors),
       withOnSuccess(
         (x) => x.renameApplicationPart.applicationPart?.application?.id,
-        onClose
+        onClose,
       ),
     ])({
       variables: {
-        input: { name: applicationName, applicationPartId: applicationPartId },
+        input: {name: applicationName, applicationPartId: applicationPartId},
       },
     });
   }, [commit, applicationPartId, applicationName, onClose]);

@@ -1,12 +1,12 @@
-import { Select, Spin } from "antd";
-import { fetchQuery, useRelayEnvironment } from "react-relay";
-import { useCallback, useEffect, useState } from "react";
+import {Select, Spin} from 'antd';
+import {fetchQuery, useRelayEnvironment} from 'react-relay';
+import {useCallback, useEffect, useState} from 'react';
 
-import { ComponentsSelectQuery } from "@generated/ComponentsSelectQuery.graphql";
-import { graphql } from "babel-plugin-relay/macro";
-import { useDebounce } from "../../shared/debounce";
+import {ComponentsSelectQuery} from '@generated/ComponentsSelectQuery.graphql';
+import {graphql} from 'babel-plugin-relay/macro';
+import {useDebounce} from '../../shared/debounce';
 
-export type ComponentOption = { label: string; value: string };
+export type ComponentOption = {label: string; value: string};
 
 export const ComponentsSelect: React.FC<{
   filter?: {
@@ -15,7 +15,7 @@ export const ComponentsSelect: React.FC<{
     namespace?: string;
   };
   onChange: (selected: ComponentOption[]) => void;
-}> = ({ onChange, filter }) => {
+}> = ({onChange, filter}) => {
   const [value, setValue] = useState<ComponentOption[]>([]);
   const [options, setOptions] = useState<ComponentOption[]>([]);
   const [isLoading, setIsLoading] = useState(options.length === 0);
@@ -53,17 +53,17 @@ export const ComponentsSelect: React.FC<{
           applicationId: filter?.applicationId,
           applicationPartId: filter?.applicationPartId,
           namespace: filter?.namespace,
-        }
+        },
       ).toPromise();
       setOptions(
         data?.components?.edges?.map((x) => ({
           value: x.node.id,
           label: x.node.name,
-        })) ?? []
+        })) ?? [],
       );
       setIsLoading(false);
     },
-    [env, filter?.applicationId, filter?.applicationPartId, filter?.namespace]
+    [env, filter?.applicationId, filter?.applicationPartId, filter?.namespace],
   );
 
   const debouncedSearch = useDebounce((search: string) => {
@@ -74,21 +74,21 @@ export const ComponentsSelect: React.FC<{
     (ids: ComponentOption[], t: any) => {
       onChange(t);
       setValue(ids);
-      fetchData("");
+      fetchData('');
     },
-    [onChange, setValue, fetchData]
+    [onChange, setValue, fetchData],
   );
 
   // initial data fetch
   useEffect(() => {
-    fetchData("");
+    fetchData('');
   }, [fetchData]);
 
   return (
     <Select<ComponentOption[]>
       mode="multiple"
       allowClear
-      style={{ width: "100%" }}
+      style={{width: '100%'}}
       value={value}
       placeholder="Please select"
       filterOption={false}

@@ -11,144 +11,139 @@
 
 // @relayRequestID 389464849a319b1e711fc645ca3128df
 
-import { ConcreteRequest, Query } from 'relay-runtime';
-import { FragmentRefs } from "relay-runtime";
+import {ConcreteRequest, Query} from 'relay-runtime';
+import {FragmentRefs} from 'relay-runtime';
 export type ApplicationCascader_ApplicationPagination_Query$variables = {
   search?: string | null;
 };
 export type ApplicationCascader_ApplicationPagination_Query$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"ApplicationCascader_Applications">;
+  readonly ' $fragmentSpreads': FragmentRefs<'ApplicationCascader_Applications'>;
 };
 export type ApplicationCascader_ApplicationPagination_Query = {
   response: ApplicationCascader_ApplicationPagination_Query$data;
   variables: ApplicationCascader_ApplicationPagination_Query$variables;
 };
 
-const node: ConcreteRequest = (function(){
-var v0 = [
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "search"
-  }
-],
-v1 = {
-  "kind": "Variable",
-  "name": "search",
-  "variableName": "search"
-},
-v2 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-},
-v3 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "name",
-  "storageKey": null
-};
-return {
-  "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
-    "kind": "Fragment",
-    "metadata": null,
-    "name": "ApplicationCascader_ApplicationPagination_Query",
-    "selections": [
+const node: ConcreteRequest = (function () {
+  var v0 = [
       {
-        "args": [
-          (v1/*: any*/)
-        ],
-        "kind": "FragmentSpread",
-        "name": "ApplicationCascader_Applications"
-      }
+        defaultValue: null,
+        kind: 'LocalArgument',
+        name: 'search',
+      },
     ],
-    "type": "Query",
-    "abstractKey": null
-  },
-  "kind": "Request",
-  "operation": {
-    "argumentDefinitions": (v0/*: any*/),
-    "kind": "Operation",
-    "name": "ApplicationCascader_ApplicationPagination_Query",
-    "selections": [
-      {
-        "alias": null,
-        "args": [
-          {
-            "kind": "Literal",
-            "name": "first",
-            "value": 50
-          },
-          (v1/*: any*/)
-        ],
-        "concreteType": "ApplicationsConnection",
-        "kind": "LinkedField",
-        "name": "applications",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "ApplicationsEdge",
-            "kind": "LinkedField",
-            "name": "edges",
-            "plural": true,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "Application",
-                "kind": "LinkedField",
-                "name": "node",
-                "plural": false,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "namespace",
-                    "storageKey": null
-                  },
-                  (v2/*: any*/),
-                  (v3/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "ApplicationPart",
-                    "kind": "LinkedField",
-                    "name": "parts",
-                    "plural": true,
-                    "selections": [
-                      (v2/*: any*/),
-                      (v3/*: any*/)
-                    ],
-                    "storageKey": null
-                  }
-                ],
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
-      }
-    ]
-  },
-  "params": {
-    "id": "389464849a319b1e711fc645ca3128df",
-    "metadata": {},
-    "name": "ApplicationCascader_ApplicationPagination_Query",
-    "operationKind": "query",
-    "text": null
-  }
-};
+    v1 = {
+      kind: 'Variable',
+      name: 'search',
+      variableName: 'search',
+    },
+    v2 = {
+      alias: null,
+      args: null,
+      kind: 'ScalarField',
+      name: 'id',
+      storageKey: null,
+    },
+    v3 = {
+      alias: null,
+      args: null,
+      kind: 'ScalarField',
+      name: 'name',
+      storageKey: null,
+    };
+  return {
+    fragment: {
+      argumentDefinitions: v0 /*: any*/,
+      kind: 'Fragment',
+      metadata: null,
+      name: 'ApplicationCascader_ApplicationPagination_Query',
+      selections: [
+        {
+          args: [v1 /*: any*/],
+          kind: 'FragmentSpread',
+          name: 'ApplicationCascader_Applications',
+        },
+      ],
+      type: 'Query',
+      abstractKey: null,
+    },
+    kind: 'Request',
+    operation: {
+      argumentDefinitions: v0 /*: any*/,
+      kind: 'Operation',
+      name: 'ApplicationCascader_ApplicationPagination_Query',
+      selections: [
+        {
+          alias: null,
+          args: [
+            {
+              kind: 'Literal',
+              name: 'first',
+              value: 50,
+            },
+            v1 /*: any*/,
+          ],
+          concreteType: 'ApplicationsConnection',
+          kind: 'LinkedField',
+          name: 'applications',
+          plural: false,
+          selections: [
+            {
+              alias: null,
+              args: null,
+              concreteType: 'ApplicationsEdge',
+              kind: 'LinkedField',
+              name: 'edges',
+              plural: true,
+              selections: [
+                {
+                  alias: null,
+                  args: null,
+                  concreteType: 'Application',
+                  kind: 'LinkedField',
+                  name: 'node',
+                  plural: false,
+                  selections: [
+                    {
+                      alias: null,
+                      args: null,
+                      kind: 'ScalarField',
+                      name: 'namespace',
+                      storageKey: null,
+                    },
+                    v2 /*: any*/,
+                    v3 /*: any*/,
+                    {
+                      alias: null,
+                      args: null,
+                      concreteType: 'ApplicationPart',
+                      kind: 'LinkedField',
+                      name: 'parts',
+                      plural: true,
+                      selections: [v2 /*: any*/, v3 /*: any*/],
+                      storageKey: null,
+                    },
+                  ],
+                  storageKey: null,
+                },
+              ],
+              storageKey: null,
+            },
+          ],
+          storageKey: null,
+        },
+      ],
+    },
+    params: {
+      id: '389464849a319b1e711fc645ca3128df',
+      metadata: {},
+      name: 'ApplicationCascader_ApplicationPagination_Query',
+      operationKind: 'query',
+      text: null,
+    },
+  };
 })();
 
-(node as any).hash = "55aba6a2ef3d2c59395799aab66a73a3";
+(node as any).hash = '55aba6a2ef3d2c59395799aab66a73a3';
 
 export default node;

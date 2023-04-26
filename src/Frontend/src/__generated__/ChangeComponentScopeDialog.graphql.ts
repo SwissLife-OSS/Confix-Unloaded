@@ -8,45 +8,45 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Fragment, ReaderFragment } from 'relay-runtime';
-import { FragmentRefs } from "relay-runtime";
+import {Fragment, ReaderFragment} from 'relay-runtime';
+import {FragmentRefs} from 'relay-runtime';
 export type ChangeComponentScopeDialog$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"ApplicationCascader">;
-  readonly " $fragmentType": "ChangeComponentScopeDialog";
+  readonly ' $fragmentSpreads': FragmentRefs<'ApplicationCascader'>;
+  readonly ' $fragmentType': 'ChangeComponentScopeDialog';
 };
 export type ChangeComponentScopeDialog$key = {
-  readonly " $data"?: ChangeComponentScopeDialog$data;
-  readonly " $fragmentSpreads": FragmentRefs<"ChangeComponentScopeDialog">;
+  readonly ' $data'?: ChangeComponentScopeDialog$data;
+  readonly ' $fragmentSpreads': FragmentRefs<'ChangeComponentScopeDialog'>;
 };
 
 const node: ReaderFragment = {
-  "argumentDefinitions": [
+  argumentDefinitions: [
     {
-      "defaultValue": null,
-      "kind": "LocalArgument",
-      "name": "search"
-    }
+      defaultValue: null,
+      kind: 'LocalArgument',
+      name: 'search',
+    },
   ],
-  "kind": "Fragment",
-  "metadata": null,
-  "name": "ChangeComponentScopeDialog",
-  "selections": [
+  kind: 'Fragment',
+  metadata: null,
+  name: 'ChangeComponentScopeDialog',
+  selections: [
     {
-      "args": [
+      args: [
         {
-          "kind": "Variable",
-          "name": "search",
-          "variableName": "search"
-        }
+          kind: 'Variable',
+          name: 'search',
+          variableName: 'search',
+        },
       ],
-      "kind": "FragmentSpread",
-      "name": "ApplicationCascader"
-    }
+      kind: 'FragmentSpread',
+      name: 'ApplicationCascader',
+    },
   ],
-  "type": "Query",
-  "abstractKey": null
+  type: 'Query',
+  abstractKey: null,
 };
 
-(node as any).hash = "f393cfb17b0e10925928226da0f32917";
+(node as any).hash = 'f393cfb17b0e10925928226da0f32917';
 
 export default node;

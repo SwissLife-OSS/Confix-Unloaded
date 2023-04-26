@@ -1,23 +1,23 @@
-import { FormikConfig, FormikValues, useFormik } from "formik";
-import { Disposable, UseMutationConfig } from "react-relay";
-import { MutationParameters } from "relay-runtime";
-import { pipeCommitFn } from "./pipeCommitFn";
-import { UseFormik } from "./UseFormik";
+import {FormikConfig, FormikValues, useFormik} from 'formik';
+import {Disposable, UseMutationConfig} from 'react-relay';
+import {MutationParameters} from 'relay-runtime';
+import {pipeCommitFn} from './pipeCommitFn';
+import {UseFormik} from './UseFormik';
 
 export const useCommitForm = <
   TMutation extends MutationParameters,
-  T extends FormikValues
+  T extends FormikValues,
 >(
   commit: (config: UseMutationConfig<TMutation>) => Disposable,
   initialValues: T,
-  variablesSelector: (values: T) => UseMutationConfig<TMutation>["variables"],
+  variablesSelector: (values: T) => UseMutationConfig<TMutation>['variables'],
   config: {
     pipes: ((
-      config: UseMutationConfig<TMutation>
+      config: UseMutationConfig<TMutation>,
     ) => Partial<UseMutationConfig<TMutation>>)[];
-  } & Partial<FormikConfig<T>>
+  } & Partial<FormikConfig<T>>,
 ): UseFormik<T> => {
-  let { pipes, enableReinitialize, ...rest } = config;
+  let {pipes, enableReinitialize, ...rest} = config;
   return useFormik({
     ...rest,
     enableReinitialize:
@@ -25,7 +25,7 @@ export const useCommitForm = <
     initialValues,
     onSubmit: (input) => {
       var commitFn = pipeCommitFn(commit, config.pipes);
-      commitFn({ variables: variablesSelector(input) });
+      commitFn({variables: variablesSelector(input)});
     },
   });
 };

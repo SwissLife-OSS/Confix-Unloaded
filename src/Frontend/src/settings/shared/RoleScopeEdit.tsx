@@ -1,50 +1,52 @@
-import React from "react";
-import { Col, Table, Button, Modal } from "antd";
-import Column from "antd/lib/table/Column";
-import { useMemo, useState } from "react";
-import { DeleteIcon } from "../../icons/icons";
-import { FieldInput } from "../../shared/FormField";
-import { SectionHeader } from "../../shared/SectionHeader";
-import { useHandler } from "../../shared/useHandler";
-import { useToggle } from "../../shared/useToggle";
-import { RoleOption, RolesSelect } from "../roles/controls/RolesSelect";
+import React from 'react';
+import {Col, Table, Button, Modal} from 'antd';
+import Column from 'antd/lib/table/Column';
+import {useMemo, useState} from 'react';
+import {DeleteIcon} from '../../icons/icons';
+import {FieldInput} from '../../shared/FormField';
+import {SectionHeader} from '../../shared/SectionHeader';
+import {useHandler} from '../../shared/useHandler';
+import {useToggle} from '../../shared/useToggle';
+import {RoleOption, RolesSelect} from '../roles/controls/RolesSelect';
 
 export interface RoleScopeData {
   readonly key: string;
   readonly namespace: string;
-  readonly roles: readonly { readonly id: string; readonly name: string }[];
+  readonly roles: readonly {readonly id: string; readonly name: string}[];
 }
 
 export const RoleScopeEditor: React.FC<{
   data: RoleScopeData[];
   onChange: (change: (previous: RoleScopeData[]) => RoleScopeData[]) => void;
-}> = ({ data, onChange }) => {
+}> = ({data, onChange}) => {
   const onUpdate = (roleScope: RoleScopeData) => {
     onChange((previous) =>
-      previous.map((x) => (x.namespace !== roleScope.namespace ? x : roleScope))
+      previous.map((x) =>
+        x.namespace !== roleScope.namespace ? x : roleScope,
+      ),
     );
   };
 
   const [isEdit, , enable, disable] = useToggle();
-  const [additionalNamespace, setAdditionalNamespace] = useState("");
+  const [additionalNamespace, setAdditionalNamespace] = useState('');
   const handleAddNamespace = useHandler(() => {
     onChange((previous) => [
       ...previous,
-      { namespace: additionalNamespace, roles: [], key: additionalNamespace },
+      {namespace: additionalNamespace, roles: [], key: additionalNamespace},
     ]);
-    setAdditionalNamespace("");
+    setAdditionalNamespace('');
     disable();
   });
 
   const removeNamespace = useHandler((data: RoleScopeData) =>
     onChange((previous) =>
-      previous.filter((x) => x.namespace !== data.namespace)
-    )
+      previous.filter((x) => x.namespace !== data.namespace),
+    ),
   );
 
   return (
     <>
-      <Col span={24} flex={"auto"}>
+      <Col span={24} flex={'auto'}>
         <SectionHeader title="Roles" onAdd={enable} />
         <Table dataSource={data} pagination={false}>
           <Column
@@ -94,7 +96,7 @@ export const RoleScopeEditor: React.FC<{
 const EditableRoles: React.FC<{
   data: RoleScopeData;
   onChange: (data: RoleScopeData) => void;
-}> = ({ data: { namespace, roles, key }, onChange }) => {
+}> = ({data: {namespace, roles, key}, onChange}) => {
   const handleEditRoles = useHandler((roles: RoleOption[]) => {
     onChange({
       key,
@@ -106,8 +108,8 @@ const EditableRoles: React.FC<{
     });
   });
   const options = useMemo(
-    () => roles.map((x) => ({ value: x.id, label: x.name })),
-    [roles]
+    () => roles.map((x) => ({value: x.id, label: x.name})),
+    [roles],
   );
   return <RolesSelect onChange={handleEditRoles} value={options} />;
 };

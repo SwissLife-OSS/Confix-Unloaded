@@ -1,26 +1,26 @@
-import * as React from "react";
+import * as React from 'react';
 
 import {
   pipeCommitFn,
   withErrorNotifications,
   withOnSuccess,
   withSuccessMessage,
-} from "../../shared/pipeCommitFn";
-import { useCallback, useState } from "react";
+} from '../../shared/pipeCommitFn';
+import {useCallback, useState} from 'react';
 
-import { AddPartToApplicationDialogMutation } from "@generated/AddPartToApplicationDialogMutation.graphql";
-import { FieldInput } from "../../shared/FormField";
-import { Modal } from "antd";
-import { graphql } from "babel-plugin-relay/macro";
-import { useMutation } from "react-relay";
-import { useStringEventHanlder } from "../../shared/useEventListener";
+import {AddPartToApplicationDialogMutation} from '@generated/AddPartToApplicationDialogMutation.graphql';
+import {FieldInput} from '../../shared/FormField';
+import {Modal} from 'antd';
+import {graphql} from 'babel-plugin-relay/macro';
+import {useMutation} from 'react-relay';
+import {useStringEventHanlder} from '../../shared/useEventListener';
 
 export const AddPartToApplicationDialog: React.FC<{
   open: boolean;
   onClose: () => void;
   applicationName: string;
   applicationId: string;
-}> = ({ open, applicationId, applicationName, onClose }) => {
+}> = ({open, applicationId, applicationName, onClose}) => {
   const [commit, isInFlight] = useMutation<AddPartToApplicationDialogMutation>(
     graphql`
       mutation AddPartToApplicationDialogMutation(
@@ -41,21 +41,21 @@ export const AddPartToApplicationDialog: React.FC<{
           }
         }
       }
-    `
+    `,
   );
 
-  const [partName, setPartName] = useState("");
+  const [partName, setPartName] = useState('');
 
   const handlePartNameChange = useStringEventHanlder(setPartName);
   const handleAddApplication = useCallback(() => {
     pipeCommitFn(commit, [
       withSuccessMessage(
         (x) => x.addPartToApplication.application?.id,
-        `Added ${partName} to ${applicationName}`
+        `Added ${partName} to ${applicationName}`,
       ),
       withErrorNotifications((x) => x.addPartToApplication?.errors),
       withOnSuccess((x) => x.addPartToApplication.application?.id, onClose),
-    ])({ variables: { input: { partName, applicationId } } });
+    ])({variables: {input: {partName, applicationId}}});
   }, [commit, partName, applicationId, onClose, applicationName]);
 
   return (

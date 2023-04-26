@@ -8,35 +8,35 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Fragment, ReaderFragment } from 'relay-runtime';
-import { FragmentRefs } from "relay-runtime";
+import {Fragment, ReaderFragment} from 'relay-runtime';
+import {FragmentRefs} from 'relay-runtime';
 export type ChangeLog_ComponentValuesChange$data = {
   readonly kind: string;
-  readonly " $fragmentType": "ChangeLog_ComponentValuesChange";
+  readonly ' $fragmentType': 'ChangeLog_ComponentValuesChange';
 };
 export type ChangeLog_ComponentValuesChange$key = {
-  readonly " $data"?: ChangeLog_ComponentValuesChange$data;
-  readonly " $fragmentSpreads": FragmentRefs<"ChangeLog_ComponentValuesChange">;
+  readonly ' $data'?: ChangeLog_ComponentValuesChange$data;
+  readonly ' $fragmentSpreads': FragmentRefs<'ChangeLog_ComponentValuesChange'>;
 };
 
 const node: ReaderFragment = {
-  "argumentDefinitions": [],
-  "kind": "Fragment",
-  "metadata": null,
-  "name": "ChangeLog_ComponentValuesChange",
-  "selections": [
+  argumentDefinitions: [],
+  kind: 'Fragment',
+  metadata: null,
+  name: 'ChangeLog_ComponentValuesChange',
+  selections: [
     {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "kind",
-      "storageKey": null
-    }
+      alias: null,
+      args: null,
+      kind: 'ScalarField',
+      name: 'kind',
+      storageKey: null,
+    },
   ],
-  "type": "ComponentValuesChange",
-  "abstractKey": null
+  type: 'ComponentValuesChange',
+  abstractKey: null,
 };
 
-(node as any).hash = "218cd94feea966e7185ec9c0b5dabc08";
+(node as any).hash = '218cd94feea966e7185ec9c0b5dabc08';
 
 export default node;

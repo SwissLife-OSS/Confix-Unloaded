@@ -1,5 +1,5 @@
-import { config } from "../config";
-import styled from "@emotion/styled";
+import {config} from '../config';
+import styled from '@emotion/styled';
 
 export const InlinePage = styled.div`
   max-height: calc(

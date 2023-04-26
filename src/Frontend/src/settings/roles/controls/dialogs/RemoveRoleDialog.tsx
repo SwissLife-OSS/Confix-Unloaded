@@ -1,25 +1,25 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { Alert, Modal } from "antd";
+import {Alert, Modal} from 'antd';
 import {
   pipeCommitFn,
   withErrorNotifications,
   withOnSuccess,
   withSuccessMessage,
-} from "../../../../shared/pipeCommitFn";
+} from '../../../../shared/pipeCommitFn';
 
-import { RemoveRoleDialogMutation } from "@generated/RemoveRoleDialogMutation.graphql";
-import { graphql } from "babel-plugin-relay/macro";
-import { useCallback } from "react";
-import { useConnectionId } from "../../../../shared/useConnectionId";
-import { useMutation } from "react-relay";
+import {RemoveRoleDialogMutation} from '@generated/RemoveRoleDialogMutation.graphql';
+import {graphql} from 'babel-plugin-relay/macro';
+import {useCallback} from 'react';
+import {useConnectionId} from '../../../../shared/useConnectionId';
+import {useMutation} from 'react-relay';
 
 export const RemoveRoleDialog: React.FC<{
   open: boolean;
   onClose: (removed: boolean) => void;
   roleId: string;
   roleName: string;
-}> = ({ open, roleId, roleName, onClose }) => {
+}> = ({open, roleId, roleName, onClose}) => {
   const [commit, isInFlight] = useMutation<RemoveRoleDialogMutation>(graphql`
     mutation RemoveRoleDialogMutation(
       $input: RemoveRoleByIdInput!
@@ -40,22 +40,22 @@ export const RemoveRoleDialog: React.FC<{
     }
   `);
 
-  const connectionId = useConnectionId("Query_searchRoles");
+  const connectionId = useConnectionId('Query_searchRoles');
 
   const handleRemoveRole = useCallback(() => {
     pipeCommitFn(commit, [
       withSuccessMessage(
         (x) => x.removeRoleById.role?.id,
-        `Removed ${roleName}`
+        `Removed ${roleName}`,
       ),
       withErrorNotifications((x) => x.removeRoleById?.errors),
       withOnSuccess(
         (x) => x.removeRoleById.role?.id,
-        () => onClose(true)
+        () => onClose(true),
       ),
     ])({
       variables: {
-        input: { id: roleId },
+        input: {id: roleId},
         connectionIds: [connectionId],
       },
     });

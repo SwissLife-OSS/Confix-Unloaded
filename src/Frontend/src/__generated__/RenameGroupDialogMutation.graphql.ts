@@ -11,7 +11,7 @@
 
 // @relayRequestID 779c8a2d3bf75c505370dcd889dd863b
 
-import { ConcreteRequest, Mutation } from 'relay-runtime';
+import {ConcreteRequest, Mutation} from 'relay-runtime';
 export type RenameGroupInput = {
   id: string;
   name: string;
@@ -32,85 +32,85 @@ export type RenameGroupDialogMutation = {
   variables: RenameGroupDialogMutation$variables;
 };
 
-const node: ConcreteRequest = (function(){
-var v0 = [
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "input"
-  }
-],
-v1 = [
-  {
-    "alias": null,
-    "args": [
+const node: ConcreteRequest = (function () {
+  var v0 = [
       {
-        "kind": "Variable",
-        "name": "input",
-        "variableName": "input"
-      }
+        defaultValue: null,
+        kind: 'LocalArgument',
+        name: 'input',
+      },
     ],
-    "concreteType": "RenameGroupPayload",
-    "kind": "LinkedField",
-    "name": "renameGroup",
-    "plural": false,
-    "selections": [
+    v1 = [
       {
-        "alias": null,
-        "args": null,
-        "concreteType": "Group",
-        "kind": "LinkedField",
-        "name": "group",
-        "plural": false,
-        "selections": [
+        alias: null,
+        args: [
           {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "id",
-            "storageKey": null
+            kind: 'Variable',
+            name: 'input',
+            variableName: 'input',
           },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "name",
-            "storageKey": null
-          }
         ],
-        "storageKey": null
-      }
-    ],
-    "storageKey": null
-  }
-];
-return {
-  "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
-    "kind": "Fragment",
-    "metadata": null,
-    "name": "RenameGroupDialogMutation",
-    "selections": (v1/*: any*/),
-    "type": "Mutation",
-    "abstractKey": null
-  },
-  "kind": "Request",
-  "operation": {
-    "argumentDefinitions": (v0/*: any*/),
-    "kind": "Operation",
-    "name": "RenameGroupDialogMutation",
-    "selections": (v1/*: any*/)
-  },
-  "params": {
-    "id": "779c8a2d3bf75c505370dcd889dd863b",
-    "metadata": {},
-    "name": "RenameGroupDialogMutation",
-    "operationKind": "mutation",
-    "text": null
-  }
-};
+        concreteType: 'RenameGroupPayload',
+        kind: 'LinkedField',
+        name: 'renameGroup',
+        plural: false,
+        selections: [
+          {
+            alias: null,
+            args: null,
+            concreteType: 'Group',
+            kind: 'LinkedField',
+            name: 'group',
+            plural: false,
+            selections: [
+              {
+                alias: null,
+                args: null,
+                kind: 'ScalarField',
+                name: 'id',
+                storageKey: null,
+              },
+              {
+                alias: null,
+                args: null,
+                kind: 'ScalarField',
+                name: 'name',
+                storageKey: null,
+              },
+            ],
+            storageKey: null,
+          },
+        ],
+        storageKey: null,
+      },
+    ];
+  return {
+    fragment: {
+      argumentDefinitions: v0 /*: any*/,
+      kind: 'Fragment',
+      metadata: null,
+      name: 'RenameGroupDialogMutation',
+      selections: v1 /*: any*/,
+      type: 'Mutation',
+      abstractKey: null,
+    },
+    kind: 'Request',
+    operation: {
+      argumentDefinitions: v0 /*: any*/,
+      kind: 'Operation',
+      name: 'RenameGroupDialogMutation',
+      selections: v1 /*: any*/,
+    },
+    params: {
+      id: '779c8a2d3bf75c505370dcd889dd863b',
+      metadata: {},
+      name: 'RenameGroupDialogMutation',
+      operationKind: 'mutation',
+      text: null,
+    },
+  };
 })();
 
-(node as any).hash = "182ad7182cf6185bfa2d8d18dcc4169f";
+(node as any).hash = '182ad7182cf6185bfa2d8d18dcc4169f';
 
 export default node;

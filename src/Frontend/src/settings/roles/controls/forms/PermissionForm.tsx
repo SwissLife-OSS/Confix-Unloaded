@@ -1,15 +1,15 @@
-import { Checkbox, Col, Row } from "antd";
+import {Checkbox, Col, Row} from 'antd';
 import {
   PermissionInput,
   PermissionsFlagsInput,
-} from "../.@generated/NewRoleMutation.graphql";
-import React, { useCallback } from "react";
+} from '../.@generated/NewRoleMutation.graphql';
+import React, {useCallback} from 'react';
 
-import { CheckboxChangeEvent } from "antd/lib/checkbox";
-import { EditRole_Form$data } from "../.@generated/EditRole_Form.graphql";
-import { Scope } from "../.@generated/EditRole_Role.graphql";
-import { noop } from "../../../../shared/noop";
-import styled from "@emotion/styled";
+import {CheckboxChangeEvent} from 'antd/lib/checkbox';
+import {EditRole_Form$data} from '../.@generated/EditRole_Form.graphql';
+import {Scope} from '../.@generated/EditRole_Role.graphql';
+import {noop} from '../../../../shared/noop';
+import styled from '@emotion/styled';
 
 export interface Permissions {
   identity: {
@@ -41,7 +41,7 @@ export const mapPermissionsToInput = (data: Permissions): PermissionInput[] => {
   const input: PermissionInput[] = [];
 
   function mapFlags(
-    permissions: Partial<Record<AllPermissions, boolean>>
+    permissions: Partial<Record<AllPermissions, boolean>>,
   ): Required<PermissionsFlagsInput> {
     return {
       isClaim: permissions.isClaim ?? false,
@@ -53,7 +53,7 @@ export const mapPermissionsToInput = (data: Permissions): PermissionInput[] => {
   }
 
   function hasFlag(
-    permissions: Partial<Record<AllPermissions, boolean>>
+    permissions: Partial<Record<AllPermissions, boolean>>,
   ): boolean {
     return (
       !!permissions.isClaim ||
@@ -66,7 +66,7 @@ export const mapPermissionsToInput = (data: Permissions): PermissionInput[] => {
 
   function addWhenHasFlag(
     scope: Scope,
-    permissions: Partial<Record<AllPermissions, boolean>>
+    permissions: Partial<Record<AllPermissions, boolean>>,
   ) {
     if (hasFlag(permissions)) {
       input.push({
@@ -76,22 +76,22 @@ export const mapPermissionsToInput = (data: Permissions): PermissionInput[] => {
     }
   }
 
-  addWhenHasFlag("APPLICATION", data.application);
-  addWhenHasFlag("COMPONENT", data.component);
-  addWhenHasFlag("CONFIGURATION", data.configuration);
-  addWhenHasFlag("IDENTITY", data.identity);
-  addWhenHasFlag("VARIABLE", data.variable);
+  addWhenHasFlag('APPLICATION', data.application);
+  addWhenHasFlag('COMPONENT', data.component);
+  addWhenHasFlag('CONFIGURATION', data.configuration);
+  addWhenHasFlag('IDENTITY', data.identity);
+  addWhenHasFlag('VARIABLE', data.variable);
 
   return input;
 };
 
 export const mapPermissionsFromObjectType = (
-  data: EditRole_Form$data
+  data: EditRole_Form$data,
 ): Permissions => {
   let permissions = createDefaultPermissions();
   function map<TKeys extends AllPermissions>(
     keys: TKeys[],
-    data: EditRole_Form$data["permissions"][number]["permissions"]
+    data: EditRole_Form$data['permissions'][number]['permissions'],
   ): {
     [Key in TKeys]: boolean;
   } {
@@ -105,34 +105,34 @@ export const mapPermissionsFromObjectType = (
   }
   for (const permission of data.permissions) {
     switch (permission.scope) {
-      case "APPLICATION":
+      case 'APPLICATION':
         permissions.application = map(
-          ["isClaim", "isPublish", "isRead", "isWrite"],
-          permission.permissions
+          ['isClaim', 'isPublish', 'isRead', 'isWrite'],
+          permission.permissions,
         );
         continue;
-      case "COMPONENT":
+      case 'COMPONENT':
         permissions.component = map(
-          ["isRead", "isWrite"],
-          permission.permissions
+          ['isRead', 'isWrite'],
+          permission.permissions,
         );
         continue;
-      case "CONFIGURATION":
+      case 'CONFIGURATION':
         permissions.configuration = map(
-          ["isRead", "isWrite"],
-          permission.permissions
+          ['isRead', 'isWrite'],
+          permission.permissions,
         );
         continue;
-      case "IDENTITY":
+      case 'IDENTITY':
         permissions.identity = map(
-          ["isRead", "isWrite"],
-          permission.permissions
+          ['isRead', 'isWrite'],
+          permission.permissions,
         );
         continue;
-      case "VARIABLE":
+      case 'VARIABLE':
         permissions.variable = map(
-          ["isRead", "isWrite", "isDecrypt"],
-          permission.permissions
+          ['isRead', 'isWrite', 'isDecrypt'],
+          permission.permissions,
         );
         continue;
     }
@@ -169,7 +169,7 @@ export const createDefaultPermissions = (): Permissions => ({
 export const PermissionsForm: React.FC<{
   permissions: Permissions;
   onChange?: (value: Permissions) => void;
-}> = ({ permissions, onChange = noop }) => {
+}> = ({permissions, onChange = noop}) => {
   return (
     <>
       <Row gutter={[15, 15]}>
@@ -279,22 +279,22 @@ export const PermissionsForm: React.FC<{
 
 export function Permission<
   T extends keyof Permissions,
-  TPermission extends keyof Permissions[T]
+  TPermission extends keyof Permissions[T],
 >(props: {
   permissions: Permissions;
   scope: T;
   permission: TPermission;
   onChange: (value: Permissions) => void;
 }) {
-  const { permissions, onChange, scope, permission } = props;
+  const {permissions, onChange, scope, permission} = props;
   const handleChange = useCallback(
     (e: CheckboxChangeEvent) => {
       onChange({
         ...permissions,
-        [scope]: { ...permissions[scope], [permission]: e.target.checked },
+        [scope]: {...permissions[scope], [permission]: e.target.checked},
       });
     },
-    [onChange, permission, permissions, scope]
+    [onChange, permission, permissions, scope],
   );
   return (
     <Col span={12}>
@@ -313,11 +313,11 @@ type AllKeys<T> = T extends any ? keyof T : never;
 type AllPermissions = AllKeys<Permissions[keyof Permissions]>;
 
 const Names: Record<AllPermissions, string> = {
-  isRead: "Read",
-  isWrite: "Write",
-  isClaim: "Claim",
-  isPublish: "Publish",
-  isDecrypt: "Decrypt",
+  isRead: 'Read',
+  isWrite: 'Write',
+  isClaim: 'Claim',
+  isPublish: 'Publish',
+  isDecrypt: 'Decrypt',
 };
 
 const Title = styled.span`

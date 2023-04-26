@@ -8,59 +8,63 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Fragment, ReaderFragment } from 'relay-runtime';
-import { FragmentRefs } from "relay-runtime";
+import {Fragment, ReaderFragment} from 'relay-runtime';
+import {FragmentRefs} from 'relay-runtime';
 export type EditComponent$data = {
   readonly id: string;
   readonly name: string;
-  readonly " $fragmentSpreads": FragmentRefs<"EditComponent_AvailableIn" | "EditComponent_ComponentChangeLog" | "EditComponent_EditComponentForm">;
-  readonly " $fragmentType": "EditComponent";
+  readonly ' $fragmentSpreads': FragmentRefs<
+    | 'EditComponent_AvailableIn'
+    | 'EditComponent_ComponentChangeLog'
+    | 'EditComponent_EditComponentForm'
+  >;
+  readonly ' $fragmentType': 'EditComponent';
 };
 export type EditComponent$key = {
-  readonly " $data"?: EditComponent$data;
-  readonly " $fragmentSpreads": FragmentRefs<"EditComponent">;
+  readonly ' $data'?: EditComponent$data;
+  readonly ' $fragmentSpreads': FragmentRefs<'EditComponent'>;
 };
 
 const node: ReaderFragment = {
-  "argumentDefinitions": [],
-  "kind": "Fragment",
-  "metadata": null,
-  "name": "EditComponent",
-  "selections": [
+  argumentDefinitions: [],
+  kind: 'Fragment',
+  metadata: null,
+  name: 'EditComponent',
+  selections: [
     {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
+      alias: null,
+      args: null,
+      kind: 'ScalarField',
+      name: 'id',
+      storageKey: null,
     },
     {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "name",
-      "storageKey": null
+      alias: null,
+      args: null,
+      kind: 'ScalarField',
+      name: 'name',
+      storageKey: null,
     },
     {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "EditComponent_AvailableIn"
+      args: null,
+      kind: 'FragmentSpread',
+      name: 'EditComponent_AvailableIn',
     },
     {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "EditComponent_EditComponentForm"
+      args: null,
+      kind: 'FragmentSpread',
+      name: 'EditComponent_EditComponentForm',
     },
     {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "EditComponent_ComponentChangeLog"
-    }
+      args: null,
+      kind: 'FragmentSpread',
+      name: 'EditComponent_ComponentChangeLog',
+    },
   ],
-  "type": "Component",
-  "abstractKey": null
+  type: 'Component',
+  abstractKey: null,
 };
 
-(node as any).hash = "cc20c66bb8c4cd62cf5337c937d60d8c";
+(node as any).hash = 'cc20c66bb8c4cd62cf5337c937d60d8c';
 
 export default node;

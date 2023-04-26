@@ -1,9 +1,9 @@
-import Icon from "@ant-design/icons";
-import { NonIndexRouteObject } from "react-router-dom";
-import { Applications } from "./applications/Applications";
-import { Components } from "./components/Components";
-import { Environments } from "./environment/Environments";
-import { Explorer } from "./explorer/Explorer";
+import Icon from '@ant-design/icons';
+import {NonIndexRouteObject} from 'react-router-dom';
+import {Applications} from './applications/Applications';
+import {Components} from './components/Components';
+import {Environments} from './environment/Environments';
+import {Explorer} from './explorer/Explorer';
 import {
   ApplicationIcon,
   ComponentIcon,
@@ -11,11 +11,11 @@ import {
   ExplorerIcon,
   SettingsIcon,
   VariablesIcon,
-} from "./icons/icons";
-import { Settings } from "./settings/Settings";
-import { Permission } from "./shared/useUser";
-import { Scope } from "./shared/useUser";
-import { Variables } from "./variables/Variables";
+} from './icons/icons';
+import {Settings} from './settings/Settings';
+import {Permission} from './shared/useUser';
+import {Scope} from './shared/useUser';
+import {Variables} from './variables/Variables';
 
 export interface RouteDefinition extends NonIndexRouteObject {
   name: string;
@@ -30,51 +30,51 @@ export interface RouteDefinition extends NonIndexRouteObject {
 
 export const navigation: RouteDefinition[] = [
   {
-    name: "Applications",
-    path: "/applications/*",
-    link: "/applications",
+    name: 'Applications',
+    path: '/applications/*',
+    link: '/applications',
     element: <Applications />,
     icon: ApplicationIcon,
   },
   {
-    name: "Components",
-    path: "/components/*",
-    link: "/components",
+    name: 'Components',
+    path: '/components/*',
+    link: '/components',
     element: <Components />,
     icon: ComponentIcon,
   },
   {
-    name: "Variables",
-    path: "/variables/*",
-    link: "/variables",
+    name: 'Variables',
+    path: '/variables/*',
+    link: '/variables',
     element: <Variables />,
     icon: VariablesIcon,
   },
   {
-    name: "Environments",
-    path: "/environments/*",
-    link: "/environments",
+    name: 'Environments',
+    path: '/environments/*',
+    link: '/environments',
     permissions: {
-      permissions: "isRead",
-      scope: "ENVIRONMENT",
+      permissions: 'isRead',
+      scope: 'ENVIRONMENT',
     },
     element: <Environments />,
     icon: EnvironmentIcon,
   },
   {
-    name: "Explorer",
-    path: "/explorer/*",
-    link: "/explorer",
+    name: 'Explorer',
+    path: '/explorer/*',
+    link: '/explorer',
     element: <Explorer />,
     icon: ExplorerIcon,
   },
   {
-    name: "Settings",
-    path: "/settings/*",
-    link: "/settings/groups",
+    name: 'Settings',
+    path: '/settings/*',
+    link: '/settings/groups',
     permissions: {
-      permissions: "isWrite",
-      scope: "IDENTITY",
+      permissions: 'isWrite',
+      scope: 'IDENTITY',
     },
     element: <Settings />,
     icon: SettingsIcon,

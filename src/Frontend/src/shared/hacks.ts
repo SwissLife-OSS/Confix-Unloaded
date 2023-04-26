@@ -17,7 +17,7 @@ export type Lookup<
   K2 extends keyof NN<NN<T>[K1]> = never,
   K3 extends keyof NN<NN<NN<T>[K1]>[K2]> = never,
   K4 extends keyof NN<NN<NN<NN<T>[K1]>[K2]>[K3]> = never,
-  K5 extends keyof NN<NN<NN<NN<NN<T>[K1]>[K2]>[K3]>[K4]> = never
+  K5 extends keyof NN<NN<NN<NN<NN<T>[K1]>[K2]>[K3]>[K4]> = never,
 > = [K5] extends [never]
   ? [K4] extends [never]
     ? [K3] extends [never]
@@ -54,7 +54,7 @@ export type NoNullablesRecursive<T, U = NonNullable<T>> = U extends Array<
   : U extends ReadonlyArray<infer B>
   ? ReadonlyArray<NoNullablesRecursive<B>>
   : U extends object
-  ? { [P in keyof U]: NoNullablesRecursive<U[P]> }
+  ? {[P in keyof U]: NoNullablesRecursive<U[P]>}
   : T;
 
 /**
@@ -72,7 +72,7 @@ export type NoNullablesRecursive<T, U = NonNullable<T>> = U extends Array<
  */
 export type NoFragmentRefs<T extends object> = OmitRecursive<
   T,
-  " $fragmentRefs" | " $refType"
+  ' $fragmentRefs' | ' $refType'
 >;
 
 export type OmitRecursive<T, K> = T extends Array<infer A>
@@ -80,12 +80,12 @@ export type OmitRecursive<T, K> = T extends Array<infer A>
   : T extends ReadonlyArray<infer B>
   ? ReadonlyArray<Identity<OmitRecursive<B, K>>>
   : T extends object
-  ? Identity<Ignore<{ [P in keyof T]: OmitRecursive<T[P], K> }, K>>
+  ? Identity<Ignore<{[P in keyof T]: OmitRecursive<T[P], K>}, K>>
   : T;
 
 export type Ignore<T, K> = Pick<T, Exclude<keyof T, K>>;
 
-export type Identity<T> = T extends object ? { [P in keyof T]: T[P] } : T;
+export type Identity<T> = T extends object ? {[P in keyof T]: T[P]} : T;
 
 /**
  * Construct a type by deeply excluding all readonlies in the path.

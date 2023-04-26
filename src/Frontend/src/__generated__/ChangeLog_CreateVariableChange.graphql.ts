@@ -8,48 +8,48 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Fragment, ReaderFragment } from 'relay-runtime';
-import { FragmentRefs } from "relay-runtime";
+import {Fragment, ReaderFragment} from 'relay-runtime';
+import {FragmentRefs} from 'relay-runtime';
 export type ChangeLog_CreateVariableChange$data = {
   readonly variable: {
     readonly name: string;
   } | null;
-  readonly " $fragmentType": "ChangeLog_CreateVariableChange";
+  readonly ' $fragmentType': 'ChangeLog_CreateVariableChange';
 };
 export type ChangeLog_CreateVariableChange$key = {
-  readonly " $data"?: ChangeLog_CreateVariableChange$data;
-  readonly " $fragmentSpreads": FragmentRefs<"ChangeLog_CreateVariableChange">;
+  readonly ' $data'?: ChangeLog_CreateVariableChange$data;
+  readonly ' $fragmentSpreads': FragmentRefs<'ChangeLog_CreateVariableChange'>;
 };
 
 const node: ReaderFragment = {
-  "argumentDefinitions": [],
-  "kind": "Fragment",
-  "metadata": null,
-  "name": "ChangeLog_CreateVariableChange",
-  "selections": [
+  argumentDefinitions: [],
+  kind: 'Fragment',
+  metadata: null,
+  name: 'ChangeLog_CreateVariableChange',
+  selections: [
     {
-      "alias": null,
-      "args": null,
-      "concreteType": "Variable",
-      "kind": "LinkedField",
-      "name": "variable",
-      "plural": false,
-      "selections": [
+      alias: null,
+      args: null,
+      concreteType: 'Variable',
+      kind: 'LinkedField',
+      name: 'variable',
+      plural: false,
+      selections: [
         {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "name",
-          "storageKey": null
-        }
+          alias: null,
+          args: null,
+          kind: 'ScalarField',
+          name: 'name',
+          storageKey: null,
+        },
       ],
-      "storageKey": null
-    }
+      storageKey: null,
+    },
   ],
-  "type": "CreateVariableChange",
-  "abstractKey": null
+  type: 'CreateVariableChange',
+  abstractKey: null,
 };
 
-(node as any).hash = "493c09c20eea46360b88675b280ffd04";
+(node as any).hash = '493c09c20eea46360b88675b280ffd04';
 
 export default node;

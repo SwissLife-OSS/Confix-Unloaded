@@ -1,16 +1,16 @@
-import { Button, List } from "antd";
+import {Button, List} from 'antd';
 
-import { ColorTag } from "../../shared/ColorTag";
-import { VariableValueList$key } from "@generated/VariableValueList.graphql";
-import { graphql } from "babel-plugin-relay/macro";
-import { groupBy } from "../../shared/groupBy";
-import { useFragment } from "react-relay";
-import { useMemo } from "react";
+import {ColorTag} from '../../shared/ColorTag';
+import {VariableValueList$key} from '@generated/VariableValueList.graphql';
+import {graphql} from 'babel-plugin-relay/macro';
+import {groupBy} from '../../shared/groupBy';
+import {useFragment} from 'react-relay';
+import {useMemo} from 'react';
 
 export const VariableValueList: React.FC<{
   data: VariableValueList$key;
   onEdit: (id: string, name: string) => void;
-}> = ({ data, onEdit }) => {
+}> = ({data, onEdit}) => {
   const values = useFragment<VariableValueList$key>(
     graphql`
       fragment VariableValueList on VariableValue @relay(plural: true) {
@@ -26,16 +26,13 @@ export const VariableValueList: React.FC<{
         value
       }
     `,
-    data
+    data,
   );
 
   const grouped = useMemo(
     () =>
-      groupBy(
-        values?.map((x) => ({ ...x })) ?? [],
-        (x) => x.variable?.id ?? ""
-      ),
-    [values]
+      groupBy(values?.map((x) => ({...x})) ?? [], (x) => x.variable?.id ?? ''),
+    [values],
   );
 
   return (
@@ -45,7 +42,7 @@ export const VariableValueList: React.FC<{
         const tags = grouped[x]
           .map((x) => x.environment?.name)
           .filter((x) => !!x)
-          .map((x) => <ColorTag value={x ?? "-"}>{x}</ColorTag>);
+          .map((x) => <ColorTag value={x ?? '-'}>{x}</ColorTag>);
 
         return (
           <List.Item
@@ -58,7 +55,7 @@ export const VariableValueList: React.FC<{
             ]}
           >
             <List.Item.Meta
-              title={variable?.name ?? "Unkonw"}
+              title={variable?.name ?? 'Unkonw'}
               description={tags}
             />
           </List.Item>

@@ -1,17 +1,17 @@
-import { Select, Spin } from "antd";
-import { fetchQuery, useRelayEnvironment } from "react-relay";
-import { useCallback, useEffect, useState } from "react";
+import {Select, Spin} from 'antd';
+import {fetchQuery, useRelayEnvironment} from 'react-relay';
+import {useCallback, useEffect, useState} from 'react';
 
-import { EnvironmentsSelectQuery } from "@generated/EnvironmentsSelectQuery.graphql";
-import { graphql } from "babel-plugin-relay/macro";
-import { useDebounce } from "../../shared/debounce";
+import {EnvironmentsSelectQuery} from '@generated/EnvironmentsSelectQuery.graphql';
+import {graphql} from 'babel-plugin-relay/macro';
+import {useDebounce} from '../../shared/debounce';
 
-export type EnvironmentOption = { label: string; value: string };
+export type EnvironmentOption = {label: string; value: string};
 
 export const EnvironmentsSelect: React.FC<{
   onChange: (selected: EnvironmentOption) => void;
   value: string;
-}> = ({ onChange, value: val }) => {
+}> = ({onChange, value: val}) => {
   const [value, setValue] = useState<EnvironmentOption[]>([]);
   const [options, setOptions] = useState<EnvironmentOption[]>([]);
   const [isLoading, setIsLoading] = useState(options.length === 0);
@@ -34,17 +34,17 @@ export const EnvironmentsSelect: React.FC<{
             }
           }
         `,
-        { search }
+        {search},
       ).toPromise();
       setOptions(
         data?.searchEnvironments?.edges?.map((x) => ({
           value: x.node.id,
           label: x.node.name,
-        })) ?? []
+        })) ?? [],
       );
       setIsLoading(false);
     },
-    [env]
+    [env],
   );
 
   const debouncedSearch = useDebounce((search: string) => {
@@ -55,18 +55,18 @@ export const EnvironmentsSelect: React.FC<{
     (ids: EnvironmentOption[], t: any) => {
       onChange(t);
       setValue(ids);
-      fetchData("");
+      fetchData('');
     },
-    [onChange, setValue, fetchData]
+    [onChange, setValue, fetchData],
   );
 
   // initial data fetch
-  useEffect(() => void fetchData(""), [fetchData]);
+  useEffect(() => void fetchData(''), [fetchData]);
 
   return (
     <Select<EnvironmentOption[]>
       allowClear
-      style={{ width: "100%" }}
+      style={{width: '100%'}}
       value={value}
       placeholder="Please select"
       filterOption={false}

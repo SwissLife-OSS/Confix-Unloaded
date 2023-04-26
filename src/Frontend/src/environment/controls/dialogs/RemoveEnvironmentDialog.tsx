@@ -1,25 +1,25 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { Alert, Modal } from "antd";
+import {Alert, Modal} from 'antd';
 import {
   pipeCommitFn,
   withErrorNotifications,
   withOnSuccess,
   withSuccessMessage,
-} from "../../../shared/pipeCommitFn";
+} from '../../../shared/pipeCommitFn';
 
-import { RemoveEnvironmentDialogMutation } from "@generated/RemoveEnvironmentDialogMutation.graphql";
-import { graphql } from "babel-plugin-relay/macro";
-import { useCallback } from "react";
-import { useConnectionId } from "../../../shared/useConnectionId";
-import { useMutation } from "react-relay";
+import {RemoveEnvironmentDialogMutation} from '@generated/RemoveEnvironmentDialogMutation.graphql';
+import {graphql} from 'babel-plugin-relay/macro';
+import {useCallback} from 'react';
+import {useConnectionId} from '../../../shared/useConnectionId';
+import {useMutation} from 'react-relay';
 
 export const RemoveEnvironmentDialog: React.FC<{
   open: boolean;
   onClose: (removed: boolean) => void;
   environmentId: string;
   environmentName: string;
-}> = ({ open, environmentId, environmentName, onClose }) => {
+}> = ({open, environmentId, environmentName, onClose}) => {
   const [commit, isInFlight] = useMutation<RemoveEnvironmentDialogMutation>(
     graphql`
       mutation RemoveEnvironmentDialogMutation(
@@ -40,25 +40,25 @@ export const RemoveEnvironmentDialog: React.FC<{
           }
         }
       }
-    `
+    `,
   );
 
-  const connectionId = useConnectionId("Query_searchEnvironments");
+  const connectionId = useConnectionId('Query_searchEnvironments');
 
   const handleRemoveEnvironment = useCallback(() => {
     pipeCommitFn(commit, [
       withSuccessMessage(
         (x) => x.removeEnvironmentById.environment?.id,
-        `Removed ${environmentName}`
+        `Removed ${environmentName}`,
       ),
       withErrorNotifications((x) => x.removeEnvironmentById?.errors),
       withOnSuccess(
         (x) => x.removeEnvironmentById.environment?.id,
-        () => onClose(true)
+        () => onClose(true),
       ),
     ])({
       variables: {
-        input: { id: environmentId },
+        input: {id: environmentId},
         connectionIds: [connectionId],
       },
     });

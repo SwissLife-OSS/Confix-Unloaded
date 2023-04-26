@@ -11,7 +11,7 @@
 
 // @relayRequestID 4bb8c24cfefe85b255c3529a5e108776
 
-import { ConcreteRequest, Mutation } from 'relay-runtime';
+import {ConcreteRequest, Mutation} from 'relay-runtime';
 export type SaveVariableValueInput = {
   applicationId?: string | null;
   environmentId?: string | null;
@@ -36,85 +36,85 @@ export type VariableEditorSaveVariableMutation = {
   variables: VariableEditorSaveVariableMutation$variables;
 };
 
-const node: ConcreteRequest = (function(){
-var v0 = [
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "input"
-  }
-],
-v1 = [
-  {
-    "alias": null,
-    "args": [
+const node: ConcreteRequest = (function () {
+  var v0 = [
       {
-        "kind": "Variable",
-        "name": "input",
-        "variableName": "input"
-      }
+        defaultValue: null,
+        kind: 'LocalArgument',
+        name: 'input',
+      },
     ],
-    "concreteType": "SaveVariableValuePayload",
-    "kind": "LinkedField",
-    "name": "saveVariableValue",
-    "plural": false,
-    "selections": [
+    v1 = [
       {
-        "alias": null,
-        "args": null,
-        "concreteType": "VariableValue",
-        "kind": "LinkedField",
-        "name": "value",
-        "plural": false,
-        "selections": [
+        alias: null,
+        args: [
           {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "id",
-            "storageKey": null
+            kind: 'Variable',
+            name: 'input',
+            variableName: 'input',
           },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "value",
-            "storageKey": null
-          }
         ],
-        "storageKey": null
-      }
-    ],
-    "storageKey": null
-  }
-];
-return {
-  "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
-    "kind": "Fragment",
-    "metadata": null,
-    "name": "VariableEditorSaveVariableMutation",
-    "selections": (v1/*: any*/),
-    "type": "Mutation",
-    "abstractKey": null
-  },
-  "kind": "Request",
-  "operation": {
-    "argumentDefinitions": (v0/*: any*/),
-    "kind": "Operation",
-    "name": "VariableEditorSaveVariableMutation",
-    "selections": (v1/*: any*/)
-  },
-  "params": {
-    "id": "4bb8c24cfefe85b255c3529a5e108776",
-    "metadata": {},
-    "name": "VariableEditorSaveVariableMutation",
-    "operationKind": "mutation",
-    "text": null
-  }
-};
+        concreteType: 'SaveVariableValuePayload',
+        kind: 'LinkedField',
+        name: 'saveVariableValue',
+        plural: false,
+        selections: [
+          {
+            alias: null,
+            args: null,
+            concreteType: 'VariableValue',
+            kind: 'LinkedField',
+            name: 'value',
+            plural: false,
+            selections: [
+              {
+                alias: null,
+                args: null,
+                kind: 'ScalarField',
+                name: 'id',
+                storageKey: null,
+              },
+              {
+                alias: null,
+                args: null,
+                kind: 'ScalarField',
+                name: 'value',
+                storageKey: null,
+              },
+            ],
+            storageKey: null,
+          },
+        ],
+        storageKey: null,
+      },
+    ];
+  return {
+    fragment: {
+      argumentDefinitions: v0 /*: any*/,
+      kind: 'Fragment',
+      metadata: null,
+      name: 'VariableEditorSaveVariableMutation',
+      selections: v1 /*: any*/,
+      type: 'Mutation',
+      abstractKey: null,
+    },
+    kind: 'Request',
+    operation: {
+      argumentDefinitions: v0 /*: any*/,
+      kind: 'Operation',
+      name: 'VariableEditorSaveVariableMutation',
+      selections: v1 /*: any*/,
+    },
+    params: {
+      id: '4bb8c24cfefe85b255c3529a5e108776',
+      metadata: {},
+      name: 'VariableEditorSaveVariableMutation',
+      operationKind: 'mutation',
+      text: null,
+    },
+  };
 })();
 
-(node as any).hash = "54889752de94756f3431fc0ff1fa57fa";
+(node as any).hash = '54889752de94756f3431fc0ff1fa57fa';
 
 export default node;

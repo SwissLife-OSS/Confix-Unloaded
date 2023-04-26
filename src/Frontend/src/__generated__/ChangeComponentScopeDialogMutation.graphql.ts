@@ -11,7 +11,7 @@
 
 // @relayRequestID 4f5dc330a515619802ac08cdf51cf591
 
-import { ConcreteRequest, Mutation } from 'relay-runtime';
+import {ConcreteRequest, Mutation} from 'relay-runtime';
 export type UpdateComponentScopesInput = {
   id: string;
   scopes: ReadonlyArray<ComponentScopeInput>;
@@ -50,143 +50,140 @@ export type ChangeComponentScopeDialogMutation = {
   variables: ChangeComponentScopeDialogMutation$variables;
 };
 
-const node: ConcreteRequest = (function(){
-var v0 = [
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "input"
-  }
-],
-v1 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-},
-v2 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "name",
-  "storageKey": null
-},
-v3 = [
-  (v1/*: any*/),
-  (v2/*: any*/)
-],
-v4 = [
-  {
-    "alias": null,
-    "args": [
+const node: ConcreteRequest = (function () {
+  var v0 = [
       {
-        "kind": "Variable",
-        "name": "input",
-        "variableName": "input"
-      }
+        defaultValue: null,
+        kind: 'LocalArgument',
+        name: 'input',
+      },
     ],
-    "concreteType": "UpdateComponentScopesPayload",
-    "kind": "LinkedField",
-    "name": "updateComponentScopes",
-    "plural": false,
-    "selections": [
+    v1 = {
+      alias: null,
+      args: null,
+      kind: 'ScalarField',
+      name: 'id',
+      storageKey: null,
+    },
+    v2 = {
+      alias: null,
+      args: null,
+      kind: 'ScalarField',
+      name: 'name',
+      storageKey: null,
+    },
+    v3 = [v1 /*: any*/, v2 /*: any*/],
+    v4 = [
       {
-        "alias": null,
-        "args": null,
-        "concreteType": "Component",
-        "kind": "LinkedField",
-        "name": "component",
-        "plural": false,
-        "selections": [
-          (v1/*: any*/),
-          (v2/*: any*/),
+        alias: null,
+        args: [
           {
-            "alias": null,
-            "args": null,
-            "concreteType": "ComponentScope",
-            "kind": "LinkedField",
-            "name": "scopes",
-            "plural": true,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "namespace",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "applicationId",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "applicationPartId",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "Application",
-                "kind": "LinkedField",
-                "name": "application",
-                "plural": false,
-                "selections": (v3/*: any*/),
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "ApplicationPart",
-                "kind": "LinkedField",
-                "name": "applicationPart",
-                "plural": false,
-                "selections": (v3/*: any*/),
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          }
+            kind: 'Variable',
+            name: 'input',
+            variableName: 'input',
+          },
         ],
-        "storageKey": null
-      }
-    ],
-    "storageKey": null
-  }
-];
-return {
-  "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
-    "kind": "Fragment",
-    "metadata": null,
-    "name": "ChangeComponentScopeDialogMutation",
-    "selections": (v4/*: any*/),
-    "type": "Mutation",
-    "abstractKey": null
-  },
-  "kind": "Request",
-  "operation": {
-    "argumentDefinitions": (v0/*: any*/),
-    "kind": "Operation",
-    "name": "ChangeComponentScopeDialogMutation",
-    "selections": (v4/*: any*/)
-  },
-  "params": {
-    "id": "4f5dc330a515619802ac08cdf51cf591",
-    "metadata": {},
-    "name": "ChangeComponentScopeDialogMutation",
-    "operationKind": "mutation",
-    "text": null
-  }
-};
+        concreteType: 'UpdateComponentScopesPayload',
+        kind: 'LinkedField',
+        name: 'updateComponentScopes',
+        plural: false,
+        selections: [
+          {
+            alias: null,
+            args: null,
+            concreteType: 'Component',
+            kind: 'LinkedField',
+            name: 'component',
+            plural: false,
+            selections: [
+              v1 /*: any*/,
+              v2 /*: any*/,
+              {
+                alias: null,
+                args: null,
+                concreteType: 'ComponentScope',
+                kind: 'LinkedField',
+                name: 'scopes',
+                plural: true,
+                selections: [
+                  {
+                    alias: null,
+                    args: null,
+                    kind: 'ScalarField',
+                    name: 'namespace',
+                    storageKey: null,
+                  },
+                  {
+                    alias: null,
+                    args: null,
+                    kind: 'ScalarField',
+                    name: 'applicationId',
+                    storageKey: null,
+                  },
+                  {
+                    alias: null,
+                    args: null,
+                    kind: 'ScalarField',
+                    name: 'applicationPartId',
+                    storageKey: null,
+                  },
+                  {
+                    alias: null,
+                    args: null,
+                    concreteType: 'Application',
+                    kind: 'LinkedField',
+                    name: 'application',
+                    plural: false,
+                    selections: v3 /*: any*/,
+                    storageKey: null,
+                  },
+                  {
+                    alias: null,
+                    args: null,
+                    concreteType: 'ApplicationPart',
+                    kind: 'LinkedField',
+                    name: 'applicationPart',
+                    plural: false,
+                    selections: v3 /*: any*/,
+                    storageKey: null,
+                  },
+                ],
+                storageKey: null,
+              },
+            ],
+            storageKey: null,
+          },
+        ],
+        storageKey: null,
+      },
+    ];
+  return {
+    fragment: {
+      argumentDefinitions: v0 /*: any*/,
+      kind: 'Fragment',
+      metadata: null,
+      name: 'ChangeComponentScopeDialogMutation',
+      selections: v4 /*: any*/,
+      type: 'Mutation',
+      abstractKey: null,
+    },
+    kind: 'Request',
+    operation: {
+      argumentDefinitions: v0 /*: any*/,
+      kind: 'Operation',
+      name: 'ChangeComponentScopeDialogMutation',
+      selections: v4 /*: any*/,
+    },
+    params: {
+      id: '4f5dc330a515619802ac08cdf51cf591',
+      metadata: {},
+      name: 'ChangeComponentScopeDialogMutation',
+      operationKind: 'mutation',
+      text: null,
+    },
+  };
 })();
 
-(node as any).hash = "5b2c0b32768d2448a07cd4d7ec415f25";
+(node as any).hash = '5b2c0b32768d2448a07cd4d7ec415f25';
 
 export default node;

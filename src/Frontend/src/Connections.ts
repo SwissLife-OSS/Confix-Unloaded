@@ -1,4 +1,4 @@
-import { graphql } from "babel-plugin-relay/macro";
+import {graphql} from 'babel-plugin-relay/macro';
 
 const applicationFragment = graphql`
   fragment Connections_applications on Application @relay(plural: true) {
@@ -20,11 +20,11 @@ const componentFragment = graphql`
 
 export const Connections = {
   applications: {
-    name: "Query_applications",
+    name: 'Query_applications',
     fragment: applicationFragment,
   },
   components: {
-    name: "Query_components",
+    name: 'Query_components',
     fragment: componentFragment,
   },
 };

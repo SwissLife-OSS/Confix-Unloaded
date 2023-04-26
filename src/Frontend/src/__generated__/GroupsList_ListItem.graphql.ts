@@ -8,43 +8,43 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Fragment, ReaderFragment } from 'relay-runtime';
-import { FragmentRefs } from "relay-runtime";
+import {Fragment, ReaderFragment} from 'relay-runtime';
+import {FragmentRefs} from 'relay-runtime';
 export type GroupsList_ListItem$data = {
   readonly id: string;
   readonly name: string;
-  readonly " $fragmentType": "GroupsList_ListItem";
+  readonly ' $fragmentType': 'GroupsList_ListItem';
 };
 export type GroupsList_ListItem$key = {
-  readonly " $data"?: GroupsList_ListItem$data;
-  readonly " $fragmentSpreads": FragmentRefs<"GroupsList_ListItem">;
+  readonly ' $data'?: GroupsList_ListItem$data;
+  readonly ' $fragmentSpreads': FragmentRefs<'GroupsList_ListItem'>;
 };
 
 const node: ReaderFragment = {
-  "argumentDefinitions": [],
-  "kind": "Fragment",
-  "metadata": null,
-  "name": "GroupsList_ListItem",
-  "selections": [
+  argumentDefinitions: [],
+  kind: 'Fragment',
+  metadata: null,
+  name: 'GroupsList_ListItem',
+  selections: [
     {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
+      alias: null,
+      args: null,
+      kind: 'ScalarField',
+      name: 'id',
+      storageKey: null,
     },
     {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "name",
-      "storageKey": null
-    }
+      alias: null,
+      args: null,
+      kind: 'ScalarField',
+      name: 'name',
+      storageKey: null,
+    },
   ],
-  "type": "Group",
-  "abstractKey": null
+  type: 'Group',
+  abstractKey: null,
 };
 
-(node as any).hash = "23bae6b0491f73f94afede71bc02bf34";
+(node as any).hash = '23bae6b0491f73f94afede71bc02bf34';
 
 export default node;

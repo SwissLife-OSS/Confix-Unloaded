@@ -8,46 +8,48 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Fragment, ReaderFragment } from 'relay-runtime';
-import { FragmentRefs } from "relay-runtime";
-export type EditApplicationPartComponent_ApplicationPartComponentChangeLog$data = {
-  readonly changeLog: ReadonlyArray<{
-    readonly " $fragmentSpreads": FragmentRefs<"ChangeLog">;
-  }>;
-  readonly " $fragmentType": "EditApplicationPartComponent_ApplicationPartComponentChangeLog";
-};
-export type EditApplicationPartComponent_ApplicationPartComponentChangeLog$key = {
-  readonly " $data"?: EditApplicationPartComponent_ApplicationPartComponentChangeLog$data;
-  readonly " $fragmentSpreads": FragmentRefs<"EditApplicationPartComponent_ApplicationPartComponentChangeLog">;
-};
+import {Fragment, ReaderFragment} from 'relay-runtime';
+import {FragmentRefs} from 'relay-runtime';
+export type EditApplicationPartComponent_ApplicationPartComponentChangeLog$data =
+  {
+    readonly changeLog: ReadonlyArray<{
+      readonly ' $fragmentSpreads': FragmentRefs<'ChangeLog'>;
+    }>;
+    readonly ' $fragmentType': 'EditApplicationPartComponent_ApplicationPartComponentChangeLog';
+  };
+export type EditApplicationPartComponent_ApplicationPartComponentChangeLog$key =
+  {
+    readonly ' $data'?: EditApplicationPartComponent_ApplicationPartComponentChangeLog$data;
+    readonly ' $fragmentSpreads': FragmentRefs<'EditApplicationPartComponent_ApplicationPartComponentChangeLog'>;
+  };
 
 const node: ReaderFragment = {
-  "argumentDefinitions": [],
-  "kind": "Fragment",
-  "metadata": null,
-  "name": "EditApplicationPartComponent_ApplicationPartComponentChangeLog",
-  "selections": [
+  argumentDefinitions: [],
+  kind: 'Fragment',
+  metadata: null,
+  name: 'EditApplicationPartComponent_ApplicationPartComponentChangeLog',
+  selections: [
     {
-      "alias": null,
-      "args": null,
-      "concreteType": "ChangeLog",
-      "kind": "LinkedField",
-      "name": "changeLog",
-      "plural": true,
-      "selections": [
+      alias: null,
+      args: null,
+      concreteType: 'ChangeLog',
+      kind: 'LinkedField',
+      name: 'changeLog',
+      plural: true,
+      selections: [
         {
-          "args": null,
-          "kind": "FragmentSpread",
-          "name": "ChangeLog"
-        }
+          args: null,
+          kind: 'FragmentSpread',
+          name: 'ChangeLog',
+        },
       ],
-      "storageKey": null
-    }
+      storageKey: null,
+    },
   ],
-  "type": "ApplicationPartComponent",
-  "abstractKey": null
+  type: 'ApplicationPartComponent',
+  abstractKey: null,
 };
 
-(node as any).hash = "ff4c0ca925e82574867faf215c3f86b5";
+(node as any).hash = 'ff4c0ca925e82574867faf215c3f86b5';
 
 export default node;

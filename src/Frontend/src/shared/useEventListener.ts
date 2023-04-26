@@ -1,4 +1,4 @@
-import { DependencyList, useCallback } from "react";
+import {DependencyList, useCallback} from 'react';
 
 type EventsWithTargetValue = React.ChangeEvent<
   HTMLTextAreaElement | HTMLInputElement
@@ -6,7 +6,7 @@ type EventsWithTargetValue = React.ChangeEvent<
 export const useIntEventHanlder = <
   T extends (value: number, e: E) => K,
   K,
-  E extends EventsWithTargetValue
+  E extends EventsWithTargetValue,
 >(
   callback: T,
   ...deps: DependencyList
@@ -20,7 +20,7 @@ export const useIntEventHanlder = <
 export const useStringEventHanlder = <
   T extends (value: string, e: E) => K,
   K,
-  E extends EventsWithTargetValue
+  E extends EventsWithTargetValue,
 >(
   callback: T,
   ...deps: DependencyList

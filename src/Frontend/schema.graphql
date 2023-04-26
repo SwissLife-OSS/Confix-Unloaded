@@ -150,9 +150,36 @@ type ApplicationPart implements Node {
   application: Application
   variableValues: [VariableValue!]!
   changeLog: [ChangeLog!]!
-  publishedVersions("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String): PublishedVersionsConnection
-  deployments("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String): DeploymentsConnection
-  publishApplicationPartById("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String): PublishApplicationPartByIdConnection
+  publishedVersions(
+    "Returns the first _n_ elements from the list."
+    first: Int
+    "Returns the elements in the list that come after the specified cursor."
+    after: String
+    "Returns the last _n_ elements from the list."
+    last: Int
+    "Returns the elements in the list that come before the specified cursor."
+    before: String
+  ): PublishedVersionsConnection
+  deployments(
+    "Returns the first _n_ elements from the list."
+    first: Int
+    "Returns the elements in the list that come after the specified cursor."
+    after: String
+    "Returns the last _n_ elements from the list."
+    last: Int
+    "Returns the elements in the list that come before the specified cursor."
+    before: String
+  ): DeploymentsConnection
+  publishApplicationPartById(
+    "Returns the first _n_ elements from the list."
+    first: Int
+    "Returns the elements in the list that come after the specified cursor."
+    after: String
+    "Returns the last _n_ elements from the list."
+    last: Int
+    "Returns the elements in the list that come before the specified cursor."
+    before: String
+  ): PublishApplicationPartByIdConnection
 }
 
 type ApplicationPartComponent {
@@ -429,7 +456,16 @@ type DeleteVariableValuePayload {
 
 type DeployedEnvironment {
   environment: Environment
-  claimedVersions("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String): ClaimedVersionsConnection
+  claimedVersions(
+    "Returns the first _n_ elements from the list."
+    first: Int
+    "Returns the elements in the list that come after the specified cursor."
+    after: String
+    "Returns the last _n_ elements from the list."
+    last: Int
+    "Returns the elements in the list that come before the specified cursor."
+    before: String
+  ): ClaimedVersionsConnection
 }
 
 "A connection to a list of items."
@@ -501,39 +537,71 @@ type Mutation {
   "Renames an application configuration."
   renameApplication(input: RenameApplicationInput!): RenameApplicationPayload!
   "Renames an application part of an application configuration."
-  renameApplicationPart(input: RenameApplicationPartInput!): RenameApplicationPartPayload!
+  renameApplicationPart(
+    input: RenameApplicationPartInput!
+  ): RenameApplicationPartPayload!
   "Adds a component to an application part."
-  addComponentsToApplicationPart(input: AddComponentsToApplicationPartInput!): AddComponentsToApplicationPartPayload!
+  addComponentsToApplicationPart(
+    input: AddComponentsToApplicationPartInput!
+  ): AddComponentsToApplicationPartPayload!
   "Adds a component to an application part."
-  addPartToApplication(input: AddPartToApplicationInput!): AddPartToApplicationPayload!
+  addPartToApplication(
+    input: AddPartToApplicationInput!
+  ): AddPartToApplicationPayload!
   "Adds a component to an application part."
-  removeApplicationPart(input: RemoveApplicationPartInput!): RemoveApplicationPartPayload!
+  removeApplicationPart(
+    input: RemoveApplicationPartInput!
+  ): RemoveApplicationPartPayload!
   "Adds a component to an application part."
-  removeComponentFromApplicationPart(input: RemoveComponentFromApplicationPartInput!): RemoveComponentFromApplicationPartPayload!
-  updateApplicationPartComponentValues(input: UpdateApplicationPartComponentValuesInput!): UpdateApplicationPartComponentValuesPayload!
+  removeComponentFromApplicationPart(
+    input: RemoveComponentFromApplicationPartInput!
+  ): RemoveComponentFromApplicationPartPayload!
+  updateApplicationPartComponentValues(
+    input: UpdateApplicationPartComponentValuesInput!
+  ): UpdateApplicationPartComponentValuesPayload!
   createComponent(input: CreateComponentInput!): CreateComponentPayload!
   renameComponent(input: RenameComponentInput!): RenameComponentPayload!
-  updateComponentScopes(input: UpdateComponentScopesInput!): UpdateComponentScopesPayload!
-  updateComponentSchema(input: UpdateComponentSchemaInput!): UpdateComponentSchemaPayload!
-  updateComponentValues(input: UpdateComponentValuesInput!): UpdateComponentValuesPayload!
+  updateComponentScopes(
+    input: UpdateComponentScopesInput!
+  ): UpdateComponentScopesPayload!
+  updateComponentSchema(
+    input: UpdateComponentSchemaInput!
+  ): UpdateComponentSchemaPayload!
+  updateComponentValues(
+    input: UpdateComponentValuesInput!
+  ): UpdateComponentValuesPayload!
   createEnvironment(input: CreateEnvironmentInput!): CreateEnvironmentPayload!
   renameEnvironment(input: RenameEnvironmentInput!): RenameEnvironmentPayload!
-  removeEnvironmentById(input: RemoveEnvironmentByIdInput!): RemoveEnvironmentByIdPayload!
-  setParentOfEnvironment(input: SetParentOfEnvironmentInput!): SetParentOfEnvironmentPayload!
-  setDeveloperAccessOfEnvironment(input: SetDeveloperAccessOfEnvironmentInput!): SetDeveloperAccessOfEnvironmentPayload!
+  removeEnvironmentById(
+    input: RemoveEnvironmentByIdInput!
+  ): RemoveEnvironmentByIdPayload!
+  setParentOfEnvironment(
+    input: SetParentOfEnvironmentInput!
+  ): SetParentOfEnvironmentPayload!
+  setDeveloperAccessOfEnvironment(
+    input: SetDeveloperAccessOfEnvironmentInput!
+  ): SetDeveloperAccessOfEnvironmentPayload!
   createVariable(input: CreateVariableInput!): CreateVariablePayload!
   saveVariableValue(input: SaveVariableValueInput!): SaveVariableValuePayload!
-  deleteVariableValue(input: DeleteVariableValueInput!): DeleteVariableValuePayload!
+  deleteVariableValue(
+    input: DeleteVariableValueInput!
+  ): DeleteVariableValuePayload!
   renameVariable(input: RenameVariableInput!): RenameVariablePayload!
-  publishApplicationPartById(input: PublishApplicationPartByIdInput!): PublishApplicationPartByIdPayload!
+  publishApplicationPartById(
+    input: PublishApplicationPartByIdInput!
+  ): PublishApplicationPartByIdPayload!
   claimVersion(input: ClaimVersionInput!): ClaimVersionPayload!
   createRole(input: CreateRoleInput!): CreateRolePayload!
   renameRole(input: RenameRoleInput!): RenameRolePayload!
-  changeRolePermissions(input: ChangeRolePermissionsInput!): ChangeRolePermissionsPayload!
+  changeRolePermissions(
+    input: ChangeRolePermissionsInput!
+  ): ChangeRolePermissionsPayload!
   removeRoleById(input: RemoveRoleByIdInput!): RemoveRoleByIdPayload!
   createGroup(input: CreateGroupInput!): CreateGroupPayload!
   renameGroup(input: RenameGroupInput!): RenameGroupPayload!
-  updateGroupRequirements(input: UpdateGroupRequirementsInput!): UpdateGroupRequirementsPayload!
+  updateGroupRequirements(
+    input: UpdateGroupRequirementsInput!
+  ): UpdateGroupRequirementsPayload!
   updateGroupRoles(input: UpdateGroupRolesInput!): UpdateGroupRolesPayload!
   removeGroupById(input: RemoveGroupByIdInput!): RemoveGroupByIdPayload!
 }
@@ -633,29 +701,101 @@ type Query {
   node("ID of the object." id: ID!): Node
   "Lookup nodes by a list of IDs."
   nodes("The list of node IDs." ids: [ID!]!): [Node]!
-  apiKeys("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String): ApiKeysConnection
+  apiKeys(
+    "Returns the first _n_ elements from the list."
+    first: Int
+    "Returns the elements in the list that come after the specified cursor."
+    after: String
+    "Returns the last _n_ elements from the list."
+    last: Int
+    "Returns the elements in the list that come before the specified cursor."
+    before: String
+  ): ApiKeysConnection
   apiKeyById(id: ID!): ApiKey
   "Get all application configurations."
-  applications(search: String "Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String): ApplicationsConnection
+  applications(
+    search: String
+    "Returns the first _n_ elements from the list."
+    first: Int
+    "Returns the elements in the list that come after the specified cursor."
+    after: String
+  ): ApplicationsConnection
   "Get a specific application configuration by its ID."
   applicationById("The application ID." id: ID!): Application
   applicationPartById(id: ID!): ApplicationPart
   applicationPartComponentById(partComponentId: ID!): ApplicationPartComponent
-  components(applicationId: ID applicationPartId: ID namespace: String search: String "Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String): ComponentsConnection
+  components(
+    applicationId: ID
+    applicationPartId: ID
+    namespace: String
+    search: String
+    "Returns the first _n_ elements from the list."
+    first: Int
+    "Returns the elements in the list that come after the specified cursor."
+    after: String
+  ): ComponentsConnection
   componentById(id: ID!): Component
-  searchEnvironments(search: String "Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String): SearchEnvironmentsConnection
+  searchEnvironments(
+    search: String
+    "Returns the first _n_ elements from the list."
+    first: Int
+    "Returns the elements in the list that come after the specified cursor."
+    after: String
+    "Returns the last _n_ elements from the list."
+    last: Int
+    "Returns the elements in the list that come before the specified cursor."
+    before: String
+  ): SearchEnvironmentsConnection
   environmentById(id: ID!): Environment
   variables: [Variable!]!
-  searchVariables(search: String "Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String): SearchVariablesConnection
+  searchVariables(
+    search: String
+    "Returns the first _n_ elements from the list."
+    first: Int
+    "Returns the elements in the list that come after the specified cursor."
+    after: String
+    "Returns the last _n_ elements from the list."
+    last: Int
+    "Returns the elements in the list that come before the specified cursor."
+    before: String
+  ): SearchVariablesConnection
   variable(id: ID!): Variable
-  variableValues(variableId: ID! applicationId: ID applicationPartId: ID): [VariableValue!]!
+  variableValues(
+    variableId: ID!
+    applicationId: ID
+    applicationPartId: ID
+  ): [VariableValue!]!
   globalVariableValues: [VariableValue!]!
   "Gets the latest published version of an application part."
-  latestPublishedVersion(applicationName: String! applicationPartName: String! environmentName: String!): LatestPublishedVersionResult
+  latestPublishedVersion(
+    applicationName: String!
+    applicationPartName: String!
+    environmentName: String!
+  ): LatestPublishedVersionResult
   changeLogById(id: ID!): ChangeLog
-  searchRoles(search: String "Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String): SearchRolesConnection
+  searchRoles(
+    search: String
+    "Returns the first _n_ elements from the list."
+    first: Int
+    "Returns the elements in the list that come after the specified cursor."
+    after: String
+    "Returns the last _n_ elements from the list."
+    last: Int
+    "Returns the elements in the list that come before the specified cursor."
+    before: String
+  ): SearchRolesConnection
   roleById(id: ID!): Role
-  searchGroups(search: String "Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String): SearchGroupsConnection
+  searchGroups(
+    search: String
+    "Returns the first _n_ elements from the list."
+    first: Int
+    "Returns the elements in the list that come after the specified cursor."
+    after: String
+    "Returns the last _n_ elements from the list."
+    last: Int
+    "Returns the elements in the list that come before the specified cursor."
+    before: String
+  ): SearchGroupsConnection
   groupById(id: ID!): Group
   me: Viewer
 }
@@ -1006,9 +1146,14 @@ type Viewer {
   namespaces: [String!]!
 }
 
-union AddComponentsToApplicationPartError = ApplicationPartIdInvalid | UnauthorizedOperationError
+union AddComponentsToApplicationPartError =
+    ApplicationPartIdInvalid
+  | UnauthorizedOperationError
 
-union AddPartToApplicationError = ApplicationNotFoundError | ApplicationPartNameTaken | UnauthorizedOperationError
+union AddPartToApplicationError =
+    ApplicationNotFoundError
+  | ApplicationPartNameTaken
+  | UnauthorizedOperationError
 
 union ChangeRolePermissionsError = UnauthorizedOperationError
 
@@ -1018,9 +1163,14 @@ union CreateApiKeyError = UnauthorizedOperationError
 
 union CreateApplicationError = ApplicationNameTaken | UnauthorizedOperationError
 
-union CreateComponentError = ValueSchemaViolation | UnauthorizedOperationError | ComponentValidationFailed
+union CreateComponentError =
+    ValueSchemaViolation
+  | UnauthorizedOperationError
+  | ComponentValidationFailed
 
-union CreateEnvironmentError = EnvironmentNameCollisionError | UnauthorizedOperationError
+union CreateEnvironmentError =
+    EnvironmentNameCollisionError
+  | UnauthorizedOperationError
 
 union CreateGroupError = UnauthorizedOperationError
 
@@ -1030,29 +1180,49 @@ union CreateVariableError = UnauthorizedOperationError
 
 union DeleteVariableValueError = UnauthorizedOperationError
 
-union LatestPublishedVersionResult = LatestPublishedVersion | ClaimVersionFailedError
+union LatestPublishedVersionResult =
+    LatestPublishedVersion
+  | ClaimVersionFailedError
 
-union PublishApplicationPartByIdError = PublishingError | UnauthorizedOperationError
+union PublishApplicationPartByIdError =
+    PublishingError
+  | UnauthorizedOperationError
 
 union RemoveApiKeyByIdError = UnauthorizedOperationError
 
-union RemoveApplicationPartError = ApplicationPartNotFoundError | UnauthorizedOperationError
+union RemoveApplicationPartError =
+    ApplicationPartNotFoundError
+  | UnauthorizedOperationError
 
-union RemoveComponentFromApplicationPartError = ApplicationPartNotFoundError | UnauthorizedOperationError
+union RemoveComponentFromApplicationPartError =
+    ApplicationPartNotFoundError
+  | UnauthorizedOperationError
 
-union RemoveEnvironmentByIdError = EnvironmentNotFoundError | UnauthorizedOperationError
+union RemoveEnvironmentByIdError =
+    EnvironmentNotFoundError
+  | UnauthorizedOperationError
 
 union RemoveGroupByIdError = UnauthorizedOperationError
 
 union RemoveRoleByIdError = UnauthorizedOperationError
 
-union RenameApplicationError = ApplicationIdInvalid | ApplicationNameTaken | UnauthorizedOperationError
+union RenameApplicationError =
+    ApplicationIdInvalid
+  | ApplicationNameTaken
+  | UnauthorizedOperationError
 
-union RenameApplicationPartError = ApplicationIdInvalid | ApplicationPartIdInvalid | ApplicationPartNameTaken | UnauthorizedOperationError
+union RenameApplicationPartError =
+    ApplicationIdInvalid
+  | ApplicationPartIdInvalid
+  | ApplicationPartNameTaken
+  | UnauthorizedOperationError
 
 union RenameComponentError = UnauthorizedOperationError
 
-union RenameEnvironmentError = EnvironmentNotFoundError | EnvironmentNameCollisionError | UnauthorizedOperationError
+union RenameEnvironmentError =
+    EnvironmentNotFoundError
+  | EnvironmentNameCollisionError
+  | UnauthorizedOperationError
 
 union RenameGroupError = UnauthorizedOperationError
 
@@ -1064,19 +1234,33 @@ union Requirement = ClaimRequirement
 
 union SaveVariableValueError = UnauthorizedOperationError
 
-union SetDeveloperAccessOfEnvironmentError = EnvironmentNotFoundError | UnauthorizedOperationError
+union SetDeveloperAccessOfEnvironmentError =
+    EnvironmentNotFoundError
+  | UnauthorizedOperationError
 
-union SetParentOfEnvironmentError = EnvironmentNotFoundError | EnvironmentCycleDetectedError | UnauthorizedOperationError
+union SetParentOfEnvironmentError =
+    EnvironmentNotFoundError
+  | EnvironmentCycleDetectedError
+  | UnauthorizedOperationError
 
 union UpdateApiKeyError = UnauthorizedOperationError
 
-union UpdateApplicationPartComponentValuesError = ApplicationPartComponentNotFoundError | ComponentNotFoundError | UnauthorizedOperationError
+union UpdateApplicationPartComponentValuesError =
+    ApplicationPartComponentNotFoundError
+  | ComponentNotFoundError
+  | UnauthorizedOperationError
 
-union UpdateComponentSchemaError = UnauthorizedOperationError | SchemaInvalidError
+union UpdateComponentSchemaError =
+    UnauthorizedOperationError
+  | SchemaInvalidError
 
-union UpdateComponentScopesError = UnauthorizedOperationError | ComponentValidationFailed
+union UpdateComponentScopesError =
+    UnauthorizedOperationError
+  | ComponentValidationFailed
 
-union UpdateComponentValuesError = ValueSchemaViolation | UnauthorizedOperationError
+union UpdateComponentValuesError =
+    ValueSchemaViolation
+  | UnauthorizedOperationError
 
 union UpdateGroupRequirementsError = UnauthorizedOperationError
 
@@ -1323,22 +1507,37 @@ enum VariableState {
   DEPRECATED
 }
 
-directive @authorize("The name of the authorization policy that determines access to the annotated resource." policy: String "Roles that are allowed to access the annotated resource." roles: [String!] "Defines when when the authorize directive shall be applied.By default the authorize directives are applied during the validation phase." apply: ApplyPolicy! = VALIDATION) repeatable on OBJECT | FIELD_DEFINITION
+directive @authorize(
+  "The name of the authorization policy that determines access to the annotated resource."
+  policy: String
+  "Roles that are allowed to access the annotated resource."
+  roles: [String!]
+  "Defines when when the authorize directive shall be applied.By default the authorize directives are applied during the validation phase."
+  apply: ApplyPolicy! = VALIDATION
+) repeatable on OBJECT | FIELD_DEFINITION
 
 "The `@defer` directive may be provided for fragment spreads and inline fragments to inform the executor to delay the execution of the current fragment to indicate deprioritization of the current fragment. A query with `@defer` directive will cause the request to potentially return multiple responses, where non-deferred data is delivered in the initial response and data deferred is delivered in a subsequent response. `@include` and `@skip` take precedence over `@defer`."
-directive @defer("If this argument label has a value other than null, it will be passed on to the result of this defer directive. This label is intended to give client applications a way to identify to which fragment a deferred result belongs to." label: String "Deferred when true." if: Boolean) on FRAGMENT_SPREAD | INLINE_FRAGMENT
+directive @defer(
+  "If this argument label has a value other than null, it will be passed on to the result of this defer directive. This label is intended to give client applications a way to identify to which fragment a deferred result belongs to."
+  label: String
+  "Deferred when true."
+  if: Boolean
+) on FRAGMENT_SPREAD | INLINE_FRAGMENT
 
 "The `@oneOf` directive is used within the type system definition language\n to indicate:\n\n - an Input Object is a Oneof Input Object, or\n - an Object Type's Field is a Oneof Field."
 directive @oneOf on INPUT_OBJECT
 
 "The `@specifiedBy` directive is used within the type system definition language to provide a URL for specifying the behavior of custom scalar definitions."
-directive @specifiedBy("The specifiedBy URL points to a human-readable specification. This field will only read a result for scalar types." url: String!) on SCALAR
+directive @specifiedBy(
+  "The specifiedBy URL points to a human-readable specification. This field will only read a result for scalar types."
+  url: String!
+) on SCALAR
 
 scalar Any
 
 "The `DateTime` scalar represents an ISO-8601 compliant date time type."
-scalar DateTime @specifiedBy(url: "https:\/\/www.graphql-scalars.com\/date-time")
+scalar DateTime @specifiedBy(url: "https://www.graphql-scalars.com/date-time")
 
 scalar SDL
 
-scalar UUID @specifiedBy(url: "https:\/\/tools.ietf.org\/html\/rfc4122")
+scalar UUID @specifiedBy(url: "https://tools.ietf.org/html/rfc4122")
