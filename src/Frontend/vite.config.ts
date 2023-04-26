@@ -25,9 +25,10 @@ export default defineConfig({
   },
   build: {
     outDir: "build",
+    chunkSizeWarningLimit: 3000,
   },
-  server:{
+  server: {
     strictPort: true,
-    port:3000
-  }
+    port: 3000,
+  },
 });
