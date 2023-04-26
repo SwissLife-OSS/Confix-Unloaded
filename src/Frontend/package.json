@@ -33,8 +33,8 @@
     "relay": "relay-compiler",
     "test": "react-app-rewired test",
     "get-schema": "get-graphql-schema http://localhost:5000/graphql > schema.graphql",
-    "prettify": "prettier --write . --ignore-path .gitignore",
-    "lint:prettier": "prettier --check . --ignore-path .gitignore"
+    "prettify": "prettier --write . ",
+    "lint:prettier": "prettier --check ."
   },
   "eslintConfig": {
     "extends": [
