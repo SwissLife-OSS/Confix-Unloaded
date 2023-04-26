@@ -80,7 +80,7 @@ internal sealed class ComponentService : IComponentService
             return Array.Empty<Component>();
         }
 
-        var namespaces = session.Namespaces;
+        var namespaces = session.NamespacesWithAccess(Scope.Component, Read);
         if (@namespace is not null)
         {
             if (namespaces.Contains(@namespace))
