@@ -1,14 +1,16 @@
-import React from "react";
 import "./App.css";
-import { NavLink, useLocation, useRoutes } from "react-router-dom";
+
 import { Layout, Menu } from "antd";
+import { Namespaces, useUser } from "./shared/UserContext";
+import { NavLink, useLocation, useRoutes } from "react-router-dom";
+
+import { Colors } from "./shared/colors";
 import { Content } from "antd/lib/layout/layout";
+import React from "react";
+import { UserOutlined } from "@ant-design/icons";
 import { css } from "@emotion/react";
 import { navigation } from "./routes";
-import { UserOutlined } from "@ant-design/icons";
-import { Colors } from "./shared/colors";
 import styled from "@emotion/styled";
-import { Namespaces, useUser } from "./shared/useUser";
 
 function App() {
   const [open, setOpen] = React.useState(false);
@@ -59,15 +61,7 @@ const Navigation: React.FC<{ open: boolean; toggleDrawer: () => void }> = ({
         mode="inline"
         selectedKeys={[location.pathname]}
         items={navigation
-          .filter(
-            (x) =>
-              !x.permissions ||
-              user.hasPermission(
-                x.permissions.scope,
-                Namespaces.Global,
-                x.permissions.permissions
-              )
-          )
+          .filter((x) => (x.permissions ? x.permissions(user) : true))
           .map((route) => ({
             key: route.path,
             icon: <route.icon style={{ color: Colors.theme.primary }} />,

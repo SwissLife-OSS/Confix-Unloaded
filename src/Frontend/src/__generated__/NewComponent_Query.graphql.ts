@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<fae9176ef47b72f277cd7b3210af4285>>
- * @relayHash 1dba5e0ac4778eb2824b028e63816b0d
+ * @generated SignedSource<<f803c9b21b147f46de7b9c1b5922f13a>>
+ * @relayHash be3fe28a2313e52da9e6283a309f44d2
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 1dba5e0ac4778eb2824b028e63816b0d
+// @relayRequestID be3fe28a2313e52da9e6283a309f44d2
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -77,24 +77,6 @@ return {
     "selections": [
       {
         "alias": null,
-        "args": null,
-        "concreteType": "Viewer",
-        "kind": "LinkedField",
-        "name": "me",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "namespaces",
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
-      },
-      {
-        "alias": null,
         "args": [
           {
             "kind": "Literal",
@@ -158,7 +140,7 @@ return {
     ]
   },
   "params": {
-    "id": "1dba5e0ac4778eb2824b028e63816b0d",
+    "id": "be3fe28a2313e52da9e6283a309f44d2",
     "metadata": {},
     "name": "NewComponent_Query",
     "operationKind": "query",

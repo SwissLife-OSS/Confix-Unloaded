@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<ed5a29e840499cd201f983a418668749>>
- * @relayHash 4b79a52fce3562eee73181dad0685385
+ * @generated SignedSource<<b61b23dc32dd5f57c3068ffe1cefaaf6>>
+ * @relayHash 8c82f115cdaa5b6202278002c94fd71a
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 4b79a52fce3562eee73181dad0685385
+// @relayRequestID 8c82f115cdaa5b6202278002c94fd71a
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -564,24 +564,6 @@ return {
         "selections": [
           {
             "alias": null,
-            "args": null,
-            "concreteType": "Viewer",
-            "kind": "LinkedField",
-            "name": "me",
-            "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "namespaces",
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          },
-          {
-            "alias": null,
             "args": [
               {
                 "kind": "Literal",
@@ -640,7 +622,7 @@ return {
     ]
   },
   "params": {
-    "id": "4b79a52fce3562eee73181dad0685385",
+    "id": "8c82f115cdaa5b6202278002c94fd71a",
     "metadata": {},
     "name": "EditComponentQuery",
     "operationKind": "query",

@@ -6,11 +6,11 @@ import { useFragment, useRefetchableFragment } from "react-relay";
 import { ApplicationCascader$key } from "@generated/ApplicationCascader.graphql";
 import { ApplicationCascader_ApplicationPagination_Query } from "@generated/ApplicationCascader_ApplicationPagination_Query.graphql";
 import { ApplicationCascader_Applications$key } from "@generated/ApplicationCascader_Applications.graphql";
-import { ApplicationCascader_Namespaces$key } from "@generated/ApplicationCascader_Namespaces.graphql";
 import { Cascader } from "antd";
 import { DefaultOptionType } from "antd/lib/cascader";
 import { MultipleCascaderProps } from "rc-cascader/lib/Cascader";
 import { graphql } from "babel-plugin-relay/macro";
+import { useUser } from "../../shared/UserContext";
 
 type Result = [string] | [string, string] | [string, string, string];
 
@@ -19,16 +19,17 @@ export const ApplicationCascader: React.FC<{
   value: Result[];
   fragmentRef: ApplicationCascader$key;
 }> = ({ onChange, value, fragmentRef }) => {
+  const { componentNamespaces } = useUser();
   const data = useFragment(
     graphql`
       fragment ApplicationCascader on Query
       @argumentDefinitions(search: { type: "String" }) {
-        ...ApplicationCascader_Namespaces
         ...ApplicationCascader_Applications @arguments(search: $search)
       }
     `,
     fragmentRef
   );
+
   const [{ applications }] = useRefetchableFragment<
     ApplicationCascader_ApplicationPagination_Query,
     ApplicationCascader_Applications$key
@@ -49,17 +50,6 @@ export const ApplicationCascader: React.FC<{
               }
             }
           }
-        }
-      }
-    `,
-    data
-  );
-
-  const { me } = useFragment<ApplicationCascader_Namespaces$key>(
-    graphql`
-      fragment ApplicationCascader_Namespaces on Query {
-        me {
-          namespaces
         }
       }
     `,
@@ -87,7 +77,7 @@ export const ApplicationCascader: React.FC<{
 
     const namespaces = new Set<string>([
       ...Object.keys(applicationsByNamespace ?? {}),
-      ...(me?.namespaces ?? []),
+      ...(componentNamespaces.map(({ namespace }) => namespace) ?? []),
     ]);
 
     return Array.from(namespaces).map((namespace) => ({
@@ -95,7 +85,7 @@ export const ApplicationCascader: React.FC<{
       label: "Namespace: " + namespace,
       children: applicationsByNamespace?.[namespace],
     }));
-  }, [applications, me]);
+  }, [applications, componentNamespaces]);
 
   const handleCascaderChange = useCallback<
     NonNullable<MultipleCascaderProps<typeof options[0]>["onChange"]>

@@ -13,6 +13,6 @@ public sealed class Viewer
 
     public string Name => _session.UserInfo.Name ?? _session.UserInfo.Email ?? _session.UserInfo.Id;
 
-    public IEnumerable<Grant> NamespacesGrants(Scope scope)
+    public IEnumerable<Grant> NamespaceGrants(Scope scope)
         => _session.GetGrantsForScope(scope);
 }
