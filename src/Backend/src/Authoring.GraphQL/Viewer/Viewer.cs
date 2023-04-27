@@ -10,10 +10,9 @@ public sealed class Viewer
     {
         _session = session;
     }
-    
+
     public string Name => _session.UserInfo.Name ?? _session.UserInfo.Email ?? _session.UserInfo.Id;
 
-    public IReadOnlyList<Group> Groups => _session.Groups;
-
-    public IEnumerable<string> Namespaces => _session.Namespaces;
+    public IEnumerable<Grant> NamespacesGrants(Scope scope)
+        => _session.GetGrantsForScope(scope);
 }
