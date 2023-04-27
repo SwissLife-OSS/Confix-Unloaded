@@ -1,37 +1,37 @@
-import { AddIcon, DeleteIcon } from "../icons/icons";
-import { Button, List } from "antd";
-import React, { useCallback, useMemo } from "react";
+import {AddIcon, DeleteIcon} from '../icons/icons';
+import {Button, List} from 'antd';
+import React, {useCallback, useMemo} from 'react';
 import {
   useFragment,
   useLazyLoadQuery,
   usePaginationFragment,
-} from "react-relay";
+} from 'react-relay';
 
-import { AddComponentsToApplicationPartDialog } from "./dialogs/AddComponentsToApplicationPartDialog";
-import { AddPartToApplicationDialog } from "./dialogs/AddPartToApplicationDialog";
-import { ApplicationsList$key } from "@generated/ApplicationsList.graphql";
-import { ApplicationsListItem$key } from "@generated/ApplicationsListItem.graphql";
-import { ApplicationsListItem_ApplicationPart$key } from "@generated/ApplicationsListItem_ApplicationPart.graphql";
-import { ApplicationsListItem_Component$key } from "@generated/ApplicationsListItem_Component.graphql";
-import { ApplicationsListItem_DefaultListItem$key } from "@generated/ApplicationsListItem_DefaultListItem.graphql";
-import { ApplicationsListItem_SelectedListItem$key } from "@generated/ApplicationsListItem_SelectedListItem.graphql";
-import { ApplicationsListQuery } from "@generated/ApplicationsListQuery.graphql";
-import { Colors } from "../shared/colors";
-import { InfiniteScrollList } from "../shared/InfiniteScrollList";
-import { RemoveComponentFromApplicationPartDialog } from "./dialogs/RemoveComponentFromApplicationPartDialog";
-import { RemovePartFromApplicationDialog } from "./dialogs/RemovePartFromApplicationDialog";
-import { config } from "../config";
-import { graphql } from "babel-plugin-relay/macro";
-import styled from "@emotion/styled";
-import { useGoTo } from "../shared/useGoTo";
-import { useHref } from "react-router";
-import { useToggle } from "../shared/useToggle";
+import {AddComponentsToApplicationPartDialog} from './dialogs/AddComponentsToApplicationPartDialog';
+import {AddPartToApplicationDialog} from './dialogs/AddPartToApplicationDialog';
+import {ApplicationsList$key} from '@generated/ApplicationsList.graphql';
+import {ApplicationsListItem$key} from '@generated/ApplicationsListItem.graphql';
+import {ApplicationsListItem_ApplicationPart$key} from '@generated/ApplicationsListItem_ApplicationPart.graphql';
+import {ApplicationsListItem_Component$key} from '@generated/ApplicationsListItem_Component.graphql';
+import {ApplicationsListItem_DefaultListItem$key} from '@generated/ApplicationsListItem_DefaultListItem.graphql';
+import {ApplicationsListItem_SelectedListItem$key} from '@generated/ApplicationsListItem_SelectedListItem.graphql';
+import {ApplicationsListQuery} from '@generated/ApplicationsListQuery.graphql';
+import {Colors} from '../shared/colors';
+import {InfiniteScrollList} from '../shared/InfiniteScrollList';
+import {RemoveComponentFromApplicationPartDialog} from './dialogs/RemoveComponentFromApplicationPartDialog';
+import {RemovePartFromApplicationDialog} from './dialogs/RemovePartFromApplicationDialog';
+import {config} from '../config';
+import {graphql} from 'babel-plugin-relay/macro';
+import styled from '@emotion/styled';
+import {useGoTo} from '../shared/useGoTo';
+import {useHref} from 'react-router';
+import {useToggle} from '../shared/useToggle';
 
 export const ApplicationList: React.FC<{
   selectedApplicationId?: string;
   onItemSelect: (item: string) => void;
   search: string | undefined;
-}> = ({ search, onItemSelect, selectedApplicationId }) => {
+}> = ({search, onItemSelect, selectedApplicationId}) => {
   const query = useLazyLoadQuery<ApplicationsListQuery>(
     graphql`
       query ApplicationsListQuery(
@@ -45,7 +45,7 @@ export const ApplicationList: React.FC<{
     {
       count: config.pagination.pageSize,
       search,
-    }
+    },
   );
 
   const {
@@ -70,12 +70,12 @@ export const ApplicationList: React.FC<{
         }
       }
     `,
-    query
+    query,
   );
 
   const handleOnItemSelected = useCallback(
     (id: string) => onItemSelect(id),
-    [onItemSelect]
+    [onItemSelect],
   );
 
   const data = connection?.applications?.edges?.map((x) => x.node);
@@ -101,7 +101,7 @@ const ApplicationListItem: React.FC<{
   selectedId?: string;
   onItemSelect: (applicationId: string) => void;
   edge: ApplicationsListItem$key;
-}> = ({ onItemSelect, edge, selectedId }) => {
+}> = ({onItemSelect, edge, selectedId}) => {
   const data = useFragment(
     graphql`
       fragment ApplicationsListItem on Application {
@@ -110,12 +110,12 @@ const ApplicationListItem: React.FC<{
         ...ApplicationsListItem_SelectedListItem
       }
     `,
-    edge
+    edge,
   );
 
   const handleSelect = useCallback(
     () => onItemSelect(data.id),
-    [onItemSelect, data]
+    [onItemSelect, data],
   );
 
   if (data.id === selectedId) {
@@ -128,7 +128,7 @@ const ApplicationListItem: React.FC<{
 const DefaultListItem: React.FC<{
   onSelect: () => void;
   edge: ApplicationsListItem_DefaultListItem$key;
-}> = ({ onSelect: handleSelect, edge }) => {
+}> = ({onSelect: handleSelect, edge}) => {
   const data = useFragment(
     graphql`
       fragment ApplicationsListItem_DefaultListItem on Application {
@@ -140,11 +140,11 @@ const DefaultListItem: React.FC<{
         }
       }
     `,
-    edge
+    edge,
   );
   const description = useMemo(
-    () => data.parts.reduce((p, c) => `${p} | ${c.name}`, ""),
-    [data.parts]
+    () => data.parts.reduce((p, c) => `${p} | ${c.name}`, ''),
+    [data.parts],
   );
   return (
     <ListItem onClick={handleSelect}>
@@ -156,8 +156,8 @@ const DefaultListItem: React.FC<{
 const SelectedListItem: React.FC<{
   onItemSelect: (applicationId: string) => void;
   data: ApplicationsListItem_SelectedListItem$key;
-}> = ({ onItemSelect, data }) => {
-  const { name, parts, id } = useFragment(
+}> = ({onItemSelect, data}) => {
+  const {name, parts, id} = useFragment(
     graphql`
       fragment ApplicationsListItem_SelectedListItem on Application {
         id
@@ -169,7 +169,7 @@ const SelectedListItem: React.FC<{
         }
       }
     `,
-    data
+    data,
   );
   const handleClick = useCallback(() => onItemSelect(id), [onItemSelect, id]);
   const [isAddPartVisible, , enableAddPart, disableAddPart] = useToggle();
@@ -197,7 +197,7 @@ const SelectedListItem: React.FC<{
 const ApplicationPart: React.FC<{
   applicationId: string;
   data: ApplicationsListItem_ApplicationPart$key;
-}> = ({ applicationId, data }) => {
+}> = ({applicationId, data}) => {
   const applicationPart = useFragment(
     graphql`
       fragment ApplicationsListItem_ApplicationPart on ApplicationPart {
@@ -212,9 +212,9 @@ const ApplicationPart: React.FC<{
         ...AddComponentsToApplicationPartDialog
       }
     `,
-    data
+    data,
   );
-  const { name, components, id } = applicationPart;
+  const {name, components, id} = applicationPart;
 
   const [isRemoveDialogShown, , enableRemoveDialog, disableRemoveDialog] =
     useToggle();
@@ -226,9 +226,9 @@ const ApplicationPart: React.FC<{
   ] = useToggle();
   useHref({});
   const goToPart = useGoTo(
-    ":applicationId/parts/:partId/edit",
+    ':applicationId/parts/:partId/edit',
     {},
-    { applicationId, partId: id }
+    {applicationId, partId: id},
   );
   return (
     <>
@@ -248,7 +248,7 @@ const ApplicationPart: React.FC<{
       {components.map((component) => (
         <Component
           applicationId={applicationId}
-          key={component.definition?.id ?? "-"}
+          key={component.definition?.id ?? '-'}
           data={component}
         />
       ))}
@@ -270,8 +270,8 @@ const ApplicationPart: React.FC<{
 const Component: React.FC<{
   applicationId: string;
   data: ApplicationsListItem_Component$key;
-}> = ({ applicationId, data }) => {
-  const { id: partComponentId, definition } = useFragment(
+}> = ({applicationId, data}) => {
+  const {id: partComponentId, definition} = useFragment(
     graphql`
       fragment ApplicationsListItem_Component on ApplicationPartComponent {
         id
@@ -281,15 +281,15 @@ const Component: React.FC<{
         }
       }
     `,
-    data
+    data,
   );
 
   const [isRemoveDialogShown, , enableRemoveDialog, disableRemoveDialog] =
     useToggle();
   const goToComponent = useGoTo(
-    ":applicationId/components/:partComponentId/edit",
+    ':applicationId/components/:partComponentId/edit',
     {},
-    { applicationId, partComponentId }
+    {applicationId, partComponentId},
   );
 
   return (
@@ -302,7 +302,7 @@ const Component: React.FC<{
       />
       <RemoveComponentFromApplicationPartDialog
         partComponentId={partComponentId}
-        componentName={definition?.name ?? ""}
+        componentName={definition?.name ?? ''}
         open={isRemoveDialogShown}
         onClose={disableRemoveDialog}
       />
@@ -317,11 +317,11 @@ const SubItemButton = styled(Button)`
   flex: 0;
 `;
 
-const SubItemTitle = styled("div")`
+const SubItemTitle = styled('div')`
   flex: 1;
 `;
 
-const SubItem = styled("div")<{ indent?: number }>`
+const SubItem = styled('div')<{indent?: number}>`
   display: flex;
   flex-direction: row;
   padding: 5px 0;

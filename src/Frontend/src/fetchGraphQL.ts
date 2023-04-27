@@ -1,46 +1,42 @@
-import {
-  FetchFunction,
-  GraphQLResponse,
-  Observable,
-} from "relay-runtime";
+import {FetchFunction, GraphQLResponse, Observable} from 'relay-runtime';
 
-import { Part } from "meros";
-import { config } from "./config";
-import { meros } from "meros/browser";
+import {Part} from 'meros';
+import {config} from './config';
+import {meros} from 'meros/browser';
 
 const isAsyncIterable = (value: any) =>
-  typeof Object(value)[Symbol.asyncIterator] === "function";
+  typeof Object(value)[Symbol.asyncIterator] === 'function';
 
 const ErrorMessages = {
-  FAILED_FETCH: "Failed to fetch",
-  ERROR_FETCH: "Error in fetch",
-  UNWORKABLE_FETCH: "Unworkable fetch",
-  SOCKET_CLOSED: "Socket closed",
-  GRAPHQL_ERRORS: "GraphQL error",
+  FAILED_FETCH: 'Failed to fetch',
+  ERROR_FETCH: 'Error in fetch',
+  UNWORKABLE_FETCH: 'Unworkable fetch',
+  SOCKET_CLOSED: 'Socket closed',
+  GRAPHQL_ERRORS: 'GraphQL error',
 };
 
 class NetworkError extends Error {
   constructor(message: string, options: any) {
     super(message, options);
 
-    this.name = "NetworkError";
+    this.name = 'NetworkError';
 
     if (options) {
-      const { cause, ...meta } = options;
+      const {cause, ...meta} = options;
 
       Object.assign(this, meta);
     }
   }
 }
 
-export const fetchGraphQL:FetchFunction = (operation, variables) => {
+export const fetchGraphQL: FetchFunction = (operation, variables) => {
   return Observable.create((sink) => {
     const init: RequestInit = {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Accept:
-          "application/graphql-response+json;charset=utf-8, multipart/mixed;charset=utf-8",
+          'application/graphql-response+json;charset=utf-8, multipart/mixed;charset=utf-8',
       },
       body: JSON.stringify({
         id: operation.id ?? undefined,
@@ -71,14 +67,14 @@ export const fetchGraphQL:FetchFunction = (operation, variables) => {
                     new NetworkError(ErrorMessages.UNWORKABLE_FETCH, {
                       request,
                       response,
-                    })
+                    }),
                   );
                   break;
                 }
 
-                if ("data" in part.body) {
+                if ('data' in part.body) {
                   sink.next(part.body as GraphQLResponse);
-                } else if ("errors" in part.body) {
+                } else if ('errors' in part.body) {
                   // If any exceptions occurred when processing the request,
                   // throw an error to indicate to the developer what went wrong.
                   sink.error(
@@ -86,14 +82,14 @@ export const fetchGraphQL:FetchFunction = (operation, variables) => {
                       request,
                       response,
                       errors: part.body.errors,
-                    })
+                    }),
                   );
                   break;
                 }
 
-                if ("incremental" in part.body) {
+                if ('incremental' in part.body) {
                   for (const chunk of (part.body as any).incremental) {
-                    if ("data" in chunk) {
+                    if ('data' in chunk) {
                       sink.next({
                         ...chunk,
                         hasNext: (part.body as any).hasNext,
@@ -130,9 +126,9 @@ export const fetchGraphQL:FetchFunction = (operation, variables) => {
             } else {
               const json = await response.json();
 
-              if ("data" in json) {
+              if ('data' in json) {
                 sink.next(json);
-              } else if ("errors" in json) {
+              } else if ('errors' in json) {
                 // If any exceptions occurred when processing the request,
                 // throw an error to indicate to the developer what went wrong.
                 sink.error(
@@ -140,7 +136,7 @@ export const fetchGraphQL:FetchFunction = (operation, variables) => {
                     request,
                     response,
                     errors: json.errors,
-                  })
+                  }),
                 );
               }
             }
@@ -153,21 +149,20 @@ export const fetchGraphQL:FetchFunction = (operation, variables) => {
                 request,
                 response,
               }),
-              true
+              true,
             );
           }
         } else {
           sink.error(
-            new NetworkError(ErrorMessages.ERROR_FETCH, { request, response })
+            new NetworkError(ErrorMessages.ERROR_FETCH, {request, response}),
           );
         }
       } catch (err) {
         sink.error(
-          new NetworkError(ErrorMessages.FAILED_FETCH, { cause: err, request }),
-          true
+          new NetworkError(ErrorMessages.FAILED_FETCH, {cause: err, request}),
+          true,
         );
       }
     })();
   });
 };
-

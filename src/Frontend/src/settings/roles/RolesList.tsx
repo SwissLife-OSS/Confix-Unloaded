@@ -1,30 +1,30 @@
-import { Button, List } from "antd";
+import {Button, List} from 'antd';
 import {
   useFragment,
   useLazyLoadQuery,
   usePaginationFragment,
-} from "react-relay";
+} from 'react-relay';
 
-import { Colors } from "../../shared/colors";
-import { DeleteIcon } from "../../icons/icons";
-import { InfiniteScrollList } from "../../shared/InfiniteScrollList";
-import { RemoveRoleDialog } from "./controls/dialogs/RemoveRoleDialog";
-import { RolesList$key } from "@generated/RolesList.graphql";
-import { RolesListPaginationQuery } from "@generated/RolesListPaginationQuery.graphql";
-import { RolesListQuery } from "@generated/RolesListQuery.graphql";
-import { RolesList_RoleListItem$key } from "@generated/RolesList_RoleListItem.graphql";
-import { config } from "../../config";
-import { graphql } from "babel-plugin-relay/macro";
-import styled from "@emotion/styled";
-import { useCallback } from "react";
-import { useGoTo } from "../../shared/useGoTo";
-import { useToggle } from "../../shared/useToggle";
+import {Colors} from '../../shared/colors';
+import {DeleteIcon} from '../../icons/icons';
+import {InfiniteScrollList} from '../../shared/InfiniteScrollList';
+import {RemoveRoleDialog} from './controls/dialogs/RemoveRoleDialog';
+import {RolesList$key} from '@generated/RolesList.graphql';
+import {RolesListPaginationQuery} from '@generated/RolesListPaginationQuery.graphql';
+import {RolesListQuery} from '@generated/RolesListQuery.graphql';
+import {RolesList_RoleListItem$key} from '@generated/RolesList_RoleListItem.graphql';
+import {config} from '../../config';
+import {graphql} from 'babel-plugin-relay/macro';
+import styled from '@emotion/styled';
+import {useCallback} from 'react';
+import {useGoTo} from '../../shared/useGoTo';
+import {useToggle} from '../../shared/useToggle';
 
 export const RolesList: React.FC<{
   selectedRoleId?: string;
   onItemSelect: (item: string) => void;
   search: string | undefined;
-}> = ({ search, onItemSelect, selectedRoleId }) => {
+}> = ({search, onItemSelect, selectedRoleId}) => {
   const queryData = useLazyLoadQuery<RolesListQuery>(
     graphql`
       query RolesListQuery($cursor: String, $count: Int, $search: String) {
@@ -34,7 +34,7 @@ export const RolesList: React.FC<{
     {
       count: config.pagination.pageSize,
       search,
-    }
+    },
   );
 
   const {
@@ -58,13 +58,13 @@ export const RolesList: React.FC<{
         }
       }
     `,
-    queryData
+    queryData,
   );
 
   const data = connection?.searchRoles?.edges?.map((x) => x.node) ?? [];
   const handleOnItemSelected = useCallback(
     (id: string) => onItemSelect(id),
-    [onItemSelect]
+    [onItemSelect],
   );
   return (
     <InfiniteScrollList
@@ -88,20 +88,20 @@ const RoleListItem: React.FC<{
   selected: boolean;
   onItemSelect: (envId: string) => void;
   edge: RolesList_RoleListItem$key;
-}> = ({ onItemSelect, edge, selected }) => {
-  const { id, name } = useFragment(
+}> = ({onItemSelect, edge, selected}) => {
+  const {id, name} = useFragment(
     graphql`
       fragment RolesList_RoleListItem on Role {
         id
         name
       }
     `,
-    edge
+    edge,
   );
 
   const [isRemoveEnvVisible, , enableRemoveEnv, disableRemoveEnv] = useToggle();
 
-  const goToOverview = useGoTo("settings/roles");
+  const goToOverview = useGoTo('settings/roles');
 
   const handleClick = useCallback(() => onItemSelect(id), [onItemSelect, id]);
   const handleOnClose = useCallback(
@@ -111,7 +111,7 @@ const RoleListItem: React.FC<{
         goToOverview();
       }
     },
-    [goToOverview, disableRemoveEnv]
+    [goToOverview, disableRemoveEnv],
   );
 
   return (
@@ -128,9 +128,9 @@ const RoleListItem: React.FC<{
   );
 };
 
-const ListItem = styled(List.Item)<{ selected: boolean }>`
+const ListItem = styled(List.Item)<{selected: boolean}>`
   cursor: pointer;
-  background-color: ${(props) => (props.selected ? Colors.gray[5] : "inherit")};
+  background-color: ${(props) => (props.selected ? Colors.gray[5] : 'inherit')};
   :hover {
     background-color: ${Colors.gray[2]};
   }

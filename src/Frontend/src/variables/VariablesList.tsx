@@ -2,24 +2,24 @@ import {
   useFragment,
   useLazyLoadQuery,
   usePaginationFragment,
-} from "react-relay";
+} from 'react-relay';
 
-import { Colors } from "../shared/colors";
-import { InfiniteScrollList } from "../shared/InfiniteScrollList";
-import { List } from "antd";
-import { VariablesList$key } from "@generated/VariablesList.graphql";
-import { VariablesListQuery } from "@generated/VariablesListQuery.graphql";
-import { VariablesList_ListItem$key } from "@generated/VariablesList_ListItem.graphql";
-import { config } from "../config";
-import { graphql } from "babel-plugin-relay/macro";
-import styled from "@emotion/styled";
-import { useCallback } from "react";
+import {Colors} from '../shared/colors';
+import {InfiniteScrollList} from '../shared/InfiniteScrollList';
+import {List} from 'antd';
+import {VariablesList$key} from '@generated/VariablesList.graphql';
+import {VariablesListQuery} from '@generated/VariablesListQuery.graphql';
+import {VariablesList_ListItem$key} from '@generated/VariablesList_ListItem.graphql';
+import {config} from '../config';
+import {graphql} from 'babel-plugin-relay/macro';
+import styled from '@emotion/styled';
+import {useCallback} from 'react';
 
 export const VariablesList: React.FC<{
   selectedVariableId?: string;
   onItemSelect: (item: string) => void;
   search: string | undefined;
-}> = ({ search, onItemSelect, selectedVariableId }) => {
+}> = ({search, onItemSelect, selectedVariableId}) => {
   const queryData = useLazyLoadQuery<VariablesListQuery>(
     graphql`
       query VariablesListQuery($cursor: String, $count: Int, $search: String) {
@@ -29,7 +29,7 @@ export const VariablesList: React.FC<{
     {
       count: config.pagination.pageSize,
       search,
-    }
+    },
   );
   const {
     data: connection,
@@ -52,12 +52,12 @@ export const VariablesList: React.FC<{
         }
       }
     `,
-    queryData
+    queryData,
   );
   const data = connection?.searchVariables?.edges?.map((x) => x.node) ?? [];
   const handleOnItemSelected = useCallback(
     (id: string) => onItemSelect(id),
-    [onItemSelect]
+    [onItemSelect],
   );
   return (
     <InfiniteScrollList
@@ -81,8 +81,8 @@ const VariableListItem: React.FC<{
   selected: boolean;
   onItemSelect: (envId: string) => void;
   edge: VariablesList_ListItem$key;
-}> = ({ onItemSelect, edge, selected }) => {
-  const { id, name } = useFragment<VariablesList_ListItem$key>(
+}> = ({onItemSelect, edge, selected}) => {
+  const {id, name} = useFragment<VariablesList_ListItem$key>(
     graphql`
       fragment VariablesList_ListItem on Variable {
         id
@@ -90,7 +90,7 @@ const VariableListItem: React.FC<{
       }
     `,
 
-    edge
+    edge,
   );
   const handleClick = useCallback(() => onItemSelect(id), [onItemSelect, id]);
 
@@ -101,9 +101,9 @@ const VariableListItem: React.FC<{
   );
 };
 
-const ListItem = styled(List.Item)<{ selected: boolean }>`
+const ListItem = styled(List.Item)<{selected: boolean}>`
   cursor: pointer;
-  background-color: ${(props) => (props.selected ? Colors.gray[5] : "inherit")};
+  background-color: ${(props) => (props.selected ? Colors.gray[5] : 'inherit')};
   :hover {
     background-color: ${Colors.gray[2]};
   }

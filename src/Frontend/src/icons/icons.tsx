@@ -1,6 +1,6 @@
-import styled from "@emotion/styled";
-import Icon from "@ant-design/icons";
-import { CustomIconComponentProps } from "@ant-design/icons/lib/components/Icon";
+import styled from '@emotion/styled';
+import Icon from '@ant-design/icons';
+import {CustomIconComponentProps} from '@ant-design/icons/lib/components/Icon';
 import {
   mdiBell,
   mdiCancel,
@@ -26,8 +26,8 @@ import {
   mdiShieldStarOutline,
   mdiToyBrickOutline,
   mdiVariable,
-} from "@mdi/js";
-import { Colors } from "../shared/colors";
+} from '@mdi/js';
+import {Colors} from '../shared/colors';
 
 const createIcon =
   (mdiIcon: string): React.FC<typeof Icon.defaultProps> =>
@@ -36,7 +36,7 @@ const createIcon =
       <Icon
         {...props}
         component={(
-          props: CustomIconComponentProps | React.SVGProps<SVGSVGElement>
+          props: CustomIconComponentProps | React.SVGProps<SVGSVGElement>,
         ) => (
           <svg viewBox="1 1 22 22" {...props}>
             <path d={mdiIcon} />

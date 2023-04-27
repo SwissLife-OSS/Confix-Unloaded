@@ -1,29 +1,29 @@
-import { Button, List } from "antd";
+import {Button, List} from 'antd';
 import {
   useFragment,
   useLazyLoadQuery,
   usePaginationFragment,
-} from "react-relay";
+} from 'react-relay';
 
-import { Colors } from "../../shared/colors";
-import { DeleteIcon } from "../../icons/icons";
-import { GroupsList$key } from "@generated/GroupsList.graphql";
-import { GroupsListQuery } from "@generated/GroupsListQuery.graphql";
-import { GroupsList_ListItem$key } from "@generated/GroupsList_ListItem.graphql";
-import { InfiniteScrollList } from "../../shared/InfiniteScrollList";
-import { RemoveGroupDialog } from "./controls/dialogs/RemoveGroupDialog";
-import { config } from "../../config";
-import { graphql } from "babel-plugin-relay/macro";
-import styled from "@emotion/styled";
-import { useCallback } from "react";
-import { useGoTo } from "../../shared/useGoTo";
-import { useToggle } from "../../shared/useToggle";
+import {Colors} from '../../shared/colors';
+import {DeleteIcon} from '../../icons/icons';
+import {GroupsList$key} from '@generated/GroupsList.graphql';
+import {GroupsListQuery} from '@generated/GroupsListQuery.graphql';
+import {GroupsList_ListItem$key} from '@generated/GroupsList_ListItem.graphql';
+import {InfiniteScrollList} from '../../shared/InfiniteScrollList';
+import {RemoveGroupDialog} from './controls/dialogs/RemoveGroupDialog';
+import {config} from '../../config';
+import {graphql} from 'babel-plugin-relay/macro';
+import styled from '@emotion/styled';
+import {useCallback} from 'react';
+import {useGoTo} from '../../shared/useGoTo';
+import {useToggle} from '../../shared/useToggle';
 
 export const GroupsList: React.FC<{
   selectedGroupId?: string;
   onItemSelect: (item: string) => void;
   search: string | undefined;
-}> = ({ search, onItemSelect, selectedGroupId }) => {
+}> = ({search, onItemSelect, selectedGroupId}) => {
   const queryData = useLazyLoadQuery<GroupsListQuery>(
     graphql`
       query GroupsListQuery($cursor: String, $count: Int, $search: String) {
@@ -33,7 +33,7 @@ export const GroupsList: React.FC<{
     {
       count: config.pagination.pageSize,
       search,
-    }
+    },
   );
   const {
     data: connection,
@@ -57,12 +57,12 @@ export const GroupsList: React.FC<{
       }
     `,
 
-    queryData
+    queryData,
   );
   const data = connection?.searchGroups?.edges?.map((x) => x.node) ?? [];
   const handleOnItemSelected = useCallback(
     (id: string) => onItemSelect(id),
-    [onItemSelect]
+    [onItemSelect],
   );
   return (
     <InfiniteScrollList
@@ -86,8 +86,8 @@ const GroupListItem: React.FC<{
   selected: boolean;
   onItemSelect: (envId: string) => void;
   edge: GroupsList_ListItem$key;
-}> = ({ onItemSelect, edge, selected }) => {
-  const { id, name } = useFragment<GroupsList_ListItem$key>(
+}> = ({onItemSelect, edge, selected}) => {
+  const {id, name} = useFragment<GroupsList_ListItem$key>(
     graphql`
       fragment GroupsList_ListItem on Group {
         id
@@ -95,12 +95,12 @@ const GroupListItem: React.FC<{
       }
     `,
 
-    edge
+    edge,
   );
 
   const [isRemoveEnvVisible, , enableRemoveEnv, disableRemoveEnv] = useToggle();
 
-  const goToOverview = useGoTo("settings/groups");
+  const goToOverview = useGoTo('settings/groups');
 
   const handleClick = useCallback(() => onItemSelect(id), [onItemSelect, id]);
   const handleOnClose = useCallback(
@@ -110,7 +110,7 @@ const GroupListItem: React.FC<{
         goToOverview();
       }
     },
-    [goToOverview, disableRemoveEnv]
+    [goToOverview, disableRemoveEnv],
   );
 
   return (
@@ -127,9 +127,9 @@ const GroupListItem: React.FC<{
   );
 };
 
-const ListItem = styled(List.Item)<{ selected: boolean }>`
+const ListItem = styled(List.Item)<{selected: boolean}>`
   cursor: pointer;
-  background-color: ${(props) => (props.selected ? Colors.gray[5] : "inherit")};
+  background-color: ${(props) => (props.selected ? Colors.gray[5] : 'inherit')};
   :hover {
     background-color: ${Colors.gray[2]};
   }

@@ -1,12 +1,12 @@
 module.exports = {
-  schema: "./schema.graphql",
+  schema: './schema.graphql',
   schemaExtensions: [],
-  src: "./src",
+  src: './src',
   eagerEsModules: true,
   noFutureProofEnums: true,
-  language: "typescript",
-  artifactDirectory: "src/__generated__",
+  language: 'typescript',
+  artifactDirectory: 'src/__generated__',
   persistConfig: {
-    file: "./persisted_queries.json",
+    file: './persisted_queries.json',
   },
 };

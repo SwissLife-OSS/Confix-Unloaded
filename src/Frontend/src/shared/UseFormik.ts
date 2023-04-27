@@ -1,4 +1,4 @@
-import { FormikConfig, FormikValues, useFormik } from "formik";
+import {FormikConfig, FormikValues, useFormik} from 'formik';
 
 class Wrapper<Values extends FormikValues = FormikValues> {
   // wrapped has no explicit return type so we can infer it
@@ -9,6 +9,5 @@ class Wrapper<Values extends FormikValues = FormikValues> {
 }
 
 export type UseFormik<Values extends FormikValues = FormikValues> = ReturnType<
-  Wrapper<Values>["wrapped"]
+  Wrapper<Values>['wrapped']
 >;
-

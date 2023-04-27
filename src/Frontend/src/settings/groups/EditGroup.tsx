@@ -1,36 +1,36 @@
-import { Button, Card, Col, List, Modal, Row, Select } from "antd";
-import { FieldInput, FormActions } from "../../shared/FormField";
-import React, { useState } from "react";
-import { RoleScopeData, RoleScopeEditor } from "../shared/RoleScopeEdit";
+import {Button, Card, Col, List, Modal, Row, Select} from 'antd';
+import {FieldInput, FormActions} from '../../shared/FormField';
+import React, {useState} from 'react';
+import {RoleScopeData, RoleScopeEditor} from '../shared/RoleScopeEdit';
 import {
   pipeCommitFn,
   withErrorNotifications,
   withSuccessMessage,
-} from "../../shared/pipeCommitFn";
-import { useFragment, useLazyLoadQuery, useMutation } from "react-relay";
+} from '../../shared/pipeCommitFn';
+import {useFragment, useLazyLoadQuery, useMutation} from 'react-relay';
 
-import { DeleteIcon } from "../../icons/icons";
-import { DetailView } from "../../shared/DetailView";
-import { EditGroupQuery } from "@generated/EditGroupQuery.graphql";
-import { EditGroup_Form$key } from "@generated/EditGroup_Form.graphql";
-import { EditGroup_Group$key } from "@generated/EditGroup_Group.graphql";
-import { EditGroup_Header$key } from "@generated/EditGroup_Header.graphql";
-import { EditGroup_RequirementsSection$key } from "@generated/EditGroup_RequirementsSection.graphql";
-import { EditGroup_RoleScopeSection$key } from "@generated/EditGroup_RoleScopeSection.graphql";
-import { EditGroup_UpdateGroupRequirements_Mutation } from "@generated/EditGroup_UpdateGroupRequirements_Mutation.graphql";
-import { EditGroup_UpdateGroupRoles_Mutation } from "@generated/EditGroup_UpdateGroupRoles_Mutation.graphql";
-import { EditableBreadcrumbHeader } from "../../shared/EditablePageHeader";
-import { RenameGroupDialog } from "./controls/dialogs/RenameGroupDialog";
-import { SectionHeader } from "../../shared/SectionHeader";
-import { css } from "@emotion/react";
-import { graphql } from "babel-plugin-relay/macro";
-import { id } from "../../shared/id";
-import { useHandler } from "../../shared/useHandler";
-import { useParams } from "react-router";
-import { useToggle } from "../../shared/useToggle";
+import {DeleteIcon} from '../../icons/icons';
+import {DetailView} from '../../shared/DetailView';
+import {EditGroupQuery} from '@generated/EditGroupQuery.graphql';
+import {EditGroup_Form$key} from '@generated/EditGroup_Form.graphql';
+import {EditGroup_Group$key} from '@generated/EditGroup_Group.graphql';
+import {EditGroup_Header$key} from '@generated/EditGroup_Header.graphql';
+import {EditGroup_RequirementsSection$key} from '@generated/EditGroup_RequirementsSection.graphql';
+import {EditGroup_RoleScopeSection$key} from '@generated/EditGroup_RoleScopeSection.graphql';
+import {EditGroup_UpdateGroupRequirements_Mutation} from '@generated/EditGroup_UpdateGroupRequirements_Mutation.graphql';
+import {EditGroup_UpdateGroupRoles_Mutation} from '@generated/EditGroup_UpdateGroupRoles_Mutation.graphql';
+import {EditableBreadcrumbHeader} from '../../shared/EditablePageHeader';
+import {RenameGroupDialog} from './controls/dialogs/RenameGroupDialog';
+import {SectionHeader} from '../../shared/SectionHeader';
+import {css} from '@emotion/react';
+import {graphql} from 'babel-plugin-relay/macro';
+import {id} from '../../shared/id';
+import {useHandler} from '../../shared/useHandler';
+import {useParams} from 'react-router';
+import {useToggle} from '../../shared/useToggle';
 
 export const EditGroup = () => {
-  const { groupId = "" } = useParams();
+  const {groupId = ''} = useParams();
   const group = useLazyLoadQuery<EditGroupQuery>(
     graphql`
       query EditGroupQuery($id: ID!) {
@@ -42,13 +42,11 @@ export const EditGroup = () => {
     `,
     {
       id: groupId,
-    }
+    },
   );
   const id = group.groupById?.id;
   if (!id) {
-    return (
-      <DetailView style={{ padding: 1 }}>Coult not find group </DetailView>
-    );
+    return <DetailView style={{padding: 1}}>Coult not find group </DetailView>;
   }
   return <EditGroupForm fragmentRef={group.groupById} id={id} key={id} />;
 };
@@ -56,7 +54,7 @@ export const EditGroup = () => {
 const EditGroupForm: React.FC<{
   id: string;
   fragmentRef: EditGroup_Form$key;
-}> = ({ fragmentRef, id }) => {
+}> = ({fragmentRef, id}) => {
   const data = useFragment(
     graphql`
       fragment EditGroup_Form on Group {
@@ -65,12 +63,12 @@ const EditGroupForm: React.FC<{
         ...EditGroup_RequirementsSection
       }
     `,
-    fragmentRef
+    fragmentRef,
   );
 
   return (
     <DetailView
-      style={{ padding: 1 }}
+      style={{padding: 1}}
       css={css`
         padding: 1;
         display: flex;
@@ -94,7 +92,7 @@ const EditGroupForm: React.FC<{
 
 const RoleScopeSection: React.FC<{
   fragmentRef: EditGroup_RoleScopeSection$key;
-}> = ({ fragmentRef }) => {
+}> = ({fragmentRef}) => {
   const data = useFragment(
     graphql`
       fragment EditGroup_RoleScopeSection on Group {
@@ -109,7 +107,7 @@ const RoleScopeSection: React.FC<{
         }
       }
     `,
-    fragmentRef
+    fragmentRef,
   );
 
   const [roleScope, setRoleScope] = useState((): RoleScopeData[] => {
@@ -144,7 +142,7 @@ const RoleScopeSection: React.FC<{
     pipeCommitFn(commit, [
       withSuccessMessage(
         (x) => x.updateGroupRoles.group?.id,
-        `Updated requirements of ${data.name}`
+        `Updated requirements of ${data.name}`,
       ),
       withErrorNotifications((x) => x.updateGroupRoles?.errors),
     ])({
@@ -179,17 +177,17 @@ const RoleScopeSection: React.FC<{
   );
 };
 
-const Header: React.FC<{ fragmentRef: EditGroup_Header$key }> = ({
+const Header: React.FC<{fragmentRef: EditGroup_Header$key}> = ({
   fragmentRef,
 }) => {
-  const { id, name } = useFragment(
+  const {id, name} = useFragment(
     graphql`
       fragment EditGroup_Header on Group {
         id
         name
       }
     `,
-    fragmentRef
+    fragmentRef,
   );
 
   const [isEdit, , enable, disable] = useToggle();
@@ -209,7 +207,7 @@ const Header: React.FC<{ fragmentRef: EditGroup_Header$key }> = ({
 
 const RequirementsSection: React.FC<{
   fragmentRef: EditGroup_RequirementsSection$key;
-}> = ({ fragmentRef }) => {
+}> = ({fragmentRef}) => {
   const data = useFragment(
     graphql`
       fragment EditGroup_RequirementsSection on Group {
@@ -224,7 +222,7 @@ const RequirementsSection: React.FC<{
         }
       }
     `,
-    fragmentRef
+    fragmentRef,
   );
 
   const [commit, isInFlight] =
@@ -250,20 +248,20 @@ const RequirementsSection: React.FC<{
   const [isEdit, , enable, disable] = useToggle();
 
   const [selectedRequirementType, setSelectedRequirementType] =
-    useState("ClaimRequirement");
+    useState('ClaimRequirement');
 
   const [requirements, setRequirements] = useState((): Requirements[] => {
     return data.requirements.reduce<Requirements[]>((previous, current) => {
       switch (current.__typename) {
-        case "ClaimRequirement":
+        case 'ClaimRequirement':
           previous.push({
             id: id(),
-            kind: "ClaimRequirement",
+            kind: 'ClaimRequirement',
             value: current.value,
             type: current.type,
           });
           break;
-        case "%other":
+        case '%other':
           break;
       }
       return previous;
@@ -274,7 +272,7 @@ const RequirementsSection: React.FC<{
     pipeCommitFn(commit, [
       withSuccessMessage(
         (x) => x.updateGroupRequirements.group?.id,
-        `Updated requirements of ${data.name}`
+        `Updated requirements of ${data.name}`,
       ),
       withErrorNotifications((x) => x.updateGroupRequirements?.errors),
     ])({
@@ -283,8 +281,8 @@ const RequirementsSection: React.FC<{
           id: data.id,
           requirements: requirements.map((x) => {
             switch (x.kind) {
-              case "ClaimRequirement":
-                return { claimRequirement: { type: x.type, value: x.value } };
+              case 'ClaimRequirement':
+                return {claimRequirement: {type: x.type, value: x.value}};
             }
             throw new Error(`Requirement ${x.kind} is not known`);
           }),
@@ -295,15 +293,15 @@ const RequirementsSection: React.FC<{
 
   const onUpdate = (requirement: Requirements) => {
     setRequirements((previous) =>
-      previous.map((x) => (x.id !== requirement.id ? x : requirement))
+      previous.map((x) => (x.id !== requirement.id ? x : requirement)),
     );
   };
 
   const handleAddRequirement = useHandler(() => {
     const newRequirement = ((): Requirements | undefined => {
       switch (selectedRequirementType) {
-        case "ClaimRequirement":
-          return { id: id(), kind: "ClaimRequirement", type: "", value: "" };
+        case 'ClaimRequirement':
+          return {id: id(), kind: 'ClaimRequirement', type: '', value: ''};
       }
       return undefined;
     })();
@@ -312,17 +310,17 @@ const RequirementsSection: React.FC<{
       setRequirements((previous) => [...previous, newRequirement]);
     }
 
-    setSelectedRequirementType("ClaimRequirement");
+    setSelectedRequirementType('ClaimRequirement');
     disable();
   });
 
   const removeNamespace = useHandler((data: Requirements) =>
-    setRequirements((previous) => previous.filter((x) => x.id !== data.id))
+    setRequirements((previous) => previous.filter((x) => x.id !== data.id)),
   );
 
   return (
     <>
-      <Col span={24} flex={"auto"}>
+      <Col span={24} flex={'auto'}>
         <SectionHeader title="Requirements" onAdd={enable} />
         <List
           grid={{
@@ -331,7 +329,7 @@ const RequirementsSection: React.FC<{
           dataSource={requirements}
           renderItem={(requirement) => {
             switch (requirement.kind) {
-              case "ClaimRequirement":
+              case 'ClaimRequirement':
                 return (
                   <List.Item>
                     <RequirementCard
@@ -383,7 +381,7 @@ type Requirements = ClaimRequirement;
 
 interface ClaimRequirement {
   id: string;
-  kind: "ClaimRequirement";
+  kind: 'ClaimRequirement';
   type: string;
   value: string;
 }
@@ -391,12 +389,12 @@ interface ClaimRequirement {
 const ClaimRequirementForm: React.FC<{
   requirement: ClaimRequirement;
   onChange: (requirement: ClaimRequirement) => void;
-}> = ({ requirement, onChange }) => {
-  const updateName = useHandler<typeof FieldInput, "onChange">((e) => {
-    onChange({ ...requirement, type: e.target.value });
+}> = ({requirement, onChange}) => {
+  const updateName = useHandler<typeof FieldInput, 'onChange'>((e) => {
+    onChange({...requirement, type: e.target.value});
   });
-  const updateValue = useHandler<typeof FieldInput, "onChange">((e) => {
-    onChange({ ...requirement, value: e.target.value });
+  const updateValue = useHandler<typeof FieldInput, 'onChange'>((e) => {
+    onChange({...requirement, value: e.target.value});
   });
 
   return (
@@ -414,10 +412,10 @@ const ClaimRequirementForm: React.FC<{
 const RequirementSelect: React.FC<{
   value: string;
   onChange: (value: string) => void;
-}> = ({ value, onChange }) => {
+}> = ({value, onChange}) => {
   return (
     <Select
-      style={{ width: "100%" }}
+      style={{width: '100%'}}
       value={value}
       filterOption={false}
       onChange={onChange}
@@ -433,7 +431,7 @@ const RequirementCard: React.FC<{
   onRemove: (requirement: Requirements) => void;
   requirement: Requirements;
   title: string;
-}> = ({ children, onRemove, requirement, title }) => {
+}> = ({children, onRemove, requirement, title}) => {
   const handleRemove = useHandler(() => onRemove(requirement));
   return (
     <Card

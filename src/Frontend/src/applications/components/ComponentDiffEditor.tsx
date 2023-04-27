@@ -1,24 +1,24 @@
-import styled from "@emotion/styled";
-import { DiffEditor } from "@monaco-editor/react";
-import { Colors } from "../../shared/colors";
-import React from "react";
-import { editor } from "monaco-editor";
-import { css } from "@emotion/react";
+import styled from '@emotion/styled';
+import {DiffEditor} from '@monaco-editor/react';
+import {Colors} from '../../shared/colors';
+import React from 'react';
+import {editor} from 'monaco-editor';
+import {css} from '@emotion/react';
 
 const options: editor.IStandaloneDiffEditorConstructionOptions = {
   glyphMargin: false,
   folding: false,
-  lineNumbers: "off",
+  lineNumbers: 'off',
   lineDecorationsWidth: 0,
   lineNumbersMinChars: 0,
   selectOnLineNumbers: true,
   roundedSelection: false,
   readOnly: true,
-  cursorStyle: "line",
+  cursorStyle: 'line',
   formatOnPaste: true,
   formatOnType: true,
   automaticLayout: true,
-  minimap: { enabled: false },
+  minimap: {enabled: false},
 };
 
 interface IHeader {
@@ -43,7 +43,7 @@ export const ComponentDiffEditor: React.FC<{
   headers: IHeaders;
   original: string;
   modified: string;
-}> = ({ headers, original, modified }) => {
+}> = ({headers, original, modified}) => {
   original = usePrettyPrint(original);
   modified = usePrettyPrint(modified);
   return (
@@ -63,7 +63,7 @@ export const ComponentDiffEditor: React.FC<{
   );
 };
 
-const Header: React.FC<{ headers: IHeaders }> = ({ headers }) => {
+const Header: React.FC<{headers: IHeaders}> = ({headers}) => {
   return (
     <div
       css={css`
@@ -107,7 +107,7 @@ const HeaderSubtitleActions = styled.div`
   flex-shrink: 1;
 `;
 
-const Wrapper = styled("div")`
+const Wrapper = styled('div')`
   display: flex;
   flex-direction: row;
   flex: 1;

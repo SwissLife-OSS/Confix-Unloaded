@@ -1,25 +1,25 @@
-import React from "react";
-import { Tag, TagProps } from "antd";
-import { hashCode } from "./hashCode";
-import styled from "@emotion/styled";
+import React from 'react';
+import {Tag, TagProps} from 'antd';
+import {hashCode} from './hashCode';
+import styled from '@emotion/styled';
 
 const colors = [
-  "pink",
-  "red",
-  "yellow",
-  "orange",
-  "cyan",
-  "green",
-  "blue",
-  "purple",
-  "geekblue",
-  "magenta",
-  "volcano",
-  "gold",
-  "lime",
+  'pink',
+  'red',
+  'yellow',
+  'orange',
+  'cyan',
+  'green',
+  'blue',
+  'purple',
+  'geekblue',
+  'magenta',
+  'volcano',
+  'gold',
+  'lime',
 ];
 
-export const ColorTag: React.FC<{ value: string } & TagProps> = ({
+export const ColorTag: React.FC<{value: string} & TagProps> = ({
   children,
   value,
   ...rest
@@ -31,7 +31,7 @@ export const ColorTag: React.FC<{ value: string } & TagProps> = ({
   );
 };
 
-export const TagBar = styled("div")`
+export const TagBar = styled('div')`
   display: flex;
   flex-direction: row;
 `;

@@ -1,17 +1,17 @@
-import React, { useState } from "react";
-import { Link, Route, Routes, useMatch } from "react-router-dom";
-import { FullSizeBox, SidebarHeader } from "../shared/FullSizeBox";
-import { SearchBar } from "../shared/SearchBar";
-import { EditApplication } from "./EditApplication";
-import { NewApplication } from "./NewApplication";
-import { Page } from "../shared/Page";
-import { css } from "@emotion/react";
-import { Button } from "antd";
-import { DefaultSuspense } from "../shared/DefaultSuspense";
-import { ApplicationList } from "./ApplicationsList";
-import { useGoTo } from "../shared/useGoTo";
-import { EditApplicationPart } from "./EditApplicationPart";
-import { EditApplicationPartComponent } from "./EditApplicationPartComponent";
+import React, {useState} from 'react';
+import {Link, Route, Routes, useMatch} from 'react-router-dom';
+import {FullSizeBox, SidebarHeader} from '../shared/FullSizeBox';
+import {SearchBar} from '../shared/SearchBar';
+import {EditApplication} from './EditApplication';
+import {NewApplication} from './NewApplication';
+import {Page} from '../shared/Page';
+import {css} from '@emotion/react';
+import {Button} from 'antd';
+import {DefaultSuspense} from '../shared/DefaultSuspense';
+import {ApplicationList} from './ApplicationsList';
+import {useGoTo} from '../shared/useGoTo';
+import {EditApplicationPart} from './EditApplicationPart';
+import {EditApplicationPartComponent} from './EditApplicationPartComponent';
 
 export const Applications: React.FC = () => {
   const [search, setSearch] = useState<string | undefined>();
@@ -24,7 +24,7 @@ export const Applications: React.FC = () => {
       <FullSizeBox>
         <SidebarHeader>
           <SearchBar onSearch={setSearch} />
-          <Link to={"new"}>
+          <Link to={'new'}>
             <Button type="primary">Add</Button>
           </Link>
         </SidebarHeader>
@@ -54,20 +54,20 @@ export const Applications: React.FC = () => {
 
 export const ApplicationRoutes: React.VFC = () => (
   <Routes>
-    <Route path={"new"} element={<NewApplication />} />
+    <Route path={'new'} element={<NewApplication />} />
     <Route
-      path={":applicationId/components/:partComponentId/:tab"}
+      path={':applicationId/components/:partComponentId/:tab'}
       element={<EditApplicationPartComponent />}
     />
     <Route
-      path={":applicationId/parts/:id/:tab"}
+      path={':applicationId/parts/:id/:tab'}
       element={<EditApplicationPart />}
     />
-    <Route path={":applicationId/:tab"} element={<EditApplication />} />
+    <Route path={':applicationId/:tab'} element={<EditApplication />} />
   </Routes>
 );
 
 const useApplicationIdFromRoute = (): string | undefined => {
-  const match = useMatch("/applications/:applicationId/*");
+  const match = useMatch('/applications/:applicationId/*');
   return match?.params?.applicationId;
 };

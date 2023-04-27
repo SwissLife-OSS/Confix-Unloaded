@@ -7,61 +7,61 @@ import {
   parse,
   TypeNode,
   UnionTypeDefinitionNode,
-} from "graphql";
-import { JSONSchema6, JSONSchema6Definition } from "json-schema";
+} from 'graphql';
+import {JSONSchema6, JSONSchema6Definition} from 'json-schema';
 
 const typeMappings: Record<string, JSONSchema6> = {
   String: {
-    anyOf: [{ type: "string" }, { $ref: `#/definitions/__Variables` }],
+    anyOf: [{type: 'string'}, {$ref: `#/definitions/__Variables`}],
   },
-  Float: { type: "number" },
-  Short: { type: "number" },
-  Decimal: { type: "number" },
-  Int: { type: "number" },
-  Boolean: { type: "boolean" },
+  Float: {type: 'number'},
+  Short: {type: 'number'},
+  Decimal: {type: 'number'},
+  Int: {type: 'number'},
+  Boolean: {type: 'boolean'},
   ID: {
-    anyOf: [{ type: "string" }, { $ref: `#/definitions/__Variables` }],
+    anyOf: [{type: 'string'}, {$ref: `#/definitions/__Variables`}],
   },
   UUID: {
-    anyOf: [{ type: "string" }, { $ref: `#/definitions/__Variables` }],
+    anyOf: [{type: 'string'}, {$ref: `#/definitions/__Variables`}],
   },
   Byte: {
-    anyOf: [{ type: "string" }, { $ref: `#/definitions/__Variables` }],
+    anyOf: [{type: 'string'}, {$ref: `#/definitions/__Variables`}],
   },
   ByteArray: {
-    anyOf: [{ type: "string" }, { $ref: `#/definitions/__Variables` }],
+    anyOf: [{type: 'string'}, {$ref: `#/definitions/__Variables`}],
   },
   Url: {
-    anyOf: [{ type: "string" }, { $ref: `#/definitions/__Variables` }],
+    anyOf: [{type: 'string'}, {$ref: `#/definitions/__Variables`}],
   },
   URL: {
-    anyOf: [{ type: "string" }, { $ref: `#/definitions/__Variables` }],
+    anyOf: [{type: 'string'}, {$ref: `#/definitions/__Variables`}],
   },
   Date: {
-    anyOf: [{ type: "string" }, { $ref: `#/definitions/__Variables` }],
+    anyOf: [{type: 'string'}, {$ref: `#/definitions/__Variables`}],
   },
   DateTime: {
-    anyOf: [{ type: "string" }, { $ref: `#/definitions/__Variables` }],
+    anyOf: [{type: 'string'}, {$ref: `#/definitions/__Variables`}],
   },
   Any: {
-    anyOf: [{ type: "string" }, { $ref: `#/definitions/__Variables` }],
+    anyOf: [{type: 'string'}, {$ref: `#/definitions/__Variables`}],
   },
 };
 
 export const translateType = (
   type: TypeNode,
   field: FieldDefinitionNode,
-  isNonNull: boolean = false
+  isNonNull: boolean = false,
 ): any => {
   if (type.kind === Kind.LIST_TYPE) {
     let oneOf: JSONSchema6[] = [
       {
-        type: "array",
+        type: 'array',
         items: translateType(type.type, field, false),
       },
     ];
     if (!isNonNull) {
-      oneOf = [{ type: "null" }, ...oneOf];
+      oneOf = [{type: 'null'}, ...oneOf];
     }
     return {
       oneOf,
@@ -77,7 +77,7 @@ export const translateType = (
         };
     let oneOf = [definition];
     if (!isNonNull) {
-      oneOf = [{ type: "null" }, ...oneOf];
+      oneOf = [{type: 'null'}, ...oneOf];
     }
 
     return {
@@ -89,7 +89,7 @@ export const translateType = (
 
 export const sdlToJsonSchema = (
   doc: string,
-  variables: string[]
+  variables: string[],
 ): JSONSchema6 | undefined => {
   try {
     if (doc) {
@@ -102,14 +102,14 @@ export const sdlToJsonSchema = (
 };
 export const buildJsonSchema = (
   doc: DocumentNode,
-  variables: string[]
+  variables: string[],
 ): JSONSchema6 => {
   let definitions: Record<string, JSONSchema6Definition> = doc.definitions
     .filter(
       (x) =>
         x.kind === Kind.OBJECT_TYPE_DEFINITION ||
         x.kind === Kind.UNION_TYPE_DEFINITION ||
-        x.kind === Kind.ENUM_TYPE_DEFINITION
+        x.kind === Kind.ENUM_TYPE_DEFINITION,
     )
     .reduce((r, c) => {
       switch (c.kind) {
@@ -133,17 +133,17 @@ export const buildJsonSchema = (
     }, {});
 
   const rootType = doc.definitions.find(
-    (x) => x.kind === Kind.OBJECT_TYPE_DEFINITION
+    (x) => x.kind === Kind.OBJECT_TYPE_DEFINITION,
   ) as ObjectTypeDefinitionNode;
 
-  const { properties, required } = createObjectTypeDefinition(rootType);
+  const {properties, required} = createObjectTypeDefinition(rootType);
 
-  definitions["__Variables"] = {
+  definitions['__Variables'] = {
     enum: variables.map((x) => `{${x}}`),
   };
 
   return {
-    $schema: "http://json-schema.org/draft-06/schema#",
+    $schema: 'http://json-schema.org/draft-06/schema#',
     definitions,
     properties,
     required,
@@ -151,7 +151,7 @@ export const buildJsonSchema = (
 };
 
 const createEnumTypeDefinition = (
-  node: EnumTypeDefinitionNode
+  node: EnumTypeDefinitionNode,
 ): JSONSchema6 => {
   return {
     anyOf: [
@@ -160,13 +160,13 @@ const createEnumTypeDefinition = (
         description: node.description?.value,
         enum: node?.values?.map((v) => v.name.value),
       },
-      { $ref: `#/definitions/__Variables` },
+      {$ref: `#/definitions/__Variables`},
     ],
   };
 };
 
 const createUnionTypeDefinition = (
-  node: UnionTypeDefinitionNode
+  node: UnionTypeDefinitionNode,
 ): JSONSchema6 => {
   return {
     title: node.name.value,
@@ -180,10 +180,10 @@ const createUnionTypeDefinition = (
 };
 
 const createObjectTypeDefinition = (
-  node: ObjectTypeDefinitionNode
+  node: ObjectTypeDefinitionNode,
 ): JSONSchema6 => {
   return {
-    type: "object",
+    type: 'object',
     title: node.name.value,
     description: node.description?.value,
     properties: node.fields?.reduce(
@@ -191,7 +191,7 @@ const createObjectTypeDefinition = (
         ...p,
         [f.name.value]: translateType(f.type, f),
       }),
-      {}
+      {},
     ),
     required: node.fields
       ?.filter((x) => x.type.kind === Kind.NON_NULL_TYPE)

@@ -1,25 +1,25 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { Alert, Modal } from "antd";
+import {Alert, Modal} from 'antd';
 import {
   pipeCommitFn,
   withErrorNotifications,
   withOnSuccess,
   withSuccessMessage,
-} from "../../../../shared/pipeCommitFn";
+} from '../../../../shared/pipeCommitFn';
 
-import { RemoveApiKeyDialogMutation } from "@generated/RemoveApiKeyDialogMutation.graphql";
-import { graphql } from "babel-plugin-relay/macro";
-import { useCallback } from "react";
-import { useConnectionId } from "../../../../shared/useConnectionId";
-import { useMutation } from "react-relay";
+import {RemoveApiKeyDialogMutation} from '@generated/RemoveApiKeyDialogMutation.graphql';
+import {graphql} from 'babel-plugin-relay/macro';
+import {useCallback} from 'react';
+import {useConnectionId} from '../../../../shared/useConnectionId';
+import {useMutation} from 'react-relay';
 
 export const RemoveApiKeyDialog: React.FC<{
   open: boolean;
   onClose: (removed: boolean) => void;
   keyId: string;
   keyName: string;
-}> = ({ open, keyId, keyName, onClose }) => {
+}> = ({open, keyId, keyName, onClose}) => {
   const [commit, isInFlight] = useMutation<RemoveApiKeyDialogMutation>(graphql`
     mutation RemoveApiKeyDialogMutation(
       $input: RemoveApiKeyByIdInput!
@@ -40,22 +40,22 @@ export const RemoveApiKeyDialog: React.FC<{
     }
   `);
 
-  const connectionId = useConnectionId("Query__apiKeys");
+  const connectionId = useConnectionId('Query__apiKeys');
 
   const handleRemoveApiKey = useCallback(() => {
     pipeCommitFn(commit, [
       withSuccessMessage(
         (x) => x.removeApiKeyById.apiKey?.id,
-        `Removed ${keyName}`
+        `Removed ${keyName}`,
       ),
       withErrorNotifications((x) => x.removeApiKeyById?.errors),
       withOnSuccess(
         (x) => x.removeApiKeyById.apiKey?.id,
-        () => onClose(true)
+        () => onClose(true),
       ),
     ])({
       variables: {
-        input: { id: keyId },
+        input: {id: keyId},
         connectionIds: [connectionId],
       },
     });

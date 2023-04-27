@@ -1,33 +1,33 @@
-import { Button, Col, Row } from "antd";
+import {Button, Col, Row} from 'antd';
 import {
   PermissionsForm,
   mapPermissionsFromObjectType,
   mapPermissionsToInput,
-} from "./controls/forms/PermissionForm";
-import React, { useState } from "react";
+} from './controls/forms/PermissionForm';
+import React, {useState} from 'react';
 import {
   pipeCommitFn,
   withErrorNotifications,
   withSuccessMessage,
-} from "../../shared/pipeCommitFn";
-import { useFragment, useLazyLoadQuery, useMutation } from "react-relay";
+} from '../../shared/pipeCommitFn';
+import {useFragment, useLazyLoadQuery, useMutation} from 'react-relay';
 
-import { DetailView } from "../../shared/DetailView";
-import { EditRoleForm_ChangeRolePermissions_Mutation } from "@generated/EditRoleForm_ChangeRolePermissions_Mutation.graphql";
-import { EditRoleQuery } from "@generated/EditRoleQuery.graphql";
-import { EditRole_Form$key } from "@generated/EditRole_Form.graphql";
-import { EditRole_Header$key } from "@generated/EditRole_Header.graphql";
-import { EditableBreadcrumbHeader } from "../../shared/EditablePageHeader";
-import { FormActions } from "../../shared/FormField";
-import { RenameRoleDialog } from "./controls/dialogs/RenameRoleDialog";
-import { css } from "@emotion/react";
-import { graphql } from "babel-plugin-relay/macro";
-import { useHandler } from "../../shared/useHandler";
-import { useParams } from "react-router";
-import { useToggle } from "../../shared/useToggle";
+import {DetailView} from '../../shared/DetailView';
+import {EditRoleForm_ChangeRolePermissions_Mutation} from '@generated/EditRoleForm_ChangeRolePermissions_Mutation.graphql';
+import {EditRoleQuery} from '@generated/EditRoleQuery.graphql';
+import {EditRole_Form$key} from '@generated/EditRole_Form.graphql';
+import {EditRole_Header$key} from '@generated/EditRole_Header.graphql';
+import {EditableBreadcrumbHeader} from '../../shared/EditablePageHeader';
+import {FormActions} from '../../shared/FormField';
+import {RenameRoleDialog} from './controls/dialogs/RenameRoleDialog';
+import {css} from '@emotion/react';
+import {graphql} from 'babel-plugin-relay/macro';
+import {useHandler} from '../../shared/useHandler';
+import {useParams} from 'react-router';
+import {useToggle} from '../../shared/useToggle';
 
 export const EditRole = () => {
-  const { roleId = "" } = useParams();
+  const {roleId = ''} = useParams();
   const query = useLazyLoadQuery<EditRoleQuery>(
     graphql`
       query EditRoleQuery($id: ID!) {
@@ -39,13 +39,13 @@ export const EditRole = () => {
     `,
     {
       id: roleId,
-    }
+    },
   );
 
   const id = query.roleById?.id;
 
   if (!id) {
-    return <DetailView style={{ padding: 1 }}>Could not find role </DetailView>;
+    return <DetailView style={{padding: 1}}>Could not find role </DetailView>;
   }
 
   return <Form key={id} fragmentRef={query.roleById} />;
@@ -53,7 +53,7 @@ export const EditRole = () => {
 
 const Form: React.FC<{
   fragmentRef: EditRole_Form$key;
-}> = ({ fragmentRef }) => {
+}> = ({fragmentRef}) => {
   const data = useFragment(
     graphql`
       fragment EditRole_Form on Role {
@@ -72,7 +72,7 @@ const Form: React.FC<{
         ...EditRole_Header
       }
     `,
-    fragmentRef
+    fragmentRef,
   );
 
   const [commit, isInFlight] =
@@ -96,26 +96,26 @@ const Form: React.FC<{
     `);
 
   const [permissions, setPermissions] = useState(() =>
-    mapPermissionsFromObjectType(data)
+    mapPermissionsFromObjectType(data),
   );
 
   const handleSavePermissions = useHandler(() => {
     pipeCommitFn(commit, [
       withSuccessMessage(
         (x) => x.changeRolePermissions?.role?.id,
-        `Updated permissions of ${data.name}`
+        `Updated permissions of ${data.name}`,
       ),
       withErrorNotifications((x) => x.changeRolePermissions?.errors),
     ])({
       variables: {
-        input: { id: data.id, permissions: mapPermissionsToInput(permissions) },
+        input: {id: data.id, permissions: mapPermissionsToInput(permissions)},
       },
     });
   });
 
   return (
     <DetailView
-      style={{ padding: 1 }}
+      style={{padding: 1}}
       css={css`
         padding: 1;
         display: flex;
@@ -142,17 +142,17 @@ const Form: React.FC<{
   );
 };
 
-const Header: React.FC<{ fragmentRef: EditRole_Header$key }> = ({
+const Header: React.FC<{fragmentRef: EditRole_Header$key}> = ({
   fragmentRef,
 }) => {
-  const { name, id } = useFragment(
+  const {name, id} = useFragment(
     graphql`
       fragment EditRole_Header on Role {
         id
         name
       }
     `,
-    fragmentRef
+    fragmentRef,
   );
 
   const [isEdit, , enable, disable] = useToggle();
