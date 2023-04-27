@@ -1,7 +1,6 @@
 import "./App.css";
 
 import { Layout, Menu } from "antd";
-import { Namespaces, useUser } from "./shared/UserContext";
 import { NavLink, useLocation, useRoutes } from "react-router-dom";
 
 import { Colors } from "./shared/colors";
@@ -11,6 +10,7 @@ import { UserOutlined } from "@ant-design/icons";
 import { css } from "@emotion/react";
 import { navigation } from "./routes";
 import styled from "@emotion/styled";
+import { useUser } from "./shared/UserContext";
 
 function App() {
   const [open, setOpen] = React.useState(false);
