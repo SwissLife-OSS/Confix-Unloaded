@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<8e123c8d2aae6bb84a638777cb9f1dfe>>
- * @relayHash f69ddc6e58b268697ac9a0358f1c0ac8
+ * @generated SignedSource<<a376aa6916b3de741340596c2d3e654a>>
+ * @relayHash d0987934bc8ebbe31c410a25e2eec9e6
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,32 +9,21 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID f69ddc6e58b268697ac9a0358f1c0ac8
+// @relayRequestID d0987934bc8ebbe31c410a25e2eec9e6
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 export type UserContextProviderQuery$variables = {};
 export type UserContextProviderQuery$data = {
   readonly me: {
-    readonly applicationNamespaces: ReadonlyArray<{
-      readonly namespace: string;
-      readonly permission: {
-        readonly isRead: boolean;
-        readonly isWrite: boolean;
-      };
-    }>;
     readonly componentNamespaces: ReadonlyArray<{
       readonly namespace: string;
-      readonly permission: {
-        readonly isRead: boolean;
-        readonly isWrite: boolean;
-      };
     }>;
-    readonly environmentGrants: ReadonlyArray<{
+    readonly environmentNamespaces: ReadonlyArray<{
       readonly permission: {
         readonly isRead: boolean;
       };
     }>;
-    readonly identityGrants: ReadonlyArray<{
+    readonly identityNamespaces: ReadonlyArray<{
       readonly permission: {
         readonly isRead: boolean;
       };
@@ -48,21 +37,7 @@ export type UserContextProviderQuery = {
 };
 
 const node: ConcreteRequest = (function(){
-var v0 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "isRead",
-  "storageKey": null
-},
-v1 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "namespace",
-    "storageKey": null
-  },
+var v0 = [
   {
     "alias": null,
     "args": null,
@@ -71,33 +46,18 @@ v1 = [
     "name": "permission",
     "plural": false,
     "selections": [
-      (v0/*: any*/),
       {
         "alias": null,
         "args": null,
         "kind": "ScalarField",
-        "name": "isWrite",
+        "name": "isRead",
         "storageKey": null
       }
     ],
     "storageKey": null
   }
 ],
-v2 = [
-  {
-    "alias": null,
-    "args": null,
-    "concreteType": "PermissionsFlags",
-    "kind": "LinkedField",
-    "name": "permission",
-    "plural": false,
-    "selections": [
-      (v0/*: any*/)
-    ],
-    "storageKey": null
-  }
-],
-v3 = [
+v1 = [
   {
     "alias": null,
     "args": null,
@@ -126,27 +86,19 @@ v3 = [
         "kind": "LinkedField",
         "name": "namespaceGrants",
         "plural": true,
-        "selections": (v1/*: any*/),
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "namespace",
+            "storageKey": null
+          }
+        ],
         "storageKey": "namespaceGrants(scope:\"COMPONENT\")"
       },
       {
-        "alias": "applicationNamespaces",
-        "args": [
-          {
-            "kind": "Literal",
-            "name": "scope",
-            "value": "APPLICATION"
-          }
-        ],
-        "concreteType": "Grant",
-        "kind": "LinkedField",
-        "name": "namespaceGrants",
-        "plural": true,
-        "selections": (v1/*: any*/),
-        "storageKey": "namespaceGrants(scope:\"APPLICATION\")"
-      },
-      {
-        "alias": "environmentGrants",
+        "alias": "environmentNamespaces",
         "args": [
           {
             "kind": "Literal",
@@ -158,11 +110,11 @@ v3 = [
         "kind": "LinkedField",
         "name": "namespaceGrants",
         "plural": true,
-        "selections": (v2/*: any*/),
+        "selections": (v0/*: any*/),
         "storageKey": "namespaceGrants(scope:\"ENVIRONMENT\")"
       },
       {
-        "alias": "identityGrants",
+        "alias": "identityNamespaces",
         "args": [
           {
             "kind": "Literal",
@@ -174,7 +126,7 @@ v3 = [
         "kind": "LinkedField",
         "name": "namespaceGrants",
         "plural": true,
-        "selections": (v2/*: any*/),
+        "selections": (v0/*: any*/),
         "storageKey": "namespaceGrants(scope:\"IDENTITY\")"
       }
     ],
@@ -187,7 +139,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "UserContextProviderQuery",
-    "selections": (v3/*: any*/),
+    "selections": (v1/*: any*/),
     "type": "Query",
     "abstractKey": null
   },
@@ -196,10 +148,10 @@ return {
     "argumentDefinitions": [],
     "kind": "Operation",
     "name": "UserContextProviderQuery",
-    "selections": (v3/*: any*/)
+    "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "f69ddc6e58b268697ac9a0358f1c0ac8",
+    "id": "d0987934bc8ebbe31c410a25e2eec9e6",
     "metadata": {},
     "name": "UserContextProviderQuery",
     "operationKind": "query",
@@ -208,6 +160,6 @@ return {
 };
 })();
 
-(node as any).hash = "63343febca1ea87d9466ae950325c67b";
+(node as any).hash = "7c04fb73e46453c17b1767584f2ef7d9";
 
 export default node;

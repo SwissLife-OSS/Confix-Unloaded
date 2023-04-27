@@ -6,14 +6,8 @@ import { config } from "../config";
 import { graphql } from "babel-plugin-relay/macro";
 import { useLazyLoadQuery } from "react-relay";
 
-export interface UserContextData {
-  name: string;
-  componentNamespaces: NonNullable<
-    UserContextProviderQuery["response"]["me"]
-  >["componentNamespaces"];
-  applicationNamespaces: NonNullable<
-    UserContextProviderQuery["response"]["me"]
-  >["applicationNamespaces"];
+export interface UserContextData
+  extends NonNullable<UserContextProviderQuery["response"]["me"]> {
   hasEnvironmentAccess: boolean;
   hasIdentityAccess: boolean;
 }
@@ -39,24 +33,13 @@ export const UserContextProvider: React.FC<{ children: React.ReactNode }> = ({
           name
           componentNamespaces: namespaceGrants(scope: COMPONENT) {
             namespace
-            permission {
-              isRead
-              isWrite
-            }
           }
-          applicationNamespaces: namespaceGrants(scope: APPLICATION) {
-            namespace
-            permission {
-              isRead
-              isWrite
-            }
-          }
-          environmentGrants: namespaceGrants(scope: ENVIRONMENT) {
+          environmentNamespaces: namespaceGrants(scope: ENVIRONMENT) {
             permission {
               isRead
             }
           }
-          identityGrants: namespaceGrants(scope: IDENTITY) {
+          identityNamespaces: namespaceGrants(scope: IDENTITY) {
             permission {
               isRead
             }
@@ -77,13 +60,12 @@ export const UserContextProvider: React.FC<{ children: React.ReactNode }> = ({
   return (
     <UserContext.Provider
       value={{
-        name: me.name,
-        componentNamespaces: me.componentNamespaces,
-        applicationNamespaces: me.applicationNamespaces,
+        ...me,
         hasEnvironmentAccess:
-          me.environmentGrants.filter((g) => g.permission.isRead).length > 0,
+          me.environmentNamespaces.filter((g) => g.permission.isRead).length >
+          0,
         hasIdentityAccess:
-          me.identityGrants.filter((g) => g.permission.isRead).length > 0,
+          me.identityNamespaces.filter((g) => g.permission.isRead).length > 0,
       }}
     >
       {children}
