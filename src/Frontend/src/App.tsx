@@ -61,7 +61,7 @@ const Navigation: React.FC<{open: boolean; toggleDrawer: () => void}> = ({
         mode="inline"
         selectedKeys={[location.pathname]}
         items={navigation
-          .filter((x) => (x.permissions ? x.permissions(user) : true))
+          .filter((x) => !x.permissions || x.permissions(user))
           .map((route) => ({
             key: route.path,
             icon: <route.icon style={{color: Colors.theme.primary}} />,
