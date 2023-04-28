@@ -47,6 +47,12 @@ public class Session : ISession
             .SelectMany(r => (r.Role?.Permissions ?? Array.Empty<Permission>())
                 .Where(p => p.Scope == scope)
                 .Select(p => new Grant(r.Namespace, scope, p.Permissions)))
+            .GroupBy(g => g.Namespace)
+            .Select(g => new Grant(
+                g.Key,
+                scope,
+                g.Select(x => x.Permission).Aggregate((a, b) => a | b)
+            ))
             .ToImmutableHashSet();
 
         _grantCache.AddMany(grantsForScope, true);

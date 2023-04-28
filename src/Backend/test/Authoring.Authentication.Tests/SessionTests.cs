@@ -1,7 +1,10 @@
 using System.Collections.Immutable;
 using FluentAssertions;
+using Snapshooter;
+using Snapshooter.Xunit;
 using Xunit;
 using static Confix.Authentication.Authorization.Permissions;
+
 namespace Confix.Authentication.Authorization.Tests;
 
 public class SessionTests
@@ -91,6 +94,26 @@ public class SessionTests
 
         // Assert
         result.Should().BeTrue();
+    }
+
+    [Theory]
+    [InlineData(Scope.Configuration)]
+    [InlineData(Scope.Application)]
+    [InlineData(Scope.Variable)]
+    [InlineData(Scope.Identity)]
+    [InlineData(Scope.Component)]
+    public void GetGrantsForScope_ForScope_MatchSnapshot(Scope scope)
+    {
+        // Arrange
+        ISession session = CreateBigBossSession();
+
+        // Act
+        IReadOnlySet<Grant> result = session.GetGrantsForScope(scope);
+
+        // Assert
+        result
+            .OrderBy(g => g.Namespace)
+            .MatchSnapshot(SnapshotNameExtension.Create(scope.ToString()));
     }
 
     private ISession CreateDeveloperSession()
