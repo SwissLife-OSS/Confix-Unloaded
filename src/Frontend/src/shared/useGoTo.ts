@@ -1,12 +1,12 @@
-import { useCallback } from "react";
-import { generatePath, NavigateOptions, useNavigate } from "react-router";
+import {useCallback} from 'react';
+import {generatePath, NavigateOptions, useNavigate} from 'react-router';
 
 export const useGoTo = <
-  T extends ((...args: any[]) => string | undefined) | (string | undefined)
+  T extends ((...args: any[]) => string | undefined) | (string | undefined),
 >(
   cb: T,
   options: NavigateOptions | undefined = undefined,
-  params: Record<string, string> | undefined = undefined
+  params: Record<string, string> | undefined = undefined,
 ): T extends (...args: any[]) => string | undefined
   ? (...args: Parameters<T>) => void
   : () => void => {
@@ -26,7 +26,7 @@ export const useGoTo = <
         navigate(url, options);
       }
     },
-    [navigate, cb, options, params]
+    [navigate, cb, options, params],
   );
 
   return handleAdd as any;

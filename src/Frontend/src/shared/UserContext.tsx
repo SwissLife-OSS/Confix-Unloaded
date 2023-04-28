@@ -1,13 +1,13 @@
-import { createContext, useContext } from "react";
+import {createContext, useContext} from 'react';
 
-import { FullPageLoader } from "./Wrapper";
-import { UserContextProviderQuery } from "../__generated__/UserContextProviderQuery.graphql";
-import { config } from "../config";
-import { graphql } from "babel-plugin-relay/macro";
-import { useLazyLoadQuery } from "react-relay";
+import {FullPageLoader} from './Wrapper';
+import {UserContextProviderQuery} from '../__generated__/UserContextProviderQuery.graphql';
+import {config} from '../config';
+import {graphql} from 'babel-plugin-relay/macro';
+import {useLazyLoadQuery} from 'react-relay';
 
 export interface UserContextData
-  extends NonNullable<UserContextProviderQuery["response"]["me"]> {
+  extends NonNullable<UserContextProviderQuery['response']['me']> {
   hasEnvironmentAccess: boolean;
   hasIdentityAccess: boolean;
 }
@@ -17,16 +17,16 @@ const UserContext = createContext<UserContextData | null>(null);
 export const useUser = () => {
   const contextData = useContext(UserContext);
   if (!contextData) {
-    throw new Error("Context not set");
+    throw new Error('Context not set');
   }
 
   return contextData;
 };
 
-export const UserContextProvider: React.FC<{ children: React.ReactNode }> = ({
+export const UserContextProvider: React.FC<{children: React.ReactNode}> = ({
   children,
 }) => {
-  const { me } = useLazyLoadQuery<UserContextProviderQuery>(
+  const {me} = useLazyLoadQuery<UserContextProviderQuery>(
     graphql`
       query UserContextProviderQuery {
         me {
@@ -47,14 +47,14 @@ export const UserContextProvider: React.FC<{ children: React.ReactNode }> = ({
         }
       }
     `,
-    {}
+    {},
   );
   if (!me) {
     window.location.href =
       config.identity.signInPath +
-      "?returnUrl=" +
-      encodeURI(window.location.href.replace(window.location.origin, ""));
-    return <FullPageLoader message={"Authenticating ... "} />;
+      '?returnUrl=' +
+      encodeURI(window.location.href.replace(window.location.origin, ''));
+    return <FullPageLoader message={'Authenticating ... '} />;
   }
 
   return (

@@ -1,0 +1,20 @@
+# dependencies
+node_modules/
+
+# generated
+__generated__/
+__snapshots__/
+reports/
+coverage/
+build/
+lib/
+dist/
+
+# temporary
+tmp/
+temp/
+*.tmp
+
+# misc
+.DS_Store
+.*/

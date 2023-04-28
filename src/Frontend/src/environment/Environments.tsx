@@ -1,15 +1,15 @@
-import React, { useState } from "react";
-import { Link, Route, Routes } from "react-router-dom";
-import { FullSizeBox, SidebarHeader } from "../shared/FullSizeBox";
-import { SearchBar } from "../shared/SearchBar";
-import { EditEnvironment } from "./EditEnvironment";
-import { NewEnvironment } from "./NewEnvironment";
-import { Page } from "../shared/Page";
-import { css } from "@emotion/react";
-import { Button } from "antd";
-import { DefaultSuspense } from "../shared/DefaultSuspense";
-import { EnvironmentsList } from "./EnvironmentsList";
-import { useGoTo } from "../shared/useGoTo";
+import React, {useState} from 'react';
+import {Link, Route, Routes} from 'react-router-dom';
+import {FullSizeBox, SidebarHeader} from '../shared/FullSizeBox';
+import {SearchBar} from '../shared/SearchBar';
+import {EditEnvironment} from './EditEnvironment';
+import {NewEnvironment} from './NewEnvironment';
+import {Page} from '../shared/Page';
+import {css} from '@emotion/react';
+import {Button} from 'antd';
+import {DefaultSuspense} from '../shared/DefaultSuspense';
+import {EnvironmentsList} from './EnvironmentsList';
+import {useGoTo} from '../shared/useGoTo';
 
 export const Environments: React.FC = (props) => {
   const [search, setSearch] = useState<string | undefined>();
@@ -20,7 +20,7 @@ export const Environments: React.FC = (props) => {
       <FullSizeBox>
         <SidebarHeader>
           <SearchBar onSearch={setSearch} />
-          <Link to={"new"}>
+          <Link to={'new'}>
             <Button type="primary">Add</Button>
           </Link>
         </SidebarHeader>
@@ -50,6 +50,6 @@ export const Environments: React.FC = (props) => {
 export const EnvironmentRoutes: React.VFC = () => (
   <Routes>
     <Route path="new" element={<NewEnvironment />} />
-    <Route path={":environmentId/edit"} element={<EditEnvironment />} />
+    <Route path={':environmentId/edit'} element={<EditEnvironment />} />
   </Routes>
 );

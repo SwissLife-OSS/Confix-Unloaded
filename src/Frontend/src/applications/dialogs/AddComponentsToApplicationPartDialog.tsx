@@ -1,29 +1,29 @@
-import * as React from "react";
+import * as React from 'react';
 
 import {
   ComponentOption,
   ComponentsSelect,
-} from "../../components/controls/ComponentsSelect";
+} from '../../components/controls/ComponentsSelect';
 import {
   pipeCommitFn,
   withErrorNotifications,
   withOnSuccess,
   withSuccessMessage,
-} from "../../shared/pipeCommitFn";
-import { useCallback, useState } from "react";
-import { useFragment, useMutation } from "react-relay";
+} from '../../shared/pipeCommitFn';
+import {useCallback, useState} from 'react';
+import {useFragment, useMutation} from 'react-relay';
 
-import { AddComponentsToApplicationPartDialog$key } from "@generated/AddComponentsToApplicationPartDialog.graphql";
-import { AddComponentsToApplicationPartDialogMutation } from "@generated/AddComponentsToApplicationPartDialogMutation.graphql";
-import { Modal } from "antd";
-import { graphql } from "babel-plugin-relay/macro";
+import {AddComponentsToApplicationPartDialog$key} from '@generated/AddComponentsToApplicationPartDialog.graphql';
+import {AddComponentsToApplicationPartDialogMutation} from '@generated/AddComponentsToApplicationPartDialogMutation.graphql';
+import {Modal} from 'antd';
+import {graphql} from 'babel-plugin-relay/macro';
 
 export const AddComponentsToApplicationPartDialog: React.FC<{
   open: boolean;
   onClose: () => void;
   fragmentRef: AddComponentsToApplicationPartDialog$key;
-}> = ({ open, fragmentRef: data, onClose }) => {
-  const { application, ...applicationPart } = useFragment(
+}> = ({open, fragmentRef: data, onClose}) => {
+  const {application, ...applicationPart} = useFragment(
     graphql`
       fragment AddComponentsToApplicationPartDialog on ApplicationPart {
         id
@@ -34,7 +34,7 @@ export const AddComponentsToApplicationPartDialog: React.FC<{
         }
       }
     `,
-    data
+    data,
   );
 
   const [commit, isInFlight] =
@@ -60,7 +60,7 @@ export const AddComponentsToApplicationPartDialog: React.FC<{
             }
           }
         }
-      `
+      `,
     );
 
   const [options, setOptions] = useState<ComponentOption[]>([]);
@@ -69,13 +69,13 @@ export const AddComponentsToApplicationPartDialog: React.FC<{
       withSuccessMessage(
         (x) =>
           x.addComponentsToApplicationPart.applicationPart?.application?.id,
-        `Added components to ${applicationPart.name}`
+        `Added components to ${applicationPart.name}`,
       ),
       withErrorNotifications((x) => x.addComponentsToApplicationPart?.errors),
       withOnSuccess(
         (x) =>
           x.addComponentsToApplicationPart.applicationPart?.application?.id,
-        onClose
+        onClose,
       ),
     ])({
       variables: {
@@ -89,7 +89,7 @@ export const AddComponentsToApplicationPartDialog: React.FC<{
 
   if (!application) {
     throw new Error(
-      "Application part {applicationPartId} does not have an application"
+      'Application part {applicationPartId} does not have an application',
     );
   }
 

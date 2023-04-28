@@ -1,7 +1,7 @@
-import React, { Suspense, SuspenseProps } from "react";
-import { PageLoader } from "./DetailView";
+import React, {Suspense, SuspenseProps} from 'react';
+import {PageLoader} from './DetailView';
 
-export const DefaultSuspense: React.FC<Omit<SuspenseProps, "fallback">> = ({
+export const DefaultSuspense: React.FC<Omit<SuspenseProps, 'fallback'>> = ({
   children,
   ...props
 }) => (

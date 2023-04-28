@@ -1,8 +1,8 @@
-import { useCallback, DependencyList } from "react";
+import {useCallback, DependencyList} from 'react';
 
 export const useMultiplexer = <TArgs>(
   fns: ((...a: TArgs[]) => void)[],
-  deps: DependencyList
+  deps: DependencyList,
 ): ((...a: TArgs[]) => void) => {
   return useCallback((...a) => {
     fns.forEach((x) => x(...a));

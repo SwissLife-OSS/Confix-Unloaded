@@ -1,24 +1,24 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { Alert, Modal } from "antd";
+import {Alert, Modal} from 'antd';
 import {
   pipeCommitFn,
   withErrorNotifications,
   withOnSuccess,
   withSuccessMessage,
-} from "../../shared/pipeCommitFn";
+} from '../../shared/pipeCommitFn';
 
-import { RemovePartFromApplicationDialogMutation } from "@generated/RemovePartFromApplicationDialogMutation.graphql";
-import { graphql } from "babel-plugin-relay/macro";
-import { useCallback } from "react";
-import { useMutation } from "react-relay";
+import {RemovePartFromApplicationDialogMutation} from '@generated/RemovePartFromApplicationDialogMutation.graphql';
+import {graphql} from 'babel-plugin-relay/macro';
+import {useCallback} from 'react';
+import {useMutation} from 'react-relay';
 
 export const RemovePartFromApplicationDialog: React.FC<{
   open: boolean;
   onClose: () => void;
   applicationPartId: string;
   applicationPartName: string;
-}> = ({ open, applicationPartId, applicationPartName, onClose }) => {
+}> = ({open, applicationPartId, applicationPartName, onClose}) => {
   const [commit, isInFlight] =
     useMutation<RemovePartFromApplicationDialogMutation>(
       graphql`
@@ -40,18 +40,18 @@ export const RemovePartFromApplicationDialog: React.FC<{
             }
           }
         }
-      `
+      `,
     );
 
   const handleAddApplication = useCallback(() => {
     pipeCommitFn(commit, [
       withSuccessMessage(
         (x) => x.removeApplicationPart.application?.id,
-        `Removed ${applicationPartName}`
+        `Removed ${applicationPartName}`,
       ),
       withErrorNotifications((x) => x.removeApplicationPart?.errors),
       withOnSuccess((x) => x.removeApplicationPart.application?.id, onClose),
-    ])({ variables: { input: { applicationPartId } } });
+    ])({variables: {input: {applicationPartId}}});
   }, [commit, applicationPartId, onClose, applicationPartName]);
 
   return (

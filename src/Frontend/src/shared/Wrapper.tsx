@@ -1,16 +1,16 @@
-import "antd/dist/antd.variable.min.css";
+import 'antd/dist/antd.variable.min.css';
 
-import { Alert, ConfigProvider } from "antd";
-import React, { ReactNode, Suspense } from "react";
+import {Alert, ConfigProvider} from 'antd';
+import React, {ReactNode, Suspense} from 'react';
 
-import { BrowserRouter } from "react-router-dom";
-import { Colors } from "./colors";
-import { PageLoader } from "./DetailView";
-import RelayEnvironment from "../RelayEnvironment";
-import { RelayEnvironmentProvider } from "react-relay";
-import { UserContextProvider } from "./UserContext";
-import { config } from "../config";
-import { css } from "@emotion/react";
+import {BrowserRouter} from 'react-router-dom';
+import {Colors} from './colors';
+import {PageLoader} from './DetailView';
+import RelayEnvironment from '../RelayEnvironment';
+import {RelayEnvironmentProvider} from 'react-relay';
+import {UserContextProvider} from './UserContext';
+import {config} from '../config';
+import {css} from '@emotion/react';
 
 ConfigProvider.config({
   theme: {
@@ -18,7 +18,7 @@ ConfigProvider.config({
   },
 });
 
-export const Wrapper: React.FC<{ children: ReactNode }> = ({ children }) => (
+export const Wrapper: React.FC<{children: ReactNode}> = ({children}) => (
   <React.StrictMode>
     <BrowserRouter>
       <RelayEnvironmentProvider environment={RelayEnvironment}>
@@ -34,7 +34,7 @@ export const Wrapper: React.FC<{ children: ReactNode }> = ({ children }) => (
   </React.StrictMode>
 );
 
-export const FullPageLoader: React.FC<{ message?: string }> = ({ message }) => (
+export const FullPageLoader: React.FC<{message?: string}> = ({message}) => (
   <div
     css={css`
       height: 100vh;
@@ -51,8 +51,8 @@ interface RootErrorBoundaryProps {
 }
 
 type RootErrorBoundaryState =
-  | { kind: "clear" }
-  | { kind: "error"; error: { message?: string } };
+  | {kind: 'clear'}
+  | {kind: 'error'; error: {message?: string}};
 
 export class RootErrorBoundary extends React.Component<
   RootErrorBoundaryProps,
@@ -60,21 +60,21 @@ export class RootErrorBoundary extends React.Component<
 > {
   constructor(props: RootErrorBoundaryProps) {
     super(props);
-    this.state = { kind: "clear" };
+    this.state = {kind: 'clear'};
   }
 
   static getDerivedStateFromError(error: Error): RootErrorBoundaryState {
-    return { kind: "error", error };
+    return {kind: 'error', error};
   }
   render() {
     switch (this.state.kind) {
-      case "clear":
+      case 'clear':
         return this.props.children;
-      case "error":
+      case 'error':
         return (
           <Alert
             message="Oops, there was an error"
-            description={this.state.error.message ?? "No description provided"}
+            description={this.state.error.message ?? 'No description provided'}
             type="error"
           />
         );

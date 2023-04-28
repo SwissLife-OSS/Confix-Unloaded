@@ -1,21 +1,21 @@
-import { Button, Col, Row } from "antd";
-import { FormActions, FormEditor, FormField } from "../shared/FormField";
-import { useLazyLoadQuery, useMutation } from "react-relay";
+import {Button, Col, Row} from 'antd';
+import {FormActions, FormEditor, FormField} from '../shared/FormField';
+import {useLazyLoadQuery, useMutation} from 'react-relay';
 import {
   withErrorNotifications,
   withOnSuccess,
   withSuccessMessage,
-} from "../shared/pipeCommitFn";
+} from '../shared/pipeCommitFn';
 
-import { ApplicationCascader } from "../applications/components/ApplicationCascader";
-import { DetailView } from "../shared/DetailView";
-import { NewComponentMutation } from "@generated/NewComponentMutation.graphql";
-import { NewComponent_Query } from "@generated/NewComponent_Query.graphql";
-import React from "react";
-import { graphql } from "babel-plugin-relay/macro";
-import { useCommitForm } from "../shared/useCommitForm";
-import { useConnectionId } from "../shared/useConnectionId";
-import { useGoTo } from "../shared/useGoTo";
+import {ApplicationCascader} from '../applications/components/ApplicationCascader';
+import {DetailView} from '../shared/DetailView';
+import {NewComponentMutation} from '@generated/NewComponentMutation.graphql';
+import {NewComponent_Query} from '@generated/NewComponent_Query.graphql';
+import React from 'react';
+import {graphql} from 'babel-plugin-relay/macro';
+import {useCommitForm} from '../shared/useCommitForm';
+import {useConnectionId} from '../shared/useConnectionId';
+import {useGoTo} from '../shared/useGoTo';
 
 const newComponentMutation = graphql`
   mutation NewComponentMutation(
@@ -55,18 +55,18 @@ export const NewComponent: React.FC = () => {
         ...ApplicationCascader @arguments(search: $search)
       }
     `,
-    {}
+    {},
   );
 
   const [scopes, setScope] = React.useState<Result[]>([]);
   const [commit, isInFlight] =
     useMutation<NewComponentMutation>(newComponentMutation);
-  const connectionId = useConnectionId("Query_components");
+  const connectionId = useConnectionId('Query_components');
   const goToEdit = useGoTo((id: string) => `../${id}/edit`);
   const form = useCommitForm(
     commit,
     {
-      name: "",
+      name: '',
       scopes: scopes.map((x) => {
         return {
           namespace: x[0],
@@ -76,20 +76,20 @@ export const NewComponent: React.FC = () => {
       }),
       schema: defaultSchema,
     },
-    (input) => ({ input, connectionIds: [connectionId] }),
+    (input) => ({input, connectionIds: [connectionId]}),
     {
       pipes: [
         withErrorNotifications((x) => x.createComponent?.errors),
         withOnSuccess((x) => x.createComponent.component?.id, goToEdit),
         withSuccessMessage(
           (x) => x.createComponent.component?.id,
-          "Component Created"
+          'Component Created',
         ),
       ],
-    }
+    },
   );
   return (
-    <DetailView style={{ padding: 1 }}>
+    <DetailView style={{padding: 1}}>
       <Row>
         <Col xs={24}>
           <h2>New Component</h2>

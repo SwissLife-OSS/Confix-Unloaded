@@ -1,48 +1,48 @@
-import * as React from "react";
+import * as React from 'react';
 
 import {
   ApplicationPartChangeLog,
   Title,
-} from "./components/ApplicationPartChangeLog";
-import { Col, Empty, Row, Tabs, Typography } from "antd";
+} from './components/ApplicationPartChangeLog';
+import {Col, Empty, Row, Tabs, Typography} from 'antd';
 import {
   EditableBreadcrumbHeader,
   HeaderButton,
-} from "../shared/EditablePageHeader";
+} from '../shared/EditablePageHeader';
 import {
   VariableOption,
   VariablesSelect,
-} from "../variables/controls/VariableSelect";
-import { useCallback, useEffect, useState } from "react";
+} from '../variables/controls/VariableSelect';
+import {useCallback, useEffect, useState} from 'react';
 
-import { ApplicationPartComponents } from "./components/ApplicationPartComponents";
-import { DefaultSuspense } from "../shared/DefaultSuspense";
-import { DeployedEnvironmentsOverview } from "./components/DeployedEnvironmentsOverview";
-import { DetailView } from "../shared/DetailView";
-import { EditApplicationPart$key } from "@generated/EditApplicationPart.graphql";
-import { EditApplicationPartQuery } from "@generated/EditApplicationPartQuery.graphql";
-import { EditApplicationPart_DeployedEnvironments$key } from "@generated/EditApplicationPart_DeployedEnvironments.graphql";
-import { EditApplicationPart_Variable$key } from "@generated/EditApplicationPart_Variable.graphql";
-import { PublishApplicationPartDialog } from "./dialogs/PublishApplicationPartDialog";
-import { PublishIcon } from "../icons/icons";
-import { PublishedApplicationParts } from "./components/PublishedApplicationParts";
-import { RenameApplicationPartDialog } from "./dialogs/RenameApplicationPartDialog";
-import { VariableEditor } from "../variables/controls/VariableEditor";
-import { VariableValueList } from "../variables/controls/VariableValueList";
-import { graphql } from "babel-plugin-relay/macro";
-import { useFragment } from "react-relay";
-import { useLocation } from "react-router-dom";
-import { useParams } from "react-router";
-import { useSilentRefreshQuery } from "../shared/useDefaultRefetch";
-import { useTabSwitcher } from "../shared/useTabSwitcher";
-import { useToggle } from "../shared/useToggle";
+import {ApplicationPartComponents} from './components/ApplicationPartComponents';
+import {DefaultSuspense} from '../shared/DefaultSuspense';
+import {DeployedEnvironmentsOverview} from './components/DeployedEnvironmentsOverview';
+import {DetailView} from '../shared/DetailView';
+import {EditApplicationPart$key} from '@generated/EditApplicationPart.graphql';
+import {EditApplicationPartQuery} from '@generated/EditApplicationPartQuery.graphql';
+import {EditApplicationPart_DeployedEnvironments$key} from '@generated/EditApplicationPart_DeployedEnvironments.graphql';
+import {EditApplicationPart_Variable$key} from '@generated/EditApplicationPart_Variable.graphql';
+import {PublishApplicationPartDialog} from './dialogs/PublishApplicationPartDialog';
+import {PublishIcon} from '../icons/icons';
+import {PublishedApplicationParts} from './components/PublishedApplicationParts';
+import {RenameApplicationPartDialog} from './dialogs/RenameApplicationPartDialog';
+import {VariableEditor} from '../variables/controls/VariableEditor';
+import {VariableValueList} from '../variables/controls/VariableValueList';
+import {graphql} from 'babel-plugin-relay/macro';
+import {useFragment} from 'react-relay';
+import {useLocation} from 'react-router-dom';
+import {useParams} from 'react-router';
+import {useSilentRefreshQuery} from '../shared/useDefaultRefetch';
+import {useTabSwitcher} from '../shared/useTabSwitcher';
+import {useToggle} from '../shared/useToggle';
 
 export const EditApplicationPart = () => {
-  const { applicationId = "", id: applicationPartId = "" } = useParams();
-  const variables = { id: applicationPartId };
-  const { tab, navigateToTab } = useTabSwitcher();
+  const {applicationId = '', id: applicationPartId = ''} = useParams();
+  const variables = {id: applicationPartId};
+  const {tab, navigateToTab} = useTabSwitcher();
 
-  const { data: query, refresh } =
+  const {data: query, refresh} =
     useSilentRefreshQuery<EditApplicationPartQuery>(
       graphql`
         query EditApplicationPartQuery($id: ID!) {
@@ -52,7 +52,7 @@ export const EditApplicationPart = () => {
           }
         }
       `,
-      variables
+      variables,
     );
 
   const data = useFragment<EditApplicationPart$key>(
@@ -72,28 +72,28 @@ export const EditApplicationPart = () => {
         ...PublishedApplicationParts
       }
     `,
-    query.applicationPartById
+    query.applicationPartById,
   );
 
   if (!data) {
     return (
-      <DetailView style={{ padding: 1 }}>
+      <DetailView style={{padding: 1}}>
         Coult not find application part
       </DetailView>
     );
   }
 
-  const { id, name: applicationPartName, application } = data;
+  const {id, name: applicationPartName, application} = data;
 
   return (
-    <DetailView style={{ padding: 1 }}>
+    <DetailView style={{padding: 1}}>
       <Row>
         <Col xs={24}>
           <Header
             applicationPartId={id}
-            applicationName={application?.name ?? ""}
+            applicationName={application?.name ?? ''}
             applicationPartName={applicationPartName}
-            namespace={application?.namespace ?? ""}
+            namespace={application?.namespace ?? ''}
             id={id}
           />
         </Col>
@@ -106,8 +106,8 @@ export const EditApplicationPart = () => {
             onChange={navigateToTab}
             items={[
               {
-                key: "edit",
-                label: "Overview",
+                key: 'edit',
+                label: 'Overview',
                 children: (
                   <>
                     <Title>
@@ -125,8 +125,8 @@ export const EditApplicationPart = () => {
                 ),
               },
               {
-                key: "variables",
-                label: "Variables",
+                key: 'variables',
+                label: 'Variables',
                 children: (
                   <DefaultSuspense>
                     <Variables fragmentRef={data} refetch={refresh} />
@@ -134,8 +134,8 @@ export const EditApplicationPart = () => {
                 ),
               },
               {
-                key: "publish_log",
-                label: "Publish Log",
+                key: 'publish_log',
+                label: 'Publish Log',
                 children: (
                   <DefaultSuspense>
                     <PublishedApplicationParts fragmentRef={data} />
@@ -143,8 +143,8 @@ export const EditApplicationPart = () => {
                 ),
               },
               {
-                key: "changelog",
-                label: "Change Log",
+                key: 'changelog',
+                label: 'Change Log',
                 children: (
                   <DefaultSuspense>
                     <ApplicationPartChangeLog fragmentRef={data} />
@@ -162,8 +162,8 @@ export const EditApplicationPart = () => {
 const Variables: React.FC<{
   fragmentRef: EditApplicationPart_Variable$key;
   refetch: () => void;
-}> = ({ fragmentRef, refetch }) => {
-  const { state } = useLocation();
+}> = ({fragmentRef, refetch}) => {
+  const {state} = useLocation();
 
   const data = useFragment(
     graphql`
@@ -177,23 +177,23 @@ const Variables: React.FC<{
         }
       }
     `,
-    fragmentRef
+    fragmentRef,
   );
 
   const [selected, setSelected] = useState<VariableOption>(
-    state?.variableOption
+    state?.variableOption,
   );
 
   const handleVariableValueEditClick = useCallback(
     (id: string, name: string) => {
-      setSelected({ label: name, value: id });
+      setSelected({label: name, value: id});
     },
-    []
+    [],
   );
 
   useEffect(
     () => state?.variableOption && setSelected(state?.variableOption),
-    [state?.variableOption]
+    [state?.variableOption],
   );
 
   return (
@@ -235,8 +235,8 @@ const Variables: React.FC<{
 
 const DeployedEnvironments: React.FC<{
   fragmentRef: EditApplicationPart_DeployedEnvironments$key;
-}> = ({ fragmentRef }) => {
-  const { deployments } = useFragment(
+}> = ({fragmentRef}) => {
+  const {deployments} = useFragment(
     graphql`
       fragment EditApplicationPart_DeployedEnvironments on ApplicationPart {
         deployments {
@@ -246,7 +246,7 @@ const DeployedEnvironments: React.FC<{
         }
       }
     `,
-    fragmentRef
+    fragmentRef,
   );
 
   if (!deployments?.nodes || deployments.nodes.length === 0) {
@@ -280,7 +280,7 @@ const Header: React.FC<{
       <EditableBreadcrumbHeader
         onEdit={enableEdit}
         title={applicationPartName}
-        breadcrumbs={[{ text: namespace }, { text: applicationName }]}
+        breadcrumbs={[{text: namespace}, {text: applicationName}]}
       >
         <HeaderButton
           type="primary"

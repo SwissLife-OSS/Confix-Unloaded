@@ -1,19 +1,19 @@
-import React, { useMemo } from "react";
-import { generatePath, useNavigate, useParams } from "react-router";
+import React, {useMemo} from 'react';
+import {generatePath, useNavigate, useParams} from 'react-router';
 
-import { CompareApplicationPartComponentVersions_Query } from "@generated/CompareApplicationPartComponentVersions_Query.graphql";
-import { ComponentDiffEditor } from "./components/ComponentDiffEditor";
-import { Select } from "antd";
-import { graphql } from "babel-plugin-relay/macro";
-import { useHandler } from "../shared/useHandler";
-import { useLazyLoadQuery } from "react-relay";
-import { useSearchQuery } from "../shared/useQuery";
+import {CompareApplicationPartComponentVersions_Query} from '@generated/CompareApplicationPartComponentVersions_Query.graphql';
+import {ComponentDiffEditor} from './components/ComponentDiffEditor';
+import {Select} from 'antd';
+import {graphql} from 'babel-plugin-relay/macro';
+import {useHandler} from '../shared/useHandler';
+import {useLazyLoadQuery} from 'react-relay';
+import {useSearchQuery} from '../shared/useQuery';
 
 export const generateComparePartComponentVersionPath = (
   applicationId: string,
   partComponentId: string,
   to: number | string,
-  from: number | string
+  from: number | string,
 ) =>
   generatePath<any>(
     `../:applicationId/components/:partComponentId/compare?from=:from&to=:to`,
@@ -22,20 +22,20 @@ export const generateComparePartComponentVersionPath = (
       partComponentId,
       to: String(to),
       from: String(from),
-    }
+    },
   );
 
 export const CompareApplicationPartComponentVersions: React.FC<{
   mostRecentVersion: number;
-}> = ({ mostRecentVersion }) => {
+}> = ({mostRecentVersion}) => {
   const search = useSearchQuery();
-  const { partComponentId = "", applicationId = "" } = useParams();
+  const {partComponentId = '', applicationId = ''} = useParams();
 
   const fromParam = Number.parseInt(
-    search.get("from") ?? String(mostRecentVersion)
+    search.get('from') ?? String(mostRecentVersion),
   );
   const toParam = Number.parseInt(
-    search.get("to") ?? String(mostRecentVersion)
+    search.get('to') ?? String(mostRecentVersion),
   );
   const from = Math.min(fromParam, toParam);
   const to = Math.max(fromParam, toParam);
@@ -66,7 +66,7 @@ export const CompareApplicationPartComponentVersions: React.FC<{
       from,
       to,
     },
-    { fetchPolicy: "store-and-network" }
+    {fetchPolicy: 'store-and-network'},
   );
   const navigate = useNavigate();
   const handlePaginationChange = useHandler((from: number, to: number) => {
@@ -74,15 +74,15 @@ export const CompareApplicationPartComponentVersions: React.FC<{
       applicationId,
       partComponentId,
       from,
-      to
+      to,
     );
     navigate(compare);
   });
   const handleFromChange = useHandler((from: number) =>
-    handlePaginationChange(from, to)
+    handlePaginationChange(from, to),
   );
   const handleToChange = useHandler((to: number) =>
-    handlePaginationChange(from, to)
+    handlePaginationChange(from, to),
   );
 
   const versions = useMemo(() => {
@@ -94,11 +94,11 @@ export const CompareApplicationPartComponentVersions: React.FC<{
       new Set(
         [
           ...data.applicationPartComponentById.changeLog.map(
-            (x) => x.change?.partComponentVersion
+            (x) => x.change?.partComponentVersion,
           ),
           data.applicationPartComponentById.version,
-        ].filter((x) => x !== undefined && x !== null) as number[]
-      )
+        ].filter((x) => x !== undefined && x !== null) as number[],
+      ),
     ).sort();
   }, [data.applicationPartComponentById]);
 
@@ -106,7 +106,7 @@ export const CompareApplicationPartComponentVersions: React.FC<{
     return <div>Application part component was not found</div>;
   }
 
-  const { fromValues, toValues } = data.applicationPartComponentById;
+  const {fromValues, toValues} = data.applicationPartComponentById;
 
   return (
     <>
@@ -133,8 +133,8 @@ export const CompareApplicationPartComponentVersions: React.FC<{
             ),
           },
         }}
-        original={fromValues ?? ""}
-        modified={toValues ?? ""}
+        original={fromValues ?? ''}
+        modified={toValues ?? ''}
       />
     </>
   );
@@ -145,10 +145,10 @@ const SelectVersion: React.FC<{
   onChange: (version: number) => void;
   version: number;
   versions: number[];
-}> = ({ onChange, title, version, versions }) => {
+}> = ({onChange, title, version, versions}) => {
   return (
     <>
-      {title}{" "}
+      {title}{' '}
       <Select<number> value={version} onChange={onChange}>
         {versions.map((x) => (
           <Select.Option value={x}>{x}</Select.Option>

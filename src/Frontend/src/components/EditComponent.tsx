@@ -1,43 +1,43 @@
-import { Button, Col, Row, Space, Tabs, Tag } from "antd";
+import {Button, Col, Row, Space, Tabs, Tag} from 'antd';
 import {
   EditComponentUpdateMutation,
   EditComponentUpdateMutation$data,
-} from "@generated/EditComponentUpdateMutation.graphql";
-import React, { useState } from "react";
+} from '@generated/EditComponentUpdateMutation.graphql';
+import React, {useState} from 'react';
 import {
   pipeCommitFn,
   withErrorNotifications,
   withSuccessMessage,
-} from "../shared/pipeCommitFn";
-import { useFragment, useLazyLoadQuery, useMutation } from "react-relay";
+} from '../shared/pipeCommitFn';
+import {useFragment, useLazyLoadQuery, useMutation} from 'react-relay';
 
-import { ButtonBar } from "../shared/ButtonBar";
-import { ChangeComponentScopeDialog } from "./controls/dialogs/ChangeComponentScopeDialog";
-import { ChangeLog } from "../shared/ChangeLog";
-import { DefaultSuspense } from "../shared/DefaultSuspense";
-import { DetailView } from "../shared/DetailView";
-import { EditComponent$key } from "@generated/EditComponent.graphql";
-import { EditComponentQuery } from "@generated/EditComponentQuery.graphql";
-import { EditComponent_AvailableIn$key } from "@generated/EditComponent_AvailableIn.graphql";
-import { EditComponent_AvailableIn_Query$key } from "@generated/EditComponent_AvailableIn_Query.graphql";
-import { EditComponent_ComponentChangeLog$key } from "@generated/EditComponent_ComponentChangeLog.graphql";
-import { EditComponent_EditComponentForm$key } from "@generated/EditComponent_EditComponentForm.graphql";
-import { EditIcon } from "../icons/icons";
-import { EditableBreadcrumbHeader } from "../shared/EditablePageHeader";
-import { RenameComponentDialog } from "./controls/dialogs/RenameComponentDialog";
-import { SchemaComponentEditor } from "../applications/components/SchemaComponentEditor";
-import { SectionHeader } from "../shared/SectionHeader";
-import { TabRow } from "../shared/TabRow";
-import { css } from "@emotion/react";
-import { graphql } from "babel-plugin-relay/macro";
-import { useParams } from "react-router";
-import { useTabSwitcher } from "../shared/useTabSwitcher";
-import { useToggle } from "../shared/useToggle";
+import {ButtonBar} from '../shared/ButtonBar';
+import {ChangeComponentScopeDialog} from './controls/dialogs/ChangeComponentScopeDialog';
+import {ChangeLog} from '../shared/ChangeLog';
+import {DefaultSuspense} from '../shared/DefaultSuspense';
+import {DetailView} from '../shared/DetailView';
+import {EditComponent$key} from '@generated/EditComponent.graphql';
+import {EditComponentQuery} from '@generated/EditComponentQuery.graphql';
+import {EditComponent_AvailableIn$key} from '@generated/EditComponent_AvailableIn.graphql';
+import {EditComponent_AvailableIn_Query$key} from '@generated/EditComponent_AvailableIn_Query.graphql';
+import {EditComponent_ComponentChangeLog$key} from '@generated/EditComponent_ComponentChangeLog.graphql';
+import {EditComponent_EditComponentForm$key} from '@generated/EditComponent_EditComponentForm.graphql';
+import {EditIcon} from '../icons/icons';
+import {EditableBreadcrumbHeader} from '../shared/EditablePageHeader';
+import {RenameComponentDialog} from './controls/dialogs/RenameComponentDialog';
+import {SchemaComponentEditor} from '../applications/components/SchemaComponentEditor';
+import {SectionHeader} from '../shared/SectionHeader';
+import {TabRow} from '../shared/TabRow';
+import {css} from '@emotion/react';
+import {graphql} from 'babel-plugin-relay/macro';
+import {useParams} from 'react-router';
+import {useTabSwitcher} from '../shared/useTabSwitcher';
+import {useToggle} from '../shared/useToggle';
 
 export const EditComponent = () => {
-  const { id: componentId = "" } = useParams();
+  const {id: componentId = ''} = useParams();
 
-  const { tab, navigateToTab } = useTabSwitcher();
+  const {tab, navigateToTab} = useTabSwitcher();
 
   const query = useLazyLoadQuery<EditComponentQuery>(
     graphql`
@@ -50,7 +50,7 @@ export const EditComponent = () => {
     `,
     {
       id: componentId,
-    }
+    },
   );
 
   const data = useFragment<EditComponent$key>(
@@ -63,18 +63,18 @@ export const EditComponent = () => {
         ...EditComponent_ComponentChangeLog
       }
     `,
-    query.componentById
+    query.componentById,
   );
   const id = data?.id;
   const name = data?.name;
   if (!id) {
     return (
-      <DetailView style={{ padding: 1 }}>Coult not find component</DetailView>
+      <DetailView style={{padding: 1}}>Coult not find component</DetailView>
     );
   }
   return (
     <DetailView
-      style={{ padding: 1 }}
+      style={{padding: 1}}
       css={css`
         padding: 1;
         display: flex;
@@ -83,7 +83,7 @@ export const EditComponent = () => {
     >
       <Row>
         <Col xs={24}>
-          <Header name={name ?? "unkonw"} id={id} />
+          <Header name={name ?? 'unkonw'} id={id} />
         </Col>
       </Row>
       <Row>
@@ -113,7 +113,7 @@ export const EditComponent = () => {
 const EditComponentForm: React.FC<{
   id: string;
   data: EditComponent_EditComponentForm$key;
-}> = ({ data, id }) => {
+}> = ({data, id}) => {
   const component = useFragment(
     graphql`
       fragment EditComponent_EditComponentForm on Component {
@@ -122,7 +122,7 @@ const EditComponentForm: React.FC<{
         values
       }
     `,
-    data
+    data,
   );
   const [commit, isInFlight] = useMutation<EditComponentUpdateMutation>(
     graphql`
@@ -155,14 +155,14 @@ const EditComponentForm: React.FC<{
           }
         }
       }
-    `
+    `,
   );
 
   const [schema, setSchema] = useState<string | undefined>(
-    component.schemaSdl ?? ""
+    component.schemaSdl ?? '',
   );
   const [values, setValues] = useState<Record<string, object> | undefined>(
-    component.values as any
+    component.values as any,
   );
   const handleUpdate = React.useCallback(() => {
     const isSuccess = (r: EditComponentUpdateMutation$data) =>
@@ -170,15 +170,15 @@ const EditComponentForm: React.FC<{
       !!r.updateComponentValues.component?.id;
 
     pipeCommitFn(commit, [
-      withSuccessMessage(isSuccess, "Updated Component"),
+      withSuccessMessage(isSuccess, 'Updated Component'),
       withErrorNotifications((r) => [
         ...(r.updateComponentSchema.errors ?? []),
         ...(r.updateComponentValues.errors ?? []),
       ]),
     ])({
       variables: {
-        schemaInput: { id, schema: schema ?? "" },
-        valuesInput: { id, values },
+        schemaInput: {id, schema: schema ?? ''},
+        valuesInput: {id, values},
       },
     });
   }, [commit, schema, values, id]);
@@ -190,7 +190,7 @@ const EditComponentForm: React.FC<{
         onValuesChanged={setValues}
         onSchemaChange={setSchema}
         values={JSON.stringify(component.values)}
-        schema={component.schemaSdl ?? ""}
+        schema={component.schemaSdl ?? ''}
         editSchema
       />
       <ButtonBar>
@@ -202,7 +202,7 @@ const EditComponentForm: React.FC<{
   );
 };
 
-const Header: React.FC<{ name: string; id: string }> = ({ name, id }) => {
+const Header: React.FC<{name: string; id: string}> = ({name, id}) => {
   const [isEdit, , enable, disable] = useToggle();
   return (
     <EditableBreadcrumbHeader onEdit={enable} title={name}>
@@ -219,8 +219,8 @@ const Header: React.FC<{ name: string; id: string }> = ({ name, id }) => {
 
 const ComponentChangeLog: React.FC<{
   data: EditComponent_ComponentChangeLog$key;
-}> = ({ data }) => {
-  const { changeLog } = useFragment(
+}> = ({data}) => {
+  const {changeLog} = useFragment(
     graphql`
       fragment EditComponent_ComponentChangeLog on Component {
         changeLog {
@@ -228,7 +228,7 @@ const ComponentChangeLog: React.FC<{
         }
       }
     `,
-    data
+    data,
   );
 
   return <ChangeLog data={changeLog} />;
@@ -238,9 +238,9 @@ const AvailableIn: React.FC<{
   id: string;
   fragmentRef: [
     EditComponent_AvailableIn_Query$key,
-    EditComponent_AvailableIn$key
+    EditComponent_AvailableIn$key,
   ];
-}> = ({ fragmentRef, id }) => {
+}> = ({fragmentRef, id}) => {
   const [isEdit, , edit, stopEdit] = useToggle();
 
   const query = useFragment<EditComponent_AvailableIn_Query$key>(
@@ -249,10 +249,10 @@ const AvailableIn: React.FC<{
         ...ChangeComponentScopeDialog
       }
     `,
-    fragmentRef[0]
+    fragmentRef[0],
   );
 
-  const { scopes } = useFragment<EditComponent_AvailableIn$key>(
+  const {scopes} = useFragment<EditComponent_AvailableIn$key>(
     graphql`
       fragment EditComponent_AvailableIn on Component {
         scopes {
@@ -268,11 +268,11 @@ const AvailableIn: React.FC<{
         }
       }
     `,
-    fragmentRef[1]
+    fragmentRef[1],
   );
   return (
     <>
-      <span style={{ marginRight: 8 }}>Scopes:</span>
+      <span style={{marginRight: 8}}>Scopes:</span>
       <Space size={[0, 8]} wrap>
         {scopes.map((scope) => {
           const tag = scope.applicationPartId
@@ -310,7 +310,7 @@ const AvailableIn: React.FC<{
             ? [x.namespace, x.applicationId!, x.applicationPartId]
             : x.applicationId
             ? [x.namespace, x.applicationId!]
-            : [x.namespace]
+            : [x.namespace],
         )}
       />
     </>

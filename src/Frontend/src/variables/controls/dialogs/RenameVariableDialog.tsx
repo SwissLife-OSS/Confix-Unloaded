@@ -1,25 +1,25 @@
-import * as React from "react";
+import * as React from 'react';
 
 import {
   pipeCommitFn,
   withOnSuccess,
   withSuccessMessage,
-} from "../../../shared/pipeCommitFn";
-import { useCallback, useState } from "react";
+} from '../../../shared/pipeCommitFn';
+import {useCallback, useState} from 'react';
 
-import { FieldInput } from "../../../shared/FormField";
-import { Modal } from "antd";
-import { RenameVariableDialogMutation } from "@generated/RenameVariableDialogMutation.graphql";
-import { graphql } from "babel-plugin-relay/macro";
-import { useMutation } from "react-relay";
-import { useStringEventHanlder } from "../../../shared/useEventListener";
+import {FieldInput} from '../../../shared/FormField';
+import {Modal} from 'antd';
+import {RenameVariableDialogMutation} from '@generated/RenameVariableDialogMutation.graphql';
+import {graphql} from 'babel-plugin-relay/macro';
+import {useMutation} from 'react-relay';
+import {useStringEventHanlder} from '../../../shared/useEventListener';
 
 export const RenameVariableDialog: React.FC<{
   open: boolean;
   onClose: () => void;
   name: string;
   id: string;
-}> = ({ open, name, id, onClose }) => {
+}> = ({open, name, id, onClose}) => {
   const [commit, isInFlight] = useMutation<RenameVariableDialogMutation>(
     graphql`
       mutation RenameVariableDialogMutation($input: RenameVariableInput!) {
@@ -30,7 +30,7 @@ export const RenameVariableDialog: React.FC<{
           }
         }
       }
-    `
+    `,
   );
   const [variableName, setVariableName] = useState(name);
 
@@ -40,10 +40,10 @@ export const RenameVariableDialog: React.FC<{
     pipeCommitFn(commit, [
       withSuccessMessage(
         (x) => x.renameVariable.variable?.id,
-        "Renamed Variable"
+        'Renamed Variable',
       ),
       withOnSuccess((x) => x.renameVariable.variable?.id, onClose),
-    ])({ variables: { input: { name: variableName, id } } });
+    ])({variables: {input: {name: variableName, id}}});
   }, [commit, id, variableName, onClose]);
 
   return (

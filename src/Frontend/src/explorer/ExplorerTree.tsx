@@ -5,41 +5,41 @@ import {
   ComponentIcon,
   NotCollapsedIcon,
   VariablesIcon,
-} from "../icons/icons";
-import { ColorTag, TagBar } from "../shared/ColorTag";
-import { Divider, Skeleton, TreeDataNode } from "antd";
+} from '../icons/icons';
+import {ColorTag, TagBar} from '../shared/ColorTag';
+import {Divider, Skeleton, TreeDataNode} from 'antd';
 import {
   ExplorerTree_ApplicationDetails$data,
   ExplorerTree_ApplicationDetails$key,
-} from "@generated/ExplorerTree_ApplicationDetails.graphql";
+} from '@generated/ExplorerTree_ApplicationDetails.graphql';
 import {
   ExplorerTree_ApplicationPart$data,
   ExplorerTree_ApplicationPart$key,
-} from "@generated/ExplorerTree_ApplicationPart.graphql";
+} from '@generated/ExplorerTree_ApplicationPart.graphql';
 import {
   ExplorerTree_Applications$data,
   ExplorerTree_Applications$key,
-} from "@generated/ExplorerTree_Applications.graphql";
-import React, { MouseEventHandler, useCallback, useState } from "react";
+} from '@generated/ExplorerTree_Applications.graphql';
+import React, {MouseEventHandler, useCallback, useState} from 'react';
 import {
   useFragment,
   useLazyLoadQuery,
   usePaginationFragment,
-} from "react-relay";
+} from 'react-relay';
 
-import { DefaultSuspense } from "../shared/DefaultSuspense";
-import { ExplorerTreeQuery } from "@generated/ExplorerTreeQuery.graphql";
-import { ExplorerTree_Application$key } from "@generated/ExplorerTree_Application.graphql";
-import InfiniteScroll from "react-infinite-scroll-component";
-import { chunkBy } from "../shared/chunkBy";
-import { config } from "../config";
-import { css } from "@emotion/react";
-import { generatePath } from "react-router-dom";
-import { graphql } from "babel-plugin-relay/macro";
-import styled from "@emotion/styled";
-import { useGoTo } from "../shared/useGoTo";
-import { useLoadNextChain } from "../shared/useLoadNextChain";
-import { useMultiplexer } from "../shared/useMultiplexer";
+import {DefaultSuspense} from '../shared/DefaultSuspense';
+import {ExplorerTreeQuery} from '@generated/ExplorerTreeQuery.graphql';
+import {ExplorerTree_Application$key} from '@generated/ExplorerTree_Application.graphql';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import {chunkBy} from '../shared/chunkBy';
+import {config} from '../config';
+import {css} from '@emotion/react';
+import {generatePath} from 'react-router-dom';
+import {graphql} from 'babel-plugin-relay/macro';
+import styled from '@emotion/styled';
+import {useGoTo} from '../shared/useGoTo';
+import {useLoadNextChain} from '../shared/useLoadNextChain';
+import {useMultiplexer} from '../shared/useMultiplexer';
 
 const exploreTreeQuery = graphql`
   query ExplorerTreeQuery($cursor: String, $count: Int) {
@@ -123,9 +123,9 @@ export const ExplorerTree: React.FC<{
   search: string | undefined;
   onClick?: (
     e: React.MouseEvent<HTMLSpanElement>,
-    node: ExplorerDataNode
+    node: ExplorerDataNode,
   ) => void;
-}> = ({ search, onClick }) => {
+}> = ({search, onClick}) => {
   const queryData = useLazyLoadQuery<ExplorerTreeQuery>(exploreTreeQuery, {
     count: config.pagination.pageSize,
   });
@@ -135,7 +135,7 @@ export const ExplorerTree: React.FC<{
     loadNext,
   } = usePaginationFragment<ExplorerTreeQuery, ExplorerTree_Applications$key>(
     exploreTreeConnectionFragment,
-    queryData
+    queryData,
   );
 
   const handleLoadNext = useLoadNextChain(loadNext);
@@ -143,14 +143,14 @@ export const ExplorerTree: React.FC<{
   const applications = connection.applications?.edges ?? [];
   return (
     <div
-      style={{ flex: 1, overflow: "auto", overscrollBehavior: "contain" }}
+      style={{flex: 1, overflow: 'auto', overscrollBehavior: 'contain'}}
       id="scrollableDiv"
     >
       <InfiniteScroll
         dataLength={applications.length}
         next={handleLoadNext}
         hasMore={hasNext}
-        loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
+        loader={<Skeleton avatar paragraph={{rows: 1}} active />}
         endMessage={<Divider plain />}
         scrollableTarget="scrollableDiv"
       >
@@ -172,12 +172,12 @@ export const ExplorerTree: React.FC<{
 const ApplictionNode: React.FC<{
   data:
     | NonNullable<
-        NonNullable<ExplorerTree_Applications$data["applications"]>["edges"]
-      >["0"]["node"];
-}> = ({ data }) => {
+        NonNullable<ExplorerTree_Applications$data['applications']>['edges']
+      >['0']['node'];
+}> = ({data}) => {
   const application = useFragment<ExplorerTree_Application$key>(
     exploreTreeApplicationFragment,
-    data
+    data,
   );
   return (
     <TreeNode
@@ -185,7 +185,7 @@ const ApplictionNode: React.FC<{
       icon={<ApplicationIcon />}
       text={application?.name}
       url={`applications/:applicationId/edit`}
-      urlParams={{ applicationId: application.id }}
+      urlParams={{applicationId: application.id}}
       hasChildren
     >
       <ApplicationNodeChildren
@@ -198,10 +198,10 @@ const ApplictionNode: React.FC<{
 const ApplicationNodeChildren: React.FC<{
   applicationId: string;
   data: ExplorerTree_ApplicationDetails$key;
-}> = ({ data, applicationId }) => {
+}> = ({data, applicationId}) => {
   const details = useFragment<ExplorerTree_ApplicationDetails$key>(
     exploreTreeApplicationDetailsFragment,
-    data
+    data,
   );
 
   return (
@@ -212,7 +212,7 @@ const ApplicationNodeChildren: React.FC<{
           icon={<ApplicationPartIcon />}
           text={x.name}
           url={`applications/:applicationId/parts/:partId/edit`}
-          urlParams={{ applicationId, partId: x.id }}
+          urlParams={{applicationId, partId: x.id}}
           hasChildren
         >
           <ApplicationPartNodeDetails
@@ -223,13 +223,13 @@ const ApplicationNodeChildren: React.FC<{
         </TreeNode>
       ))}
       {chunkBy(
-        details?.variableValues?.map((x) => ({ ...x })) ?? [],
-        (x) => x.variable?.name ?? "-"
+        details?.variableValues?.map((x) => ({...x})) ?? [],
+        (x) => x.variable?.name ?? '-',
       ).map((x) => (
         <VariableValuesNode
           indent={1}
-          url={"applications/:applicationId/edit"}
-          urlParams={{ applicationId }}
+          url={'applications/:applicationId/edit'}
+          urlParams={{applicationId}}
           data={x}
         />
       ))}
@@ -239,11 +239,11 @@ const ApplicationNodeChildren: React.FC<{
 
 const ApplicationPartNodeDetails: React.FC<{
   applicationId: string;
-  data: ExplorerTree_ApplicationDetails$data["parts"][0];
-}> = ({ data, applicationId }) => {
+  data: ExplorerTree_ApplicationDetails$data['parts'][0];
+}> = ({data, applicationId}) => {
   const partDetails = useFragment<ExplorerTree_ApplicationPart$key>(
     exploreTreeApplicationPartFragment,
-    data
+    data,
   );
   return (
     <>
@@ -255,13 +255,13 @@ const ApplicationPartNodeDetails: React.FC<{
         />
       ))}
       {chunkBy(
-        partDetails?.variableValues?.map((x) => ({ ...x })) ?? [],
-        (x) => x.variable?.name ?? "-"
+        partDetails?.variableValues?.map((x) => ({...x})) ?? [],
+        (x) => x.variable?.name ?? '-',
       ).map((x) => (
         <VariableValuesNode
           indent={2}
           url={`applications/:applicationId/parts/:partId/edit`}
-          urlParams={{ applicationId, partId: data.id }}
+          urlParams={{applicationId, partId: data.id}}
           data={x}
         />
       ))}
@@ -271,15 +271,15 @@ const ApplicationPartNodeDetails: React.FC<{
 
 const ApplicationPartComponentNode: React.FC<{
   applicationId: string;
-  data: ExplorerTree_ApplicationPart$data["components"][0];
-}> = ({ data, applicationId }) => {
+  data: ExplorerTree_ApplicationPart$data['components'][0];
+}> = ({data, applicationId}) => {
   return (
     <TreeNode
       indent={2}
       icon={<ComponentIcon />}
       url={`applications/:applicationId/components/:componentId/edit`}
-      urlParams={{ applicationId, componentId: data.id }}
-      text={data.definition?.name ?? ""}
+      urlParams={{applicationId, componentId: data.id}}
+      text={data.definition?.name ?? ''}
     />
   );
 };
@@ -287,13 +287,13 @@ const ApplicationPartComponentNode: React.FC<{
 const VariableValuesNode: React.FC<{
   indent: number;
   data: NonNullable<
-    NonNullable<ExplorerTree_ApplicationDetails$data["variableValues"]>
-  >["0"][];
+    NonNullable<ExplorerTree_ApplicationDetails$data['variableValues']>
+  >['0'][];
   url: string;
   urlParams?: Record<string, string>;
-}> = ({ data, urlParams, indent, url }) => {
-  const variableName = data?.[0].variable?.name ?? "";
-  const variableId = data?.[0].variable?.id ?? "";
+}> = ({data, urlParams, indent, url}) => {
+  const variableName = data?.[0].variable?.name ?? '';
+  const variableId = data?.[0].variable?.id ?? '';
 
   return (
     <TreeNode
@@ -303,8 +303,8 @@ const VariableValuesNode: React.FC<{
       url={url}
       urlParams={urlParams}
       state={{
-        tab: "variables",
-        variableOption: { label: variableName, value: variableId },
+        tab: 'variables',
+        variableOption: {label: variableName, value: variableId},
       }}
       hasChildren
     >
@@ -312,7 +312,7 @@ const VariableValuesNode: React.FC<{
         <TagBar>
           {data
             .filter((x) => x.environment)
-            .map((x) => x.environment?.name ?? "")
+            .map((x) => x.environment?.name ?? '')
             .map((x) => (
               <ColorTag value={x}>{x}</ColorTag>
             ))}
@@ -343,7 +343,7 @@ const TreeNode: React.FC<{
 }) => {
   const [collapsed, setCollapsed] = useState(true);
   const path = url && generatePath(url, urlParams);
-  const goToUrl = useGoTo(path, { state });
+  const goToUrl = useGoTo(path, {state});
   const handleExpand = useCallback(() => {
     setCollapsed(false);
   }, [setCollapsed]);
@@ -353,11 +353,11 @@ const TreeNode: React.FC<{
       e.stopPropagation();
       setCollapsed((p) => !p);
     },
-    [setCollapsed]
+    [setCollapsed],
   );
   const handleClick = useMultiplexer(
     [goToUrl, handleExpand],
-    [setCollapsed, url]
+    [setCollapsed, url],
   );
   if (!hasChildren) {
     return (
@@ -382,7 +382,7 @@ const TreeNode: React.FC<{
   );
 };
 
-const IndentedBox = styled("div")<{ indent?: number }>`
+const IndentedBox = styled('div')<{indent?: number}>`
   display: flex;
   flex-direction: row;
   padding: 5px 0;
@@ -397,7 +397,7 @@ const IndentedBox = styled("div")<{ indent?: number }>`
   }
 `;
 
-const BoxIcon = styled("div")`
+const BoxIcon = styled('div')`
   width: 18px;
   display: table-cell;
   vertical-align: middle;

@@ -1,9 +1,9 @@
 export const config = {
   graphql: {
-    api: "/graphql",
+    api: '/graphql',
   },
   identity: {
-    signInPath: "/login",
+    signInPath: '/login',
   },
   appBar: {
     height: 72,

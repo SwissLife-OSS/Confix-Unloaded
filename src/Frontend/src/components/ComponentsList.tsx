@@ -1,16 +1,16 @@
-import { useLazyLoadQuery, usePaginationFragment } from "react-relay";
+import {useLazyLoadQuery, usePaginationFragment} from 'react-relay';
 
-import { ComponentsList$key } from "@generated/ComponentsList.graphql";
-import { ComponentsListQuery } from "@generated/ComponentsListQuery.graphql";
-import { InfiniteScrollList } from "../shared/InfiniteScrollList";
-import { config } from "../config";
-import { graphql } from "babel-plugin-relay/macro";
-import { useCallback } from "react";
+import {ComponentsList$key} from '@generated/ComponentsList.graphql';
+import {ComponentsListQuery} from '@generated/ComponentsListQuery.graphql';
+import {InfiniteScrollList} from '../shared/InfiniteScrollList';
+import {config} from '../config';
+import {graphql} from 'babel-plugin-relay/macro';
+import {useCallback} from 'react';
 
 export const ComponentsList: React.FC<{
   onItemSelect: (item: string) => void;
   search: string | undefined;
-}> = ({ search, onItemSelect }) => {
+}> = ({search, onItemSelect}) => {
   const query = useLazyLoadQuery<ComponentsListQuery>(
     graphql`
       query ComponentsListQuery($cursor: String, $count: Int, $search: String) {
@@ -20,10 +20,10 @@ export const ComponentsList: React.FC<{
     {
       count: config.pagination.pageSize,
       search,
-    }
+    },
   );
 
-  const { data, hasNext, loadNext, isLoadingNext } = usePaginationFragment<
+  const {data, hasNext, loadNext, isLoadingNext} = usePaginationFragment<
     ComponentsListQuery,
     ComponentsList$key
   >(
@@ -41,12 +41,12 @@ export const ComponentsList: React.FC<{
         }
       }
     `,
-    query
+    query,
   );
 
   const handleOnItemSelected = useCallback(
-    (t: { id: string }) => onItemSelect(t.id),
-    [onItemSelect]
+    (t: {id: string}) => onItemSelect(t.id),
+    [onItemSelect],
   );
 
   return (

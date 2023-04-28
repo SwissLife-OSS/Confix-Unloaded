@@ -1,6 +1,6 @@
-import styled from "@emotion/styled";
-import { Button } from "antd";
-import React from "react";
+import styled from '@emotion/styled';
+import {Button} from 'antd';
+import React from 'react';
 export const SectionHeader: React.FC<{
   title?: string;
   loading?: boolean;
@@ -8,7 +8,7 @@ export const SectionHeader: React.FC<{
   onAdd?: () => void;
   onSave?: () => void;
   children?: React.ReactElement;
-}> = ({ title, onSave, onAdd, loading, disabled }) => {
+}> = ({title, onSave, onAdd, loading, disabled}) => {
   return (
     <Wrapper>
       <Title>{title && <h2>{title}</h2>}</Title>
@@ -36,11 +36,11 @@ export const SectionHeader: React.FC<{
   );
 };
 
-const Title = styled("div")`
+const Title = styled('div')`
   flex: 1;
 `;
 
-const Wrapper = styled("div")`
+const Wrapper = styled('div')`
   display: flex;
   justify-content: space-between;
 `;

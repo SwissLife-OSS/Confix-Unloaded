@@ -1,25 +1,25 @@
-import * as React from "react";
+import * as React from 'react';
 
 import {
   pipeCommitFn,
   withOnSuccess,
   withSuccessMessage,
-} from "../../../../shared/pipeCommitFn";
-import { useCallback, useState } from "react";
+} from '../../../../shared/pipeCommitFn';
+import {useCallback, useState} from 'react';
 
-import { FieldInput } from "../../../../shared/FormField";
-import { Modal } from "antd";
-import { RenameRoleDialogMutation } from "@generated/RenameRoleDialogMutation.graphql";
-import { graphql } from "babel-plugin-relay/macro";
-import { useMutation } from "react-relay";
-import { useStringEventHanlder } from "../../../../shared/useEventListener";
+import {FieldInput} from '../../../../shared/FormField';
+import {Modal} from 'antd';
+import {RenameRoleDialogMutation} from '@generated/RenameRoleDialogMutation.graphql';
+import {graphql} from 'babel-plugin-relay/macro';
+import {useMutation} from 'react-relay';
+import {useStringEventHanlder} from '../../../../shared/useEventListener';
 
 export const RenameRoleDialog: React.FC<{
   open: boolean;
   onClose: () => void;
   name: string;
   id: string;
-}> = ({ open, name, id, onClose }) => {
+}> = ({open, name, id, onClose}) => {
   const [commit, isInFlight] = useMutation<RenameRoleDialogMutation>(graphql`
     mutation RenameRoleDialogMutation($input: RenameRoleInput!) {
       renameRole(input: $input) {
@@ -35,9 +35,9 @@ export const RenameRoleDialog: React.FC<{
   const handlePartNameChange = useStringEventHanlder(setRoleName);
   const handleRename = useCallback(() => {
     pipeCommitFn(commit, [
-      withSuccessMessage((x) => x.renameRole.role?.id, "Renamed Role"),
+      withSuccessMessage((x) => x.renameRole.role?.id, 'Renamed Role'),
       withOnSuccess((x) => x.renameRole.role?.id, onClose),
-    ])({ variables: { input: { name: roleName, id } } });
+    ])({variables: {input: {name: roleName, id}}});
   }, [commit, id, roleName, onClose]);
   return (
     <Modal

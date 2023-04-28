@@ -1,14 +1,14 @@
-import { useCallback, useRef, useState } from "react";
+import {useCallback, useRef, useState} from 'react';
 import {
   RefetchFnDynamic,
   useLazyLoadQuery,
   useRelayEnvironment,
-} from "react-relay";
-import { fetchQuery, GraphQLTaggedNode, OperationType } from "relay-runtime";
+} from 'react-relay';
+import {fetchQuery, GraphQLTaggedNode, OperationType} from 'relay-runtime';
 
 export type KeyType<TData = unknown> = Readonly<{
-  " $data"?: TData | undefined;
-  " $fragmentSpreads": any;
+  ' $data'?: TData | undefined;
+  ' $fragmentSpreads': any;
 }>;
 
 // from https://relay.dev/docs/guided-tour/refetching/refreshing-fragments/
@@ -44,5 +44,5 @@ export const useSilentRefreshQuery = <TQuery extends OperationType>(
     });
   }, [env, query, variables]);
 
-  return { data, refresh, isRefreshing };
+  return {data, refresh, isRefreshing};
 };

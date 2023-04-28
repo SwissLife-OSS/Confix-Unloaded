@@ -1,5 +1,5 @@
-import { FetchPolicy } from "react-relay";
-import { CacheConfig, RenderPolicy } from "relay-runtime";
+import {FetchPolicy} from 'react-relay';
+import {CacheConfig, RenderPolicy} from 'relay-runtime';
 
 export type QueryOptions = {
   fetchKey?: string | number | undefined;

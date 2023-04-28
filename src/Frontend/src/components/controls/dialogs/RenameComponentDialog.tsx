@@ -1,24 +1,24 @@
-import * as React from "react";
+import * as React from 'react';
 
 import {
   pipeCommitFn,
   withOnSuccess,
   withSuccessMessage,
-} from "../../../shared/pipeCommitFn";
+} from '../../../shared/pipeCommitFn';
 
-import { FieldInput } from "../../../shared/FormField";
-import { Modal } from "antd";
-import { RenameComponentDialogMutation } from "@generated/RenameComponentDialogMutation.graphql";
-import { graphql } from "babel-plugin-relay/macro";
-import { useMutation } from "react-relay";
-import { useStringEventHanlder } from "../../../shared/useEventListener";
+import {FieldInput} from '../../../shared/FormField';
+import {Modal} from 'antd';
+import {RenameComponentDialogMutation} from '@generated/RenameComponentDialogMutation.graphql';
+import {graphql} from 'babel-plugin-relay/macro';
+import {useMutation} from 'react-relay';
+import {useStringEventHanlder} from '../../../shared/useEventListener';
 
 export const RenameComponentDialog: React.FC<{
   open: boolean;
   onClose: () => void;
   name: string;
   id: string;
-}> = ({ open, name, id, onClose }) => {
+}> = ({open, name, id, onClose}) => {
   const [commit, isInFlight] = useMutation<RenameComponentDialogMutation>(
     graphql`
       mutation RenameComponentDialogMutation($input: RenameComponentInput!) {
@@ -29,7 +29,7 @@ export const RenameComponentDialog: React.FC<{
           }
         }
       }
-    `
+    `,
   );
 
   const [componentName, setComponentName] = React.useState(name);
@@ -39,10 +39,10 @@ export const RenameComponentDialog: React.FC<{
     pipeCommitFn(commit, [
       withSuccessMessage(
         (x) => x.renameComponent.component?.id,
-        "Renamed Component"
+        'Renamed Component',
       ),
       withOnSuccess((x) => x.renameComponent.component?.id, onClose),
-    ])({ variables: { input: { name: componentName, id } } });
+    ])({variables: {input: {name: componentName, id}}});
   }, [commit, id, componentName, onClose]);
 
   return (
