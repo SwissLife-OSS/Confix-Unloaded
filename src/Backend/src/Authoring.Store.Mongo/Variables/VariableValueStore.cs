@@ -13,22 +13,34 @@ internal sealed class VariableValueStore : IVariableValueStore
         _dbContext = dbContext;
     }
 
-    public async Task<VariableValue> GetByIdAsync(Guid id, CancellationToken cancellationToken)
-    {
-        return await _dbContext.VariableValues.AsQueryable()
-            .Where(x => x.Id == id)
-            .SingleAsync(cancellationToken);
-    }
-
-    public async Task<VariableValue?> GetByKeyAsync(
-        VariableKey key,
+    public async Task<IEnumerable<VariableValue>> GetByFilterAsync(
+        IEnumerable<Guid>? variableIds,
+        IEnumerable<VariableValueScope>? filters,
         CancellationToken cancellationToken)
     {
-        var keyFilter = BuildUniqueKeyFilter(key);
+        var filter = Filter.Empty;
+
+        if (variableIds != null)
+        {
+            filter &= Filter.In(x => x.VariableId, variableIds);
+        }
+
+        if (filters != null)
+        {
+            filter &= Filter.Or(filters.Select(ToFilter));
+        }
 
         return await _dbContext.VariableValues
-            .Find(keyFilter)
-            .SingleOrDefaultAsync(cancellationToken);
+            .Find(filter)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<VariableValue> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    {
+        return await _dbContext.VariableValues
+            .AsQueryable()
+            .Where(x => x.Id == id)
+            .SingleAsync(cancellationToken);
     }
 
     public async Task<IEnumerable<VariableValue>> GetManyAsync(
@@ -40,23 +52,14 @@ internal sealed class VariableValueStore : IVariableValueStore
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<IEnumerable<VariableValue>> GetByFilterAsync(
-        VariableValueFilter filter,
-        CancellationToken cancellationToken)
-    {
-        var dbFilter = BuildFindKeyFilter(filter);
-
-        var cursor = await _dbContext.VariableValues.FindAsync(dbFilter, null, cancellationToken);
-
-        return await cursor.ToListAsync(cancellationToken);
-    }
-
     public async Task<VariableValue> SaveAsync(
         VariableValue value,
         CancellationToken cancellationToken)
     {
         await _dbContext.VariableValues.ReplaceOneAsync(
-            BuildUniqueKeyFilter(value.Key),
+            Filter.And(
+                Filter.Eq(x => x.VariableId, value.VariableId),
+                ToFilter(value.Scope)),
             value,
             new ReplaceOptions { IsUpsert = true },
             cancellationToken);
@@ -69,34 +72,24 @@ internal sealed class VariableValueStore : IVariableValueStore
         await _dbContext.VariableValues.DeleteOneAsync(x => x.Id == id, null, cancellationToken);
     }
 
-    private static FilterDefinition<VariableValue> BuildUniqueKeyFilter(VariableKey variableKey)
+    private static FilterDefinition<VariableValue> ToFilter(VariableValueScope filter)
     {
-        return Filter.And(
-            Filter.EqOrNull(u => u.Key.VariableId, variableKey.VariableId),
-            Filter.EqOrNull(u => u.Key.ApplicationId, variableKey.ApplicationId),
-            Filter.EqOrNull(u => u.Key.PartId, variableKey.PartId),
-            Filter.EqOrNull(u => u.Key.EnvironmentId, variableKey.EnvironmentId));
-    }
-
-    private static FilterDefinition<VariableValue> BuildFindKeyFilter(VariableValueFilter filter)
-    {
-        var dbFilter = Filter.Eq(x => x.Key.VariableId, filter.Id);
-
-        if (filter.EnvironmentId.HasValue)
+        var filterDefinition = filter switch
         {
-            dbFilter &= Filter.EqOrNull(x => x.Key.EnvironmentId, filter.EnvironmentId.Value);
+            ApplicationVariableValueScope f
+                => Filter.Eq("Scope.ApplicationId", f.ApplicationId),
+            ApplicationPartVariableValueScope f
+                => Filter.Eq("Scope.PartId", f.PartId),
+            NamespaceVariableValueScope f
+                => Filter.Eq("Scope.Namespace", f.Namespace),
+            _ => throw new ArgumentOutOfRangeException(nameof(filter))
+        };
+
+        if (filter.EnvironmentId is not null)
+        {
+            filterDefinition &= Filter.Eq(x => x.Scope.EnvironmentId, filter.EnvironmentId);
         }
 
-        if (filter.ApplicationId.HasValue)
-        {
-            dbFilter &= Filter.EqOrNull(x => x.Key.ApplicationId, filter.ApplicationId.Value);
-        }
-
-        if (filter.PartId.HasValue)
-        {
-            dbFilter &= Filter.EqOrNull(x => x.Key.PartId, filter.PartId.Value);
-        }
-
-        return dbFilter;
+        return filterDefinition;
     }
 }

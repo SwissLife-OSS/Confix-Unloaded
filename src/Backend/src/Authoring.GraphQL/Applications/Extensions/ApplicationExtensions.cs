@@ -10,7 +10,10 @@ public sealed class ApplicationExtensions
         [Parent] Application application,
         CancellationToken cancellationToken)
     {
-        return await service.GetValuesByApplicationAsync(application.Id, cancellationToken);
+        return await service.GetValuesAsync(
+            null,
+            new[] { new ApplicationVariableValueScope(null, application.Id) },
+            cancellationToken);
     }
 
     public async Task<IEnumerable<ChangeLog>> GetChangeLogAsync(

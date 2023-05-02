@@ -10,20 +10,19 @@ public sealed class VariableValueChange : IVariableChange
     public VariableValueChange(
         Guid variableId,
         int variableVersion,
-        VariableKey key,
-        string? value,
+        VariableValueScope scope,
+        Guid? environmentId,
         EncryptedValue? encryptedValue)
     {
         VariableId = variableId;
         VariableVersion = variableVersion;
-        Key = key;
-        Value = value;
         EncryptedValue = encryptedValue;
+        Scope = scope;
     }
 
-    public VariableKey Key { get; init; }
+    public VariableValueScope Scope { get; init; }
 
-    public string? Value { get; init; }
+    public Guid? EnvironmentId { get; init; }
 
     public EncryptedValue? EncryptedValue { get; init; }
 

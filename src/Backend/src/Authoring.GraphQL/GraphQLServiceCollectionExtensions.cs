@@ -2,7 +2,11 @@ using System.Diagnostics;
 using HotChocolate.Diagnostics;
 using HotChocolate.Execution;
 using HotChocolate.Execution.Configuration;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using AuthorizeAttribute = HotChocolate.Authorization.AuthorizeAttribute;
+using RequestDelegate = HotChocolate.Execution.RequestDelegate;
 
 namespace Confix.Authoring.GraphQL;
 
@@ -45,7 +49,8 @@ public static class GraphQlServiceCollectionExtensions
                 o.Scopes = ActivityScopes.Default;
             })
             .AddDiagnosticEventListener<ErrorLoggingDiagnosticEventListener>()
-            .ConfigureSchemaServices(x => x.AddSingleton<IReadStoredQueries, RelayResourceManifestQueryStorage>())
+            .ConfigureSchemaServices(x
+                => x.AddSingleton<IReadStoredQueries, RelayResourceManifestQueryStorage>())
             .ModifyOptions(x =>
             {
                 x.EnableFlagEnums = true;

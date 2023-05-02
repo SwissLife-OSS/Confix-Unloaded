@@ -5,12 +5,11 @@ public interface IVariableValueStore
     Task DeleteAsync(Guid id, CancellationToken cancellationToken);
 
     Task<IEnumerable<VariableValue>> GetByFilterAsync(
-        VariableValueFilter filter,
+        IEnumerable<Guid>? ids,
+        IEnumerable<VariableValueScope>? filter,
         CancellationToken cancellationToken);
 
     Task<VariableValue> GetByIdAsync(Guid id, CancellationToken cancellationToken);
-
-    Task<VariableValue?> GetByKeyAsync(VariableKey key, CancellationToken cancellationToken);
 
     Task<IEnumerable<VariableValue>> GetManyAsync(
         IEnumerable<Guid> ids,

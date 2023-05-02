@@ -11,14 +11,11 @@ namespace Confix.Authoring;
 
 internal sealed class VariableService : IVariableService
 {
-    private readonly IApplicationDataLoader _applicationById;
-    private readonly IApplicationByPartIdDataLoader _applicationByPartId;
     private readonly IAuthorizationService _authorizationService;
+    private readonly IVariableDataLoader _variableById;
     private readonly IChangeLogService _changeLogService;
-    private readonly IDecryptor _decryptor;
     private readonly IEncryptor _encryptor;
     private readonly ISessionAccessor _sessionAccessor;
-    private readonly IVariableDataLoader _variableById;
     private readonly IVariableStore _variableStore;
     private readonly IVariableValueStore _variableValueStore;
 
@@ -27,22 +24,16 @@ internal sealed class VariableService : IVariableService
         IVariableValueStore variableValueStore,
         IChangeLogService changeLogService,
         IEncryptor encryptor,
-        IDecryptor decryptor,
         IAuthorizationService authorizationService,
         ISessionAccessor sessionAccessor,
-        IApplicationByPartIdDataLoader applicationByPartId,
-        IApplicationDataLoader applicationById,
         IVariableDataLoader variableById)
     {
         _variableStore = variableStore;
         _variableValueStore = variableValueStore;
         _changeLogService = changeLogService;
         _encryptor = encryptor;
-        _decryptor = decryptor;
         _authorizationService = authorizationService;
         _sessionAccessor = sessionAccessor;
-        _applicationByPartId = applicationByPartId;
-        _applicationById = applicationById;
         _variableById = variableById;
     }
 
@@ -50,10 +41,12 @@ internal sealed class VariableService : IVariableService
         string name,
         string @namespace,
         bool isSecret,
+        VariableValueScope scope,
         string? defaultValue,
         CancellationToken cancellationToken)
     {
-        Variable variable = new(Guid.NewGuid(), VariableState.Active, name, isSecret, @namespace);
+        Variable variable =
+            new(Guid.NewGuid(), VariableState.Active, name, isSecret, @namespace);
 
         if (!await _authorizationService
                 .RuleFor<Variable>()
@@ -73,6 +66,7 @@ internal sealed class VariableService : IVariableService
                 await _changeLogService.CreateAsync(log, cancellationToken);
                 await SaveVariableValueAsync(
                     variable,
+                    scope,
                     defaultValue,
                     cancellationToken: cancellationToken);
 
@@ -81,26 +75,6 @@ internal sealed class VariableService : IVariableService
         }
 
         return variable;
-    }
-
-    public async Task<IEnumerable<Variable>> GetAllAsync(CancellationToken cancellationToken)
-    {
-        var session = await _sessionAccessor.GetSession(cancellationToken);
-
-        if (session is null)
-        {
-            return Array.Empty<Variable>();
-        }
-
-        return await _variableStore.GetAllByNamespacesAsync(session.Namespaces, cancellationToken);
-    }
-
-    // TODO move this out of the service into some kind of provider
-    public async Task<IEnumerable<Variable?>> GetByNamesAsync(
-        IEnumerable<string> names,
-        CancellationToken cancellationToken)
-    {
-        return await _variableStore.GetByNamesAsync(names, cancellationToken);
     }
 
     public async Task<IQueryable<Variable>> SearchVariables(
@@ -138,10 +112,7 @@ internal sealed class VariableService : IVariableService
     public async Task<VariableValue> SaveValueAsync(
         Guid variableId,
         string value,
-        Guid? valueId = null,
-        Guid? applicationId = null,
-        Guid? partId = null,
-        Guid? environmentId = null,
+        VariableValueScope scope,
         CancellationToken cancellationToken = default)
     {
         var variable = await GetByIdAsync(variableId, cancellationToken);
@@ -153,149 +124,44 @@ internal sealed class VariableService : IVariableService
             throw new UnauthorizedOperationException();
         }
 
-        return await SaveVariableValueAsync(
-            variable,
-            value,
-            valueId,
-            applicationId,
-            partId,
-            environmentId,
-            cancellationToken);
+        return await SaveVariableValueAsync(variable!, scope, value, cancellationToken);
     }
 
     public async Task<IEnumerable<VariableValue>> GetValuesAsync(
-        VariableValueFilter filter,
-        bool decrypt,
+        IEnumerable<Guid>? variableIds,
+        IEnumerable<VariableValueScope>? filter,
         CancellationToken cancellationToken)
     {
-        var variable = await _variableStore.GetByIdAsync(filter.Id, cancellationToken);
+        await _authorizationService.EnsureAuthenticated(cancellationToken);
 
-        if (!await _authorizationService
-                .RuleFor<Variable>()
-                .IsAuthorizedAsync(variable, Read, cancellationToken))
+        // TODO add namespace filter if there are no filters provided &
+        // verify namespace filter when provided
+        var values =
+            await _variableValueStore.GetByFilterAsync(variableIds, filter, cancellationToken);
+
+        // prefetch variables for authorization (TODO: we have to prefetch more (apps => namespaces))
+        await _variableById
+            .LoadAsync(values.Select(x => x.VariableId).Distinct(), cancellationToken);
+
+        var result = new List<VariableValue>();
+        foreach (var value in values)
         {
-            return Array.Empty<VariableValue>();
-        }
-
-        return await GetValuesAsync(variable!, filter, decrypt, cancellationToken);
-    }
-
-    public async Task<IEnumerable<VariableValue>> GetValuesByApplicationPartAsync(
-        Guid applicationPartId,
-        CancellationToken cancellationToken)
-    {
-        var applicationPart = _applicationByPartId.LoadAsync(applicationPartId, cancellationToken);
-
-        if (!await _authorizationService
-                .RuleFor<Variable>()
-                .IsAuthorizedFromAsync(applicationPart, Read, cancellationToken))
-        {
-            return Array.Empty<VariableValue>();
-        }
-
-        return await _variableStore.GetByApplicationPartIdAsync(
-            applicationPartId,
-            cancellationToken);
-    }
-
-    public async Task<IEnumerable<VariableValue>> GetValuesByApplicationAsync(
-        Guid applicationId,
-        CancellationToken cancellationToken)
-    {
-        var applicationPart = _applicationById.LoadAsync(applicationId, cancellationToken);
-
-        if (!await _authorizationService
-                .RuleFor<Variable>()
-                .IsAuthorizedFromAsync(applicationPart, Read, cancellationToken))
-        {
-            return Array.Empty<VariableValue>();
-        }
-
-        return await _variableStore.GetByApplicationIdAsync(applicationId, cancellationToken);
-    }
-
-    public async Task<IEnumerable<VariableValue>> GetGlobalValues(
-        CancellationToken cancellationToken)
-    {
-        // ReSharper disable method PossibleMultipleEnumeration
-        var session = await _sessionAccessor.GetSession(cancellationToken);
-
-        if (session is null)
-        {
-            return Array.Empty<VariableValue>();
-        }
-
-        var values = await _variableStore.GetGlobalVariableValue(cancellationToken);
-        var variableIds = values.Select(x => x.Key.VariableId).ToHashSet();
-
-        var rule = _authorizationService.RuleFor<VariableValue>();
-
-        var variables = await _variableById.LoadAsync(variableIds, cancellationToken)
-            .ToAsyncEnumerable()
-            .SelectMany(x => x.ToAsyncEnumerable())
-            .OfType<Variable>()
-            .SelectAwait(SelectVariableAndPermissions)
-            .Where(x => x.IsAuthorized)
-            .Select(x => x.Variable)
-            .Distinct()
-            .ToDictionaryAsync(x => x.Id, cancellationToken);
-
-        return values.Where(x => variables.ContainsKey(x.Key.VariableId)).ToList();
-
-        async ValueTask<(Variable Variable, bool IsAuthorized)> SelectVariableAndPermissions(
-            Variable variable)
-        {
-            return (variable, await rule.IsAuthorizedFromAsync(variable, Read, cancellationToken));
-        }
-    }
-
-    public async Task<IEnumerable<VariableValue>> GetValuesAsync(
-        Variable variable,
-        VariableValueFilter filter,
-        bool decrypt,
-        CancellationToken cancellationToken)
-    {
-        if (!await _authorizationService
-                .RuleFor<Variable>()
-                .IsAuthorizedAsync(variable, Read, cancellationToken))
-        {
-            return Array.Empty<VariableValue>();
-        }
-
-        var values = await _variableValueStore.GetByFilterAsync(filter, cancellationToken);
-
-        if (variable.IsSecret)
-        {
-            if (decrypt &&
-                await _authorizationService
-                    .RuleFor<Variable>()
-                    .IsAuthorizedAsync(variable, Decrypt, cancellationToken))
+            if (await _authorizationService
+                    .RuleFor<VariableValue>()
+                    .IsAuthorizedAsync(value, Read, cancellationToken))
             {
-                values = await values
-                    .ToAsyncEnumerable()
-                    .SelectAwait(
-                        async value => value with
-                        {
-                            Value = await _decryptor.DecryptAsync(
-                                value.EncryptedValue!,
-                                cancellationToken)
-                        })
-                    .ToArrayAsync(cancellationToken);
-            }
-            else
-            {
-                values = values.Select(x => x with { Value = "[redacted]" });
+                result.Add(value);
             }
         }
 
-        return values;
+        return result;
     }
 
     public async Task<VariableValue> DeleteValueAsync(Guid id, CancellationToken cancellationToken)
     {
         var value = await _variableValueStore.GetByIdAsync(id, cancellationToken);
 
-        var variable = await _variableStore.GetByIdAsync(value.Key.VariableId, cancellationToken);
+        var variable = await _variableStore.GetByIdAsync(value.VariableId, cancellationToken);
 
         if (!await _authorizationService
                 .RuleFor<Variable>()
@@ -306,7 +172,7 @@ internal sealed class VariableService : IVariableService
 
         variable = variable! with { Version = variable.Version + 1 };
 
-        var log = new DeleteVariableValueChange(variable.Id, variable.Version, value, value.Key);
+        var log = new DeleteVariableValueChange(variable.Id, variable.Version, value);
 
         using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
         {
@@ -350,49 +216,31 @@ internal sealed class VariableService : IVariableService
     }
 
     private async Task<VariableValue> SaveVariableValueAsync(
-        Variable? variable,
+        Variable variable,
+        VariableValueScope scope,
         string value,
-        Guid? valueId = null,
-        Guid? applicationId = null,
-        Guid? partId = null,
-        Guid? environmentId = null,
         CancellationToken cancellationToken = default)
     {
-        VariableValue? variableValue = null;
+        var variables = await _variableValueStore.GetByFilterAsync(
+            new[] { variable.Id },
+            new[] { scope },
+            cancellationToken);
 
-        if (valueId is not null)
-        {
-            variableValue =
-                await _variableValueStore.GetByIdAsync(valueId.Value, cancellationToken);
-        }
+        var variableValue = variables.SingleOrDefault() ??
+            new VariableValue(Guid.NewGuid(), scope, null, 0);
 
-        variableValue ??= new VariableValue(
-            Guid.NewGuid(),
-            new VariableKey(variable!.Id, applicationId, partId, environmentId),
-            string.Empty,
-            null,
-            0);
+        const string topic = "variable";
 
-        if (variable!.IsSecret)
-        {
-            var encrypted = await _encryptor.EncryptAsync(
-                "variable",
-                value,
-                environmentId ?? Guid.Empty,
-                cancellationToken);
+        var encrypted = await _encryptor
+            .EncryptAsync(topic, value, scope.EnvironmentId ?? Guid.Empty, cancellationToken);
 
-            variableValue = variableValue with { EncryptedValue = encrypted };
-        }
-        else
-        {
-            variableValue = variableValue with { Value = value };
-        }
+        variableValue = variableValue with { EncryptedValue = encrypted };
 
         var log = new VariableValueChange(
             variable.Id,
             variable.Version,
-            variableValue.Key,
-            variableValue.Value,
+            scope,
+            scope.EnvironmentId,
             variableValue.EncryptedValue);
 
         using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))

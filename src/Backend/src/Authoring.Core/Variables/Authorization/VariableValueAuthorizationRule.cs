@@ -1,5 +1,6 @@
 using Confix.Authentication.Authorization;
 using Confix.Authoring.Store;
+using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring.Variables;
 
@@ -23,7 +24,7 @@ internal sealed class VariableValueAuthorizationRule : AuthorizationRule<Variabl
         Permissions permissions,
         CancellationToken cancellationToken)
     {
-        var variable = await _variableById.LoadAsync(resource.Key.VariableId, cancellationToken);
+        var variable = await _variableById.LoadAsync(resource.VariableId, cancellationToken);
 
         return await _authorizationService
             .RuleFor<Variable>()

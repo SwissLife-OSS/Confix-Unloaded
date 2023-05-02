@@ -11,7 +11,10 @@ public sealed class ApplicationPartExtensions
         [Parent] ApplicationPart applicationPart,
         CancellationToken cancellationToken)
     {
-        return await service.GetValuesByApplicationPartAsync(applicationPart.Id, cancellationToken);
+        return await service.GetValuesAsync(
+            null,
+            new[] { new ApplicationPartVariableValueScope(null, applicationPart.Id) },
+            cancellationToken);
     }
 
     public async Task<IEnumerable<ChangeLog>> GetChangeLogAsync(
