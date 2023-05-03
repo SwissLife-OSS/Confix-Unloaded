@@ -1,14 +1,16 @@
-import React, { ReactNode, Suspense } from "react";
-import { RelayEnvironmentProvider } from "react-relay";
-import RelayEnvironment from "../RelayEnvironment";
-import { BrowserRouter } from "react-router-dom";
-import { PageLoader } from "./DetailView";
-import { css } from "@emotion/react";
-import "antd/dist/antd.variable.min.css";
-import { Alert, ConfigProvider } from "antd";
-import { isNotLoggedInError } from "./useUser";
-import { config } from "../config";
-import { Colors } from "./colors";
+import 'antd/dist/antd.variable.min.css';
+
+import {Alert, ConfigProvider} from 'antd';
+import React, {ReactNode, Suspense} from 'react';
+
+import {BrowserRouter} from 'react-router-dom';
+import {Colors} from './colors';
+import {PageLoader} from './DetailView';
+import RelayEnvironment from '../RelayEnvironment';
+import {RelayEnvironmentProvider} from 'react-relay';
+import {UserContextProvider} from './UserContext';
+import {config} from '../config';
+import {css} from '@emotion/react';
 
 ConfigProvider.config({
   theme: {
@@ -16,13 +18,15 @@ ConfigProvider.config({
   },
 });
 
-export const Wrapper: React.FC<{ children: ReactNode }> = ({ children }) => (
+export const Wrapper: React.FC<{children: ReactNode}> = ({children}) => (
   <React.StrictMode>
     <BrowserRouter>
       <RelayEnvironmentProvider environment={RelayEnvironment}>
         <ConfigProvider>
           <RootErrorBoundary>
-            <Suspense fallback={<FullPageLoader />}>{children}</Suspense>
+            <Suspense fallback={<FullPageLoader />}>
+              <UserContextProvider>{children}</UserContextProvider>
+            </Suspense>
           </RootErrorBoundary>
         </ConfigProvider>
       </RelayEnvironmentProvider>
@@ -30,7 +34,7 @@ export const Wrapper: React.FC<{ children: ReactNode }> = ({ children }) => (
   </React.StrictMode>
 );
 
-export const FullPageLoader: React.FC<{ message?: string }> = ({ message }) => (
+export const FullPageLoader: React.FC<{message?: string}> = ({message}) => (
   <div
     css={css`
       height: 100vh;
@@ -47,9 +51,8 @@ interface RootErrorBoundaryProps {
 }
 
 type RootErrorBoundaryState =
-  | { kind: "clear" }
-  | { kind: "requires-sign-in" }
-  | { kind: "error"; error: { message?: string } };
+  | {kind: 'clear'}
+  | {kind: 'error'; error: {message?: string}};
 
 export class RootErrorBoundary extends React.Component<
   RootErrorBoundaryProps,
@@ -57,36 +60,24 @@ export class RootErrorBoundary extends React.Component<
 > {
   constructor(props: RootErrorBoundaryProps) {
     super(props);
-    this.state = { kind: "clear" };
+    this.state = {kind: 'clear'};
   }
 
   static getDerivedStateFromError(error: Error): RootErrorBoundaryState {
-    const { message } = error;
-
-    if (isNotLoggedInError(error)) {
-      return { kind: "requires-sign-in" };
-    }
-
-    return { kind: "error", error: { message } };
+    return {kind: 'error', error};
   }
   render() {
     switch (this.state.kind) {
-      case "clear":
+      case 'clear':
         return this.props.children;
-      case "error":
+      case 'error':
         return (
           <Alert
             message="Oops, there was an error"
-            description={this.state.error.message ?? "No description provided"}
+            description={this.state.error.message ?? 'No description provided'}
             type="error"
           />
         );
-      case "requires-sign-in":
-        window.location.href =
-          config.identity.signInPath +
-          "?returnUrl=" +
-          encodeURI(window.location.href.replace(window.location.origin, ""));
-        return <FullPageLoader message={"Authenticating ... "} />;
     }
   }
 }

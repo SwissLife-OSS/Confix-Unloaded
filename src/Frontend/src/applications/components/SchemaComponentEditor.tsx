@@ -1,20 +1,20 @@
-import styled from "@emotion/styled";
-import { Colors } from "../../shared/colors";
-import React, { useCallback } from "react";
-import { css } from "@emotion/react";
-import { Button } from "antd";
-import { sdlToJsonSchema } from "./buildJsonSchema";
-import { useDelay } from "../../shared/useDelay";
-import { noop } from "../../shared/noop";
+import styled from '@emotion/styled';
+import {Colors} from '../../shared/colors';
+import React, {useCallback} from 'react';
+import {css} from '@emotion/react';
+import {Button} from 'antd';
+import {sdlToJsonSchema} from './buildJsonSchema';
+import {useDelay} from '../../shared/useDelay';
+import {noop} from '../../shared/noop';
 import {
   SchemaEditor,
   useSchemaEditorRef,
-} from "../../shared/editor/SchemaEditor";
+} from '../../shared/editor/SchemaEditor';
 import {
   ComponentValueEditor,
   useComponentValueEditorRef,
-} from "../../shared/editor/ComponentEditor";
-import { useHandler } from "../../shared/useHandler";
+} from '../../shared/editor/ComponentEditor';
+import {useHandler} from '../../shared/useHandler';
 
 export const SchemaComponentEditor: React.FC<{
   onValuesChanged?: (values?: Record<string, any>) => void;
@@ -40,14 +40,14 @@ export const SchemaComponentEditor: React.FC<{
       const schema = value && sdlToJsonSchema(value, variables);
       schema && valueEditor.setSchema(schema);
     },
-    [valueEditor, variables]
+    [valueEditor, variables],
   );
 
-  const handleSchemaChange = useHandler<typeof SchemaEditor, "onChange">(
+  const handleSchemaChange = useHandler<typeof SchemaEditor, 'onChange'>(
     (value: string | undefined) => {
       onSchemaChange(value);
       updateSchema(value);
-    }
+    },
   );
 
   useDelay(() => {
@@ -56,7 +56,7 @@ export const SchemaComponentEditor: React.FC<{
 
   const handleComponentValueChange = useHandler<
     typeof ComponentValueEditor,
-    "onChange"
+    'onChange'
   >((value: string | undefined) => {
     try {
       if (!value) {
@@ -73,7 +73,7 @@ export const SchemaComponentEditor: React.FC<{
     <Wrapper>
       <div>
         <Header
-          title={"Values"}
+          title={'Values'}
           actions={[<Button onClick={valueEditor.format}>Format</Button>]}
         />
         <ComponentValueEditor
@@ -84,7 +84,7 @@ export const SchemaComponentEditor: React.FC<{
       </div>
       <div>
         <Header
-          title={"Schema"}
+          title={'Schema'}
           actions={
             editSchema
               ? [
@@ -106,7 +106,7 @@ export const SchemaComponentEditor: React.FC<{
   );
 };
 
-const Header: React.FC<{ title: string; actions?: React.ReactNode[] }> = ({
+const Header: React.FC<{title: string; actions?: React.ReactNode[]}> = ({
   title,
   actions,
 }) => {
@@ -127,7 +127,7 @@ const Header: React.FC<{ title: string; actions?: React.ReactNode[] }> = ({
   );
 };
 
-const Wrapper = styled("div")`
+const Wrapper = styled('div')`
   display: flex;
   flex-direction: row;
   flex: 1;

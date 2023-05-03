@@ -1,7 +1,7 @@
-import React from "react";
-import { useCallback, useRef } from "react";
+import React from 'react';
+import {useCallback, useRef} from 'react';
 
-type ExtractProps<T extends React.FC<any>> = Parameters<T>["0"];
+type ExtractProps<T extends React.FC<any>> = Parameters<T>['0'];
 type ExtractClassProps<T extends React.Component<any, any>> =
   T extends React.Component<infer X> ? X : never;
 
@@ -29,7 +29,7 @@ type HandlerProperty<T extends ComponentOrList> =
 
 type Handler<
   T extends ComponentOrList,
-  TProp extends HandlerProperty<T>
+  TProp extends HandlerProperty<T>,
 > = T extends keyof JSX.IntrinsicElements
   ? TProp extends keyof JSX.IntrinsicElements[T]
     ? JSX.IntrinsicElements[T][TProp]
@@ -47,9 +47,9 @@ type Handler<
 export const useHandler = <
   T extends ComponentOrList,
   TProp extends HandlerProperty<T>,
-  THandler extends Handler<T, TProp> = Handler<T, TProp>
+  THandler extends Handler<T, TProp> = Handler<T, TProp>,
 >(
-  callback: THandler
+  callback: THandler,
 ): THandler => {
   const ref = useRef<THandler>(callback);
   ref.current = callback;

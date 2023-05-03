@@ -1,24 +1,24 @@
-import * as React from "react";
+import * as React from 'react';
 
 import {
   pipeCommitFn,
   withErrorNotifications,
   withOnSuccess,
   withSuccessMessage,
-} from "../../shared/pipeCommitFn";
+} from '../../shared/pipeCommitFn';
 
-import { Modal } from "antd";
-import { PublishApplicationPartDialogMutation } from "@generated/PublishApplicationPartDialogMutation.graphql";
-import { graphql } from "babel-plugin-relay/macro";
-import { useCallback } from "react";
-import { useMutation } from "react-relay";
+import {Modal} from 'antd';
+import {PublishApplicationPartDialogMutation} from '@generated/PublishApplicationPartDialogMutation.graphql';
+import {graphql} from 'babel-plugin-relay/macro';
+import {useCallback} from 'react';
+import {useMutation} from 'react-relay';
 
 export const PublishApplicationPartDialog: React.FC<{
   open: boolean;
   onClose: () => void;
   applicationPartName: string;
   applicationPartId: string;
-}> = ({ open, applicationPartId, applicationPartName, onClose }) => {
+}> = ({open, applicationPartId, applicationPartName, onClose}) => {
   const [commit, isInFlight] =
     useMutation<PublishApplicationPartDialogMutation>(
       graphql`
@@ -39,23 +39,23 @@ export const PublishApplicationPartDialog: React.FC<{
             }
           }
         }
-      `
+      `,
     );
 
   const handlePublish = useCallback(() => {
     pipeCommitFn(commit, [
       withSuccessMessage(
         (x) => x.publishApplicationPartById.publishedApplicationPart?.id,
-        `Published ${applicationPartName}`
+        `Published ${applicationPartName}`,
       ),
       withErrorNotifications((x) => x.publishApplicationPartById.errors),
       withOnSuccess(
         (x) => x.publishApplicationPartById.publishedApplicationPart?.id,
-        onClose
+        onClose,
       ),
     ])({
       variables: {
-        input: { applicationPartId },
+        input: {applicationPartId},
       },
     });
   }, [commit, onClose, applicationPartId, applicationPartName]);

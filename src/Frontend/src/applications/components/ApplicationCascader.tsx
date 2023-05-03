@@ -1,16 +1,16 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { useCallback, useMemo } from "react";
-import { useFragment, useRefetchableFragment } from "react-relay";
+import {useCallback, useMemo} from 'react';
+import {useFragment, useRefetchableFragment} from 'react-relay';
 
-import { ApplicationCascader$key } from "@generated/ApplicationCascader.graphql";
-import { ApplicationCascader_ApplicationPagination_Query } from "@generated/ApplicationCascader_ApplicationPagination_Query.graphql";
-import { ApplicationCascader_Applications$key } from "@generated/ApplicationCascader_Applications.graphql";
-import { ApplicationCascader_Namespaces$key } from "@generated/ApplicationCascader_Namespaces.graphql";
-import { Cascader } from "antd";
-import { DefaultOptionType } from "antd/lib/cascader";
-import { MultipleCascaderProps } from "rc-cascader/lib/Cascader";
-import { graphql } from "babel-plugin-relay/macro";
+import {ApplicationCascader$key} from '@generated/ApplicationCascader.graphql';
+import {ApplicationCascader_ApplicationPagination_Query} from '@generated/ApplicationCascader_ApplicationPagination_Query.graphql';
+import {ApplicationCascader_Applications$key} from '@generated/ApplicationCascader_Applications.graphql';
+import {Cascader} from 'antd';
+import {DefaultOptionType} from 'antd/lib/cascader';
+import {MultipleCascaderProps} from 'rc-cascader/lib/Cascader';
+import {graphql} from 'babel-plugin-relay/macro';
+import {useUser} from '../../shared/UserContext';
 
 type Result = [string] | [string, string] | [string, string, string];
 
@@ -18,25 +18,26 @@ export const ApplicationCascader: React.FC<{
   onChange: (option: Result[]) => void;
   value: Result[];
   fragmentRef: ApplicationCascader$key;
-}> = ({ onChange, value, fragmentRef }) => {
+}> = ({onChange, value, fragmentRef}) => {
+  const {componentNamespaces} = useUser();
   const data = useFragment(
     graphql`
       fragment ApplicationCascader on Query
-      @argumentDefinitions(search: { type: "String" }) {
-        ...ApplicationCascader_Namespaces
+      @argumentDefinitions(search: {type: "String"}) {
         ...ApplicationCascader_Applications @arguments(search: $search)
       }
     `,
-    fragmentRef
+    fragmentRef,
   );
-  const [{ applications }] = useRefetchableFragment<
+
+  const [{applications}] = useRefetchableFragment<
     ApplicationCascader_ApplicationPagination_Query,
     ApplicationCascader_Applications$key
   >(
     graphql`
       fragment ApplicationCascader_Applications on Query
       @refetchable(queryName: "ApplicationCascader_ApplicationPagination_Query")
-      @argumentDefinitions(search: { type: "String" }) {
+      @argumentDefinitions(search: {type: "String"}) {
         applications(first: 50, search: $search) {
           edges {
             node {
@@ -52,18 +53,7 @@ export const ApplicationCascader: React.FC<{
         }
       }
     `,
-    data
-  );
-
-  const { me } = useFragment<ApplicationCascader_Namespaces$key>(
-    graphql`
-      fragment ApplicationCascader_Namespaces on Query {
-        me {
-          namespaces
-        }
-      }
-    `,
-    data
+    data,
   );
 
   const options = useMemo<DefaultOptionType[]>(() => {
@@ -75,10 +65,10 @@ export const ApplicationCascader: React.FC<{
       const namespaceApps = acc[namespace] ?? [];
       namespaceApps.push({
         value: app.id,
-        label: "App: " + app.name,
+        label: 'App: ' + app.name,
         children: app.parts.map((part) => ({
           value: part.id,
-          label: "Part: " + part.name,
+          label: 'Part: ' + part.name,
         })),
       });
       acc[namespace] = namespaceApps;
@@ -87,34 +77,34 @@ export const ApplicationCascader: React.FC<{
 
     const namespaces = new Set<string>([
       ...Object.keys(applicationsByNamespace ?? {}),
-      ...(me?.namespaces ?? []),
+      ...(componentNamespaces.map(({namespace}) => namespace) ?? []),
     ]);
 
     return Array.from(namespaces).map((namespace) => ({
       value: namespace,
-      label: "Namespace: " + namespace,
+      label: 'Namespace: ' + namespace,
       children: applicationsByNamespace?.[namespace],
     }));
-  }, [applications, me]);
+  }, [applications, componentNamespaces]);
 
   const handleCascaderChange = useCallback<
-    NonNullable<MultipleCascaderProps<typeof options[0]>["onChange"]>
+    NonNullable<MultipleCascaderProps<typeof options[0]>['onChange']>
   >(
     (value, selectedOptions) => {
       onChange(
         selectedOptions
           .map((option) => {
-            return option.map((option) => option.value?.toString() ?? "");
+            return option.map((option) => option.value?.toString() ?? '');
           })
-          .filter((option) => !!option) as Result[]
+          .filter((option) => !!option) as Result[],
       );
     },
-    [onChange]
+    [onChange],
   );
 
   return (
     <Cascader
-      style={{ width: "100%" }}
+      style={{width: '100%'}}
       options={options}
       multiple
       onChange={handleCascaderChange}

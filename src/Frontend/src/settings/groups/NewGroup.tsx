@@ -1,19 +1,19 @@
-import { Button, Col, Row } from "antd";
-import { FormActions, FormField } from "../../shared/FormField";
+import {Button, Col, Row} from 'antd';
+import {FormActions, FormField} from '../../shared/FormField';
 import {
   withErrorNotifications,
   withOnSuccess,
   withSuccessMessage,
-} from "../../shared/pipeCommitFn";
+} from '../../shared/pipeCommitFn';
 
-import { DetailView } from "../../shared/DetailView";
-import { NewGroupMutation } from "@generated/NewGroupMutation.graphql";
-import React from "react";
-import { graphql } from "babel-plugin-relay/macro";
-import { useCommitForm } from "../../shared/useCommitForm";
-import { useConnectionId } from "../../shared/useConnectionId";
-import { useGoTo } from "../../shared/useGoTo";
-import { useMutation } from "react-relay";
+import {DetailView} from '../../shared/DetailView';
+import {NewGroupMutation} from '@generated/NewGroupMutation.graphql';
+import React from 'react';
+import {graphql} from 'babel-plugin-relay/macro';
+import {useCommitForm} from '../../shared/useCommitForm';
+import {useConnectionId} from '../../shared/useConnectionId';
+import {useGoTo} from '../../shared/useGoTo';
+import {useMutation} from 'react-relay';
 
 export const NewGroup: React.FC = () => {
   const [commit, isInFlight] = useMutation<NewGroupMutation>(graphql`
@@ -38,8 +38,8 @@ export const NewGroup: React.FC = () => {
   `);
 
   const connectionIds = [
-    useConnectionId("useGroups_searchGroups"),
-    useConnectionId("Query_searchGroups"),
+    useConnectionId('useGroups_searchGroups'),
+    useConnectionId('Query_searchGroups'),
   ];
 
   const goToEdit = useGoTo((id: string) => `${id}/edit`);
@@ -47,22 +47,22 @@ export const NewGroup: React.FC = () => {
   const form = useCommitForm(
     commit,
     {
-      name: "",
+      name: '',
       requirements: [],
       roles: [],
     },
-    (input) => ({ input, connectionIds }),
+    (input) => ({input, connectionIds}),
     {
       pipes: [
         withErrorNotifications((x) => x.createGroup?.errors),
         withOnSuccess((x) => x.createGroup.group?.id, goToEdit),
-        withSuccessMessage((x) => x.createGroup.group?.id, "Group Created"),
+        withSuccessMessage((x) => x.createGroup.group?.id, 'Group Created'),
       ],
-    }
+    },
   );
 
   return (
-    <DetailView style={{ padding: 1 }}>
+    <DetailView style={{padding: 1}}>
       <Row>
         <Col xs={24}>
           <h2>New Group</h2>

@@ -1,11 +1,11 @@
-import { Collapse, notification } from "antd";
-import { PayloadError } from "relay-runtime";
+import {Collapse, notification} from 'antd';
+import {PayloadError} from 'relay-runtime';
 
 export type CommitErrors =
   | Error
   | PayloadError[]
   | SyntaxError
-  | readonly { readonly message?: String | null | undefined }[]
+  | readonly {readonly message?: String | null | undefined}[]
   | undefined
   | null;
 
@@ -13,7 +13,7 @@ export const reportError = (error: CommitErrors) => {
   if (error instanceof SyntaxError) {
   } else if (error instanceof Error) {
     notification.error({
-      message: "There was a fatal error",
+      message: 'There was a fatal error',
       description: (
         <Collapse ghost>
           <Collapse.Panel header="See details" key="1">
@@ -26,7 +26,7 @@ export const reportError = (error: CommitErrors) => {
     for (var err of error) {
       if (err.message) {
         notification.error({
-          message: "There was a error in your mutation",
+          message: 'There was a error in your mutation',
           description: (
             <Collapse ghost>
               <Collapse.Panel header="See details" key="1">

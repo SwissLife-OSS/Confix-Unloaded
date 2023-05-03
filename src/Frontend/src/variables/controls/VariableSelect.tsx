@@ -1,10 +1,10 @@
-import { Select, SelectProps, Spin } from "antd";
-import { fetchQuery, useRelayEnvironment } from "react-relay";
-import { useCallback, useEffect, useState } from "react";
+import {Select, SelectProps, Spin} from 'antd';
+import {fetchQuery, useRelayEnvironment} from 'react-relay';
+import {useCallback, useEffect, useState} from 'react';
 
-import { VariableSelectQuery } from "@generated/VariableSelectQuery.graphql";
-import { graphql } from "babel-plugin-relay/macro";
-import { useDebounce } from "../../shared/debounce";
+import {VariableSelectQuery} from '@generated/VariableSelectQuery.graphql';
+import {graphql} from 'babel-plugin-relay/macro';
+import {useDebounce} from '../../shared/debounce';
 
 const searchVariables = graphql`
   query VariableSelectQuery($search: String) {
@@ -19,13 +19,13 @@ const searchVariables = graphql`
   }
 `;
 
-export type VariableOption = { label: string; value: string };
+export type VariableOption = {label: string; value: string};
 
 export const VariablesSelect: React.FC<
   {
     onChange: (selected: VariableOption) => void;
   } & SelectProps<any>
-> = ({ onChange, ...props }) => {
+> = ({onChange, ...props}) => {
   const [value, setValue] = useState<VariableOption[]>([]);
   const [options, setOptions] = useState<VariableOption[]>([]);
   const [isLoading, setIsLoading] = useState(options.length === 0);
@@ -41,11 +41,11 @@ export const VariablesSelect: React.FC<
         data?.searchVariables?.edges?.map((x) => ({
           value: x.node.id,
           label: x.node.name,
-        })) ?? []
+        })) ?? [],
       );
       setIsLoading(false);
     },
-    [env]
+    [env],
   );
 
   const debouncedSearch = useDebounce((search: string) => {
@@ -56,20 +56,20 @@ export const VariablesSelect: React.FC<
     (ids: VariableOption[], t: any) => {
       onChange(t);
       setValue(ids);
-      fetchData("");
+      fetchData('');
     },
-    [onChange, setValue, fetchData]
+    [onChange, setValue, fetchData],
   );
 
   // initial data fetch
   useEffect(() => {
-    fetchData("");
+    fetchData('');
   }, [fetchData]);
 
   return (
     <Select<VariableOption[]>
       allowClear
-      style={{ width: "100%" }}
+      style={{width: '100%'}}
       value={value}
       placeholder="Please select"
       filterOption={false}

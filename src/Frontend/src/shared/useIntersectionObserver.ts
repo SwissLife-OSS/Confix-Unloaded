@@ -1,4 +1,4 @@
-import { useEffect, useState, RefObject, useRef } from "react";
+import {useEffect, useState, RefObject, useRef} from 'react';
 
 /**
  * Hook parameters.
@@ -58,7 +58,7 @@ interface IntersectionObserverOptions {
   rootMargin?: string;
 }
 
-const IS_BROWSER = typeof window !== "undefined";
+const IS_BROWSER = typeof window !== 'undefined';
 /**
  * Watch for the scrolling intersection of a React component or
  * Element.
@@ -72,7 +72,7 @@ const IS_BROWSER = typeof window !== "undefined";
 export const useIntersectionObserver = ({
   ref,
   element,
-  options = { triggerOnce: true, threshold: 0 },
+  options = {triggerOnce: true, threshold: 0},
   callback,
 }: UseIntersectionObserverProperties) => {
   const [inView, setInView] = useState(false);
@@ -105,7 +105,7 @@ export const useIntersectionObserver = ({
   };
 
   const [intersectObs] = useState(() =>
-    IS_BROWSER ? new IntersectionObserver(handleIntersect, options) : undefined
+    IS_BROWSER ? new IntersectionObserver(handleIntersect, options) : undefined,
   );
 
   useEffect(() => {

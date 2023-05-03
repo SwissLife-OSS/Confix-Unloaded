@@ -1,14 +1,16 @@
-import React from "react";
-import "./App.css";
-import { NavLink, useLocation, useRoutes } from "react-router-dom";
-import { Layout, Menu } from "antd";
-import { Content } from "antd/lib/layout/layout";
-import { css } from "@emotion/react";
-import { navigation } from "./routes";
-import { UserOutlined } from "@ant-design/icons";
-import { Colors } from "./shared/colors";
-import styled from "@emotion/styled";
-import { Namespaces, useUser } from "./shared/useUser";
+import './App.css';
+
+import {Layout, Menu} from 'antd';
+import {NavLink, useLocation, useRoutes} from 'react-router-dom';
+
+import {Colors} from './shared/colors';
+import {Content} from 'antd/lib/layout/layout';
+import React from 'react';
+import {UserOutlined} from '@ant-design/icons';
+import {css} from '@emotion/react';
+import {navigation} from './routes';
+import styled from '@emotion/styled';
+import {useUser} from './shared/UserContext';
 
 function App() {
   const [open, setOpen] = React.useState(false);
@@ -19,7 +21,7 @@ function App() {
   const routes = useRoutes(navigation);
 
   return (
-    <Layout style={{ minHeight: "100vh" }}>
+    <Layout style={{minHeight: '100vh'}}>
       <Layout.Sider collapsible collapsed={!open} onCollapse={toggleDrawer}>
         <Navigation open={open} toggleDrawer={toggleDrawer} />
       </Layout.Sider>
@@ -38,7 +40,7 @@ function App() {
   );
 }
 
-const Navigation: React.FC<{ open: boolean; toggleDrawer: () => void }> = ({
+const Navigation: React.FC<{open: boolean; toggleDrawer: () => void}> = ({
   open,
   toggleDrawer,
 }) => {
@@ -59,23 +61,15 @@ const Navigation: React.FC<{ open: boolean; toggleDrawer: () => void }> = ({
         mode="inline"
         selectedKeys={[location.pathname]}
         items={navigation
-          .filter(
-            (x) =>
-              !x.permissions ||
-              user.hasPermission(
-                x.permissions.scope,
-                Namespaces.Global,
-                x.permissions.permissions
-              )
-          )
+          .filter((x) => !x.permissions || x.permissions(user))
           .map((route) => ({
             key: route.path,
-            icon: <route.icon style={{ color: Colors.theme.primary }} />,
+            icon: <route.icon style={{color: Colors.theme.primary}} />,
             label: (
               <NavLink
                 to={route.link}
                 style={{
-                  textDecoration: "none",
+                  textDecoration: 'none',
                 }}
               >
                 {route.name}
@@ -88,7 +82,7 @@ const Navigation: React.FC<{ open: boolean; toggleDrawer: () => void }> = ({
   );
 };
 
-const User: React.FC<{ open: boolean }> = ({ open }) => {
+const User: React.FC<{open: boolean}> = ({open}) => {
   const user = useUser();
   return (
     <UserWrapper open={open}>
@@ -128,20 +122,20 @@ const User: React.FC<{ open: boolean }> = ({ open }) => {
   );
 };
 
-const UserWrapper = styled.div<{ open: boolean }>`
+const UserWrapper = styled.div<{open: boolean}>`
   display: flex;
   justify-content: center;
   text-align: center;
   flex-direction: column;
 `;
 
-const UserName = styled.span<{ open: boolean }>`
+const UserName = styled.span<{open: boolean}>`
   opacity: ${(p) => (p.open ? 1 : 0)};
   color: rgba(255, 255, 255, 0.65);
   display: inline-block;
   transition: all 0.3s, background 0.3s,
     padding 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
-  margin-bottom: ${(p) => (p.open ? "10px" : 0)};
+  margin-bottom: ${(p) => (p.open ? '10px' : 0)};
 `;
 
 export default App;

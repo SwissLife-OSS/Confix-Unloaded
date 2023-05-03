@@ -13,7 +13,7 @@ internal sealed class VariableValueStore : IVariableValueStore
         _dbContext = dbContext;
     }
 
-    public async Task<IEnumerable<VariableValue>> GetByFilterAsync(
+    public async Task<IReadOnlyList<VariableValue>> GetByFilterAsync(
         IEnumerable<Guid>? variableIds,
         IEnumerable<VariableValueScope>? filters,
         CancellationToken cancellationToken)
@@ -41,15 +41,6 @@ internal sealed class VariableValueStore : IVariableValueStore
             .AsQueryable()
             .Where(x => x.Id == id)
             .SingleAsync(cancellationToken);
-    }
-
-    public async Task<IEnumerable<VariableValue>> GetManyAsync(
-        IEnumerable<Guid> ids,
-        CancellationToken cancellationToken)
-    {
-        return await _dbContext.VariableValues.AsQueryable()
-            .Where(x => ids.Contains(x.Id))
-            .ToListAsync(cancellationToken);
     }
 
     public async Task<VariableValue> SaveAsync(

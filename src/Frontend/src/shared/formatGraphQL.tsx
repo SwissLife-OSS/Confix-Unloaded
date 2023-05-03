@@ -1,17 +1,17 @@
-import React from "react";
-import prettier from "prettier/standalone";
-import praserGraphql from "prettier/parser-graphql";
-import { Collapse, notification } from "antd";
-import { css } from "@emotion/react";
+import React from 'react';
+import prettier from 'prettier/standalone';
+import praserGraphql from 'prettier/parser-graphql';
+import {Collapse, notification} from 'antd';
+import {css} from '@emotion/react';
 
 const noop = () => {};
 export const formatGraphQL = (
   text: string,
-  onFailure: (e: Error) => void = noop
+  onFailure: (e: Error) => void = noop,
 ): string => {
   try {
     return prettier.format(text, {
-      parser: "graphql",
+      parser: 'graphql',
       plugins: [praserGraphql],
     });
   } catch (e) {
@@ -29,7 +29,7 @@ export const reportGraphQLFormatError = (e: Error) => {
           <span
             css={css`
               white-space: pre-wrap;
-              font-family: "Courier New", monospace;
+              font-family: 'Courier New', monospace;
             `}
           >
             {`${e.message}`}

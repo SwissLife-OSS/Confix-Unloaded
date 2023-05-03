@@ -87,9 +87,10 @@ internal sealed class VariableService : IVariableService
             return Array.Empty<Variable>().AsQueryable();
         }
 
+        var namespacesWithAccess = session.GetNamespacesWithAccess(Scope.Variable, Read);
         var queryable = _variableStore
             .Query()
-            .Where(x => session.Namespaces.Contains(x.Namespace));
+            .Where(x => namespacesWithAccess.Contains(x.Namespace));
 
         if (search is not null)
         {
@@ -132,16 +133,51 @@ internal sealed class VariableService : IVariableService
         IEnumerable<VariableValueScope>? filter,
         CancellationToken cancellationToken)
     {
-        await _authorizationService.EnsureAuthenticated(cancellationToken);
+        var session = await _sessionAccessor.GetSession(cancellationToken);
+        if (session is null)
+        {
+            return Array.Empty<VariableValue>();
+        }
 
-        // TODO add namespace filter if there are no filters provided &
+        // when a filter is provided, we have to verify that the user has access to the namespaces
+        // to avoid over fetching
+        if (filter is not null)
+        {
+            filter = filter.Where(x =>
+                x is not NamespaceVariableValueScope { Namespace: var @namespace } ||
+                session.HasPermission(@namespace, Scope.Variable, Read));
+        }
+
+        // when no filter is provided, we have to limit the fetch to all namespaces the user has
+        // access to
+        if (filter is null || !filter.Any())
+        {
+            var namespacesWithAccess = session.GetNamespacesWithAccess(Scope.Variable, Read);
+            filter = namespacesWithAccess.Select(x => new NamespaceVariableValueScope(null, x));
+        }
+
         // verify namespace filter when provided
         var values =
             await _variableValueStore.GetByFilterAsync(variableIds, filter, cancellationToken);
 
         // prefetch variables for authorization (TODO: we have to prefetch more (apps => namespaces))
-        await _variableById
-            .LoadAsync(values.Select(x => x.VariableId).Distinct(), cancellationToken);
+
+        variableIds ??= values.Select(x => x.VariableId).Distinct();
+        var applicationIds = values
+            .Select(x => x.Scope)
+            .OfType<ApplicationVariableValueScope>()
+            .Select(x => x.ApplicationId)
+            .Distinct();
+
+        await Task.WhenAll(
+            _variableById.LoadAsync(variableIds, cancellationToken),
+            _variableById.LoadAsync(values
+                    .Select(x => x.Scope)
+                    .OfType<ApplicationVariableValueScope>()
+                    .Select(x => x.ApplicationId)
+                    .Distinct(),
+                cancellationToken)
+        );
 
         var result = new List<VariableValue>();
         foreach (var value in values)

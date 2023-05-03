@@ -1,13 +1,13 @@
-import { css } from "@emotion/react";
-import styled from "@emotion/styled";
-import { Breadcrumb, BreadcrumbItemProps, Button } from "antd";
-import React from "react";
-import { EditIcon } from "../icons/icons";
+import {css} from '@emotion/react';
+import styled from '@emotion/styled';
+import {Breadcrumb, BreadcrumbItemProps, Button} from 'antd';
+import React from 'react';
+import {EditIcon} from '../icons/icons';
 
 const empty: any[] = [];
 const noop = () => {};
 export const EditableBreadcrumbHeader: React.FC<{
-  breadcrumbs?: Array<{ text: string } & BreadcrumbItemProps>;
+  breadcrumbs?: Array<{text: string} & BreadcrumbItemProps>;
   title: string;
   onEdit?: () => void;
   isEditable?: boolean;
@@ -24,7 +24,7 @@ export const EditableBreadcrumbHeader: React.FC<{
     <Wrapper>
       <Title>
         <Breadcrumb>
-          {breadcrumbs.map(({ text, ...props }, i) => (
+          {breadcrumbs.map(({text, ...props}, i) => (
             <Breadcrumb.Item key={i} {...props}>
               {text}
             </Breadcrumb.Item>
@@ -49,12 +49,12 @@ export const EditableBreadcrumbHeader: React.FC<{
   );
 };
 
-const Wrapper = styled("div")`
+const Wrapper = styled('div')`
   display: flex;
   justify-content: space-between;
 `;
 
-const Title = styled("div")`
+const Title = styled('div')`
   flex: 1;
   .ant-breadcrumb {
     font-size: 16px;

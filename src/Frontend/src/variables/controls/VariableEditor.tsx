@@ -1,28 +1,28 @@
-import { Button, Row, message } from "antd";
-import React, { useCallback, useEffect, useState } from "react";
+import {Button, Row, message} from 'antd';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   VariableEditorQuery,
   VariableEditorQuery$data,
-} from "@generated/VariableEditorQuery.graphql";
+} from '@generated/VariableEditorQuery.graphql';
 import {
   pipeCommitFn,
   withOnCompleted,
   withSuccessMessage,
-} from "../../shared/pipeCommitFn";
+} from '../../shared/pipeCommitFn';
 import {
   useLazyLoadQuery,
   useMutation,
   usePaginationFragment,
-} from "react-relay";
+} from 'react-relay';
 
-import { FieldInputGroup } from "../../shared/FormField";
-import { QueryOptions } from "../../shared/QueryOptions";
-import { VariableEditorDeleteVariableValueMutation } from "@generated/VariableEditorDeleteVariableValueMutation.graphql";
-import { VariableEditorSaveVariableMutation } from "@generated/VariableEditorSaveVariableMutation.graphql";
-import { VariableEditor_useEnvironments$key } from "@generated/VariableEditor_useEnvironments.graphql";
-import { VariableEditor_useEnvironmentsPaginationQuery } from "@generated/VariableEditor_useEnvironmentsPaginationQuery.graphql";
-import { graphql } from "babel-plugin-relay/macro";
-import { useStringEventHanlder } from "../../shared/useEventListener";
+import {FieldInputGroup} from '../../shared/FormField';
+import {QueryOptions} from '../../shared/QueryOptions';
+import {VariableEditorDeleteVariableValueMutation} from '@generated/VariableEditorDeleteVariableValueMutation.graphql';
+import {VariableEditorSaveVariableMutation} from '@generated/VariableEditorSaveVariableMutation.graphql';
+import {VariableEditor_useEnvironments$key} from '@generated/VariableEditor_useEnvironments.graphql';
+import {VariableEditor_useEnvironmentsPaginationQuery} from '@generated/VariableEditor_useEnvironmentsPaginationQuery.graphql';
+import {graphql} from 'babel-plugin-relay/macro';
+import {useStringEventHanlder} from '../../shared/useEventListener';
 
 const variableEditorQuery = graphql`
   query VariableEditorQuery(
@@ -78,23 +78,23 @@ export const VariableEditor: React.FC<{
       applicationId,
       applicationPartId,
     },
-    { fetchPolicy: "network-only", ...queryOptions }
+    {fetchPolicy: 'network-only', ...queryOptions},
   );
   const valueByEnv: {
-    [key: string]: VariableEditorQuery$data["variableValues"][0];
+    [key: string]: VariableEditorQuery$data['variableValues'][0];
   } = data.variableValues.reduce(
     (p, c) => ({
       ...p,
-      [c.environment?.id ?? "-"]: c,
+      [c.environment?.id ?? '-']: c,
     }),
-    {}
+    {},
   );
 
   const environments = useEnvironments(data);
   const refresh = useCallback(() => {
     outerRefresh && outerRefresh();
     setQueryOptions((p) => ({
-      fetchPolicy: "store-and-network",
+      fetchPolicy: 'store-and-network',
       fetchKey: Number(p?.fetchKey ?? 0) + 1,
     }));
   }, [outerRefresh, setQueryOptions]);
@@ -105,13 +105,13 @@ export const VariableEditor: React.FC<{
         <Row key={x.id}>
           <EnvironementVariableValue
             key={
-              (applicationId ?? "-") +
-              (applicationPartId ?? "-") +
+              (applicationId ?? '-') +
+              (applicationPartId ?? '-') +
               x.id +
               variableId
             }
             environment={x}
-            value={valueByEnv[x.id]?.value ?? ""}
+            value={valueByEnv[x.id]?.value ?? ''}
             valueId={valueByEnv[x.id]?.id}
             isSecret={valueByEnv[x.id]?.variable?.isSecret ?? true}
             applicationId={applicationId}
@@ -161,23 +161,23 @@ const useSaveVariable = (
   applicationId?: string,
   applicationPartId?: string,
   value?: string | undefined,
-  valueId?: string | undefined
+  valueId?: string | undefined,
 ) => {
   const [commit, isSaving] = useMutation<VariableEditorSaveVariableMutation>(
-    variableEditorSaveVariableValue
+    variableEditorSaveVariableValue,
   );
   const saveVariable = React.useCallback(() => {
     pipeCommitFn(commit, [
       withSuccessMessage(
         (x) => x.saveVariableValue.value?.id,
-        "Saved Variable"
+        'Saved Variable',
       ),
       withOnCompleted(() => refresh()),
     ])({
       variables: {
         input: {
           variableId,
-          value: value ?? "",
+          value: value ?? '',
           valueId,
           applicationId: applicationId,
           partId: applicationPartId,
@@ -196,27 +196,27 @@ const useSaveVariable = (
     variableId,
   ]);
 
-  return { saveVariable, isSaving };
+  return {saveVariable, isSaving};
 };
 
 const useDeleteVariableValue = (
   valueId: string | undefined,
-  refresh: () => void
+  refresh: () => void,
 ) => {
   const [commit, isDeleting] =
     useMutation<VariableEditorDeleteVariableValueMutation>(
-      variableEditorDeleteVariableValue
+      variableEditorDeleteVariableValue,
     );
   const deleteVariableValue = React.useCallback(() => {
     if (!valueId) {
-      message.error("This variable does not have a value");
+      message.error('This variable does not have a value');
       return;
     }
 
     pipeCommitFn(commit, [
       withSuccessMessage(
         (x) => x.deleteVariableValue.value?.variable?.id,
-        "Deleted Variable Value"
+        'Deleted Variable Value',
       ),
       withOnCompleted(() => refresh()),
     ])({
@@ -228,11 +228,11 @@ const useDeleteVariableValue = (
     });
   }, [commit, refresh, valueId]);
 
-  return { deleteVariableValue, isDeleting };
+  return {deleteVariableValue, isDeleting};
 };
 
 const EnvironementVariableValue: React.FC<{
-  environment: { id: string; name: string };
+  environment: {id: string; name: string};
   variableId: string;
   applicationId?: string;
   applicationPartId?: string;
@@ -252,18 +252,18 @@ const EnvironementVariableValue: React.FC<{
 }) => {
   const [value, setValue] = useState(defaultValue);
   const handleChange = useStringEventHanlder(setValue);
-  const { isDeleting, deleteVariableValue } = useDeleteVariableValue(
+  const {isDeleting, deleteVariableValue} = useDeleteVariableValue(
     valueId,
-    refresh
+    refresh,
   );
-  const { isSaving, saveVariable } = useSaveVariable(
+  const {isSaving, saveVariable} = useSaveVariable(
     environment.id,
     variableId,
     refresh,
     applicationId,
     applicationPartId,
     value,
-    valueId
+    valueId,
   );
 
   // reset the input when the variable is changed from the outside
@@ -275,7 +275,7 @@ const EnvironementVariableValue: React.FC<{
     <FieldInputGroup
       label={environment.name}
       value={value}
-      type={isSecret ? "password" : "text"}
+      type={isSecret ? 'password' : 'text'}
       onChange={handleChange}
       allowClear
     >
@@ -292,17 +292,17 @@ const EnvironementVariableValue: React.FC<{
 };
 
 const useEnvironments = (
-  dataRef: VariableEditor_useEnvironments$key
-): { id: string; name: string }[] => {
-  const { data: connection } = usePaginationFragment<
+  dataRef: VariableEditor_useEnvironments$key,
+): {id: string; name: string}[] => {
+  const {data: connection} = usePaginationFragment<
     VariableEditor_useEnvironmentsPaginationQuery,
     VariableEditor_useEnvironments$key
   >(
     graphql`
       fragment VariableEditor_useEnvironments on Query
       @argumentDefinitions(
-        count: { type: "Int", defaultValue: 50 }
-        cursor: { type: "String" }
+        count: {type: "Int", defaultValue: 50}
+        cursor: {type: "String"}
       )
       @refetchable(queryName: "VariableEditor_useEnvironmentsPaginationQuery") {
         searchEnvironments(after: $cursor, first: $count)
@@ -318,7 +318,7 @@ const useEnvironments = (
         }
       }
     `,
-    dataRef
+    dataRef,
   );
 
   return connection?.searchEnvironments?.edges?.map((x) => x.node) ?? [];

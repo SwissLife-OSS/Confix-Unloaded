@@ -1,7 +1,7 @@
-import styled from "@emotion/styled";
-import { Card, Space } from "antd";
+import styled from '@emotion/styled';
+import {Card, Space} from 'antd';
 
-export const FullSizeBox = styled(Card)<{ grow?: boolean }>`
+export const FullSizeBox = styled(Card)<{grow?: boolean}>`
   display: flex;
   overflow: auto;
   .ant-card-body {

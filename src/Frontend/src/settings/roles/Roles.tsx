@@ -1,15 +1,15 @@
-import { css } from "@emotion/react";
-import { Button } from "antd";
-import { useState } from "react";
-import { Link, Routes, Route } from "react-router-dom";
-import { DefaultSuspense } from "../../shared/DefaultSuspense";
-import { FullSizeBox, SidebarHeader } from "../../shared/FullSizeBox";
-import { InlinePage } from "../../shared/InlinePage";
-import { SearchBar } from "../../shared/SearchBar";
-import { useGoTo } from "../../shared/useGoTo";
-import { EditRole } from "./EditRole";
-import { RolesList } from "./RolesList";
-import { NewRole } from "./NewRole";
+import {css} from '@emotion/react';
+import {Button} from 'antd';
+import {useState} from 'react';
+import {Link, Routes, Route} from 'react-router-dom';
+import {DefaultSuspense} from '../../shared/DefaultSuspense';
+import {FullSizeBox, SidebarHeader} from '../../shared/FullSizeBox';
+import {InlinePage} from '../../shared/InlinePage';
+import {SearchBar} from '../../shared/SearchBar';
+import {useGoTo} from '../../shared/useGoTo';
+import {EditRole} from './EditRole';
+import {RolesList} from './RolesList';
+import {NewRole} from './NewRole';
 
 export const Roles: React.FC = (props) => {
   const [search, setSearch] = useState<string | undefined>();
@@ -20,7 +20,7 @@ export const Roles: React.FC = (props) => {
       <FullSizeBox>
         <SidebarHeader>
           <SearchBar onSearch={setSearch} />
-          <Link to={"new"}>
+          <Link to={'new'}>
             <Button type="primary">Add</Button>
           </Link>
         </SidebarHeader>
@@ -47,6 +47,6 @@ export const Roles: React.FC = (props) => {
 export const RoleRoutes: React.VFC = () => (
   <Routes>
     <Route path="new" element={<NewRole />} />
-    <Route path={":roleId/edit"} element={<EditRole />} />
+    <Route path={':roleId/edit'} element={<EditRole />} />
   </Routes>
 );

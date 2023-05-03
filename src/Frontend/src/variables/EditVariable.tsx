@@ -1,37 +1,37 @@
-import { CheckIcon, NotCheckIcon } from "../icons/icons";
-import { Col, Descriptions, Empty, Row, Select, Spin, Tabs } from "antd";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import {CheckIcon, NotCheckIcon} from '../icons/icons';
+import {Col, Descriptions, Empty, Row, Select, Spin, Tabs} from 'antd';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {
   useFragment,
   useLazyLoadQuery,
   useRefetchableFragment,
-} from "react-relay";
+} from 'react-relay';
 
-import { ChangeLog } from "../shared/ChangeLog";
-import { DefaultSuspense } from "../shared/DefaultSuspense";
-import { DetailView } from "../shared/DetailView";
-import { EditVariable$key } from "@generated/EditVariable.graphql";
-import { EditVariableQuery } from "@generated/EditVariableQuery.graphql";
-import { EditVariable_ApplicationPartSelector$key } from "@generated/EditVariable_ApplicationPartSelector.graphql";
-import { EditVariable_ApplicationSelector$key } from "@generated/EditVariable_ApplicationSelector.graphql";
-import { EditVariable_ApplicationSelector_Query } from "@generated/EditVariable_ApplicationSelector_Query.graphql";
-import { EditVariable_EditVariableForm$key } from "@generated/EditVariable_EditVariableForm.graphql";
-import { EditVariable_VariableChangeLog$key } from "@generated/EditVariable_VariableChangeLog.graphql";
-import { EditableBreadcrumbHeader } from "../shared/EditablePageHeader";
-import { Field } from "../shared/FormField";
-import { RenameVariableDialog } from "./controls/dialogs/RenameVariableDialog";
-import { TabRow } from "../shared/TabRow";
-import { VariableEditor } from "./controls/VariableEditor";
-import { css } from "@emotion/react";
-import { graphql } from "babel-plugin-relay/macro";
-import { useDebounce } from "../shared/debounce";
-import { useMultiplexer } from "../shared/useMultiplexer";
-import { useParams } from "react-router";
-import { useTabSwitcher } from "../shared/useTabSwitcher";
-import { useToggle } from "../shared/useToggle";
+import {ChangeLog} from '../shared/ChangeLog';
+import {DefaultSuspense} from '../shared/DefaultSuspense';
+import {DetailView} from '../shared/DetailView';
+import {EditVariable$key} from '@generated/EditVariable.graphql';
+import {EditVariableQuery} from '@generated/EditVariableQuery.graphql';
+import {EditVariable_ApplicationPartSelector$key} from '@generated/EditVariable_ApplicationPartSelector.graphql';
+import {EditVariable_ApplicationSelector$key} from '@generated/EditVariable_ApplicationSelector.graphql';
+import {EditVariable_ApplicationSelector_Query} from '@generated/EditVariable_ApplicationSelector_Query.graphql';
+import {EditVariable_EditVariableForm$key} from '@generated/EditVariable_EditVariableForm.graphql';
+import {EditVariable_VariableChangeLog$key} from '@generated/EditVariable_VariableChangeLog.graphql';
+import {EditableBreadcrumbHeader} from '../shared/EditablePageHeader';
+import {Field} from '../shared/FormField';
+import {RenameVariableDialog} from './controls/dialogs/RenameVariableDialog';
+import {TabRow} from '../shared/TabRow';
+import {VariableEditor} from './controls/VariableEditor';
+import {css} from '@emotion/react';
+import {graphql} from 'babel-plugin-relay/macro';
+import {useDebounce} from '../shared/debounce';
+import {useMultiplexer} from '../shared/useMultiplexer';
+import {useParams} from 'react-router';
+import {useTabSwitcher} from '../shared/useTabSwitcher';
+import {useToggle} from '../shared/useToggle';
 
 export const EditVariable = () => {
-  const { variableId = "" } = useParams();
+  const {variableId = ''} = useParams();
   const query = useLazyLoadQuery<EditVariableQuery>(
     graphql`
       query EditVariableQuery($id: ID!) {
@@ -43,7 +43,7 @@ export const EditVariable = () => {
     `,
     {
       id: variableId,
-    }
+    },
   );
   const variable = useFragment<EditVariable$key>(
     graphql`
@@ -55,22 +55,22 @@ export const EditVariable = () => {
         ...EditVariable_VariableChangeLog
       }
     `,
-    query.variable
+    query.variable,
   );
 
-  const { tab, navigateToTab } = useTabSwitcher();
+  const {tab, navigateToTab} = useTabSwitcher();
 
   if (!variable?.id) {
     return (
-      <DetailView style={{ padding: 1 }}>Coult not find Variable</DetailView>
+      <DetailView style={{padding: 1}}>Coult not find Variable</DetailView>
     );
   }
 
-  const { id, name, namespace } = variable;
+  const {id, name, namespace} = variable;
 
   return (
     <DetailView
-      style={{ padding: 1 }}
+      style={{padding: 1}}
       css={css`
         padding: 1;
         display: flex;
@@ -90,15 +90,15 @@ export const EditVariable = () => {
           onChange={navigateToTab}
           items={[
             {
-              key: "edit",
-              label: "Edit",
+              key: 'edit',
+              label: 'Edit',
               children: (
                 <EditVariableForm id={id} data={variable} query={query} />
               ),
             },
             {
-              key: "changelog",
-              label: "Change Log",
+              key: 'changelog',
+              label: 'Change Log',
               children: (
                 <DefaultSuspense>
                   <VariableChangeLog data={variable} />
@@ -116,8 +116,8 @@ const EditVariableForm: React.FC<{
   id: string;
   data: EditVariable_EditVariableForm$key;
   query: EditVariable_ApplicationSelector$key;
-}> = ({ data, id, query }) => {
-  const { name, namespace, isSecret } = useFragment(
+}> = ({data, id, query}) => {
+  const {name, namespace, isSecret} = useFragment(
     graphql`
       fragment EditVariable_EditVariableForm on Variable {
         name
@@ -125,19 +125,19 @@ const EditVariableForm: React.FC<{
         isSecret
       }
     `,
-    data
+    data,
   );
   const [application, setSelectedApplication] = useState<ApplicationOption>();
   const [applicationPart, setApplicationPart] =
     useState<ApplicationPartOption>();
   const handleApplicationChange = useMultiplexer(
     [setSelectedApplication, () => setApplicationPart(undefined)],
-    [setSelectedApplication, setApplicationPart]
+    [setSelectedApplication, setApplicationPart],
   );
 
   return (
     <DetailView
-      style={{ padding: 1 }}
+      style={{padding: 1}}
       css={css`
         padding: 1;
         display: flex;
@@ -177,14 +177,14 @@ const EditVariableForm: React.FC<{
   );
 };
 
-const nullWhenGlobal = (val?: string | "__global"): string | undefined =>
-  !val || val === "__global" ? undefined : val;
+const nullWhenGlobal = (val?: string | '__global'): string | undefined =>
+  !val || val === '__global' ? undefined : val;
 
 export const VariableEditorOrPlaceholder: React.FC<{
   variableId?: string;
   applicationOption?: ApplicationOption;
   applicationPartOption?: ApplicationPartOption;
-}> = ({ variableId, applicationOption, applicationPartOption }) => {
+}> = ({variableId, applicationOption, applicationPartOption}) => {
   if (variableId && applicationOption && applicationPartOption) {
     return (
       <DefaultSuspense>
@@ -210,7 +210,7 @@ const Header: React.FC<{
   name: string;
   namespace: string | null;
   id: string;
-}> = ({ name, namespace, id }) => {
+}> = ({name, namespace, id}) => {
   const [isEdit, , enable, disable] = useToggle();
   return (
     <EditableBreadcrumbHeader
@@ -218,7 +218,7 @@ const Header: React.FC<{
       title={name}
       breadcrumbs={[
         {
-          text: namespace ?? "-",
+          text: namespace ?? '-',
         },
       ]}
     >
@@ -236,12 +236,12 @@ const Header: React.FC<{
 export type ApplicationOption = {
   label: string;
   value: string;
-  edge?: EditVariable_ApplicationPartSelector$key & { id: string };
+  edge?: EditVariable_ApplicationPartSelector$key & {id: string};
 };
 
 const globalOption: ApplicationOption = {
-  label: "Global",
-  value: "__global",
+  label: 'Global',
+  value: '__global',
   edge: undefined,
 };
 
@@ -249,7 +249,7 @@ const ApplicationSelector: React.FC<{
   query: EditVariable_ApplicationSelector$key;
   onChange: (id?: ApplicationOption) => void;
   value?: ApplicationOption;
-}> = ({ onChange, value, query }) => {
+}> = ({onChange, value, query}) => {
   const [options, setOptions] = useState<ApplicationOption[]>([]);
   const [isLoading, setIsLoading] = useState(options.length === 0);
 
@@ -261,9 +261,9 @@ const ApplicationSelector: React.FC<{
       fragment EditVariable_ApplicationSelector on Query
       @refetchable(queryName: "EditVariable_ApplicationSelector_Query")
       @argumentDefinitions(
-        cursor: { type: "String" }
-        count: { type: "Int", defaultValue: 20 }
-        search: { type: "String" }
+        cursor: {type: "String"}
+        count: {type: "Int", defaultValue: 20}
+        search: {type: "String"}
       ) {
         applications(after: $cursor, first: $count, search: $search)
           @connection(key: "Query_applications") {
@@ -277,7 +277,7 @@ const ApplicationSelector: React.FC<{
         }
       }
     `,
-    query
+    query,
   );
 
   const fetchData = useCallback(
@@ -291,11 +291,11 @@ const ApplicationSelector: React.FC<{
           value: x.node.id,
           edge: x.node,
           label: x.node.name,
-        })) ?? []
+        })) ?? [],
       );
       setIsLoading(false);
     },
-    [data, refetch]
+    [data, refetch],
   );
 
   const debouncedSearch = useDebounce((search: string) => {
@@ -305,19 +305,19 @@ const ApplicationSelector: React.FC<{
   const handleChange = useCallback(
     (ids: ApplicationOption[], t: any) => {
       onChange(t);
-      fetchData("");
+      fetchData('');
     },
-    [onChange, fetchData]
+    [onChange, fetchData],
   );
 
   // initial data fetch
   useEffect(() => {
-    fetchData("");
+    fetchData('');
   }, [fetchData]);
 
   const optionsWithGlobal = useMemo(
     () => [globalOption, ...options],
-    [options]
+    [options],
   );
 
   return (
@@ -325,7 +325,7 @@ const ApplicationSelector: React.FC<{
       <Select<ApplicationOption[]>
         allowClear
         labelInValue
-        style={{ width: "100%" }}
+        style={{width: '100%'}}
         value={value ? [value] : []}
         placeholder="Please select"
         filterOption={false}
@@ -350,7 +350,7 @@ const ApplicationPartSelector: React.FC<{
   application?: ApplicationOption;
   onChange: (id?: ApplicationPartOption) => void;
   value?: ApplicationPartOption;
-}> = ({ onChange, application, value }) => {
+}> = ({onChange, application, value}) => {
   const data = useFragment<EditVariable_ApplicationPartSelector$key>(
     graphql`
       fragment EditVariable_ApplicationPartSelector on Application {
@@ -367,7 +367,7 @@ const ApplicationPartSelector: React.FC<{
         }
       }
     `,
-    application?.edge ?? null
+    application?.edge ?? null,
   );
 
   const options: ApplicationPartOption[] = useMemo(() => {
@@ -391,12 +391,12 @@ const ApplicationPartSelector: React.FC<{
     (ids: ApplicationPartOption[], t: any) => {
       onChange(t);
     },
-    [onChange]
+    [onChange],
   );
 
   const optionsWithGlobal = useMemo(
     () => [globalOption, ...options],
-    [options]
+    [options],
   );
 
   return (
@@ -404,7 +404,7 @@ const ApplicationPartSelector: React.FC<{
       <Select<ApplicationPartOption[]>
         allowClear
         labelInValue
-        style={{ width: "100%" }}
+        style={{width: '100%'}}
         placeholder="Please select"
         filterOption={false}
         value={value ? [value] : []}
@@ -418,8 +418,8 @@ const ApplicationPartSelector: React.FC<{
 
 const VariableChangeLog: React.FC<{
   data: EditVariable_VariableChangeLog$key;
-}> = ({ data }) => {
-  const { changeLog } = useFragment(
+}> = ({data}) => {
+  const {changeLog} = useFragment(
     graphql`
       fragment EditVariable_VariableChangeLog on Variable {
         changeLog {
@@ -427,7 +427,7 @@ const VariableChangeLog: React.FC<{
         }
       }
     `,
-    data
+    data,
   );
 
   return <ChangeLog data={changeLog} />;

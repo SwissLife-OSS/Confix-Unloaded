@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.Collections.Immutable;
 
 namespace Confix.Authentication.Authorization;
 
@@ -6,68 +7,85 @@ public class Session : ISession
 {
     private readonly ConcurrentDictionary<Grant, bool> _grantCache = new();
     private readonly IReadOnlyDictionary<Guid, Role> _roleMap;
-    private IReadOnlySet<string>? _namespaces;
+    private readonly Lazy<IReadOnlySet<string>> _namespaces;
 
     public Session(UserInfo userInfo, IReadOnlyList<Group> groups, IReadOnlyDictionary<Guid, Role> roleMap)
     {
         UserInfo = userInfo;
         Groups = groups;
         _roleMap = roleMap;
+        _namespaces = new Lazy<IReadOnlySet<string>>(
+            () => Groups
+                .SelectMany(x => x.Roles)
+                .Select(x => x.Namespace)
+                .ToHashSet());
     }
 
     public UserInfo UserInfo { get; }
 
     public IReadOnlyList<Group> Groups { get; }
 
-    public IReadOnlySet<string> Namespaces => _namespaces
-        ??= Groups
-            .SelectMany(x => x.Roles)
-            .Select(x => x.Namespace)
+    public IReadOnlySet<string> GetNamespacesWithAccess(Scope scope, Permissions permission)
+        => _namespaces.Value
+            .Where(n => HasPermission(n, scope, permission))
             .ToHashSet();
-            
+
     public bool HasPermission(string @namespace, Scope scope, Permissions permission)
+        => _grantCache.GetOrAdd(new(@namespace, scope, permission), HasGrant);
+
+    public IReadOnlySet<Grant> GetGrantsForScope(Scope scope)
     {
-        var grant = new Grant(@namespace, scope, permission);
-
-        return _grantCache.GetOrAdd(grant, _ => HasPermissionCheck());
-
-        bool HasPermissionCheck()
-        {
-            foreach (var group in Groups)
+        IReadOnlySet<Grant> grantsForScope = Groups
+            .SelectMany(g => g.Roles)
+            .AsParallel()
+            .SelectMany(roleScope => roleScope.RoleIds.Select(roleId => new
             {
-                foreach (var roleScope in group.Roles)
-                {
-                    if (roleScope.Namespace != @namespace &&
-                        roleScope.Namespace is not WellKnownNamespaces.Global)
-                    {
-                        continue;
-                    }
+                roleScope.Namespace,
+                Role = _roleMap.GetValueOrDefault(roleId)
+            }))
+            .SelectMany(r => (r.Role?.Permissions ?? Array.Empty<Permission>())
+                .Where(p => p.Scope == scope)
+                .Select(p => new Grant(r.Namespace, scope, p.Permissions)))
+            .GroupBy(g => g.Namespace)
+            .Select(g => new Grant(
+                g.Key,
+                scope,
+                g.Select(x => x.Permission).Aggregate((a, b) => a | b)
+            ))
+            .ToImmutableHashSet();
 
-                    foreach (var roleId in roleScope.RoleIds)
-                    {
-                        if (!_roleMap.TryGetValue(roleId, out var role))
-                        {
-                            continue;
-                        }
+        _grantCache.AddMany(grantsForScope, true);
 
-                        foreach (var rolePermission in role.Permissions)
-                        {
-                            if (rolePermission.Scope != scope)
-                            {
-                                continue;
-                            }
+        return grantsForScope;
+    }
 
-                            if (rolePermission.Permissions.HasFlag(permission))
-                            {
-                                return true;
-                            }
-                        }
-                    }
-                }
-            }
+    private bool HasGrant(Grant grant) => Groups
+        .AsParallel()
+        .SelectMany(group => group.Roles)
+        .Where(roleScope => roleScope.Namespace == grant.Namespace || roleScope.Namespace is WellKnownNamespaces.Global)
+        .SelectMany(roleScope => roleScope.RoleIds)
+        .Select(roleId => _roleMap.GetValueOrDefault(roleId))
+        .Any(role => role.GrantsPermissionFor(grant.Scope, grant.Permission));
+}
 
-            return false;
+file static class Extensions
+{
+    public static bool GrantsPermissionFor(
+        this Role? role,
+        Scope scope,
+        Permissions permission)
+        => role?.Permissions.Any(rolePermission =>
+            rolePermission.Scope == scope
+            && rolePermission.Permissions.HasFlag(permission)) ?? false;
+
+    public static void AddMany<TKey, TValue>(
+        this IDictionary<TKey, TValue> dictionary,
+        IEnumerable<TKey> keys,
+        TValue value)
+    {
+        foreach (var item in keys)
+        {
+            dictionary.TryAdd(item, value);
         }
     }
-    private readonly record struct Grant(string Namespace, Scope Scope, Permissions Permission);
 }

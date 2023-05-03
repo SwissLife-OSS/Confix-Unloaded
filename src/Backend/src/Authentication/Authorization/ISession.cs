@@ -2,11 +2,13 @@ namespace Confix.Authentication.Authorization;
 
 public interface ISession
 {
-    IReadOnlySet<string> Namespaces { get; }
-
     IReadOnlyList<Group> Groups { get; }
 
     UserInfo UserInfo { get; }
 
+    IReadOnlySet<string> GetNamespacesWithAccess(Scope scope, Permissions permission);
+    IReadOnlySet<Grant> GetGrantsForScope(Scope scope);
     bool HasPermission(string @namespace, Scope scope, Permissions permission);
 }
+
+public readonly record struct Grant(string Namespace, Scope Scope, Permissions Permission);

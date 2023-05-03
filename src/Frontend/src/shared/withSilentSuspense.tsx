@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React, {Suspense} from 'react';
 
 export const withSilentSuspense =
   <P extends object>(Component: React.ComponentType<P>): React.FC<P> =>

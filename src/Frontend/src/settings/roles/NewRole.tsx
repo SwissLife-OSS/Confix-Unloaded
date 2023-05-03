@@ -1,24 +1,24 @@
-import { Button, Col, Row } from "antd";
-import { FormActions, FormField } from "../../shared/FormField";
+import {Button, Col, Row} from 'antd';
+import {FormActions, FormField} from '../../shared/FormField';
 import {
   PermissionsForm,
   createDefaultPermissions,
   mapPermissionsToInput,
-} from "./controls/forms/PermissionForm";
-import React, { useState } from "react";
+} from './controls/forms/PermissionForm';
+import React, {useState} from 'react';
 import {
   withErrorNotifications,
   withOnSuccess,
   withSuccessMessage,
-} from "../../shared/pipeCommitFn";
+} from '../../shared/pipeCommitFn';
 
-import { DetailView } from "../../shared/DetailView";
-import { NewRoleMutation } from "@generated/NewRoleMutation.graphql";
-import { graphql } from "babel-plugin-relay/macro";
-import { useCommitForm } from "../../shared/useCommitForm";
-import { useConnectionId } from "../../shared/useConnectionId";
-import { useGoTo } from "../../shared/useGoTo";
-import { useMutation } from "react-relay";
+import {DetailView} from '../../shared/DetailView';
+import {NewRoleMutation} from '@generated/NewRoleMutation.graphql';
+import {graphql} from 'babel-plugin-relay/macro';
+import {useCommitForm} from '../../shared/useCommitForm';
+import {useConnectionId} from '../../shared/useConnectionId';
+import {useGoTo} from '../../shared/useGoTo';
+import {useMutation} from 'react-relay';
 
 export const NewRole: React.FC = () => {
   const [commit, isInFlight] = useMutation<NewRoleMutation>(graphql`
@@ -41,12 +41,12 @@ export const NewRole: React.FC = () => {
   `);
 
   const [permissions, setPermissions] = useState(() =>
-    createDefaultPermissions()
+    createDefaultPermissions(),
   );
 
   const connectionIds = [
-    useConnectionId("useRoles_searchRoles"),
-    useConnectionId("Query_searchRoles"),
+    useConnectionId('useRoles_searchRoles'),
+    useConnectionId('Query_searchRoles'),
   ];
 
   const goToEdit = useGoTo((id: string) => `${id}/edit`);
@@ -54,24 +54,24 @@ export const NewRole: React.FC = () => {
   const form = useCommitForm(
     commit,
     {
-      name: "",
+      name: '',
       permissions: [],
     },
     (input) => ({
-      input: { ...input, permissions: mapPermissionsToInput(permissions) },
+      input: {...input, permissions: mapPermissionsToInput(permissions)},
       connectionIds,
     }),
     {
       pipes: [
         withErrorNotifications((x) => x.createRole?.errors),
         withOnSuccess((x) => x.createRole.role?.id, goToEdit),
-        withSuccessMessage((x) => x.createRole.role?.id, "Role Created"),
+        withSuccessMessage((x) => x.createRole.role?.id, 'Role Created'),
       ],
-    }
+    },
   );
 
   return (
-    <DetailView style={{ padding: 1 }}>
+    <DetailView style={{padding: 1}}>
       <Row>
         <Col xs={24}>
           <h2>New Role</h2>

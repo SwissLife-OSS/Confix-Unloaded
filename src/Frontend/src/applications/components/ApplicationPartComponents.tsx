@@ -1,22 +1,22 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { Button, Card, Col, Descriptions, Empty, Row } from "antd";
-import { DeleteIcon, EditIcon } from "../../icons/icons";
-import { Link, generatePath } from "react-router-dom";
+import {Button, Card, Col, Descriptions, Empty, Row} from 'antd';
+import {DeleteIcon, EditIcon} from '../../icons/icons';
+import {Link, generatePath} from 'react-router-dom';
 
-import { ApplicationPartComponents$key } from "@generated/ApplicationPartComponents.graphql";
-import { ApplicationPartComponents_ApplicationPartComponentsDisplay$key } from "@generated/ApplicationPartComponents_ApplicationPartComponentsDisplay.graphql";
-import { RemoveComponentFromApplicationPartDialog } from "../dialogs/RemoveComponentFromApplicationPartDialog";
-import { graphql } from "babel-plugin-relay/macro";
-import styled from "@emotion/styled";
-import { useFragment } from "react-relay";
-import { useToggle } from "../../shared/useToggle";
+import {ApplicationPartComponents$key} from '@generated/ApplicationPartComponents.graphql';
+import {ApplicationPartComponents_ApplicationPartComponentsDisplay$key} from '@generated/ApplicationPartComponents_ApplicationPartComponentsDisplay.graphql';
+import {RemoveComponentFromApplicationPartDialog} from '../dialogs/RemoveComponentFromApplicationPartDialog';
+import {graphql} from 'babel-plugin-relay/macro';
+import styled from '@emotion/styled';
+import {useFragment} from 'react-relay';
+import {useToggle} from '../../shared/useToggle';
 
 export const ApplicationPartComponents: React.FC<{
   applicationId: string;
   fragmentRef: ApplicationPartComponents$key;
-}> = ({ applicationId, fragmentRef }) => {
-  const { components } = useFragment(
+}> = ({applicationId, fragmentRef}) => {
+  const {components} = useFragment(
     graphql`
       fragment ApplicationPartComponents on ApplicationPart {
         components {
@@ -28,7 +28,7 @@ export const ApplicationPartComponents: React.FC<{
         }
       }
     `,
-    fragmentRef
+    fragmentRef,
   );
 
   if (components.length === 0) {
@@ -37,7 +37,7 @@ export const ApplicationPartComponents: React.FC<{
 
   return (
     <Row gutter={[16, 16]}>
-      {(components.map((x) => ({ ...x })) ?? []).map((item) => (
+      {(components.map((x) => ({...x})) ?? []).map((item) => (
         <Col span={8} key={item.definition?.id}>
           <ApplicationPartComponentsDisplay
             applicationId={applicationId}
@@ -54,8 +54,8 @@ const ApplicationPartComponentsDisplay: React.FC<{
   applicationId: string;
   componentPartId: string;
   fragmentRef: ApplicationPartComponents_ApplicationPartComponentsDisplay$key;
-}> = ({ fragmentRef, applicationId }) => {
-  const { id, definition } = useFragment(
+}> = ({fragmentRef, applicationId}) => {
+  const {id, definition} = useFragment(
     graphql`
       fragment ApplicationPartComponents_ApplicationPartComponentsDisplay on ApplicationPartComponent {
         id
@@ -66,7 +66,7 @@ const ApplicationPartComponentsDisplay: React.FC<{
         }
       }
     `,
-    fragmentRef
+    fragmentRef,
   );
 
   const [isRemoveDialogShown, , enableRemoveDialog, disableRemoveDialog] =
@@ -77,7 +77,7 @@ const ApplicationPartComponentsDisplay: React.FC<{
     {
       applicationId,
       componentId: id,
-    }
+    },
   );
 
   return (
@@ -106,7 +106,7 @@ const ApplicationPartComponentsDisplay: React.FC<{
       </Card>
       <RemoveComponentFromApplicationPartDialog
         partComponentId={id}
-        componentName={definition?.name ?? ""}
+        componentName={definition?.name ?? ''}
         open={isRemoveDialogShown}
         onClose={disableRemoveDialog}
       />
@@ -114,7 +114,7 @@ const ApplicationPartComponentsDisplay: React.FC<{
   );
 };
 
-const CardBody = styled("div")`
+const CardBody = styled('div')`
   height: 200px;
   overflow-y: auto;
 `;

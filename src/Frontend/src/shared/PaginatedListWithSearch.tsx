@@ -1,10 +1,10 @@
-import { Button, Divider, Input, List, Skeleton, Space } from "antd";
-import Search from "antd/lib/input/Search";
-import React, { useCallback } from "react";
-import InfiniteScroll from "react-infinite-scroll-component";
-import { AddIcon, SearchIcon } from "../icons/icons";
-import { debounce, useDebounce } from "./debounce";
-import { useStringEventHanlder as useStringEventHandler } from "./useEventListener";
+import {Button, Divider, Input, List, Skeleton, Space} from 'antd';
+import Search from 'antd/lib/input/Search';
+import React, {useCallback} from 'react';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import {AddIcon, SearchIcon} from '../icons/icons';
+import {debounce, useDebounce} from './debounce';
+import {useStringEventHanlder as useStringEventHandler} from './useEventListener';
 
 interface PaginatedListWithSearchProps<T> {
   items: T[];
@@ -30,17 +30,17 @@ export function PaginatedListWithSearch<T>({
   isLoading,
   batchSize = 20,
   loadMore = () => {},
-  description = () => "",
+  description = () => '',
   onSearch = (search) => {},
 }: PaginatedListWithSearchProps<T>): React.ReactElement<any, any> | null {
   const loadNext = useCallback(
     () => loadMore(batchSize),
-    [batchSize, loadMore]
+    [batchSize, loadMore],
   );
   const handleSearch = useStringEventHandler(debounce(onSearch));
   return (
     <>
-      <div style={{ flex: 0 }}>
+      <div style={{flex: 0}}>
         <Space wrap>
           <Input
             placeholder="input search text"
@@ -53,14 +53,14 @@ export function PaginatedListWithSearch<T>({
         </Space>
       </div>
       <div
-        style={{ flex: 1, overflow: "auto", overscrollBehavior: "contain" }}
+        style={{flex: 1, overflow: 'auto', overscrollBehavior: 'contain'}}
         id="scrollableDiv"
       >
         <InfiniteScroll
           dataLength={items.length}
           next={loadNext}
           hasMore={hasNext}
-          loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
+          loader={<Skeleton avatar paragraph={{rows: 1}} active />}
           endMessage={<Divider plain>It is all, nothing more 🤐</Divider>}
           scrollableTarget="scrollableDiv"
         >
@@ -95,7 +95,7 @@ function SearchListItem<T>({
 }) {
   const handleClick = useCallback(
     () => onItemSelect(item),
-    [onItemSelect, item]
+    [onItemSelect, item],
   );
   return (
     <List.Item onClick={handleClick}>

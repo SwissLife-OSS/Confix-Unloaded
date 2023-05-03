@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<31d32dafe801e79e39bb9bf6131d3126>>
+ * @generated SignedSource<<bc9e7c142955e45d58a41d5c78ec7ca7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,7 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type ApplicationCascader$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"ApplicationCascader_Applications" | "ApplicationCascader_Namespaces">;
+  readonly " $fragmentSpreads": FragmentRefs<"ApplicationCascader_Applications">;
   readonly " $fragmentType": "ApplicationCascader";
 };
 export type ApplicationCascader$key = {
@@ -32,11 +32,6 @@ const node: ReaderFragment = {
   "name": "ApplicationCascader",
   "selections": [
     {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "ApplicationCascader_Namespaces"
-    },
-    {
       "args": [
         {
           "kind": "Variable",
@@ -52,6 +47,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "52358c8ecd819df6c1156a74f4ae49ac";
+(node as any).hash = "69a92a7c222a26cd656edc2ee42557a0";
 
 export default node;

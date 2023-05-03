@@ -1,15 +1,15 @@
-import { pipeCommitFn, withSuccessMessage } from "../../../shared/pipeCommitFn";
+import {pipeCommitFn, withSuccessMessage} from '../../../shared/pipeCommitFn';
 
-import { Button } from "antd";
-import React from "react";
-import { SaveDeveloperAccessButtonMutation } from "@generated/SaveDeveloperAccessButtonMutation.graphql";
-import { graphql } from "babel-plugin-relay/macro";
-import { useMutation } from "react-relay";
+import {Button} from 'antd';
+import React from 'react';
+import {SaveDeveloperAccessButtonMutation} from '@generated/SaveDeveloperAccessButtonMutation.graphql';
+import {graphql} from 'babel-plugin-relay/macro';
+import {useMutation} from 'react-relay';
 
 export const SaveDeveloperAccessButton: React.FC<{
   isAllowed: boolean;
   environmentId: string;
-}> = ({ isAllowed, environmentId }) => {
+}> = ({isAllowed, environmentId}) => {
   const [commit, isInFlight] = useMutation<SaveDeveloperAccessButtonMutation>(
     graphql`
       mutation SaveDeveloperAccessButtonMutation(
@@ -37,14 +37,14 @@ export const SaveDeveloperAccessButton: React.FC<{
           }
         }
       }
-    `
+    `,
   );
 
   const handleSave = React.useCallback(() => {
     pipeCommitFn(commit, [
       withSuccessMessage(
         (x) => x.setDeveloperAccessOfEnvironment.environment?.id,
-        "Saved Developer Access"
+        'Saved Developer Access',
       ),
     ])({
       variables: {

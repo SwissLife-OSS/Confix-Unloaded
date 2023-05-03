@@ -1,12 +1,12 @@
-import { css } from "@emotion/react";
-import styled from "@emotion/styled";
-import { Checkbox, Input, InputProps, Row, Select } from "antd";
-import { FormikValues } from "formik";
-import React, { ReactNode, useCallback } from "react";
-import { Colors } from "./colors";
-import { SchemaEditor, useSchemaEditorRef } from "./editor/SchemaEditor";
-import { UseFormik } from "./UseFormik";
-import { useHandler } from "./useHandler";
+import {css} from '@emotion/react';
+import styled from '@emotion/styled';
+import {Checkbox, Input, InputProps, Row, Select} from 'antd';
+import {FormikValues} from 'formik';
+import React, {ReactNode, useCallback} from 'react';
+import {Colors} from './colors';
+import {SchemaEditor, useSchemaEditorRef} from './editor/SchemaEditor';
+import {UseFormik} from './UseFormik';
+import {useHandler} from './useHandler';
 
 export const FormActions = styled(Row)`
   padding: 0px 0px 5px 0px;
@@ -15,13 +15,13 @@ export const FormActions = styled(Row)`
 export const ReadOnlyFormField: React.FC<{
   value: string;
   label: string;
-}> = ({ value, label }) => (
+}> = ({value, label}) => (
   <Field name={label} label={label}>
     <Input value={value} disabled />
   </Field>
 );
 
-const Label = styled.label<{ isError?: boolean }>`
+const Label = styled.label<{isError?: boolean}>`
   color: ${(props) =>
     props.isError ? Colors.error : Colors.text.secondaryText};
 `;
@@ -32,7 +32,7 @@ export const Field: React.FC<{
   isError?: boolean;
   className?: string;
   children: ReactNode;
-}> = ({ className, name, label, isError = false, children }) => (
+}> = ({className, name, label, isError = false, children}) => (
   <Row
     css={[
       css`
@@ -55,7 +55,7 @@ export const FieldInput: React.FC<
     label: string;
     isError?: boolean;
   } & InputProps
-> = ({ name, label, isError = false, ...inputProps }) => (
+> = ({name, label, isError = false, ...inputProps}) => (
   <Field name={name} label={label} isError={isError}>
     <Input name={name ?? label} {...inputProps} />
   </Field>
@@ -67,7 +67,7 @@ export const FieldGroup: React.FC<{
   isError?: boolean;
   compact?: boolean;
   children: React.ReactNode;
-}> = ({ name, label, isError = false, compact, children, ...inputProps }) => (
+}> = ({name, label, isError = false, compact, children, ...inputProps}) => (
   <Field name={name} label={label} isError={isError}>
     <Input.Group
       compact={compact}
@@ -100,12 +100,12 @@ export const FieldInputGroup: React.FC<
   ...inputProps
 }) => (
   <FieldGroup name={name} label={label} isError={isError} compact={compact}>
-    {type === "password" ? (
+    {type === 'password' ? (
       <Input.Password
         name={name ?? label}
         {...inputProps}
         style={{
-          flex: "1",
+          flex: '1',
         }}
       />
     ) : (
@@ -113,7 +113,7 @@ export const FieldInputGroup: React.FC<
         name={name ?? label}
         {...inputProps}
         style={{
-          flex: "1",
+          flex: '1',
         }}
       />
     )}
@@ -123,10 +123,10 @@ export const FieldInputGroup: React.FC<
 
 export function FormField<TValues extends FormikValues>(props: {
   form: UseFormik<TValues>;
-  field: keyof UseFormik<TValues>["values"];
+  field: keyof UseFormik<TValues>['values'];
   label: string;
 }): React.ReactElement {
-  const { form, field, label } = props;
+  const {form, field, label} = props;
   return (
     <Field
       name={String(field)}
@@ -149,12 +149,12 @@ export function FormField<TValues extends FormikValues>(props: {
 
 export function FormEditor<TValues extends FormikValues>(props: {
   form: UseFormik<TValues>;
-  field: keyof UseFormik<TValues>["values"];
+  field: keyof UseFormik<TValues>['values'];
   label: string;
 }): React.ReactElement {
-  const { form, field, label } = props;
+  const {form, field, label} = props;
   const editor = useSchemaEditorRef();
-  const handleChange = useHandler<typeof SchemaEditor, "onChange">((value) => {
+  const handleChange = useHandler<typeof SchemaEditor, 'onChange'>((value) => {
     form.setFieldValue(String(field), value);
   });
   return (
@@ -186,10 +186,10 @@ export function FormEditor<TValues extends FormikValues>(props: {
 
 export function FormCheckbox<TValues extends FormikValues>(props: {
   form: UseFormik<TValues>;
-  field: keyof UseFormik<TValues>["values"];
+  field: keyof UseFormik<TValues>['values'];
   label: string;
 }): React.ReactElement {
-  const { form, field, label } = props;
+  const {form, field, label} = props;
   return (
     <Field
       name={String(field)}
@@ -208,15 +208,15 @@ export function FormCheckbox<TValues extends FormikValues>(props: {
 
 export function TagSelectField<TValues extends FormikValues>(props: {
   form: UseFormik<TValues>;
-  field: keyof UseFormik<TValues>["values"];
+  field: keyof UseFormik<TValues>['values'];
   label: string;
 }): React.ReactElement {
-  const { form, field, label } = props;
+  const {form, field, label} = props;
   const onChange = useCallback(
     (value: string[], option: any) => {
       form.setFieldValue(String(field), value);
     },
-    [field, form]
+    [field, form],
   );
   return (
     <Field
@@ -224,7 +224,7 @@ export function TagSelectField<TValues extends FormikValues>(props: {
       label={label}
       isError={(form.touched[field] && Boolean(form.errors[field])) || false}
     >
-      <Select mode="tags" style={{ width: "100%" }} onChange={onChange} />
+      <Select mode="tags" style={{width: '100%'}} onChange={onChange} />
     </Field>
   );
 }
