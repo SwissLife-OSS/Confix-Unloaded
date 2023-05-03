@@ -7,15 +7,18 @@ namespace Confix.Authoring.Variables;
 internal sealed class VariableValueAuthorizationRule : AuthorizationRule<VariableValue>
 {
     private readonly IAuthorizationService _authorizationService;
-    private readonly IVariableDataLoader _variableById;
+    private readonly IApplicationDataLoader _applicationById;
+    private readonly IApplicationByPartIdDataLoader _applicationByPartId;
 
     public VariableValueAuthorizationRule(
         ISessionAccessor accessor,
-        IVariableDataLoader variableById,
-        IAuthorizationService authorizationService) : base(accessor)
+        IAuthorizationService authorizationService,
+        IApplicationDataLoader applicationById,
+        IApplicationByPartIdDataLoader applicationByPartId) : base(accessor)
     {
-        _variableById = variableById;
         _authorizationService = authorizationService;
+        _applicationById = applicationById;
+        _applicationByPartId = applicationByPartId;
     }
 
     protected override async ValueTask<bool> IsAuthorizedAsync(
@@ -24,11 +27,36 @@ internal sealed class VariableValueAuthorizationRule : AuthorizationRule<Variabl
         Permissions permissions,
         CancellationToken cancellationToken)
     {
-        var variable = await _variableById.LoadAsync(resource.VariableId, cancellationToken);
+        switch (resource.Scope)
+        {
+            case NamespaceVariableValueScope { Namespace: var @namespace }:
+                return session.HasPermission(@namespace, Scope.Variable, permissions);
 
-        return await _authorizationService
-            .RuleFor<Variable>()
-            .IsAuthorizedAsync(variable, permissions, cancellationToken);
+            case ApplicationVariableValueScope { ApplicationId: var applicationId }:
+                var application =
+                    await _applicationById.LoadAsync(applicationId, cancellationToken);
+
+                if (application is null)
+                {
+                    return false;
+                }
+
+                return session.HasPermission(application.Namespace, Scope.Variable, permissions);
+
+            case ApplicationPartVariableValueScope { PartId: var applicationPartId }:
+                var applicationPart =
+                    await _applicationByPartId.LoadAsync(applicationPartId, cancellationToken);
+
+                if (applicationPart is null)
+                {
+                    return false;
+                }
+
+                return session
+                    .HasPermission(applicationPart.Namespace, Scope.Variable, permissions);
+        }
+
+        return false;
     }
 
     protected override async ValueTask<bool> IsAuthorizedFromAsync<TOther>(

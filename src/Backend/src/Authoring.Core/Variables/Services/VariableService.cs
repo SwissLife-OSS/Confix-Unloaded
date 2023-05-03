@@ -12,12 +12,13 @@ namespace Confix.Authoring;
 internal sealed class VariableService : IVariableService
 {
     private readonly IAuthorizationService _authorizationService;
-    private readonly IVariableDataLoader _variableById;
     private readonly IChangeLogService _changeLogService;
     private readonly IEncryptor _encryptor;
     private readonly ISessionAccessor _sessionAccessor;
     private readonly IVariableStore _variableStore;
     private readonly IVariableValueStore _variableValueStore;
+    private readonly IApplicationDataLoader _applicationById;
+    private readonly IApplicationByPartIdDataLoader _applicationByPartId;
 
     public VariableService(
         IVariableStore variableStore,
@@ -26,7 +27,8 @@ internal sealed class VariableService : IVariableService
         IEncryptor encryptor,
         IAuthorizationService authorizationService,
         ISessionAccessor sessionAccessor,
-        IVariableDataLoader variableById)
+        IApplicationDataLoader applicationById,
+        IApplicationByPartIdDataLoader applicationByPartId)
     {
         _variableStore = variableStore;
         _variableValueStore = variableValueStore;
@@ -34,7 +36,8 @@ internal sealed class VariableService : IVariableService
         _encryptor = encryptor;
         _authorizationService = authorizationService;
         _sessionAccessor = sessionAccessor;
-        _variableById = variableById;
+        _applicationById = applicationById;
+        _applicationByPartId = applicationByPartId;
     }
 
     public async Task<Variable?> CreateAsync(
@@ -160,24 +163,23 @@ internal sealed class VariableService : IVariableService
         var values =
             await _variableValueStore.GetByFilterAsync(variableIds, filter, cancellationToken);
 
-        // prefetch variables for authorization (TODO: we have to prefetch more (apps => namespaces))
+        // prefetch variables for authorization
 
-        variableIds ??= values.Select(x => x.VariableId).Distinct();
         var applicationIds = values
             .Select(x => x.Scope)
             .OfType<ApplicationVariableValueScope>()
             .Select(x => x.ApplicationId)
             .Distinct();
 
+        var applicationPartIds = values
+            .Select(x => x.Scope)
+            .OfType<ApplicationPartVariableValueScope>()
+            .Select(x => x.PartId)
+            .Distinct();
+
         await Task.WhenAll(
-            _variableById.LoadAsync(variableIds, cancellationToken),
-            _variableById.LoadAsync(values
-                    .Select(x => x.Scope)
-                    .OfType<ApplicationVariableValueScope>()
-                    .Select(x => x.ApplicationId)
-                    .Distinct(),
-                cancellationToken)
-        );
+            _applicationById.LoadAsync(applicationIds, cancellationToken),
+            _applicationByPartId.LoadAsync(applicationPartIds, cancellationToken));
 
         var result = new List<VariableValue>();
         foreach (var value in values)
