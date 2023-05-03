@@ -62,10 +62,7 @@ public class Session : ISession
     private bool HasGrant(Grant grant) => Groups
         .AsParallel()
         .SelectMany(group => group.Roles)
-        .Where(roleScope =>
-            grant.Scope is Scope.Identity or Scope.Environment ?
-                roleScope.Namespace is WellKnownNamespaces.Global
-                : roleScope.Namespace == grant.Namespace)
+        .Where(roleScope => roleScope.Namespace == grant.Namespace || roleScope.Namespace is WellKnownNamespaces.Global)
         .SelectMany(roleScope => roleScope.RoleIds)
         .Select(roleId => _roleMap.GetValueOrDefault(roleId))
         .Any(role => role.GrantsPermissionFor(grant.Scope, grant.Permission));
