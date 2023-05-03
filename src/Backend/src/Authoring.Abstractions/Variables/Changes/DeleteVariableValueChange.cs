@@ -9,16 +9,12 @@ public sealed class DeleteVariableValueChange : IVariableChange
     public DeleteVariableValueChange(
         Guid variableId,
         int variableVersion,
-        VariableValue variableValue,
-        VariableKey key)
+        VariableValue variableValue)
     {
         VariableId = variableId;
         VariableVersion = variableVersion;
         VariableValue = variableValue;
-        Key = key;
     }
-
-    public VariableKey Key { get; init; }
 
     public VariableValue VariableValue { get; init; }
 

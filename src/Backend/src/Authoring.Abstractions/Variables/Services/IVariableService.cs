@@ -6,13 +6,8 @@ public interface IVariableService
         string name,
         string @namespace,
         bool isSecret,
+        VariableValueScope scope,
         string? defaultValue,
-        CancellationToken cancellationToken);
-
-    Task<IEnumerable<Variable>> GetAllAsync(CancellationToken cancellationToken);
-
-    Task<IEnumerable<Variable?>> GetByNamesAsync(
-        IEnumerable<string> names,
         CancellationToken cancellationToken);
 
     Task<IQueryable<Variable>> SearchVariables(string? search, CancellationToken cancellationToken);
@@ -22,32 +17,13 @@ public interface IVariableService
     Task<VariableValue> SaveValueAsync(
         Guid variableId,
         string value,
-        Guid? valueId = null,
-        Guid? applicationId = null,
-        Guid? partId = null,
-        Guid? environmentId = null,
-        CancellationToken cancellationToken = default);
-
-    Task<IEnumerable<VariableValue>> GetValuesAsync(
-        VariableValueFilter filter,
-        bool decrypt,
+        VariableValueScope scope,
         CancellationToken cancellationToken);
 
     Task<IEnumerable<VariableValue>> GetValuesAsync(
-        Variable variable,
-        VariableValueFilter filter,
-        bool decrypt,
+        IEnumerable<Guid>? variableIds,
+        IEnumerable<VariableValueScope>? filter,
         CancellationToken cancellationToken);
-
-    Task<IEnumerable<VariableValue>> GetValuesByApplicationPartAsync(
-        Guid applicationPartId,
-        CancellationToken cancellationToken);
-
-    Task<IEnumerable<VariableValue>> GetValuesByApplicationAsync(
-        Guid applicationId,
-        CancellationToken cancellationToken);
-
-    Task<IEnumerable<VariableValue>> GetGlobalValues(CancellationToken cancellationToken);
 
     Task<VariableValue> DeleteValueAsync(Guid id, CancellationToken cancellationToken);
 

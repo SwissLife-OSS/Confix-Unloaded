@@ -24,35 +24,9 @@ internal sealed class VariableAuthorizationRule : AuthorizationRule<Variable>
             session.HasPermission(resource.Namespace, Scope.Variable, permissions));
     }
 
-    protected override async ValueTask<bool> IsAuthorizedFromAsync<TOther>(
+    protected override ValueTask<bool> IsAuthorizedFromAsync<TOther>(
         TOther resource,
         ISession session,
         Permissions permissions,
-        CancellationToken cancellationToken)
-    {
-        return resource switch
-        {
-            ApplicationPart r => await AuthorizeApplicationPart(r),
-            Application r => await AuthorizeApplication(r),
-            _ => false
-        };
-
-        async ValueTask<bool> AuthorizeApplicationPart(ApplicationPart part)
-        {
-            var application = await _applicationByPartId.LoadAsync(part.Id, cancellationToken);
-
-            if (application is null)
-            {
-                return false;
-            }
-
-            return await AuthorizeApplication(application);
-        }
-
-        ValueTask<bool> AuthorizeApplication(Application app)
-        {
-            return new ValueTask<bool>(
-                session.HasPermission(app.Namespace, Scope.Variable, permissions));
-        }
-    }
+        CancellationToken cancellationToken) => new(false);
 }

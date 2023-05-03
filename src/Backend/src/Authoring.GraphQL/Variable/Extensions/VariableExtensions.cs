@@ -12,15 +12,4 @@ public sealed class VariableExtensions
     {
         return await service.GetByVariableId(application.Id, cancellationToken);
     }
-
-    public async Task<IEnumerable<VariableValue>> GetValuesAsync(
-        [Service] IVariableService service,
-        [Parent] Variable variable,
-        CancellationToken cancellationToken)
-    {
-        return await service.GetValuesAsync(variable,
-            new VariableValueFilter(variable.Id),
-            false,
-            cancellationToken);
-    }
 }

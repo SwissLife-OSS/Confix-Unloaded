@@ -6,6 +6,7 @@ using Confix.Authoring.Messaging;
 using Confix.Authoring.Publishing.Authorization;
 using Confix.Authoring.Publishing.Stores;
 using Confix.Authoring.Store;
+using Confix.Authoring.Store.Mongo;
 using Confix.Common.Exceptions;
 using Confix.CryptoProviders;
 using GreenDonut;
@@ -23,9 +24,11 @@ internal sealed class PublishingService : IPublishingService
     private readonly IAuthorizationService _authorizationService;
     private readonly IComponentDataLoader _componentDataLoader;
     private readonly IVariableStore _variableStore;
+    private readonly IVariableValueStore _variableValueStore;
     private readonly IComponentService _componentService;
     private readonly IChangeLogService _changeLogService;
     private readonly IEncryptor _encryptor;
+    private readonly IDecryptor _decryptor;
     private readonly IDataLoader<Guid, Environment> _environmentById;
     private readonly IEnvironmentStore _environmentStore;
     private readonly IPublishedApplicationPartByIdDataloader _publishedApplicationPartById;
@@ -34,7 +37,6 @@ internal sealed class PublishingService : IPublishingService
     private readonly IDataLoader<Guid, PublishedApplicationPart?> _publishedById;
     private readonly IPublishingStore _publishingStore;
     private readonly ISessionAccessor _sessionAccessor;
-    private readonly IVariableService _variableService;
     private readonly ICreateVaultConfigClient _createVaultConfig;
 
     public PublishingService(
@@ -46,7 +48,6 @@ internal sealed class PublishingService : IPublishingService
         ISessionAccessor sessionAccessor,
         IPublishingStore publishingStore,
         IEncryptor encryptor,
-        IVariableService variableService,
         IComponentService componentService,
         IAuthorizationService authorizationService,
         IApplicationByPartIdDataLoader applicationByPartId,
@@ -54,7 +55,9 @@ internal sealed class PublishingService : IPublishingService
         IChangeLogService changeLogService,
         IEnvironmentStore environmentStore,
         IVariableStore variableStore,
-        ICreateVaultConfigClient createVaultConfig)
+        ICreateVaultConfigClient createVaultConfig,
+        IDecryptor decryptor,
+        IVariableValueStore variableValueStore)
     {
         _publishedById = publishedById;
         _publishedApplicationPartsByPartId = publishedApplicationPartsByPartId;
@@ -63,7 +66,6 @@ internal sealed class PublishingService : IPublishingService
         _componentDataLoader = componentDataLoader;
         _sessionAccessor = sessionAccessor;
         _publishingStore = publishingStore;
-        _variableService = variableService;
         _componentService = componentService;
         _authorizationService = authorizationService;
         _applicationByPartId = applicationByPartId;
@@ -72,6 +74,8 @@ internal sealed class PublishingService : IPublishingService
         _environmentStore = environmentStore;
         _variableStore = variableStore;
         _createVaultConfig = createVaultConfig;
+        _decryptor = decryptor;
+        _variableValueStore = variableValueStore;
         _encryptor = encryptor;
     }
 
@@ -445,6 +449,7 @@ internal sealed class PublishingService : IPublishingService
         var variableNames = context.Variables.Select(x => x.VariableName).Distinct().ToArray();
 
         var resolvesValues = await GetBestMatchingValuesAsync(
+            app,
             variableNames,
             app.Id,
             part.Id,
@@ -461,7 +466,10 @@ internal sealed class PublishingService : IPublishingService
                     variable.VariableName);
             }
 
-            variable.SetValue(JsonValue.Create(value.Value)!);
+            var decryptedValue =
+                await _decryptor.DecryptAsync(value.EncryptedValue, cancellationToken);
+
+            variable.SetValue(JsonValue.Create(decryptedValue)!);
         }
 
         return jsonObject.ToJsonString();
@@ -491,7 +499,7 @@ internal sealed class PublishingService : IPublishingService
         JsonVariableVisitor.Default.Visit(jsonObject, context);
 
         var variableNames = context.Variables.Select(x => x.VariableName).ToArray();
-        var variables = await _variableService.GetByNamesAsync(variableNames, cancellationToken);
+        var variables = await _variableStore.GetByNamesAsync(variableNames, cancellationToken);
 
         var variableLookup = variables
             .Where(x => x is not null)
@@ -589,6 +597,7 @@ internal sealed class PublishingService : IPublishingService
     }
 
     private async Task<IDictionary<string, VariableValue>> GetBestMatchingValuesAsync(
+        Application app,
         IEnumerable<string> variableNames,
         Guid applicationId,
         Guid applicationPartId,
@@ -601,43 +610,83 @@ internal sealed class PublishingService : IPublishingService
 
         IDictionary<string, VariableValue> values = new Dictionary<string, VariableValue>();
 
-        IDictionary<Guid, Variable> ids = variables.OfType<Variable>().ToDictionary(x => x.Id);
+        var variableLookup = variables.OfType<Variable>().ToDictionary(x => x.Id);
 
-        var partValues = await _variableStore
-            .GetByApplicationPartIdAsync(applicationPartId, ids.Keys, cancellationToken);
+        var applicationAndEnvScope =
+            new ApplicationVariableValueScope(environmentId, applicationId);
+        var applicationPartAndEnvScope =
+            new ApplicationPartVariableValueScope(environmentId, applicationPartId);
+        var namespaceAndEnvScope =
+            new NamespaceVariableValueScope(environmentId, app.Namespace);
+        var applicationScope =
+            new ApplicationVariableValueScope(null, applicationId);
+        var applicationPartScope =
+            new ApplicationPartVariableValueScope(null, applicationPartId);
+        var namespaceScope =
+            new NamespaceVariableValueScope(null, app.Namespace);
 
-        foreach (var value in partValues)
+        var possibleValues =
+            await _variableValueStore.GetByFilterAsync(
+                variables.Select(x => x.Id).Distinct(),
+                new VariableValueScope[]
+                {
+                    applicationAndEnvScope,
+                    applicationPartAndEnvScope,
+                    namespaceAndEnvScope,
+                    applicationScope,
+                    applicationPartScope,
+                    namespaceScope
+                },
+                cancellationToken);
+
+        var lookupByScope = possibleValues.ToLookup(x => x.Scope);
+        var lookupAppAndEnv = lookupByScope[applicationAndEnvScope].ToDictionary(x => x.VariableId);
+        var lookupPartAndEnv =
+            lookupByScope[applicationPartAndEnvScope].ToDictionary(x => x.VariableId);
+        var lookupNamespaceAndEnv =
+            lookupByScope[namespaceAndEnvScope].ToDictionary(x => x.VariableId);
+        var lookupApplication = lookupByScope[applicationScope].ToDictionary(x => x.VariableId);
+        var lookupApplicationPart =
+            lookupByScope[applicationPartScope].ToDictionary(x => x.VariableId);
+        var lookupNamespace = lookupByScope[namespaceScope].ToDictionary(x => x.VariableId);
+
+        foreach (var (id, variable) in variableLookup)
         {
-            if (ids.TryGetValue(value.Key.VariableId, out var variable) &&
-                value.Key.EnvironmentId == environmentId)
+            VariableValue? result;
+            if (lookupPartAndEnv.TryGetValue(id, out result))
             {
-                values[variable.Name] = value;
-                ids.Remove(value.Key.VariableId);
+                values.Add(variable.Name, result);
+                continue;
             }
-        }
 
-        var appValues = await _variableStore
-            .GetByApplicationIdAsync(applicationId, ids.Keys, cancellationToken);
-
-        foreach (var value in appValues)
-        {
-            if (ids.TryGetValue(value.Key.VariableId, out var variable) &&
-                value.Key.EnvironmentId == environmentId)
+            if (lookupAppAndEnv.TryGetValue(id, out result))
             {
-                values[variable.Name] = value;
-                ids.Remove(value.Key.VariableId);
+                values.Add(variable.Name, result);
+                continue;
             }
-        }
 
-        var globalValues = await _variableStore.GetGlobalVariableValue(ids.Keys, cancellationToken);
-
-        foreach (var value in globalValues)
-        {
-            if (ids.TryGetValue(value.Key.VariableId, out var variable) &&
-                value.Key.EnvironmentId == environmentId)
+            if (lookupNamespaceAndEnv.TryGetValue(id, out result))
             {
-                values[variable.Name] = value;
-                ids.Remove(value.Key.VariableId);
+                values.Add(variable.Name, result);
+                continue;
+            }
+
+            if (lookupApplicationPart.TryGetValue(id, out result))
+            {
+                values.Add(variable.Name, result);
+                continue;
+            }
+
+            if (lookupApplication.TryGetValue(id, out result))
+            {
+                values.Add(variable.Name, result);
+                continue;
+            }
+
+            if (lookupNamespace.TryGetValue(id, out result))
+            {
+                values.Add(variable.Name, result);
+                continue;
             }
         }
 

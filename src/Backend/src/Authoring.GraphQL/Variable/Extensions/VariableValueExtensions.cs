@@ -10,7 +10,7 @@ public sealed class VariableValueExtensions
         [Parent] VariableValue value,
         CancellationToken cancellationToken)
     {
-        return await variableService.GetByIdAsync(value.Key.VariableId, cancellationToken);
+        return await variableService.GetByIdAsync(value.VariableId, cancellationToken);
     }
 
     public async Task<Application?> GetApplicationAsync(
@@ -18,7 +18,7 @@ public sealed class VariableValueExtensions
         [Service] IApplicationService service,
         CancellationToken cancellationToken)
     {
-        return value.Key.ApplicationId is { } applicationId
+        return value.Scope is ApplicationVariableValueScope { ApplicationId: var applicationId }
             ? await service.GetByIdAsync(applicationId, cancellationToken)
             : null;
     }
@@ -28,7 +28,7 @@ public sealed class VariableValueExtensions
         [Service] IApplicationService service,
         CancellationToken cancellationToken)
     {
-        return value.Key.PartId is { } partId
+        return value.Scope is ApplicationPartVariableValueScope { PartId: var partId }
             ? await service.GetPartByIdAsync(partId, cancellationToken)
             : null;
     }
@@ -38,7 +38,7 @@ public sealed class VariableValueExtensions
         [Service] IEnvironmentService service,
         CancellationToken cancellationToken)
     {
-        return value.Key.EnvironmentId is { } environmentId
+        return value.Scope.EnvironmentId is { } environmentId
             ? await service.GetByIdAsync(environmentId, cancellationToken)
             : null;
     }
