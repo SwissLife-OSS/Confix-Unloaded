@@ -1,9 +1,3 @@
-import Icon from '@ant-design/icons';
-import {NonIndexRouteObject} from 'react-router-dom';
-import {Applications} from './applications/Applications';
-import {Components} from './components/Components';
-import {Environments} from './environment/Environments';
-import {Explorer} from './explorer/Explorer';
 import {
   ApplicationIcon,
   ComponentIcon,
@@ -12,19 +6,22 @@ import {
   SettingsIcon,
   VariablesIcon,
 } from './icons/icons';
+
+import {Applications} from './applications/Applications';
+import {Components} from './components/Components';
+import {Environments} from './environment/Environments';
+import {Explorer} from './explorer/Explorer';
+import Icon from '@ant-design/icons';
+import {NonIndexRouteObject} from 'react-router-dom';
 import {Settings} from './settings/Settings';
-import {Permission} from './shared/useUser';
-import {Scope} from './shared/useUser';
+import {UserContextData} from './shared/UserContext';
 import {Variables} from './variables/Variables';
 
 export interface RouteDefinition extends NonIndexRouteObject {
   name: string;
   path: string;
   link: string;
-  permissions?: {
-    scope: Scope;
-    permissions: Permission;
-  };
+  permissions?: (user: UserContextData) => boolean;
   icon: React.FC<typeof Icon.defaultProps>;
 }
 
@@ -54,10 +51,7 @@ export const navigation: RouteDefinition[] = [
     name: 'Environments',
     path: '/environments/*',
     link: '/environments',
-    permissions: {
-      permissions: 'isRead',
-      scope: 'ENVIRONMENT',
-    },
+    permissions: ({hasEnvironmentAccess}) => hasEnvironmentAccess,
     element: <Environments />,
     icon: EnvironmentIcon,
   },
@@ -72,10 +66,7 @@ export const navigation: RouteDefinition[] = [
     name: 'Settings',
     path: '/settings/*',
     link: '/settings/groups',
-    permissions: {
-      permissions: 'isWrite',
-      scope: 'IDENTITY',
-    },
+    permissions: ({hasIdentityAccess}) => hasIdentityAccess,
     element: <Settings />,
     icon: SettingsIcon,
   },

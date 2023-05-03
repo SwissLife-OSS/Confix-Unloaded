@@ -1,0 +1,22 @@
+﻿[
+  {
+    "Namespace": "CompanyNamespace",
+    "Scope": "Identity",
+    "Permission": "Read, Write"
+  },
+  {
+    "Namespace": "Project1Namespace",
+    "Scope": "Identity",
+    "Permission": "Read, Write"
+  },
+  {
+    "Namespace": "Project2Namespace",
+    "Scope": "Identity",
+    "Permission": "Read, Write"
+  },
+  {
+    "Namespace": "SuperImportant",
+    "Scope": "Identity",
+    "Permission": "Read, Write"
+  }
+]

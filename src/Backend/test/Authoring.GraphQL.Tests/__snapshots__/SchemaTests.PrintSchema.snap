@@ -481,6 +481,12 @@ type EnvironmentNotFoundError implements UserError {
   message: String!
 }
 
+type Grant {
+  namespace: String!
+  scope: Scope!
+  permission: PermissionsFlags!
+}
+
 type Group {
   id: ID!
   name: String!
@@ -1003,9 +1009,8 @@ type VariableValueChange implements VariableChange & Change {
 }
 
 type Viewer {
+  namespaceGrants(scope: Scope!): [Grant!]!
   name: String!
-  groups: [Group!]!
-  namespaces: [String!]!
 }
 
 union AddComponentsToApplicationPartError = ApplicationPartIdInvalid | UnauthorizedOperationError

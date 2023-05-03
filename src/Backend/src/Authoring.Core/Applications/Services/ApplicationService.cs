@@ -116,8 +116,12 @@ internal sealed class ApplicationService : IApplicationService
             return Array.Empty<Application>();
         }
 
-        return await _appStore
-            .Search(skip, take, session.Namespaces, search, cancellationToken);
+        return await _appStore.Search(
+                skip,
+                take,
+                session.GetNamespacesWithAccess(Scope.Application, Read),
+                search,
+                cancellationToken);
     }
 
     public async Task<Application> CreateAsync(
@@ -164,7 +168,8 @@ internal sealed class ApplicationService : IApplicationService
 
         application = application with
         {
-            Version = application.Version + 1, Parts = applicationParts
+            Version = application.Version + 1,
+            Parts = applicationParts
         };
 
         using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))

@@ -1,7 +1,6 @@
 using Moq;
 using Xunit;
 using System.Collections.Immutable;
-using System.Security.Authentication;
 using System.Security.Claims;
 using Confix.Authentication.ApiKey;
 using IdentityModel;

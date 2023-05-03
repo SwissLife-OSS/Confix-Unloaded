@@ -1,14 +1,16 @@
-import React, {ReactNode, Suspense} from 'react';
-import {RelayEnvironmentProvider} from 'react-relay';
-import RelayEnvironment from '../RelayEnvironment';
-import {BrowserRouter} from 'react-router-dom';
-import {PageLoader} from './DetailView';
-import {css} from '@emotion/react';
 import 'antd/dist/antd.variable.min.css';
+
 import {Alert, ConfigProvider} from 'antd';
-import {isNotLoggedInError} from './useUser';
-import {config} from '../config';
+import React, {ReactNode, Suspense} from 'react';
+
+import {BrowserRouter} from 'react-router-dom';
 import {Colors} from './colors';
+import {PageLoader} from './DetailView';
+import RelayEnvironment from '../RelayEnvironment';
+import {RelayEnvironmentProvider} from 'react-relay';
+import {UserContextProvider} from './UserContext';
+import {config} from '../config';
+import {css} from '@emotion/react';
 
 ConfigProvider.config({
   theme: {
@@ -22,7 +24,9 @@ export const Wrapper: React.FC<{children: ReactNode}> = ({children}) => (
       <RelayEnvironmentProvider environment={RelayEnvironment}>
         <ConfigProvider>
           <RootErrorBoundary>
-            <Suspense fallback={<FullPageLoader />}>{children}</Suspense>
+            <Suspense fallback={<FullPageLoader />}>
+              <UserContextProvider>{children}</UserContextProvider>
+            </Suspense>
           </RootErrorBoundary>
         </ConfigProvider>
       </RelayEnvironmentProvider>
@@ -48,7 +52,6 @@ interface RootErrorBoundaryProps {
 
 type RootErrorBoundaryState =
   | {kind: 'clear'}
-  | {kind: 'requires-sign-in'}
   | {kind: 'error'; error: {message?: string}};
 
 export class RootErrorBoundary extends React.Component<
@@ -61,13 +64,7 @@ export class RootErrorBoundary extends React.Component<
   }
 
   static getDerivedStateFromError(error: Error): RootErrorBoundaryState {
-    const {message} = error;
-
-    if (isNotLoggedInError(error)) {
-      return {kind: 'requires-sign-in'};
-    }
-
-    return {kind: 'error', error: {message}};
+    return {kind: 'error', error};
   }
   render() {
     switch (this.state.kind) {
@@ -81,12 +78,6 @@ export class RootErrorBoundary extends React.Component<
             type="error"
           />
         );
-      case 'requires-sign-in':
-        window.location.href =
-          config.identity.signInPath +
-          '?returnUrl=' +
-          encodeURI(window.location.href.replace(window.location.origin, ''));
-        return <FullPageLoader message={'Authenticating ... '} />;
     }
   }
 }
