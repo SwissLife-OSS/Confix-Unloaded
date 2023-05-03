@@ -6,7 +6,7 @@ public interface ISession
 
     UserInfo UserInfo { get; }
 
-    IReadOnlySet<string> NamespacesWithAccess(Scope scope, Permissions permission);
+    IReadOnlySet<string> GetNamespacesWithAccess(Scope scope, Permissions permission);
     IReadOnlySet<Grant> GetGrantsForScope(Scope scope);
     bool HasPermission(string @namespace, Scope scope, Permissions permission);
 }

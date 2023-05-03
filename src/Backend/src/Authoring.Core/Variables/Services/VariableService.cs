@@ -93,7 +93,7 @@ internal sealed class VariableService : IVariableService
         }
 
         return await _variableStore.GetAllByNamespacesAsync(
-            session.NamespacesWithAccess(Scope.Variable, Read),
+            session.GetNamespacesWithAccess(Scope.Variable, Read),
             cancellationToken);
     }
 
@@ -114,7 +114,7 @@ internal sealed class VariableService : IVariableService
         {
             return Array.Empty<Variable>().AsQueryable();
         }
-        var namespacesWithAccess = session.NamespacesWithAccess(Scope.Variable, Read);
+        var namespacesWithAccess = session.GetNamespacesWithAccess(Scope.Variable, Read);
         var queryable = _variableStore
             .Query()
             .Where(x => namespacesWithAccess.Contains(x.Namespace));

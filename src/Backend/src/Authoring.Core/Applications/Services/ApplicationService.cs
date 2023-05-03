@@ -119,7 +119,7 @@ internal sealed class ApplicationService : IApplicationService
         return await _appStore.Search(
                 skip,
                 take,
-                session.NamespacesWithAccess(Scope.Application, Read),
+                session.GetNamespacesWithAccess(Scope.Application, Read),
                 search,
                 cancellationToken);
     }

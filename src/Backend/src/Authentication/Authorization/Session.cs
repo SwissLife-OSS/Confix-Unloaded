@@ -25,11 +25,10 @@ public class Session : ISession
 
     public IReadOnlyList<Group> Groups { get; }
 
-    public IReadOnlySet<string> NamespacesWithAccess(Scope scope, Permissions permission)
+    public IReadOnlySet<string> GetNamespacesWithAccess(Scope scope, Permissions permission)
         => _namespaces.Value
-            .AsParallel()
             .Where(n => HasPermission(n, scope, permission))
-            .ToImmutableHashSet();
+            .ToHashSet();
 
     public bool HasPermission(string @namespace, Scope scope, Permissions permission)
         => _grantCache.GetOrAdd(new(@namespace, scope, permission), HasGrant);
@@ -63,7 +62,10 @@ public class Session : ISession
     private bool HasGrant(Grant grant) => Groups
         .AsParallel()
         .SelectMany(group => group.Roles)
-        .Where(roleScope => roleScope.Namespace == grant.Namespace || roleScope.Namespace is WellKnownNamespaces.Global)
+        .Where(roleScope =>
+            grant.Scope is Scope.Identity or Scope.Environment ?
+                roleScope.Namespace is WellKnownNamespaces.Global
+                : roleScope.Namespace == grant.Namespace)
         .SelectMany(roleScope => roleScope.RoleIds)
         .Select(roleId => _roleMap.GetValueOrDefault(roleId))
         .Any(role => role.GrantsPermissionFor(grant.Scope, grant.Permission));

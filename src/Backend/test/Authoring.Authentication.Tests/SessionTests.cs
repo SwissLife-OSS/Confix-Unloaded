@@ -10,13 +10,13 @@ namespace Confix.Authentication.Authorization.Tests;
 public class SessionTests
 {
     [Fact]
-    public void NamespacesWithAccess_ApplicationReadAsDeveloper_MatchSnapshot()
+    public void GetNamespacesWithAccess_ApplicationReadAsDeveloper_MatchSnapshot()
     {
         // Arrange
         ISession session = CreateDeveloperSession();
 
         // Act
-        var result = session.NamespacesWithAccess(Scope.Application, Read);
+        var result = session.GetNamespacesWithAccess(Scope.Application, Read);
 
         // Assert
         result.Should().BeEquivalentTo(new[]{
@@ -27,26 +27,26 @@ public class SessionTests
     }
 
     [Fact]
-    public void NamespacesWithAccess_IdentityReadAsDeveloper_None()
+    public void GetNamespacesWithAccess_IdentityReadAsDeveloper_None()
     {
         // Arrange
         ISession session = CreateDeveloperSession();
 
         // Act
-        var result = session.NamespacesWithAccess(Scope.Identity, Read);
+        var result = session.GetNamespacesWithAccess(Scope.Identity, Read);
 
         // Assert
         result.Should().BeEmpty();
     }
 
     [Fact]
-    public void NamespacesWithAccess_IdentityReadAsBigBoss_CorrectElements()
+    public void GetNamespacesWithAccess_IdentityReadAsBigBoss_CorrectElements()
     {
         // Arrange
         ISession session = CreateBigBossSession();
 
         // Act
-        var result = session.NamespacesWithAccess(Scope.Identity, Read);
+        var result = session.GetNamespacesWithAccess(Scope.Identity, Read);
 
         // Assert
         result.Should().BeEquivalentTo(new[]{
