@@ -24,12 +24,12 @@ public sealed class VariableMutations
     public async Task<VariableValue> SaveVariableValueAsync(
         [Service] IVariableService variableService,
         [ID<Variable>] Guid variableId,
-        VariableReferenceInput reference,
+        VariableValueScopeInput reference,
         string value,
         CancellationToken cancellationToken)
     {
         return await variableService
-            .SaveValueAsync(variableId, value, reference.GetReference(), cancellationToken);
+            .SaveValueAsync(variableId, value, reference.GetValueScope(), cancellationToken);
     }
 
     [Error(typeof(UnauthorizedOperationException))]
