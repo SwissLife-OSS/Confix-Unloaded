@@ -1,4 +1,5 @@
 using Confix.Authentication.Authorization;
+using Confix.Vault;
 using Confix.Vault.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -55,7 +56,6 @@ public sealed class ConfigurationController : ControllerBase
         [FromQuery] string applicationName,
         [FromQuery] string applicationPartName,
         [FromQuery] string environmentName,
-        [FromQuery] string token,
         CancellationToken cancellationToken)
     {
         if (string.IsNullOrEmpty(applicationName))
@@ -76,6 +76,8 @@ public sealed class ConfigurationController : ControllerBase
                 .FromError(nameof(environmentName) + " must be provided");
         }
 
+        Request.Headers.TryGetValue(WellKnown.Headers.TokenHeader, out var token);
+
         if (string.IsNullOrEmpty(token))
         {
             return GetConfigurationResponse.FromError(nameof(token) + " must be provided");
@@ -85,7 +87,7 @@ public sealed class ConfigurationController : ControllerBase
             applicationName,
             applicationPartName,
             environmentName,
-            token,
+            token.ToString(),
             cancellationToken);
 
         if (configuration is null)
