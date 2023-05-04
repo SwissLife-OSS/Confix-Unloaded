@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<aa79f4820a38737ecf3d2e897b603615>>
+ * @generated SignedSource<<d0e587a4577bc109a746036a5b5e8551>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,7 @@ export type VariableValueList$data = ReadonlyArray<{
     readonly name: string;
   } | null;
   readonly id: string;
-  readonly value: string | null;
+  readonly value: string;
   readonly variable: {
     readonly id: string;
     readonly name: string;

@@ -169,6 +169,7 @@ const EditVariableForm: React.FC<{
       </Row>
       <VariableEditorOrPlaceholder
         key={id}
+        namespace={namespace}
         applicationOption={application}
         applicationPartOption={applicationPart}
         variableId={id}
@@ -181,14 +182,16 @@ const nullWhenGlobal = (val?: string | '__global'): string | undefined =>
   !val || val === '__global' ? undefined : val;
 
 export const VariableEditorOrPlaceholder: React.FC<{
+  namespace: string;
   variableId?: string;
   applicationOption?: ApplicationOption;
   applicationPartOption?: ApplicationPartOption;
-}> = ({variableId, applicationOption, applicationPartOption}) => {
+}> = ({namespace, variableId, applicationOption, applicationPartOption}) => {
   if (variableId && applicationOption && applicationPartOption) {
     return (
       <DefaultSuspense>
         <VariableEditor
+          namespace={namespace}
           variableId={variableId}
           applicationId={nullWhenGlobal(applicationOption?.edge?.id)}
           applicationPartId={nullWhenGlobal(applicationPartOption.id)}

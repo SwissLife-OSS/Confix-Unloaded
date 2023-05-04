@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<02e1c8549b0963b490dc91e28a50dd95>>
+ * @generated SignedSource<<9eb09431bd685ace2445591dc8a249d7>>
  * @relayHash 7f0e6e9f8e37b720490bab3446d06544
  * @lightSyntaxTransform
  * @nogrep
@@ -16,6 +16,24 @@ export type CreateVariableInput = {
   defaultValue?: string | null;
   isSecret: boolean;
   name: string;
+  namespace: string;
+  scope: VariableValueScopeInput;
+};
+export type VariableValueScopeInput = {
+  application?: ApplicationVariableValueScopeInput | null;
+  applicationPart?: ApplicationPartVariableValueScopeInput | null;
+  namespace?: NamespaceVariableValueScopeInput | null;
+};
+export type ApplicationVariableValueScopeInput = {
+  applicationId: string;
+  environmentId?: string | null;
+};
+export type ApplicationPartVariableValueScopeInput = {
+  environmentId?: string | null;
+  partId: string;
+};
+export type NamespaceVariableValueScopeInput = {
+  environmentId?: string | null;
   namespace: string;
 };
 export type NewVariableMutation$variables = {

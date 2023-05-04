@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<301b5e8349127195c82778992690a53e>>
+ * @generated SignedSource<<2e8ce5f290ad04826f8c78785db1d92b>>
  * @relayHash 4bb8c24cfefe85b255c3529a5e108776
  * @lightSyntaxTransform
  * @nogrep
@@ -13,12 +13,26 @@
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type SaveVariableValueInput = {
-  applicationId?: string | null;
-  environmentId?: string | null;
-  partId?: string | null;
+  reference: VariableValueScopeInput;
   value: string;
-  valueId?: string | null;
   variableId: string;
+};
+export type VariableValueScopeInput = {
+  application?: ApplicationVariableValueScopeInput | null;
+  applicationPart?: ApplicationPartVariableValueScopeInput | null;
+  namespace?: NamespaceVariableValueScopeInput | null;
+};
+export type ApplicationVariableValueScopeInput = {
+  applicationId: string;
+  environmentId?: string | null;
+};
+export type ApplicationPartVariableValueScopeInput = {
+  environmentId?: string | null;
+  partId: string;
+};
+export type NamespaceVariableValueScopeInput = {
+  environmentId?: string | null;
+  namespace: string;
 };
 export type VariableEditorSaveVariableMutation$variables = {
   input: SaveVariableValueInput;
@@ -27,7 +41,7 @@ export type VariableEditorSaveVariableMutation$data = {
   readonly saveVariableValue: {
     readonly value: {
       readonly id: string;
-      readonly value: string | null;
+      readonly value: string;
     } | null;
   };
 };

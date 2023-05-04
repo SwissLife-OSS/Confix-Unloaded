@@ -1,4 +1,6 @@
+using Confix.Authentication.Authorization;
 using Confix.Authoring.Store;
+using Confix.CryptoProviders;
 
 namespace Confix.Authoring.GraphQL;
 
@@ -42,4 +44,10 @@ public sealed class VariableValueExtensions
             ? await service.GetByIdAsync(environmentId, cancellationToken)
             : null;
     }
+
+    public async Task<string> GetValueAsync(
+        [Parent] VariableValue value,
+        [Service] IVariableService variableService,
+        CancellationToken cancellationToken)
+    => await variableService.DecryptedValueAsync(value, cancellationToken);
 }

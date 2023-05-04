@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<150cb560b1beadb99331df1b543d7a96>>
- * @relayHash 62a91288ebb43ae99a3664aad0603418
+ * @generated SignedSource<<d7338d9efced498b7d6e2590265534b1>>
+ * @relayHash 11d1065fedb081ec3f08371d919ade67
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 62a91288ebb43ae99a3664aad0603418
+// @relayRequestID 11d1065fedb081ec3f08371d919ade67
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type DeleteVariableValueInput = {
@@ -23,10 +23,6 @@ export type VariableEditorDeleteVariableValueMutation$data = {
     readonly value: {
       readonly variable: {
         readonly id: string;
-        readonly values: ReadonlyArray<{
-          readonly id: string;
-          readonly value: string | null;
-        }>;
       } | null;
     } | null;
   };
@@ -66,26 +62,7 @@ v3 = {
   "name": "variable",
   "plural": false,
   "selections": [
-    (v2/*: any*/),
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "VariableValue",
-      "kind": "LinkedField",
-      "name": "values",
-      "plural": true,
-      "selections": [
-        (v2/*: any*/),
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "value",
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
-    }
+    (v2/*: any*/)
   ],
   "storageKey": null
 };
@@ -156,7 +133,7 @@ return {
     ]
   },
   "params": {
-    "id": "62a91288ebb43ae99a3664aad0603418",
+    "id": "11d1065fedb081ec3f08371d919ade67",
     "metadata": {},
     "name": "VariableEditorDeleteVariableValueMutation",
     "operationKind": "mutation",
@@ -165,6 +142,6 @@ return {
 };
 })();
 
-(node as any).hash = "711576a5c5587d42d641470381d523bd";
+(node as any).hash = "c556cd581bf649a4a039065e118d79e0";
 
 export default node;

@@ -42,4 +42,13 @@
       <LogicalName>Confix.Authoring.GraphQL.Persisted.Vault</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Variable\Configuration\VariableValueScopeType.cs">
+      <Link>Variable\VariableValueScopeType.cs</Link>
+    </Compile>
+    <Compile Update="Variable\Configuration\VariableValueScopeType.cs">
+      <Link>Variable\VariableValueScopeType.cs</Link>
+    </Compile>
+  </ItemGroup>
 </Project>

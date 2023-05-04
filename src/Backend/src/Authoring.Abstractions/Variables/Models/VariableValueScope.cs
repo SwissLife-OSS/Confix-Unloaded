@@ -2,7 +2,13 @@ using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring;
 
-public abstract record VariableValueScope([property: ID<Environment>] Guid? EnvironmentId)
+public abstract record VariableValueScope
 {
-    public abstract string Identifier { get; }
+    protected VariableValueScope(Guid? environmentId)
+    {
+        this.EnvironmentId = environmentId;
+    }
+
+    [ID<Environment>]
+    public Guid? EnvironmentId { get; set; }
 }

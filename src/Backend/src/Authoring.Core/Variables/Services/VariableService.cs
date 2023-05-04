@@ -14,6 +14,7 @@ internal sealed class VariableService : IVariableService
     private readonly IAuthorizationService _authorizationService;
     private readonly IChangeLogService _changeLogService;
     private readonly IEncryptor _encryptor;
+    private readonly IDecryptor _decryptor;
     private readonly ISessionAccessor _sessionAccessor;
     private readonly IVariableStore _variableStore;
     private readonly IVariableValueStore _variableValueStore;
@@ -21,21 +22,23 @@ internal sealed class VariableService : IVariableService
     private readonly IApplicationByPartIdDataLoader _applicationByPartId;
 
     public VariableService(
-        IVariableStore variableStore,
-        IVariableValueStore variableValueStore,
+        IAuthorizationService authorizationService,
         IChangeLogService changeLogService,
         IEncryptor encryptor,
-        IAuthorizationService authorizationService,
+        IDecryptor decryptor,
         ISessionAccessor sessionAccessor,
+        IVariableStore variableStore,
+        IVariableValueStore variableValueStore,
         IApplicationDataLoader applicationById,
         IApplicationByPartIdDataLoader applicationByPartId)
     {
-        _variableStore = variableStore;
-        _variableValueStore = variableValueStore;
+        _authorizationService = authorizationService;
         _changeLogService = changeLogService;
         _encryptor = encryptor;
-        _authorizationService = authorizationService;
+        _decryptor = decryptor;
         _sessionAccessor = sessionAccessor;
+        _variableStore = variableStore;
+        _variableValueStore = variableValueStore;
         _applicationById = applicationById;
         _applicationByPartId = applicationByPartId;
     }
@@ -290,5 +293,19 @@ internal sealed class VariableService : IVariableService
         }
 
         return variableValue;
+    }
+
+    public async Task<string> DecryptedValueAsync(
+        VariableValue variableValue,
+        CancellationToken cancellationToken)
+    {
+        if (!await _authorizationService
+            .RuleFor<VariableValue>()
+            .IsAuthorizedAsync(variableValue, Decrypt, cancellationToken))
+        {
+            throw new UnauthorizedOperationException();
+        }
+
+        return await _decryptor.DecryptAsync(variableValue.EncryptedValue, cancellationToken);
     }
 }

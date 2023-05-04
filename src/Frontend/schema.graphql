@@ -1,277 +1,573 @@
-"""
-The `@oneOf` directive is used within the type system definition language
- to indicate:
+schema {
+  query: Query
+  mutation: Mutation
+}
 
- - an Input Object is a Oneof Input Object, or
- - an Object Type's Field is a Oneof Field.
-"""
-directive @oneOf on INPUT_OBJECT
+interface ApplicationChange implements Change {
+  application: Application
+  applicationVersion: Int!
+  kind: String!
+}
 
-"""
-The `@defer` directive may be provided for fragment spreads and inline fragments to inform the executor to delay the execution of the current fragment to indicate deprioritization of the current fragment. A query with `@defer` directive will cause the request to potentially return multiple responses, where non-deferred data is delivered in the initial response and data deferred is delivered in a subsequent response. `@include` and `@skip` take precedence over `@defer`.
-"""
-directive @defer(
-  """
-  If this argument label has a value other than null, it will be passed on to the result of this defer directive. This label is intended to give client applications a way to identify to which fragment a deferred result belongs to.
-  """
-  label: String
+interface ApplicationPartChange implements ApplicationChange & Change {
+  part: ApplicationPart
+  partVersion: Int!
+  application: Application
+  applicationVersion: Int!
+  kind: String!
+}
 
-  """
-  Deferred when true.
-  """
-  if: Boolean
-) on FRAGMENT_SPREAD | INLINE_FRAGMENT
+interface ApplicationPartComponentChange implements ApplicationPartChange & ApplicationChange & Change {
+  partComponent: ApplicationPartComponent
+  partComponentVersion: Int!
+  part: ApplicationPart
+  partVersion: Int!
+  application: Application
+  applicationVersion: Int!
+  kind: String!
+}
 
-type Query {
-  """
-  Fetches an object given its ID.
-  """
-  node(
-    """
-    ID of the object.
-    """
-    id: ID!
-  ): Node
+interface Change {
+  kind: String!
+}
 
-  """
-  Lookup nodes by a list of IDs.
-  """
-  nodes(
-    """
-    The list of node IDs.
-    """
-    ids: [ID!]!
-  ): [Node]!
-  apiKeys(
-    """
-    Returns the first _n_ elements from the list.
-    """
+interface ComponentChange implements Change {
+  component: Component
+  componentVersion: Int!
+  kind: String!
+}
+
+"The node interface is implemented by entities that have a global unique identifier."
+interface Node {
+  id: ID!
+}
+
+interface UserError {
+  code: String!
+  message: String!
+}
+
+interface VariableChange implements Change {
+  variable: Variable
+  variableVersion: Int!
+  kind: String!
+}
+
+type AddComponentToApplicationPartChange implements ApplicationPartComponentChange & ApplicationPartChange & ApplicationChange & Change {
+  addedComponent: ApplicationPartComponent!
+  kind: String!
+  application: Application
+  applicationVersion: Int!
+  part: ApplicationPart
+  partVersion: Int!
+  partComponent: ApplicationPartComponent
+  partComponentVersion: Int!
+}
+
+type AddComponentsToApplicationPartPayload {
+  applicationPart: ApplicationPart
+  errors: [AddComponentsToApplicationPartError!]
+  query: Query!
+}
+
+type AddPartToApplicationChange implements ApplicationPartChange & ApplicationChange & Change {
+  addedPart: ApplicationPart!
+  kind: String!
+  application: Application
+  applicationVersion: Int!
+  part: ApplicationPart
+  partVersion: Int!
+}
+
+type AddPartToApplicationPayload {
+  application: Application
+  errors: [AddPartToApplicationError!]
+  query: Query!
+}
+
+type ApiKey {
+  id: ID!
+  name: String!
+  roles: [RoleScope!]!
+}
+
+type ApiKeyWithSecret {
+  key: ApiKey!
+  secret: String!
+}
+
+"A connection to a list of items."
+type ApiKeysConnection {
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "A list of edges."
+  edges: [ApiKeysEdge!]
+  "A flattened list of the nodes."
+  nodes: [ApiKey!]
+}
+
+"An edge in a connection."
+type ApiKeysEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: ApiKey!
+}
+
+type Application implements Node {
+  id: ID!
+  name: String!
+  namespace: String!
+  version: Int!
+  parts: [ApplicationPart!]!
+  variableValues: [VariableValue!]!
+  changeLog: [ChangeLog!]!
+}
+
+type ApplicationIdInvalid implements UserError {
+  applicationId: ID!
+  code: String!
+  message: String!
+}
+
+type ApplicationNameTaken implements UserError {
+  applicationName: String!
+  code: String!
+  message: String!
+}
+
+type ApplicationNotFoundError implements UserError {
+  applicationId: ID!
+  code: String!
+  message: String!
+}
+
+type ApplicationPart implements Node {
+  id: ID!
+  name: String!
+  version: Int!
+  components: [ApplicationPartComponent!]!
+  application: Application
+  variableValues: [VariableValue!]!
+  changeLog: [ChangeLog!]!
+  publishedVersions(
+    "Returns the first _n_ elements from the list."
     first: Int
-
-    """
-    Returns the elements in the list that come after the specified cursor.
-    """
+    "Returns the elements in the list that come after the specified cursor."
     after: String
-
-    """
-    Returns the last _n_ elements from the list.
-    """
+    "Returns the last _n_ elements from the list."
     last: Int
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
+    "Returns the elements in the list that come before the specified cursor."
     before: String
-  ): ApiKeysConnection
-  apiKeyById(id: ID!): ApiKey
-
-  """
-  Get all application configurations.
-  """
-  applications(
-    search: String
-
-    """
-    Returns the first _n_ elements from the list.
-    """
+  ): PublishedVersionsConnection
+  deployments(
+    "Returns the first _n_ elements from the list."
     first: Int
-
-    """
-    Returns the elements in the list that come after the specified cursor.
-    """
+    "Returns the elements in the list that come after the specified cursor."
     after: String
-  ): ApplicationsConnection
-
-  """
-  Get a specific application configuration by its ID.
-  """
-  applicationById(
-    """
-    The application ID.
-    """
-    id: ID!
-  ): Application
-  applicationPartById(id: ID!): ApplicationPart
-  applicationPartComponentById(partComponentId: ID!): ApplicationPartComponent
-  components(
-    applicationId: ID
-    applicationPartId: ID
-    namespace: String
-    search: String
-
-    """
-    Returns the first _n_ elements from the list.
-    """
-    first: Int
-
-    """
-    Returns the elements in the list that come after the specified cursor.
-    """
-    after: String
-  ): ComponentsConnection
-  componentById(id: ID!): Component
-  searchEnvironments(
-    search: String
-
-    """
-    Returns the first _n_ elements from the list.
-    """
-    first: Int
-
-    """
-    Returns the elements in the list that come after the specified cursor.
-    """
-    after: String
-
-    """
-    Returns the last _n_ elements from the list.
-    """
+    "Returns the last _n_ elements from the list."
     last: Int
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
+    "Returns the elements in the list that come before the specified cursor."
     before: String
-  ): SearchEnvironmentsConnection
-  environmentById(id: ID!): Environment
-  variables: [Variable!]!
-  searchVariables(
-    search: String
-
-    """
-    Returns the first _n_ elements from the list.
-    """
+  ): DeploymentsConnection
+  publishApplicationPartById(
+    "Returns the first _n_ elements from the list."
     first: Int
-
-    """
-    Returns the elements in the list that come after the specified cursor.
-    """
+    "Returns the elements in the list that come after the specified cursor."
     after: String
-
-    """
-    Returns the last _n_ elements from the list.
-    """
+    "Returns the last _n_ elements from the list."
     last: Int
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
+    "Returns the elements in the list that come before the specified cursor."
     before: String
-  ): SearchVariablesConnection
-  variable(id: ID!): Variable
-  variableValues(
-    variableId: ID!
-    applicationId: ID
-    applicationPartId: ID
-  ): [VariableValue!]!
-  globalVariableValues: [VariableValue!]!
+  ): PublishApplicationPartByIdConnection
+}
 
-  """
-  Gets the latest published version of an application part.
-  """
-  latestPublishedVersion(
-    applicationName: String!
-    applicationPartName: String!
-    environmentName: String!
-  ): LatestPublishedVersionResult
-  changeLogById(id: ID!): ChangeLog
-  searchRoles(
-    search: String
+type ApplicationPartComponent {
+  id: ID!
+  version: Int!
+  definition: Component
+  applicationPart: ApplicationPart
+  values(version: Int): String
+  changeLog: [ChangeLog!]!
+}
 
-    """
-    Returns the first _n_ elements from the list.
-    """
+type ApplicationPartComponentNotFoundError implements UserError {
+  componentPartId: ID!
+  code: String!
+  message: String!
+}
+
+type ApplicationPartComponentValuesChange implements ApplicationPartComponentChange & ApplicationPartChange & ApplicationChange & Change {
+  values: String
+  kind: String!
+  application: Application
+  applicationVersion: Int!
+  part: ApplicationPart
+  partVersion: Int!
+  partComponent: ApplicationPartComponent
+  partComponentVersion: Int!
+}
+
+type ApplicationPartIdInvalid implements UserError {
+  code: String!
+  message: String!
+  applicationPartId: ID!
+}
+
+type ApplicationPartNameTaken implements UserError {
+  applicationName: String!
+  code: String!
+  message: String!
+}
+
+type ApplicationPartNotFoundError implements UserError {
+  applicationPartId: ID!
+  code: String!
+  message: String!
+}
+
+type ApplicationPartVariableValueScope {
+  partId: ID!
+  environmentId: ID
+}
+
+type ApplicationVariableValueScope {
+  applicationId: ID!
+  environmentId: ID
+}
+
+"A connection to a list of items."
+type ApplicationsConnection {
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "A list of edges."
+  edges: [ApplicationsEdge!]
+  "A flattened list of the nodes."
+  nodes: [Application!]
+}
+
+"An edge in a connection."
+type ApplicationsEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: Application!
+}
+
+type ChangeLog {
+  id: ID!
+  change: Change!
+  modifiedBy: UserInfo!
+  modifiedAt: DateTime!
+}
+
+type ChangeRolePermissionsPayload {
+  role: Role
+  errors: [ChangeRolePermissionsError!]
+  query: Query!
+}
+
+type ChangeScopeOfComponentChange implements ComponentChange & Change {
+  scopes: [ComponentScope!]!
+  kind: String!
+  component: Component
+  componentVersion: Int!
+}
+
+type ClaimRequirement {
+  type: String!
+  value: String!
+}
+
+type ClaimVersionFailedError implements UserError {
+  message: String!
+  code: String!
+}
+
+type ClaimVersionPayload {
+  result: ClaimVersionResult
+  errors: [ClaimVersionError!]
+  query: Query!
+}
+
+type ClaimVersionResult {
+  version: ClaimedVersion!
+  token: String
+  decryptionKey: String
+}
+
+type ClaimedVersion {
+  id: ID!
+  tag: String!
+  claimedAt: DateTime!
+  application: Application
+  applicationPart: ApplicationPart
+  environment: Environment
+  publishedApplicationPart: PublishedApplicationPart
+}
+
+"A connection to a list of items."
+type ClaimedVersionsConnection {
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "A list of edges."
+  edges: [ClaimedVersionsEdge!]
+  "A flattened list of the nodes."
+  nodes: [ClaimedVersion!]
+}
+
+"An edge in a connection."
+type ClaimedVersionsEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: ClaimedVersion!
+}
+
+type Component implements Node {
+  id: ID!
+  name: String!
+  scopes: [ComponentScope!]!
+  version: Int!
+  state: ComponentState!
+  changeLog: [ChangeLog!]!
+  schemaSdl: SDL
+  schema: Any
+  values: Any
+  defaults: Any
+  schemaViolations: [SchemaViolation!]!
+}
+
+type ComponentNotFoundError implements UserError {
+  componentId: ID!
+  code: String!
+  message: String!
+}
+
+type ComponentSchemaChange implements ComponentChange & Change {
+  schema: String!
+  kind: String!
+  component: Component
+  componentVersion: Int!
+}
+
+type ComponentScope {
+  namespace: String!
+  applicationId: ID
+  applicationPartId: ID
+  application: Application
+  applicationPart: ApplicationPart
+}
+
+type ComponentValidationFailed implements UserError {
+  message: String!
+  code: String!
+}
+
+type ComponentValuesChange implements ComponentChange & Change {
+  values: String!
+  kind: String!
+  component: Component
+  componentVersion: Int!
+}
+
+"A connection to a list of items."
+type ComponentsConnection {
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "A list of edges."
+  edges: [ComponentsEdge!]
+  "A flattened list of the nodes."
+  nodes: [Component!]
+}
+
+"An edge in a connection."
+type ComponentsEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: Component!
+}
+
+type CreateApiKeyPayload {
+  apiKeyWithSecret: ApiKeyWithSecret
+  errors: [CreateApiKeyError!]
+  query: Query!
+}
+
+type CreateApplicationChange implements ApplicationChange & Change {
+  application: Application!
+  kind: String!
+  applicationVersion: Int!
+}
+
+type CreateApplicationPayload {
+  application: Application
+  errors: [CreateApplicationError!]
+  query: Query!
+}
+
+type CreateComponentChange implements ComponentChange & Change {
+  kind: String!
+  component: Component
+  componentVersion: Int!
+}
+
+type CreateComponentPayload {
+  component: Component
+  errors: [CreateComponentError!]
+  query: Query!
+}
+
+type CreateEnvironmentPayload {
+  environment: Environment
+  errors: [CreateEnvironmentError!]
+  query: Query!
+}
+
+type CreateGroupPayload {
+  group: Group
+  errors: [CreateGroupError!]
+  query: Query!
+}
+
+type CreateRolePayload {
+  role: Role
+  errors: [CreateRoleError!]
+  query: Query!
+}
+
+type CreateVariableChange implements VariableChange & Change {
+  value: Variable
+  variable: Variable
+  variableVersion: Int!
+  kind: String!
+}
+
+type CreateVariablePayload {
+  variable: Variable
+  errors: [CreateVariableError!]
+  query: Query!
+}
+
+type DeleteVariableValueChange implements VariableChange & Change {
+  variableValue: VariableValue!
+  variable: Variable
+  variableVersion: Int!
+  kind: String!
+}
+
+type DeleteVariableValuePayload {
+  value: VariableValue
+  errors: [DeleteVariableValueError!]
+  query: Query!
+}
+
+type DeployedEnvironment {
+  environment: Environment
+  claimedVersions(
+    "Returns the first _n_ elements from the list."
     first: Int
-
-    """
-    Returns the elements in the list that come after the specified cursor.
-    """
+    "Returns the elements in the list that come after the specified cursor."
     after: String
-
-    """
-    Returns the last _n_ elements from the list.
-    """
+    "Returns the last _n_ elements from the list."
     last: Int
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
+    "Returns the elements in the list that come before the specified cursor."
     before: String
-  ): SearchRolesConnection
-  roleById(id: ID!): Role
-  searchGroups(
-    search: String
+  ): ClaimedVersionsConnection
+}
 
-    """
-    Returns the first _n_ elements from the list.
-    """
-    first: Int
+"A connection to a list of items."
+type DeploymentsConnection {
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "A list of edges."
+  edges: [DeploymentsEdge!]
+  "A flattened list of the nodes."
+  nodes: [DeployedEnvironment!]
+}
 
-    """
-    Returns the elements in the list that come after the specified cursor.
-    """
-    after: String
+"An edge in a connection."
+type DeploymentsEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: DeployedEnvironment!
+}
 
-    """
-    Returns the last _n_ elements from the list.
-    """
-    last: Int
+type EncryptedValue {
+  value: String!
+  iv: String!
+  topic: String!
+}
 
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-  ): SearchGroupsConnection
-  groupById(id: ID!): Group
-  me: Viewer
+type Environment implements Node {
+  id: ID!
+  name: String!
+  allowDeveloperAccess: Boolean!
+  parent: Environment
+}
+
+type EnvironmentCycleDetectedError implements UserError {
+  message: String!
+  path: [String!]!
+  code: String!
+}
+
+type EnvironmentNameCollisionError implements UserError {
+  name: String!
+  code: String!
+  message: String!
+}
+
+type EnvironmentNotFoundError implements UserError {
+  environmentId: ID!
+  code: String!
+  message: String!
+}
+
+type Grant {
+  namespace: String!
+  scope: Scope!
+  permission: PermissionsFlags!
+}
+
+type Group {
+  id: ID!
+  name: String!
+  requirements: [Requirement!]!
+  roles: [RoleScope!]!
+}
+
+type LatestPublishedVersion {
+  configuration: String!
 }
 
 type Mutation {
   createApiKey(input: CreateApiKeyInput!): CreateApiKeyPayload!
   updateApiKey(input: UpdateApiKeyInput!): UpdateApiKeyPayload!
   removeApiKeyById(input: RemoveApiKeyByIdInput!): RemoveApiKeyByIdPayload!
-
-  """
-  Creates a new application configuration.
-  """
+  "Creates a new application configuration."
   createApplication(input: CreateApplicationInput!): CreateApplicationPayload!
-
-  """
-  Renames an application configuration.
-  """
+  "Renames an application configuration."
   renameApplication(input: RenameApplicationInput!): RenameApplicationPayload!
-
-  """
-  Renames an application part of an application configuration.
-  """
+  "Renames an application part of an application configuration."
   renameApplicationPart(
     input: RenameApplicationPartInput!
   ): RenameApplicationPartPayload!
-
-  """
-  Adds a component to an application part.
-  """
+  "Adds a component to an application part."
   addComponentsToApplicationPart(
     input: AddComponentsToApplicationPartInput!
   ): AddComponentsToApplicationPartPayload!
-
-  """
-  Adds a component to an application part.
-  """
+  "Adds a component to an application part."
   addPartToApplication(
     input: AddPartToApplicationInput!
   ): AddPartToApplicationPayload!
-
-  """
-  Adds a component to an application part.
-  """
+  "Adds a component to an application part."
   removeApplicationPart(
     input: RemoveApplicationPartInput!
   ): RemoveApplicationPartPayload!
-
-  """
-  Adds a component to an application part.
-  """
+  "Adds a component to an application part."
   removeComponentFromApplicationPart(
     input: RemoveComponentFromApplicationPartInput!
   ): RemoveComponentFromApplicationPartPayload!
@@ -325,77 +621,263 @@ type Mutation {
   removeGroupById(input: RemoveGroupByIdInput!): RemoveGroupByIdPayload!
 }
 
-scalar SDL
+type NamespaceVariableValueScope {
+  namespace: String!
+  environmentId: ID
+}
 
-interface UserError {
-  code: String!
+"Information about pagination in a connection."
+type PageInfo {
+  "Indicates whether more edges exist following the set defined by the clients arguments."
+  hasNextPage: Boolean!
+  "Indicates whether more edges exist prior the set defined by the clients arguments."
+  hasPreviousPage: Boolean!
+  "When paginating backwards, the cursor to continue."
+  startCursor: String
+  "When paginating forwards, the cursor to continue."
+  endCursor: String
+}
+
+type Permission {
+  scope: Scope!
+  permissions: PermissionsFlags!
+}
+
+type PermissionsFlags {
+  isRead: Boolean!
+  isWrite: Boolean!
+  isClaim: Boolean!
+  isPublish: Boolean!
+  isDecrypt: Boolean!
+}
+
+"A connection to a list of items."
+type PublishApplicationPartByIdConnection {
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "A list of edges."
+  edges: [PublishApplicationPartByIdEdge!]
+  "A flattened list of the nodes."
+  nodes: [PublishedApplicationPart!]
+}
+
+"An edge in a connection."
+type PublishApplicationPartByIdEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: PublishedApplicationPart!
+}
+
+type PublishApplicationPartByIdPayload {
+  publishedApplicationPart: PublishedApplicationPart
+  errors: [PublishApplicationPartByIdError!]
+  query: Query!
+}
+
+type PublishedApplicationPart implements Node {
+  id: ID!
+  version: Int!
+  part: ApplicationPart!
+  configuration: String!
+  publishedAt: DateTime!
+  publishedBy: UserInfo!
+  claimsVersions: [ClaimedVersion!]!
+}
+
+type PublishedApplicationPartChange implements ApplicationPartChange & ApplicationChange & Change {
+  kind: String!
+  application: Application
+  applicationVersion: Int!
+  part: ApplicationPart
+  partVersion: Int!
+}
+
+"A connection to a list of items."
+type PublishedVersionsConnection {
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "A list of edges."
+  edges: [PublishedVersionsEdge!]
+  "A flattened list of the nodes."
+  nodes: [PublishedApplicationPart!]
+}
+
+"An edge in a connection."
+type PublishedVersionsEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: PublishedApplicationPart!
+}
+
+type PublishingError implements UserError {
   message: String!
-}
-
-interface ApplicationPartChange implements ApplicationChange & Change {
-  part: ApplicationPart
-  partVersion: Int!
-  application: Application
-  applicationVersion: Int!
-  kind: String!
-}
-
-interface ApplicationChange implements Change {
-  application: Application
-  applicationVersion: Int!
-  kind: String!
-}
-
-interface ApplicationPartComponentChange implements ApplicationPartChange & ApplicationChange & Change {
-  partComponent: ApplicationPartComponent
-  partComponentVersion: Int!
-  part: ApplicationPart
-  partVersion: Int!
-  application: Application
-  applicationVersion: Int!
-  kind: String!
-}
-
-type SchemaViolation {
-  path: Any!
   code: String!
 }
 
-interface ComponentChange implements Change {
+type Query {
+  "Fetches an object given its ID."
+  node("ID of the object." id: ID!): Node
+  "Lookup nodes by a list of IDs."
+  nodes("The list of node IDs." ids: [ID!]!): [Node]!
+  apiKeys(
+    "Returns the first _n_ elements from the list."
+    first: Int
+    "Returns the elements in the list that come after the specified cursor."
+    after: String
+    "Returns the last _n_ elements from the list."
+    last: Int
+    "Returns the elements in the list that come before the specified cursor."
+    before: String
+  ): ApiKeysConnection
+  apiKeyById(id: ID!): ApiKey
+  "Get all application configurations."
+  applications(
+    search: String
+    "Returns the first _n_ elements from the list."
+    first: Int
+    "Returns the elements in the list that come after the specified cursor."
+    after: String
+  ): ApplicationsConnection
+  "Get a specific application configuration by its ID."
+  applicationById("The application ID." id: ID!): Application
+  applicationPartById(id: ID!): ApplicationPart
+  applicationPartComponentById(partComponentId: ID!): ApplicationPartComponent
+  components(
+    applicationId: ID
+    applicationPartId: ID
+    namespace: String
+    search: String
+    "Returns the first _n_ elements from the list."
+    first: Int
+    "Returns the elements in the list that come after the specified cursor."
+    after: String
+  ): ComponentsConnection
+  componentById(id: ID!): Component
+  searchEnvironments(
+    search: String
+    "Returns the first _n_ elements from the list."
+    first: Int
+    "Returns the elements in the list that come after the specified cursor."
+    after: String
+    "Returns the last _n_ elements from the list."
+    last: Int
+    "Returns the elements in the list that come before the specified cursor."
+    before: String
+  ): SearchEnvironmentsConnection
+  environmentById(id: ID!): Environment
+  searchVariables(
+    search: String
+    "Returns the first _n_ elements from the list."
+    first: Int
+    "Returns the elements in the list that come after the specified cursor."
+    after: String
+    "Returns the last _n_ elements from the list."
+    last: Int
+    "Returns the elements in the list that come before the specified cursor."
+    before: String
+  ): SearchVariablesConnection
+  variable(id: ID!): Variable
+  variableValues(
+    variableId: ID!
+    scope: VariableValueScopeInput!
+  ): [VariableValue!]!
+  globalVariableValues: [VariableValue!]!
+  "Gets the latest published version of an application part."
+  latestPublishedVersion(
+    applicationName: String!
+    applicationPartName: String!
+    environmentName: String!
+  ): LatestPublishedVersionResult
+  changeLogById(id: ID!): ChangeLog
+  searchRoles(
+    search: String
+    "Returns the first _n_ elements from the list."
+    first: Int
+    "Returns the elements in the list that come after the specified cursor."
+    after: String
+    "Returns the last _n_ elements from the list."
+    last: Int
+    "Returns the elements in the list that come before the specified cursor."
+    before: String
+  ): SearchRolesConnection
+  roleById(id: ID!): Role
+  searchGroups(
+    search: String
+    "Returns the first _n_ elements from the list."
+    first: Int
+    "Returns the elements in the list that come after the specified cursor."
+    after: String
+    "Returns the last _n_ elements from the list."
+    last: Int
+    "Returns the elements in the list that come before the specified cursor."
+    before: String
+  ): SearchGroupsConnection
+  groupById(id: ID!): Group
+  me: Viewer
+}
+
+type RemoveApiKeyByIdPayload {
+  apiKey: ApiKey
+  errors: [RemoveApiKeyByIdError!]
+  query: Query!
+}
+
+type RemoveApplicationPartPayload {
+  application: Application
+  errors: [RemoveApplicationPartError!]
+  query: Query!
+}
+
+type RemoveComponentChange implements ComponentChange & Change {
+  kind: String!
   component: Component
   componentVersion: Int!
+}
+
+type RemoveComponentFromApplicationPartChange implements ApplicationPartComponentChange & ApplicationPartChange & ApplicationChange & Change {
+  removedComponent: ApplicationPartComponent!
   kind: String!
-}
-
-interface VariableChange implements Change {
-  variable: Variable
-  variableVersion: Int!
-  kind: String!
-}
-
-interface Change {
-  kind: String!
-}
-
-"""
-The node interface is implemented by entities that have a global unique identifier.
-"""
-interface Node {
-  id: ID!
-}
-
-scalar Any
-
-enum ApplyPolicy {
-  BEFORE_RESOLVER
-  AFTER_RESOLVER
-  VALIDATION
-}
-
-type CreateApplicationChange implements ApplicationChange & Change {
-  application: Application!
-  kind: String!
+  application: Application
   applicationVersion: Int!
+  part: ApplicationPart
+  partVersion: Int!
+  partComponent: ApplicationPartComponent
+  partComponentVersion: Int!
+}
+
+type RemoveComponentFromApplicationPartPayload {
+  applicationPart: ApplicationPart
+  errors: [RemoveComponentFromApplicationPartError!]
+  query: Query!
+}
+
+type RemoveEnvironmentByIdPayload {
+  environment: Environment
+  errors: [RemoveEnvironmentByIdError!]
+  query: Query!
+}
+
+type RemoveGroupByIdPayload {
+  group: Group
+  errors: [RemoveGroupByIdError!]
+  query: Query!
+}
+
+type RemovePartFromApplicationChange implements ApplicationPartChange & ApplicationChange & Change {
+  removedPart: ApplicationPart!
+  kind: String!
+  application: Application
+  applicationVersion: Int!
+  part: ApplicationPart
+  partVersion: Int!
+}
+
+type RemoveRoleByIdPayload {
+  role: Role
+  errors: [RemoveRoleByIdError!]
+  query: Query!
 }
 
 type RenameApplicationChange implements ApplicationChange & Change {
@@ -414,75 +896,16 @@ type RenameApplicationPartChange implements ApplicationPartChange & ApplicationC
   partVersion: Int!
 }
 
-type AddComponentToApplicationPartChange implements ApplicationPartComponentChange & ApplicationPartChange & ApplicationChange & Change {
-  addedComponent: ApplicationPartComponent!
-  kind: String!
+type RenameApplicationPartPayload {
+  applicationPart: ApplicationPart
+  errors: [RenameApplicationPartError!]
+  query: Query!
+}
+
+type RenameApplicationPayload {
   application: Application
-  applicationVersion: Int!
-  part: ApplicationPart
-  partVersion: Int!
-  partComponent: ApplicationPartComponent
-  partComponentVersion: Int!
-}
-
-type AddPartToApplicationChange implements ApplicationPartChange & ApplicationChange & Change {
-  addedPart: ApplicationPart!
-  kind: String!
-  application: Application
-  applicationVersion: Int!
-  part: ApplicationPart
-  partVersion: Int!
-}
-
-type PublishedApplicationPartChange implements ApplicationPartChange & ApplicationChange & Change {
-  kind: String!
-  application: Application
-  applicationVersion: Int!
-  part: ApplicationPart
-  partVersion: Int!
-}
-
-type RemovePartFromApplicationChange implements ApplicationPartChange & ApplicationChange & Change {
-  removedPart: ApplicationPart!
-  kind: String!
-  application: Application
-  applicationVersion: Int!
-  part: ApplicationPart
-  partVersion: Int!
-}
-
-type RemoveComponentFromApplicationPartChange implements ApplicationPartComponentChange & ApplicationPartChange & ApplicationChange & Change {
-  removedComponent: ApplicationPartComponent!
-  kind: String!
-  application: Application
-  applicationVersion: Int!
-  part: ApplicationPart
-  partVersion: Int!
-  partComponent: ApplicationPartComponent
-  partComponentVersion: Int!
-}
-
-type ApplicationPartComponentValuesChange implements ApplicationPartComponentChange & ApplicationPartChange & ApplicationChange & Change {
-  values: String
-  kind: String!
-  application: Application
-  applicationVersion: Int!
-  part: ApplicationPart
-  partVersion: Int!
-  partComponent: ApplicationPartComponent
-  partComponentVersion: Int!
-}
-
-type CreateComponentChange implements ComponentChange & Change {
-  kind: String!
-  component: Component
-  componentVersion: Int!
-}
-
-type RemoveComponentChange implements ComponentChange & Change {
-  kind: String!
-  component: Component
-  componentVersion: Int!
+  errors: [RenameApplicationError!]
+  query: Query!
 }
 
 type RenameComponentChange implements ComponentChange & Change {
@@ -492,32 +915,28 @@ type RenameComponentChange implements ComponentChange & Change {
   componentVersion: Int!
 }
 
-type ChangeScopeOfComponentChange implements ComponentChange & Change {
-  scopes: [ComponentScope!]!
-  kind: String!
+type RenameComponentPayload {
   component: Component
-  componentVersion: Int!
+  errors: [RenameComponentError!]
+  query: Query!
 }
 
-type ComponentSchemaChange implements ComponentChange & Change {
-  schema: String!
-  kind: String!
-  component: Component
-  componentVersion: Int!
+type RenameEnvironmentPayload {
+  environment: Environment
+  errors: [RenameEnvironmentError!]
+  query: Query!
 }
 
-type ComponentValuesChange implements ComponentChange & Change {
-  values: String!
-  kind: String!
-  component: Component
-  componentVersion: Int!
+type RenameGroupPayload {
+  group: Group
+  errors: [RenameGroupError!]
+  query: Query!
 }
 
-type CreateVariableChange implements VariableChange & Change {
-  value: Variable
-  variable: Variable
-  variableVersion: Int!
-  kind: String!
+type RenameRolePayload {
+  role: Role
+  errors: [RenameRoleError!]
+  query: Query!
 }
 
 type RenameVariableChange implements VariableChange & Change {
@@ -527,132 +946,180 @@ type RenameVariableChange implements VariableChange & Change {
   kind: String!
 }
 
-type DeleteVariableValueChange implements VariableChange & Change {
-  key: VariableKey!
-  variableValue: VariableValue!
+type RenameVariablePayload {
   variable: Variable
-  variableVersion: Int!
-  kind: String!
+  errors: [RenameVariableError!]
+  query: Query!
 }
 
-type VariableValueChange implements VariableChange & Change {
-  key: VariableKey!
-  value: String
-  encryptedValue: EncryptedValue
-  variable: Variable
-  variableVersion: Int!
-  kind: String!
-}
-
-type ClaimRequirement {
-  type: String!
-  value: String!
-}
-
-type ApplicationPart implements Node {
+type Role {
   id: ID!
   name: String!
-  version: Int!
-  components: [ApplicationPartComponent!]!
-  application: Application
-  variableValues: [VariableValue!]!
-  changeLog: [ChangeLog!]!
-  publishedVersions(
-    """
-    Returns the first _n_ elements from the list.
-    """
-    first: Int
-
-    """
-    Returns the elements in the list that come after the specified cursor.
-    """
-    after: String
-
-    """
-    Returns the last _n_ elements from the list.
-    """
-    last: Int
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-  ): PublishedVersionsConnection
-  deployments(
-    """
-    Returns the first _n_ elements from the list.
-    """
-    first: Int
-
-    """
-    Returns the elements in the list that come after the specified cursor.
-    """
-    after: String
-
-    """
-    Returns the last _n_ elements from the list.
-    """
-    last: Int
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-  ): DeploymentsConnection
-  publishApplicationPartById(
-    """
-    Returns the first _n_ elements from the list.
-    """
-    first: Int
-
-    """
-    Returns the elements in the list that come after the specified cursor.
-    """
-    after: String
-
-    """
-    Returns the last _n_ elements from the list.
-    """
-    last: Int
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-  ): PublishApplicationPartByIdConnection
+  permissions: [Permission!]!
 }
 
-type Application implements Node {
-  id: ID!
-  name: String!
+type RoleScope {
   namespace: String!
-  version: Int!
-  parts: [ApplicationPart!]!
-  variableValues: [VariableValue!]!
-  changeLog: [ChangeLog!]!
+  roles: [Role!]!
 }
 
-type ApplicationPartComponent {
-  id: ID!
-  version: Int!
-  definition: Component
-  applicationPart: ApplicationPart
-  values(version: Int): String
-  changeLog: [ChangeLog!]!
+type SaveVariableValuePayload {
+  value: VariableValue
+  errors: [SaveVariableValueError!]
+  query: Query!
 }
 
-type Component implements Node {
-  id: ID!
-  name: String!
-  scopes: [ComponentScope!]!
-  version: Int!
-  state: ComponentState!
-  changeLog: [ChangeLog!]!
-  schemaSdl: SDL
-  schema: Any
-  values: Any
-  defaults: Any
-  schemaViolations: [SchemaViolation!]!
+type SchemaInvalidError implements UserError {
+  code: String!
+  message: String!
+}
+
+type SchemaViolation {
+  path: Any!
+  code: String!
+}
+
+"A connection to a list of items."
+type SearchEnvironmentsConnection {
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "A list of edges."
+  edges: [SearchEnvironmentsEdge!]
+  "A flattened list of the nodes."
+  nodes: [Environment!]
+}
+
+"An edge in a connection."
+type SearchEnvironmentsEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: Environment!
+}
+
+"A connection to a list of items."
+type SearchGroupsConnection {
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "A list of edges."
+  edges: [SearchGroupsEdge!]
+  "A flattened list of the nodes."
+  nodes: [Group!]
+}
+
+"An edge in a connection."
+type SearchGroupsEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: Group!
+}
+
+"A connection to a list of items."
+type SearchRolesConnection {
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "A list of edges."
+  edges: [SearchRolesEdge!]
+  "A flattened list of the nodes."
+  nodes: [Role!]
+}
+
+"An edge in a connection."
+type SearchRolesEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: Role!
+}
+
+"A connection to a list of items."
+type SearchVariablesConnection {
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "A list of edges."
+  edges: [SearchVariablesEdge!]
+  "A flattened list of the nodes."
+  nodes: [Variable!]
+}
+
+"An edge in a connection."
+type SearchVariablesEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: Variable!
+}
+
+type SetDeveloperAccessOfEnvironmentPayload {
+  environment: Environment
+  errors: [SetDeveloperAccessOfEnvironmentError!]
+  query: Query!
+}
+
+type SetParentOfEnvironmentPayload {
+  environment: Environment
+  errors: [SetParentOfEnvironmentError!]
+  query: Query!
+}
+
+type UnauthorizedOperationError implements UserError {
+  message: String!
+  code: String!
+}
+
+type UpdateApiKeyPayload {
+  apiKey: ApiKey
+  errors: [UpdateApiKeyError!]
+  query: Query!
+}
+
+type UpdateApplicationPartComponentValuesPayload {
+  component: ApplicationPartComponent
+  errors: [UpdateApplicationPartComponentValuesError!]
+  query: Query!
+}
+
+type UpdateComponentSchemaPayload {
+  component: Component
+  errors: [UpdateComponentSchemaError!]
+  query: Query!
+}
+
+type UpdateComponentScopesPayload {
+  component: Component
+  errors: [UpdateComponentScopesError!]
+  query: Query!
+}
+
+type UpdateComponentValuesPayload {
+  component: Component
+  errors: [UpdateComponentValuesError!]
+  query: Query!
+}
+
+type UpdateGroupRequirementsPayload {
+  group: Group
+  errors: [UpdateGroupRequirementsError!]
+  query: Query!
+}
+
+type UpdateGroupRolesPayload {
+  group: Group
+  errors: [UpdateGroupRolesError!]
+  query: Query!
+}
+
+type UserInfo {
+  id: String!
+  name: String
+  email: String
+}
+
+type ValueSchemaViolation implements UserError {
+  violations: [SchemaViolation!]!
+  code: String!
+  message: String!
 }
 
 type Variable implements Node {
@@ -663,619 +1130,253 @@ type Variable implements Node {
   namespace: String!
   version: Int!
   changeLog: [ChangeLog!]!
-  values: [VariableValue!]!
 }
 
-"""
-A connection to a list of items.
-"""
-type ApiKeysConnection {
-  """
-  Information to aid in pagination.
-  """
-  pageInfo: PageInfo!
-
-  """
-  A list of edges.
-  """
-  edges: [ApiKeysEdge!]
-
-  """
-  A flattened list of the nodes.
-  """
-  nodes: [ApiKey!]
-}
-
-type UnauthorizedOperationError implements UserError {
-  message: String!
-  code: String!
-}
-
-"""
-A connection to a list of items.
-"""
-type ApplicationsConnection {
-  """
-  Information to aid in pagination.
-  """
-  pageInfo: PageInfo!
-
-  """
-  A list of edges.
-  """
-  edges: [ApplicationsEdge!]
-
-  """
-  A flattened list of the nodes.
-  """
-  nodes: [Application!]
-}
-
-type ApplicationNameTaken implements UserError {
-  applicationName: String!
-  code: String!
-  message: String!
-}
-
-type ApplicationIdInvalid implements UserError {
-  applicationId: ID!
-  code: String!
-  message: String!
-}
-
-type ApplicationPartIdInvalid implements UserError {
-  code: String!
-  message: String!
-  applicationPartId: ID!
-}
-
-type ApplicationPartNameTaken implements UserError {
-  applicationName: String!
-  code: String!
-  message: String!
-}
-
-type ApplicationNotFoundError implements UserError {
-  applicationId: ID!
-  code: String!
-  message: String!
-}
-
-type ApplicationPartNotFoundError implements UserError {
-  applicationPartId: ID!
-  code: String!
-  message: String!
-}
-
-type ApplicationPartComponentNotFoundError implements UserError {
-  componentPartId: ID!
-  code: String!
-  message: String!
-}
-
-type ComponentNotFoundError implements UserError {
-  componentId: ID!
-  code: String!
-  message: String!
-}
-
-"""
-A connection to a list of items.
-"""
-type PublishedVersionsConnection {
-  """
-  Information to aid in pagination.
-  """
-  pageInfo: PageInfo!
-
-  """
-  A list of edges.
-  """
-  edges: [PublishedVersionsEdge!]
-
-  """
-  A flattened list of the nodes.
-  """
-  nodes: [PublishedApplicationPart!]
-}
-
-"""
-A connection to a list of items.
-"""
-type DeploymentsConnection {
-  """
-  Information to aid in pagination.
-  """
-  pageInfo: PageInfo!
-
-  """
-  A list of edges.
-  """
-  edges: [DeploymentsEdge!]
-
-  """
-  A flattened list of the nodes.
-  """
-  nodes: [DeployedEnvironment!]
-}
-
-"""
-A connection to a list of items.
-"""
-type ComponentsConnection {
-  """
-  Information to aid in pagination.
-  """
-  pageInfo: PageInfo!
-
-  """
-  A list of edges.
-  """
-  edges: [ComponentsEdge!]
-
-  """
-  A flattened list of the nodes.
-  """
-  nodes: [Component!]
-}
-
-type ValueSchemaViolation implements UserError {
-  violations: [SchemaViolation!]!
-  code: String!
-  message: String!
-}
-
-type ComponentValidationFailed implements UserError {
-  message: String!
-  code: String!
-}
-
-type SchemaInvalidError implements UserError {
-  code: String!
-  message: String!
-}
-
-"""
-A connection to a list of items.
-"""
-type SearchEnvironmentsConnection {
-  """
-  Information to aid in pagination.
-  """
-  pageInfo: PageInfo!
-
-  """
-  A list of edges.
-  """
-  edges: [SearchEnvironmentsEdge!]
-
-  """
-  A flattened list of the nodes.
-  """
-  nodes: [Environment!]
-}
-
-type EnvironmentNameCollisionError implements UserError {
-  name: String!
-  code: String!
-  message: String!
-}
-
-type EnvironmentNotFoundError implements UserError {
-  environmentId: ID!
-  code: String!
-  message: String!
-}
-
-type EnvironmentCycleDetectedError implements UserError {
-  message: String!
-  path: [String!]!
-  code: String!
-}
-
-"""
-A connection to a list of items.
-"""
-type SearchVariablesConnection {
-  """
-  Information to aid in pagination.
-  """
-  pageInfo: PageInfo!
-
-  """
-  A list of edges.
-  """
-  edges: [SearchVariablesEdge!]
-
-  """
-  A flattened list of the nodes.
-  """
-  nodes: [Variable!]
-}
-
-type PublishingError implements UserError {
-  message: String!
-  code: String!
-}
-
-type ClaimVersionFailedError implements UserError {
-  message: String!
-  code: String!
-}
-
-union LatestPublishedVersionResult =
-    LatestPublishedVersion
-  | ClaimVersionFailedError
-
-"""
-A connection to a list of items.
-"""
-type PublishApplicationPartByIdConnection {
-  """
-  Information to aid in pagination.
-  """
-  pageInfo: PageInfo!
-
-  """
-  A list of edges.
-  """
-  edges: [PublishApplicationPartByIdEdge!]
-
-  """
-  A flattened list of the nodes.
-  """
-  nodes: [PublishedApplicationPart!]
-}
-
-"""
-A connection to a list of items.
-"""
-type SearchRolesConnection {
-  """
-  Information to aid in pagination.
-  """
-  pageInfo: PageInfo!
-
-  """
-  A list of edges.
-  """
-  edges: [SearchRolesEdge!]
-
-  """
-  A flattened list of the nodes.
-  """
-  nodes: [Role!]
-}
-
-"""
-A connection to a list of items.
-"""
-type SearchGroupsConnection {
-  """
-  Information to aid in pagination.
-  """
-  pageInfo: PageInfo!
-
-  """
-  A list of edges.
-  """
-  edges: [SearchGroupsEdge!]
-
-  """
-  A flattened list of the nodes.
-  """
-  nodes: [Group!]
-}
-
-"""
-Information about pagination in a connection.
-"""
-type PageInfo {
-  """
-  Indicates whether more edges exist following the set defined by the clients arguments.
-  """
-  hasNextPage: Boolean!
-
-  """
-  Indicates whether more edges exist prior the set defined by the clients arguments.
-  """
-  hasPreviousPage: Boolean!
-
-  """
-  When paginating backwards, the cursor to continue.
-  """
-  startCursor: String
-
-  """
-  When paginating forwards, the cursor to continue.
-  """
-  endCursor: String
-}
-
-type ApiKey {
-  id: ID!
-  name: String!
-  roles: [RoleScope!]!
-}
-
-"""
-An edge in a connection.
-"""
-type ApiKeysEdge {
-  """
-  A cursor for use in pagination.
-  """
-  cursor: String!
-
-  """
-  The item at the end of the edge.
-  """
-  node: ApiKey!
-}
-
-"""
-An edge in a connection.
-"""
-type ApplicationsEdge {
-  """
-  A cursor for use in pagination.
-  """
-  cursor: String!
-
-  """
-  The item at the end of the edge.
-  """
-  node: Application!
-}
-
-type PublishedApplicationPart implements Node {
+type VariableValue {
   id: ID!
   version: Int!
-  part: ApplicationPart!
-  configuration: String!
-  publishedAt: DateTime!
-  publishedBy: UserInfo!
-  claimsVersions: [ClaimedVersion!]!
-}
-
-"""
-An edge in a connection.
-"""
-type PublishedVersionsEdge {
-  """
-  A cursor for use in pagination.
-  """
-  cursor: String!
-
-  """
-  The item at the end of the edge.
-  """
-  node: PublishedApplicationPart!
-}
-
-type DeployedEnvironment {
-  environment: Environment
-  claimedVersions(
-    """
-    Returns the first _n_ elements from the list.
-    """
-    first: Int
-
-    """
-    Returns the elements in the list that come after the specified cursor.
-    """
-    after: String
-
-    """
-    Returns the last _n_ elements from the list.
-    """
-    last: Int
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-  ): ClaimedVersionsConnection
-}
-
-"""
-An edge in a connection.
-"""
-type DeploymentsEdge {
-  """
-  A cursor for use in pagination.
-  """
-  cursor: String!
-
-  """
-  The item at the end of the edge.
-  """
-  node: DeployedEnvironment!
-}
-
-"""
-An edge in a connection.
-"""
-type ComponentsEdge {
-  """
-  A cursor for use in pagination.
-  """
-  cursor: String!
-
-  """
-  The item at the end of the edge.
-  """
-  node: Component!
-}
-
-type Environment implements Node {
-  id: ID!
-  name: String!
-  allowDeveloperAccess: Boolean!
-  parent: Environment
-}
-
-"""
-An edge in a connection.
-"""
-type SearchEnvironmentsEdge {
-  """
-  A cursor for use in pagination.
-  """
-  cursor: String!
-
-  """
-  The item at the end of the edge.
-  """
-  node: Environment!
-}
-
-"""
-An edge in a connection.
-"""
-type SearchVariablesEdge {
-  """
-  A cursor for use in pagination.
-  """
-  cursor: String!
-
-  """
-  The item at the end of the edge.
-  """
-  node: Variable!
-}
-
-type LatestPublishedVersion {
-  configuration: String!
-}
-
-"""
-An edge in a connection.
-"""
-type PublishApplicationPartByIdEdge {
-  """
-  A cursor for use in pagination.
-  """
-  cursor: String!
-
-  """
-  The item at the end of the edge.
-  """
-  node: PublishedApplicationPart!
-}
-
-type Role {
-  id: ID!
-  name: String!
-  permissions: [Permission!]!
-}
-
-"""
-An edge in a connection.
-"""
-type SearchRolesEdge {
-  """
-  A cursor for use in pagination.
-  """
-  cursor: String!
-
-  """
-  The item at the end of the edge.
-  """
-  node: Role!
-}
-
-type Group {
-  id: ID!
-  name: String!
-  requirements: [Requirement!]!
-  roles: [RoleScope!]!
-}
-
-"""
-An edge in a connection.
-"""
-type SearchGroupsEdge {
-  """
-  A cursor for use in pagination.
-  """
-  cursor: String!
-
-  """
-  The item at the end of the edge.
-  """
-  node: Group!
-}
-
-"""
-A connection to a list of items.
-"""
-type ClaimedVersionsConnection {
-  """
-  Information to aid in pagination.
-  """
-  pageInfo: PageInfo!
-
-  """
-  A list of edges.
-  """
-  edges: [ClaimedVersionsEdge!]
-
-  """
-  A flattened list of the nodes.
-  """
-  nodes: [ClaimedVersion!]
-}
-
-type ClaimedVersion {
-  id: ID!
-  tag: String!
-  claimedAt: DateTime!
+  variable: Variable
   application: Application
   applicationPart: ApplicationPart
   environment: Environment
-  publishedApplicationPart: PublishedApplicationPart
+  value: String!
 }
 
-"""
-An edge in a connection.
-"""
-type ClaimedVersionsEdge {
-  """
-  A cursor for use in pagination.
-  """
-  cursor: String!
-
-  """
-  The item at the end of the edge.
-  """
-  node: ClaimedVersion!
+type VariableValueChange implements VariableChange & Change {
+  scope: VariableValueScope!
+  environmentId: UUID
+  encryptedValue: EncryptedValue
+  variable: Variable
+  variableVersion: Int!
+  kind: String!
 }
-
-enum VariableState {
-  ACTIVE
-  DEPRECATED
-}
-
-enum ComponentState {
-  ACTIVE
-  DEPRECATED
-}
-
-scalar UUID
 
 type Viewer {
   namespaceGrants(scope: Scope!): [Grant!]!
   name: String!
 }
 
-input RequirementInput {
-  claimRequirement: ClaimRequirementInput
+union AddComponentsToApplicationPartError =
+    ApplicationPartIdInvalid
+  | UnauthorizedOperationError
+
+union AddPartToApplicationError =
+    ApplicationNotFoundError
+  | ApplicationPartNameTaken
+  | UnauthorizedOperationError
+
+union ChangeRolePermissionsError = UnauthorizedOperationError
+
+union ClaimVersionError = ClaimVersionFailedError | UnauthorizedOperationError
+
+union CreateApiKeyError = UnauthorizedOperationError
+
+union CreateApplicationError = ApplicationNameTaken | UnauthorizedOperationError
+
+union CreateComponentError =
+    ValueSchemaViolation
+  | UnauthorizedOperationError
+  | ComponentValidationFailed
+
+union CreateEnvironmentError =
+    EnvironmentNameCollisionError
+  | UnauthorizedOperationError
+
+union CreateGroupError = UnauthorizedOperationError
+
+union CreateRoleError = UnauthorizedOperationError
+
+union CreateVariableError = UnauthorizedOperationError
+
+union DeleteVariableValueError = UnauthorizedOperationError
+
+union LatestPublishedVersionResult =
+    LatestPublishedVersion
+  | ClaimVersionFailedError
+
+union PublishApplicationPartByIdError =
+    PublishingError
+  | UnauthorizedOperationError
+
+union RemoveApiKeyByIdError = UnauthorizedOperationError
+
+union RemoveApplicationPartError =
+    ApplicationPartNotFoundError
+  | UnauthorizedOperationError
+
+union RemoveComponentFromApplicationPartError =
+    ApplicationPartNotFoundError
+  | UnauthorizedOperationError
+
+union RemoveEnvironmentByIdError =
+    EnvironmentNotFoundError
+  | UnauthorizedOperationError
+
+union RemoveGroupByIdError = UnauthorizedOperationError
+
+union RemoveRoleByIdError = UnauthorizedOperationError
+
+union RenameApplicationError =
+    ApplicationIdInvalid
+  | ApplicationNameTaken
+  | UnauthorizedOperationError
+
+union RenameApplicationPartError =
+    ApplicationIdInvalid
+  | ApplicationPartIdInvalid
+  | ApplicationPartNameTaken
+  | UnauthorizedOperationError
+
+union RenameComponentError = UnauthorizedOperationError
+
+union RenameEnvironmentError =
+    EnvironmentNotFoundError
+  | EnvironmentNameCollisionError
+  | UnauthorizedOperationError
+
+union RenameGroupError = UnauthorizedOperationError
+
+union RenameRoleError = UnauthorizedOperationError
+
+union RenameVariableError = UnauthorizedOperationError
+
+union Requirement = ClaimRequirement
+
+union SaveVariableValueError = UnauthorizedOperationError
+
+union SetDeveloperAccessOfEnvironmentError =
+    EnvironmentNotFoundError
+  | UnauthorizedOperationError
+
+union SetParentOfEnvironmentError =
+    EnvironmentNotFoundError
+  | EnvironmentCycleDetectedError
+  | UnauthorizedOperationError
+
+union UpdateApiKeyError = UnauthorizedOperationError
+
+union UpdateApplicationPartComponentValuesError =
+    ApplicationPartComponentNotFoundError
+  | ComponentNotFoundError
+  | UnauthorizedOperationError
+
+union UpdateComponentSchemaError =
+    UnauthorizedOperationError
+  | SchemaInvalidError
+
+union UpdateComponentScopesError =
+    UnauthorizedOperationError
+  | ComponentValidationFailed
+
+union UpdateComponentValuesError =
+    ValueSchemaViolation
+  | UnauthorizedOperationError
+
+union UpdateGroupRequirementsError = UnauthorizedOperationError
+
+union UpdateGroupRolesError = UnauthorizedOperationError
+
+union VariableValueScope =
+    ApplicationPartVariableValueScope
+  | ApplicationVariableValueScope
+  | NamespaceVariableValueScope
+
+input AddComponentsToApplicationPartInput {
+  applicationPartId: ID!
+  componentIds: [ID!]!
 }
 
-type RoleScope {
+input AddPartToApplicationInput {
+  partName: String!
+  applicationId: ID!
+}
+
+input ApplicationPartVariableValueScopeInput {
+  partId: ID!
+  environmentId: ID
+}
+
+input ApplicationVariableValueScopeInput {
+  applicationId: ID!
+  environmentId: ID
+}
+
+input ChangeRolePermissionsInput {
+  id: ID!
+  permissions: [PermissionInput!]!
+}
+
+input ClaimRequirementInput {
+  type: String!
+  value: String!
+}
+
+input ClaimVersionInput {
+  tag: String!
+  applicationName: String!
+  applicationPartName: String!
+  environmentName: String!
+}
+
+input ComponentScopeInput {
   namespace: String!
-  roles: [Role!]!
+  applicationId: ID
+  applicationPartId: ID
+}
+
+input CreateApiKeyInput {
+  name: String!
+  roles: [RoleScopeInput!]!
+}
+
+input CreateApplicationInput {
+  name: String!
+  namespace: String!
+  parts: [String!]
+}
+
+input CreateComponentInput {
+  name: String!
+  scopes: [ComponentScopeInput!]!
+  schema: String = "type Component { text: String! }"
+  values: Any
+}
+
+input CreateEnvironmentInput {
+  name: String!
+}
+
+input CreateGroupInput {
+  name: String!
+  requirements: [RequirementInput!]!
+  roles: [RoleScopeInput!]!
+}
+
+input CreateRoleInput {
+  name: String!
+  permissions: [PermissionInput!]!
+}
+
+input CreateVariableInput {
+  name: String!
+  isSecret: Boolean!
+  namespace: String!
+  defaultValue: String
+  scope: VariableValueScopeInput!
+}
+
+input DeleteVariableValueInput {
+  id: ID!
+}
+
+input NamespaceVariableValueScopeInput {
+  namespace: String!
+  environmentId: ID
+}
+
+input PermissionInput {
+  scope: Scope!
+  permissions: PermissionsFlagsInput!
 }
 
 input PermissionsFlagsInput {
@@ -1286,84 +1387,71 @@ input PermissionsFlagsInput {
   isDecrypt: Boolean
 }
 
-input PermissionInput {
-  scope: Scope!
-  permissions: PermissionsFlagsInput!
+input PublishApplicationPartByIdInput {
+  applicationPartId: ID!
 }
 
-"""
-The `DateTime` scalar represents an ISO-8601 compliant date time type.
-"""
-scalar DateTime
-
-type ClaimVersionResult {
-  version: ClaimedVersion!
-  token: String
-  decryptionKey: String
-}
-
-type PermissionsFlags {
-  isRead: Boolean!
-  isWrite: Boolean!
-  isClaim: Boolean!
-  isPublish: Boolean!
-  isDecrypt: Boolean!
-}
-
-type Permission {
-  scope: Scope!
-  permissions: PermissionsFlags!
-}
-
-type EncryptedValue {
-  value: String!
-  iv: String!
-  topic: String!
-}
-
-type VariableKey {
-  variableId: ID!
-  applicationId: ID
-  partId: ID
-  environmentId: ID
-}
-
-type UserInfo {
-  id: String!
-  name: String
-  email: String
-}
-
-type ComponentScope {
-  namespace: String!
-  applicationId: ID
-  applicationPartId: ID
-  application: Application
-  applicationPart: ApplicationPart
-}
-
-input ComponentScopeInput {
-  namespace: String!
-  applicationId: ID
-  applicationPartId: ID
-}
-
-type ChangeLog {
+input RemoveApiKeyByIdInput {
   id: ID!
-  change: Change!
-  modifiedBy: UserInfo!
-  modifiedAt: DateTime!
 }
 
-type VariableValue {
+input RemoveApplicationPartInput {
+  applicationPartId: ID!
+}
+
+input RemoveComponentFromApplicationPartInput {
+  partComponentId: ID!
+}
+
+input RemoveEnvironmentByIdInput {
   id: ID!
-  key: VariableKey!
-  value: String
-  version: Int!
-  variable: Variable
-  application: Application
-  applicationPart: ApplicationPart
-  environment: Environment
+}
+
+input RemoveGroupByIdInput {
+  id: ID!
+}
+
+input RemoveRoleByIdInput {
+  id: ID!
+}
+
+input RenameApplicationInput {
+  id: ID!
+  name: String!
+}
+
+input RenameApplicationPartInput {
+  applicationPartId: ID!
+  name: String!
+}
+
+input RenameComponentInput {
+  id: ID!
+  name: String!
+}
+
+input RenameEnvironmentInput {
+  id: ID!
+  name: String!
+}
+
+input RenameGroupInput {
+  id: ID!
+  name: String!
+}
+
+input RenameRoleInput {
+  id: ID!
+  name: String!
+}
+
+input RenameVariableInput {
+  id: ID!
+  name: String!
+}
+
+input RequirementInput @oneOf {
+  claimRequirement: ClaimRequirementInput
 }
 
 input RoleScopeInput {
@@ -1371,12 +1459,73 @@ input RoleScopeInput {
   roleIds: [ID!]!
 }
 
-type ApiKeyWithSecret {
-  key: ApiKey!
-  secret: String!
+input SaveVariableValueInput {
+  variableId: ID!
+  reference: VariableValueScopeInput!
+  value: String!
 }
 
-union Requirement = ClaimRequirement
+input SetDeveloperAccessOfEnvironmentInput {
+  environmentId: ID!
+  isAllowed: Boolean!
+}
+
+input SetParentOfEnvironmentInput {
+  environmentId: ID!
+  parentId: ID!
+}
+
+input UpdateApiKeyInput {
+  id: ID!
+  roles: [RoleScopeInput!]!
+}
+
+input UpdateApplicationPartComponentValuesInput {
+  partComponentId: ID!
+  values: Any
+}
+
+input UpdateComponentSchemaInput {
+  id: ID!
+  schema: String!
+}
+
+input UpdateComponentScopesInput {
+  id: ID!
+  scopes: [ComponentScopeInput!]!
+}
+
+input UpdateComponentValuesInput {
+  id: ID!
+  values: Any
+}
+
+input UpdateGroupRequirementsInput {
+  id: ID!
+  requirements: [RequirementInput!]!
+}
+
+input UpdateGroupRolesInput {
+  id: ID!
+  roles: [RoleScopeInput!]!
+}
+
+input VariableValueScopeInput @oneOf {
+  application: ApplicationVariableValueScopeInput
+  applicationPart: ApplicationPartVariableValueScopeInput
+  namespace: NamespaceVariableValueScopeInput
+}
+
+enum ApplyPolicy {
+  BEFORE_RESOLVER
+  AFTER_RESOLVER
+  VALIDATION
+}
+
+enum ComponentState {
+  ACTIVE
+  DEPRECATED
+}
 
 enum Scope {
   CONFIGURATION
@@ -1387,526 +1536,42 @@ enum Scope {
   ENVIRONMENT
 }
 
-input ClaimRequirementInput {
-  type: String!
-  value: String!
-}
-
-type Grant {
-  namespace: String!
-  scope: Scope!
-  permission: PermissionsFlags!
-}
-
-input CreateApiKeyInput {
-  name: String!
-  roles: [RoleScopeInput!]!
-}
-
-union CreateApiKeyError = UnauthorizedOperationError
-
-type CreateApiKeyPayload {
-  apiKeyWithSecret: ApiKeyWithSecret
-  errors: [CreateApiKeyError!]
-  query: Query!
-}
-
-input UpdateApiKeyInput {
-  id: ID!
-  roles: [RoleScopeInput!]!
-}
-
-union UpdateApiKeyError = UnauthorizedOperationError
-
-type UpdateApiKeyPayload {
-  apiKey: ApiKey
-  errors: [UpdateApiKeyError!]
-  query: Query!
-}
-
-input RemoveApiKeyByIdInput {
-  id: ID!
-}
-
-union RemoveApiKeyByIdError = UnauthorizedOperationError
-
-type RemoveApiKeyByIdPayload {
-  apiKey: ApiKey
-  errors: [RemoveApiKeyByIdError!]
-  query: Query!
-}
-
-input CreateApplicationInput {
-  name: String!
-  namespace: String!
-  parts: [String!]
-}
-
-union CreateApplicationError = ApplicationNameTaken | UnauthorizedOperationError
-
-type CreateApplicationPayload {
-  application: Application
-  errors: [CreateApplicationError!]
-  query: Query!
-}
-
-input RenameApplicationInput {
-  id: ID!
-  name: String!
-}
-
-union RenameApplicationError =
-    ApplicationIdInvalid
-  | ApplicationNameTaken
-  | UnauthorizedOperationError
-
-type RenameApplicationPayload {
-  application: Application
-  errors: [RenameApplicationError!]
-  query: Query!
-}
-
-input RenameApplicationPartInput {
-  applicationPartId: ID!
-  name: String!
-}
-
-union RenameApplicationPartError =
-    ApplicationIdInvalid
-  | ApplicationPartIdInvalid
-  | ApplicationPartNameTaken
-  | UnauthorizedOperationError
-
-type RenameApplicationPartPayload {
-  applicationPart: ApplicationPart
-  errors: [RenameApplicationPartError!]
-  query: Query!
-}
-
-input AddComponentsToApplicationPartInput {
-  applicationPartId: ID!
-  componentIds: [ID!]!
-}
-
-union AddComponentsToApplicationPartError =
-    ApplicationPartIdInvalid
-  | UnauthorizedOperationError
-
-type AddComponentsToApplicationPartPayload {
-  applicationPart: ApplicationPart
-  errors: [AddComponentsToApplicationPartError!]
-  query: Query!
-}
-
-input AddPartToApplicationInput {
-  partName: String!
-  applicationId: ID!
-}
-
-union AddPartToApplicationError =
-    ApplicationNotFoundError
-  | ApplicationPartNameTaken
-  | UnauthorizedOperationError
-
-type AddPartToApplicationPayload {
-  application: Application
-  errors: [AddPartToApplicationError!]
-  query: Query!
-}
-
-input RemoveApplicationPartInput {
-  applicationPartId: ID!
-}
-
-union RemoveApplicationPartError =
-    ApplicationPartNotFoundError
-  | UnauthorizedOperationError
-
-type RemoveApplicationPartPayload {
-  application: Application
-  errors: [RemoveApplicationPartError!]
-  query: Query!
-}
-
-input RemoveComponentFromApplicationPartInput {
-  partComponentId: ID!
-}
-
-union RemoveComponentFromApplicationPartError =
-    ApplicationPartNotFoundError
-  | UnauthorizedOperationError
-
-type RemoveComponentFromApplicationPartPayload {
-  applicationPart: ApplicationPart
-  errors: [RemoveComponentFromApplicationPartError!]
-  query: Query!
-}
-
-input UpdateApplicationPartComponentValuesInput {
-  partComponentId: ID!
-  values: Any
-}
-
-union UpdateApplicationPartComponentValuesError =
-    ApplicationPartComponentNotFoundError
-  | ComponentNotFoundError
-  | UnauthorizedOperationError
-
-type UpdateApplicationPartComponentValuesPayload {
-  component: ApplicationPartComponent
-  errors: [UpdateApplicationPartComponentValuesError!]
-  query: Query!
-}
-
-input CreateComponentInput {
-  name: String!
-  scopes: [ComponentScopeInput!]!
-  schema: String = "type Component { text: String! }"
-  values: Any
-}
-
-union CreateComponentError =
-    ValueSchemaViolation
-  | UnauthorizedOperationError
-  | ComponentValidationFailed
-
-type CreateComponentPayload {
-  component: Component
-  errors: [CreateComponentError!]
-  query: Query!
-}
-
-input RenameComponentInput {
-  id: ID!
-  name: String!
-}
-
-union RenameComponentError = UnauthorizedOperationError
-
-type RenameComponentPayload {
-  component: Component
-  errors: [RenameComponentError!]
-  query: Query!
-}
-
-input UpdateComponentScopesInput {
-  id: ID!
-  scopes: [ComponentScopeInput!]!
-}
-
-union UpdateComponentScopesError =
-    UnauthorizedOperationError
-  | ComponentValidationFailed
-
-type UpdateComponentScopesPayload {
-  component: Component
-  errors: [UpdateComponentScopesError!]
-  query: Query!
-}
-
-input UpdateComponentSchemaInput {
-  id: ID!
-  schema: String!
-}
-
-union UpdateComponentSchemaError =
-    UnauthorizedOperationError
-  | SchemaInvalidError
-
-type UpdateComponentSchemaPayload {
-  component: Component
-  errors: [UpdateComponentSchemaError!]
-  query: Query!
-}
-
-input UpdateComponentValuesInput {
-  id: ID!
-  values: Any
-}
-
-union UpdateComponentValuesError =
-    ValueSchemaViolation
-  | UnauthorizedOperationError
-
-type UpdateComponentValuesPayload {
-  component: Component
-  errors: [UpdateComponentValuesError!]
-  query: Query!
-}
-
-input CreateEnvironmentInput {
-  name: String!
-}
-
-union CreateEnvironmentError =
-    EnvironmentNameCollisionError
-  | UnauthorizedOperationError
-
-type CreateEnvironmentPayload {
-  environment: Environment
-  errors: [CreateEnvironmentError!]
-  query: Query!
-}
-
-input RenameEnvironmentInput {
-  id: ID!
-  name: String!
-}
-
-union RenameEnvironmentError =
-    EnvironmentNotFoundError
-  | EnvironmentNameCollisionError
-  | UnauthorizedOperationError
-
-type RenameEnvironmentPayload {
-  environment: Environment
-  errors: [RenameEnvironmentError!]
-  query: Query!
-}
-
-input RemoveEnvironmentByIdInput {
-  id: ID!
-}
-
-union RemoveEnvironmentByIdError =
-    EnvironmentNotFoundError
-  | UnauthorizedOperationError
-
-type RemoveEnvironmentByIdPayload {
-  environment: Environment
-  errors: [RemoveEnvironmentByIdError!]
-  query: Query!
-}
-
-input SetParentOfEnvironmentInput {
-  environmentId: ID!
-  parentId: ID!
-}
-
-union SetParentOfEnvironmentError =
-    EnvironmentNotFoundError
-  | EnvironmentCycleDetectedError
-  | UnauthorizedOperationError
-
-type SetParentOfEnvironmentPayload {
-  environment: Environment
-  errors: [SetParentOfEnvironmentError!]
-  query: Query!
-}
-
-input SetDeveloperAccessOfEnvironmentInput {
-  environmentId: ID!
-  isAllowed: Boolean!
-}
-
-union SetDeveloperAccessOfEnvironmentError =
-    EnvironmentNotFoundError
-  | UnauthorizedOperationError
-
-type SetDeveloperAccessOfEnvironmentPayload {
-  environment: Environment
-  errors: [SetDeveloperAccessOfEnvironmentError!]
-  query: Query!
-}
-
-input CreateVariableInput {
-  name: String!
-  isSecret: Boolean!
-  namespace: String!
-  defaultValue: String
-}
-
-union CreateVariableError = UnauthorizedOperationError
-
-type CreateVariablePayload {
-  variable: Variable
-  errors: [CreateVariableError!]
-  query: Query!
-}
-
-input SaveVariableValueInput {
-  variableId: ID!
-  value: String!
-  valueId: ID
-  applicationId: ID
-  partId: ID
-  environmentId: ID
-}
-
-union SaveVariableValueError = UnauthorizedOperationError
-
-type SaveVariableValuePayload {
-  value: VariableValue
-  errors: [SaveVariableValueError!]
-  query: Query!
-}
-
-input DeleteVariableValueInput {
-  id: ID!
-}
-
-union DeleteVariableValueError = UnauthorizedOperationError
-
-type DeleteVariableValuePayload {
-  value: VariableValue
-  errors: [DeleteVariableValueError!]
-  query: Query!
-}
-
-input RenameVariableInput {
-  id: ID!
-  name: String!
-}
-
-union RenameVariableError = UnauthorizedOperationError
-
-type RenameVariablePayload {
-  variable: Variable
-  errors: [RenameVariableError!]
-  query: Query!
-}
-
-input PublishApplicationPartByIdInput {
-  applicationPartId: ID!
-}
-
-union PublishApplicationPartByIdError =
-    PublishingError
-  | UnauthorizedOperationError
-
-type PublishApplicationPartByIdPayload {
-  publishedApplicationPart: PublishedApplicationPart
-  errors: [PublishApplicationPartByIdError!]
-  query: Query!
-}
-
-input ClaimVersionInput {
-  tag: String!
-  applicationName: String!
-  applicationPartName: String!
-  environmentName: String!
-}
-
-union ClaimVersionError = ClaimVersionFailedError | UnauthorizedOperationError
-
-type ClaimVersionPayload {
-  result: ClaimVersionResult
-  errors: [ClaimVersionError!]
-  query: Query!
-}
-
-input CreateRoleInput {
-  name: String!
-  permissions: [PermissionInput!]!
-}
-
-union CreateRoleError = UnauthorizedOperationError
-
-type CreateRolePayload {
-  role: Role
-  errors: [CreateRoleError!]
-  query: Query!
-}
-
-input RenameRoleInput {
-  id: ID!
-  name: String!
-}
-
-union RenameRoleError = UnauthorizedOperationError
-
-type RenameRolePayload {
-  role: Role
-  errors: [RenameRoleError!]
-  query: Query!
-}
-
-input ChangeRolePermissionsInput {
-  id: ID!
-  permissions: [PermissionInput!]!
-}
-
-union ChangeRolePermissionsError = UnauthorizedOperationError
-
-type ChangeRolePermissionsPayload {
-  role: Role
-  errors: [ChangeRolePermissionsError!]
-  query: Query!
-}
-
-input RemoveRoleByIdInput {
-  id: ID!
-}
-
-union RemoveRoleByIdError = UnauthorizedOperationError
-
-type RemoveRoleByIdPayload {
-  role: Role
-  errors: [RemoveRoleByIdError!]
-  query: Query!
-}
-
-input CreateGroupInput {
-  name: String!
-  requirements: [RequirementInput!]!
-  roles: [RoleScopeInput!]!
-}
-
-union CreateGroupError = UnauthorizedOperationError
-
-type CreateGroupPayload {
-  group: Group
-  errors: [CreateGroupError!]
-  query: Query!
-}
-
-input RenameGroupInput {
-  id: ID!
-  name: String!
-}
-
-union RenameGroupError = UnauthorizedOperationError
-
-type RenameGroupPayload {
-  group: Group
-  errors: [RenameGroupError!]
-  query: Query!
-}
-
-input UpdateGroupRequirementsInput {
-  id: ID!
-  requirements: [RequirementInput!]!
-}
-
-union UpdateGroupRequirementsError = UnauthorizedOperationError
-
-type UpdateGroupRequirementsPayload {
-  group: Group
-  errors: [UpdateGroupRequirementsError!]
-  query: Query!
-}
-
-input UpdateGroupRolesInput {
-  id: ID!
-  roles: [RoleScopeInput!]!
-}
-
-union UpdateGroupRolesError = UnauthorizedOperationError
-
-type UpdateGroupRolesPayload {
-  group: Group
-  errors: [UpdateGroupRolesError!]
-  query: Query!
-}
-
-input RemoveGroupByIdInput {
-  id: ID!
-}
-
-union RemoveGroupByIdError = UnauthorizedOperationError
-
-type RemoveGroupByIdPayload {
-  group: Group
-  errors: [RemoveGroupByIdError!]
-  query: Query!
-}
+enum VariableState {
+  ACTIVE
+  DEPRECATED
+}
+
+directive @authorize(
+  "The name of the authorization policy that determines access to the annotated resource."
+  policy: String
+  "Roles that are allowed to access the annotated resource."
+  roles: [String!]
+  "Defines when when the authorize directive shall be applied.By default the authorize directives are applied during the validation phase."
+  apply: ApplyPolicy! = VALIDATION
+) repeatable on OBJECT | FIELD_DEFINITION
+
+"The `@defer` directive may be provided for fragment spreads and inline fragments to inform the executor to delay the execution of the current fragment to indicate deprioritization of the current fragment. A query with `@defer` directive will cause the request to potentially return multiple responses, where non-deferred data is delivered in the initial response and data deferred is delivered in a subsequent response. `@include` and `@skip` take precedence over `@defer`."
+directive @defer(
+  "If this argument label has a value other than null, it will be passed on to the result of this defer directive. This label is intended to give client applications a way to identify to which fragment a deferred result belongs to."
+  label: String
+  "Deferred when true."
+  if: Boolean
+) on FRAGMENT_SPREAD | INLINE_FRAGMENT
+
+"The `@oneOf` directive is used within the type system definition language\n to indicate:\n\n - an Input Object is a Oneof Input Object, or\n - an Object Type's Field is a Oneof Field."
+directive @oneOf on INPUT_OBJECT
+
+"The `@specifiedBy` directive is used within the type system definition language to provide a URL for specifying the behavior of custom scalar definitions."
+directive @specifiedBy(
+  "The specifiedBy URL points to a human-readable specification. This field will only read a result for scalar types."
+  url: String!
+) on SCALAR
+
+scalar Any
+
+"The `DateTime` scalar represents an ISO-8601 compliant date time type."
+scalar DateTime @specifiedBy(url: "https://www.graphql-scalars.com/date-time")
+
+scalar SDL
+
+scalar UUID @specifiedBy(url: "https://tools.ietf.org/html/rfc4122")

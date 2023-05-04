@@ -37,6 +37,10 @@ public static class VariablesRequestExecutorBuilderExtensions
             .AddType<DeleteVariableValueChange>()
             .AddType<VariableValueChange>();
 
+        // Variable scope
+        builder.AddType<VariableValueScopeType>();
+
         return builder;
     }
+
 }
