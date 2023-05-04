@@ -22,22 +22,25 @@ internal sealed class VariableValueCollectionConfiguration
                 BsonClassMap.RegisterClassMap<VariableValueScope>(x =>
                 {
                     x.SetIsRootClass(true);
-                    x.SetDiscriminatorIsRequired(true);
+                   // x.SetDiscriminatorIsRequired(true);
                     x.AddKnownType(typeof(NamespaceVariableValueScope));
                     x.AddKnownType(typeof(ApplicationVariableValueScope));
                     x.AddKnownType(typeof(ApplicationPartVariableValueScope));
                 });
                 BsonClassMap.RegisterClassMap<NamespaceVariableValueScope>(x =>
                 {
-                    x.SetDiscriminator("NamespaceVariableValueScope");
+                    x.AutoMap();
+                  //  x.SetDiscriminator("NamespaceVariableValueScope");
                 });
                 BsonClassMap.RegisterClassMap<ApplicationVariableValueScope>(x =>
                 {
-                    x.SetDiscriminator("ApplicationVariableValueScope");
+                    x.AutoMap();
+                   // x.SetDiscriminator("ApplicationVariableValueScope");
                 });
                 BsonClassMap.RegisterClassMap<ApplicationPartVariableValueScope>(x =>
                 {
-                    x.SetDiscriminator("ApplicationPartVariableValueScope");
+                    x.AutoMap();
+                  //  x.SetDiscriminator("ApplicationPartVariableValueScope");
                 });
 
                 var variableIdIndex = new CreateIndexModel<VariableValue>(
