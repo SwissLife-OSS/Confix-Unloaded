@@ -17,6 +17,7 @@ public sealed class VariableValueChange : IVariableChange
         VariableId = variableId;
         VariableVersion = variableVersion;
         EncryptedValue = encryptedValue;
+        EnvironmentId = environmentId;
         Scope = scope;
     }
 
