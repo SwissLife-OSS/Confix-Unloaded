@@ -199,6 +199,16 @@ type ApplicationPartNotFoundError implements UserError {
   message: String!
 }
 
+type ApplicationPartVariableValueScope {
+  partId: ID!
+  environmentId: ID
+}
+
+type ApplicationVariableValueScope {
+  applicationId: ID!
+  environmentId: ID
+}
+
 "A connection to a list of items."
 type ApplicationsConnection {
   "Information to aid in pagination."
@@ -228,6 +238,13 @@ type ChangeRolePermissionsPayload {
   role: Role
   errors: [ChangeRolePermissionsError!]
   query: Query!
+}
+
+type ChangeScopeOfComponentChange implements ComponentChange & Change {
+  scopes: [ComponentScope!]!
+  kind: String!
+  component: Component
+  componentVersion: Int!
 }
 
 type ClaimRequirement {
@@ -309,8 +326,15 @@ type ComponentSchemaChange implements ComponentChange & Change {
 
 type ComponentScope {
   namespace: String!
-  application: String
-  applicationPart: String
+  applicationId: ID
+  applicationPartId: ID
+  application: Application
+  applicationPart: ApplicationPart
+}
+
+type ComponentValidationFailed implements UserError {
+  message: String!
+  code: String!
 }
 
 type ComponentValuesChange implements ComponentChange & Change {
@@ -400,7 +424,6 @@ type CreateVariablePayload {
 }
 
 type DeleteVariableValueChange implements VariableChange & Change {
-  key: VariableKey!
   variableValue: VariableValue!
   variable: Variable
   variableVersion: Int!
@@ -467,6 +490,12 @@ type EnvironmentNotFoundError implements UserError {
   message: String!
 }
 
+type Grant {
+  namespace: String!
+  scope: Scope!
+  permission: PermissionsFlags!
+}
+
 type Group {
   id: ID!
   name: String!
@@ -499,6 +528,7 @@ type Mutation {
   updateApplicationPartComponentValues(input: UpdateApplicationPartComponentValuesInput!): UpdateApplicationPartComponentValuesPayload!
   createComponent(input: CreateComponentInput!): CreateComponentPayload!
   renameComponent(input: RenameComponentInput!): RenameComponentPayload!
+  updateComponentScopes(input: UpdateComponentScopesInput!): UpdateComponentScopesPayload!
   updateComponentSchema(input: UpdateComponentSchemaInput!): UpdateComponentSchemaPayload!
   updateComponentValues(input: UpdateComponentValuesInput!): UpdateComponentValuesPayload!
   createEnvironment(input: CreateEnvironmentInput!): CreateEnvironmentPayload!
@@ -521,6 +551,11 @@ type Mutation {
   updateGroupRequirements(input: UpdateGroupRequirementsInput!): UpdateGroupRequirementsPayload!
   updateGroupRoles(input: UpdateGroupRolesInput!): UpdateGroupRolesPayload!
   removeGroupById(input: RemoveGroupByIdInput!): RemoveGroupByIdPayload!
+}
+
+type NamespaceVariableValueScope {
+  namespace: String!
+  environmentId: ID
 }
 
 "Information about pagination in a connection."
@@ -626,14 +661,13 @@ type Query {
   applicationById("The application ID." id: ID!): Application
   applicationPartById(id: ID!): ApplicationPart
   applicationPartComponentById(partComponentId: ID!): ApplicationPartComponent
-  components(search: String "Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String): ComponentsConnection
+  components(applicationId: ID applicationPartId: ID namespace: String search: String "Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String): ComponentsConnection
   componentById(id: ID!): Component
   searchEnvironments(search: String "Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String): SearchEnvironmentsConnection
   environmentById(id: ID!): Environment
-  variables: [Variable!]!
   searchVariables(search: String "Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String): SearchVariablesConnection
   variable(id: ID!): Variable
-  variableValues(variableId: ID! applicationId: ID applicationPartId: ID): [VariableValue!]!
+  variableValues(variableId: ID! scope: VariableValueScopeInput!): [VariableValue!]!
   globalVariableValues: [VariableValue!]!
   "Gets the latest published version of an application part."
   latestPublishedVersion(applicationName: String! applicationPartName: String! environmentName: String!): LatestPublishedVersionResult
@@ -913,6 +947,12 @@ type UpdateComponentSchemaPayload {
   query: Query!
 }
 
+type UpdateComponentScopesPayload {
+  component: Component
+  errors: [UpdateComponentScopesError!]
+  query: Query!
+}
+
 type UpdateComponentValuesPayload {
   component: Component
   errors: [UpdateComponentValuesError!]
@@ -932,6 +972,8 @@ type UpdateGroupRolesPayload {
 }
 
 type UserInfo {
+  id: String!
+  name: String
   email: String
 }
 
@@ -949,20 +991,10 @@ type Variable implements Node {
   namespace: String!
   version: Int!
   changeLog: [ChangeLog!]!
-  values: [VariableValue!]!
-}
-
-type VariableKey {
-  variableId: ID!
-  applicationId: ID
-  partId: ID
-  environmentId: ID
 }
 
 type VariableValue {
   id: ID!
-  key: VariableKey!
-  value: String
   version: Int!
   variable: Variable
   application: Application
@@ -971,8 +1003,8 @@ type VariableValue {
 }
 
 type VariableValueChange implements VariableChange & Change {
-  key: VariableKey!
-  value: String
+  scope: VariableValueScope!
+  environmentId: UUID
   encryptedValue: EncryptedValue
   variable: Variable
   variableVersion: Int!
@@ -980,9 +1012,8 @@ type VariableValueChange implements VariableChange & Change {
 }
 
 type Viewer {
+  namespaceGrants(scope: Scope!): [Grant!]!
   name: String!
-  groups: [Group!]!
-  namespaces: [String!]!
 }
 
 union AddComponentsToApplicationPartError = ApplicationPartIdInvalid | UnauthorizedOperationError
@@ -997,7 +1028,7 @@ union CreateApiKeyError = UnauthorizedOperationError
 
 union CreateApplicationError = ApplicationNameTaken | UnauthorizedOperationError
 
-union CreateComponentError = ValueSchemaViolation | UnauthorizedOperationError
+union CreateComponentError = ValueSchemaViolation | UnauthorizedOperationError | ComponentValidationFailed
 
 union CreateEnvironmentError = EnvironmentNameCollisionError | UnauthorizedOperationError
 
@@ -1053,11 +1084,15 @@ union UpdateApplicationPartComponentValuesError = ApplicationPartComponentNotFou
 
 union UpdateComponentSchemaError = UnauthorizedOperationError | SchemaInvalidError
 
+union UpdateComponentScopesError = UnauthorizedOperationError | ComponentValidationFailed
+
 union UpdateComponentValuesError = ValueSchemaViolation | UnauthorizedOperationError
 
 union UpdateGroupRequirementsError = UnauthorizedOperationError
 
 union UpdateGroupRolesError = UnauthorizedOperationError
+
+union VariableValueScope = ApplicationPartVariableValueScope | ApplicationVariableValueScope | NamespaceVariableValueScope
 
 input AddComponentsToApplicationPartInput {
   applicationPartId: ID!
@@ -1067,6 +1102,16 @@ input AddComponentsToApplicationPartInput {
 input AddPartToApplicationInput {
   partName: String!
   applicationId: ID!
+}
+
+input ApplicationPartVariableValueScopeInput {
+  partId: ID!
+  environmentId: ID
+}
+
+input ApplicationVariableValueScopeInput {
+  applicationId: ID!
+  environmentId: ID
 }
 
 input ChangeRolePermissionsInput {
@@ -1086,6 +1131,12 @@ input ClaimVersionInput {
   environmentName: String!
 }
 
+input ComponentScopeInput {
+  namespace: String!
+  applicationId: ID
+  applicationPartId: ID
+}
+
 input CreateApiKeyInput {
   name: String!
   roles: [RoleScopeInput!]!
@@ -1099,7 +1150,7 @@ input CreateApplicationInput {
 
 input CreateComponentInput {
   name: String!
-  namespace: String!
+  scopes: [ComponentScopeInput!]!
   schema: String = "type Component { text: String! }"
   values: Any
 }
@@ -1124,10 +1175,16 @@ input CreateVariableInput {
   isSecret: Boolean!
   namespace: String!
   defaultValue: String
+  scope: VariableValueScopeInput!
 }
 
 input DeleteVariableValueInput {
   id: ID!
+}
+
+input NamespaceVariableValueScopeInput {
+  namespace: String!
+  environmentId: ID
 }
 
 input PermissionInput {
@@ -1217,11 +1274,8 @@ input RoleScopeInput {
 
 input SaveVariableValueInput {
   variableId: ID!
+  reference: VariableValueScopeInput!
   value: String!
-  valueId: ID
-  applicationId: ID
-  partId: ID
-  environmentId: ID
 }
 
 input SetDeveloperAccessOfEnvironmentInput {
@@ -1249,6 +1303,11 @@ input UpdateComponentSchemaInput {
   schema: String!
 }
 
+input UpdateComponentScopesInput {
+  id: ID!
+  scopes: [ComponentScopeInput!]!
+}
+
 input UpdateComponentValuesInput {
   id: ID!
   values: Any
@@ -1262,6 +1321,12 @@ input UpdateGroupRequirementsInput {
 input UpdateGroupRolesInput {
   id: ID!
   roles: [RoleScopeInput!]!
+}
+
+input VariableValueScopeInput @oneOf {
+  application: ApplicationVariableValueScopeInput
+  applicationPart: ApplicationPartVariableValueScopeInput
+  namespace: NamespaceVariableValueScopeInput
 }
 
 enum ApplyPolicy {
