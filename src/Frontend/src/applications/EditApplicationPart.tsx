@@ -171,6 +171,7 @@ const Variables: React.FC<{
         id
         application {
           id
+          namespace
         }
         variableValues {
           ...VariableValueList
@@ -209,6 +210,7 @@ const Variables: React.FC<{
           <Col xs={24}>
             <DefaultSuspense>
               <VariableEditor
+                namespace={data.application?.namespace ?? ''}
                 applicationId={data.application?.id}
                 applicationPartId={data.id}
                 variableId={selected.value}

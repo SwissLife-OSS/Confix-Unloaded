@@ -5,6 +5,6 @@ public record NamespaceVariableValueScope(
     string Namespace) : VariableValueScope(EnvironmentId)
 {
     /// <inheritdoc />
-    public override string Identifier
-        => $"/namespace:{Namespace}/environment:{EnvironmentId?.ToString() ?? "global"}";
+    //public override string Identifier
+    //    => $"/namespace:{Namespace}/environment:{EnvironmentId?.ToString() ?? "global"}";
 }

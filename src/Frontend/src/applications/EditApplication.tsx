@@ -170,6 +170,7 @@ const Variables: React.FC<{
           <Col xs={24}>
             <DefaultSuspense>
               <VariableEditor
+                namespace={data.namespace}
                 applicationId={data.id}
                 variableId={selected.value}
                 refresh={refetch}

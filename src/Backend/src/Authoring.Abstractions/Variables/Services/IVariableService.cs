@@ -13,6 +13,7 @@ public interface IVariableService
     Task<IQueryable<Variable>> SearchVariables(string? search, CancellationToken cancellationToken);
 
     Task<Variable?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
+    Task<string> DecryptedValueAsync(VariableValue variableValue, CancellationToken cancellationToken);
 
     Task<VariableValue> SaveValueAsync(
         Guid variableId,

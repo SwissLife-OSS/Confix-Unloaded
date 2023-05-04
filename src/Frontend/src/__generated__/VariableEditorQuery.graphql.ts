@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<9ca41f2e75bd093d72200e5b9bc70121>>
- * @relayHash 37064fc35fe43476b5521645fd849eb8
+ * @generated SignedSource<<ec444527a0813e2ae7f1de46fe28c368>>
+ * @relayHash 98745994726d6f51dc7bd8656f7314a6
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,13 +9,29 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 37064fc35fe43476b5521645fd849eb8
+// @relayRequestID 98745994726d6f51dc7bd8656f7314a6
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
+export type VariableValueScopeInput = {
+  application?: ApplicationVariableValueScopeInput | null;
+  applicationPart?: ApplicationPartVariableValueScopeInput | null;
+  namespace?: NamespaceVariableValueScopeInput | null;
+};
+export type ApplicationVariableValueScopeInput = {
+  applicationId: string;
+  environmentId?: string | null;
+};
+export type ApplicationPartVariableValueScopeInput = {
+  environmentId?: string | null;
+  partId: string;
+};
+export type NamespaceVariableValueScopeInput = {
+  environmentId?: string | null;
+  namespace: string;
+};
 export type VariableEditorQuery$variables = {
-  applicationId?: string | null;
-  applicationPartId?: string | null;
+  scope: VariableValueScopeInput;
   variableId: string;
 };
 export type VariableEditorQuery$data = {
@@ -33,7 +49,7 @@ export type VariableEditorQuery$data = {
       readonly name: string;
     } | null;
     readonly id: string;
-    readonly value: string | null;
+    readonly value: string;
     readonly variable: {
       readonly id: string;
       readonly isSecret: boolean;
@@ -51,48 +67,38 @@ const node: ConcreteRequest = (function(){
 var v0 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "applicationId"
+  "name": "scope"
 },
 v1 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "applicationPartId"
-},
-v2 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
   "name": "variableId"
 },
-v3 = {
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v4 = {
+v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v5 = [
-  (v3/*: any*/),
-  (v4/*: any*/)
+v4 = [
+  (v2/*: any*/),
+  (v3/*: any*/)
 ],
-v6 = {
+v5 = {
   "alias": null,
   "args": [
     {
       "kind": "Variable",
-      "name": "applicationId",
-      "variableName": "applicationId"
-    },
-    {
-      "kind": "Variable",
-      "name": "applicationPartId",
-      "variableName": "applicationPartId"
+      "name": "scope",
+      "variableName": "scope"
     },
     {
       "kind": "Variable",
@@ -105,7 +111,7 @@ v6 = {
   "name": "variableValues",
   "plural": true,
   "selections": [
-    (v3/*: any*/),
+    (v2/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -113,7 +119,7 @@ v6 = {
       "kind": "LinkedField",
       "name": "application",
       "plural": false,
-      "selections": (v5/*: any*/),
+      "selections": (v4/*: any*/),
       "storageKey": null
     },
     {
@@ -124,8 +130,8 @@ v6 = {
       "name": "variable",
       "plural": false,
       "selections": [
+        (v2/*: any*/),
         (v3/*: any*/),
-        (v4/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -143,7 +149,7 @@ v6 = {
       "kind": "LinkedField",
       "name": "environment",
       "plural": false,
-      "selections": (v5/*: any*/),
+      "selections": (v4/*: any*/),
       "storageKey": null
     },
     {
@@ -153,7 +159,7 @@ v6 = {
       "kind": "LinkedField",
       "name": "applicationPart",
       "plural": false,
-      "selections": (v5/*: any*/),
+      "selections": (v4/*: any*/),
       "storageKey": null
     },
     {
@@ -166,7 +172,7 @@ v6 = {
   ],
   "storageKey": null
 },
-v7 = [
+v6 = [
   {
     "kind": "Literal",
     "name": "first",
@@ -177,14 +183,13 @@ return {
   "fragment": {
     "argumentDefinitions": [
       (v0/*: any*/),
-      (v1/*: any*/),
-      (v2/*: any*/)
+      (v1/*: any*/)
     ],
     "kind": "Fragment",
     "metadata": null,
     "name": "VariableEditorQuery",
     "selections": [
-      (v6/*: any*/),
+      (v5/*: any*/),
       {
         "args": null,
         "kind": "FragmentSpread",
@@ -197,17 +202,16 @@ return {
   "kind": "Request",
   "operation": {
     "argumentDefinitions": [
-      (v2/*: any*/),
-      (v0/*: any*/),
-      (v1/*: any*/)
+      (v1/*: any*/),
+      (v0/*: any*/)
     ],
     "kind": "Operation",
     "name": "VariableEditorQuery",
     "selections": [
-      (v6/*: any*/),
+      (v5/*: any*/),
       {
         "alias": null,
-        "args": (v7/*: any*/),
+        "args": (v6/*: any*/),
         "concreteType": "SearchEnvironmentsConnection",
         "kind": "LinkedField",
         "name": "searchEnvironments",
@@ -229,8 +233,8 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
+                  (v2/*: any*/),
                   (v3/*: any*/),
-                  (v4/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -281,7 +285,7 @@ return {
       },
       {
         "alias": null,
-        "args": (v7/*: any*/),
+        "args": (v6/*: any*/),
         "filters": null,
         "handle": "connection",
         "key": "VariableEditor_useEnvironments_searchEnvironments",
@@ -291,7 +295,7 @@ return {
     ]
   },
   "params": {
-    "id": "37064fc35fe43476b5521645fd849eb8",
+    "id": "98745994726d6f51dc7bd8656f7314a6",
     "metadata": {},
     "name": "VariableEditorQuery",
     "operationKind": "query",
@@ -300,6 +304,6 @@ return {
 };
 })();
 
-(node as any).hash = "0f6bc61bc06dd3a6d86bb456112ee7b3";
+(node as any).hash = "66aac1a6c70a4a6a2fe2261f795b4592";
 
 export default node;

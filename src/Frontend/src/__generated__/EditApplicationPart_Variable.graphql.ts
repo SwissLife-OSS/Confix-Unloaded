@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<65221acbd75064da3e27484ee6fca247>>
+ * @generated SignedSource<<e81b932b3d675ef9b307ca32debd7212>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,6 +13,7 @@ import { FragmentRefs } from "relay-runtime";
 export type EditApplicationPart_Variable$data = {
   readonly application: {
     readonly id: string;
+    readonly namespace: string;
   } | null;
   readonly id: string;
   readonly variableValues: ReadonlyArray<{
@@ -48,7 +49,14 @@ return {
       "name": "application",
       "plural": false,
       "selections": [
-        (v0/*: any*/)
+        (v0/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "namespace",
+          "storageKey": null
+        }
       ],
       "storageKey": null
     },
@@ -74,6 +82,6 @@ return {
 };
 })();
 
-(node as any).hash = "2ec46eb4f46e33e492917e63a02db39a";
+(node as any).hash = "0ab814479feefcbbf0df184c844e7665";
 
 export default node;

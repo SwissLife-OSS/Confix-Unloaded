@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<30bcc8a83675c657cfe0f3724a92d603>>
- * @relayHash a83a0dacf95ef2e598eff96353839e10
+ * @generated SignedSource<<4a5a0201f7692d5e5355e3bba29f4fa3>>
+ * @relayHash ffc1ea821c519551351e3b00a4f2bd58
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID a83a0dacf95ef2e598eff96353839e10
+// @relayRequestID ffc1ea821c519551351e3b00a4f2bd58
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -56,35 +56,42 @@ v3 = {
   "name": "name",
   "storageKey": null
 },
-v4 = [
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "namespace",
+  "storageKey": null
+},
+v5 = [
   {
     "kind": "Literal",
     "name": "first",
     "value": 20
   }
 ],
-v5 = {
+v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "publishedAt",
   "storageKey": null
 },
-v6 = [
+v7 = [
   (v3/*: any*/),
   (v2/*: any*/)
 ],
-v7 = {
+v8 = {
   "alias": null,
   "args": null,
   "concreteType": "ApplicationPart",
   "kind": "LinkedField",
   "name": "part",
   "plural": false,
-  "selections": (v6/*: any*/),
+  "selections": (v7/*: any*/),
   "storageKey": null
 },
-v8 = [
+v9 = [
   {
     "alias": null,
     "args": null,
@@ -93,58 +100,45 @@ v8 = [
     "storageKey": null
   }
 ],
-v9 = {
+v10 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "version",
   "storageKey": null
 },
-v10 = {
+v11 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "tag",
   "storageKey": null
 },
-v11 = {
+v12 = {
   "alias": null,
   "args": null,
   "concreteType": "Environment",
   "kind": "LinkedField",
   "name": "environment",
   "plural": false,
-  "selections": (v6/*: any*/),
+  "selections": (v7/*: any*/),
   "storageKey": null
 },
-v12 = {
+v13 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "__typename",
   "storageKey": null
 },
-v13 = [
-  (v2/*: any*/)
-],
-v14 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "Application",
-  "kind": "LinkedField",
-  "name": "application",
-  "plural": false,
-  "selections": (v13/*: any*/),
-  "storageKey": null
-},
-v15 = [
+v14 = [
   (v2/*: any*/),
   (v3/*: any*/)
 ],
-v16 = [
+v15 = [
   (v3/*: any*/)
 ],
-v17 = [
+v16 = [
   {
     "alias": null,
     "args": null,
@@ -152,9 +146,12 @@ v17 = [
     "kind": "LinkedField",
     "name": "definition",
     "plural": false,
-    "selections": (v6/*: any*/),
+    "selections": (v7/*: any*/),
     "storageKey": null
   },
+  (v2/*: any*/)
+],
+v17 = [
   (v2/*: any*/)
 ],
 v18 = [
@@ -165,7 +162,7 @@ v18 = [
     "kind": "LinkedField",
     "name": "component",
     "plural": false,
-    "selections": (v6/*: any*/),
+    "selections": (v7/*: any*/),
     "storageKey": null
   }
 ],
@@ -177,7 +174,7 @@ v19 = [
     "kind": "LinkedField",
     "name": "variable",
     "plural": false,
-    "selections": (v6/*: any*/),
+    "selections": (v7/*: any*/),
     "storageKey": null
   }
 ];
@@ -234,13 +231,7 @@ return {
             "plural": false,
             "selections": [
               (v2/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "namespace",
-                "storageKey": null
-              },
+              (v4/*: any*/),
               (v3/*: any*/)
             ],
             "storageKey": null
@@ -279,7 +270,7 @@ return {
           },
           {
             "alias": null,
-            "args": (v4/*: any*/),
+            "args": (v5/*: any*/),
             "concreteType": "PublishedVersionsConnection",
             "kind": "LinkedField",
             "name": "publishedVersions",
@@ -302,8 +293,8 @@ return {
                     "plural": false,
                     "selections": [
                       (v2/*: any*/),
-                      (v5/*: any*/),
-                      (v7/*: any*/),
+                      (v6/*: any*/),
+                      (v8/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -311,10 +302,10 @@ return {
                         "kind": "LinkedField",
                         "name": "publishedBy",
                         "plural": false,
-                        "selections": (v8/*: any*/),
+                        "selections": (v9/*: any*/),
                         "storageKey": null
                       },
-                      (v9/*: any*/),
+                      (v10/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -323,13 +314,13 @@ return {
                         "name": "claimsVersions",
                         "plural": true,
                         "selections": [
-                          (v10/*: any*/),
                           (v11/*: any*/),
+                          (v12/*: any*/),
                           (v2/*: any*/)
                         ],
                         "storageKey": null
                       },
-                      (v12/*: any*/)
+                      (v13/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -373,7 +364,7 @@ return {
           },
           {
             "alias": null,
-            "args": (v4/*: any*/),
+            "args": (v5/*: any*/),
             "filters": null,
             "handle": "connection",
             "key": "part_publishedVersions",
@@ -386,7 +377,19 @@ return {
             "label": "EditApplicationPart$defer$EditApplicationPart_Variable",
             "selections": [
               (v2/*: any*/),
-              (v14/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Application",
+                "kind": "LinkedField",
+                "name": "application",
+                "plural": false,
+                "selections": [
+                  (v2/*: any*/),
+                  (v4/*: any*/)
+                ],
+                "storageKey": null
+              },
               {
                 "alias": null,
                 "args": null,
@@ -403,7 +406,7 @@ return {
                     "kind": "LinkedField",
                     "name": "environment",
                     "plural": false,
-                    "selections": (v15/*: any*/),
+                    "selections": (v14/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -413,7 +416,7 @@ return {
                     "kind": "LinkedField",
                     "name": "variable",
                     "plural": false,
-                    "selections": (v15/*: any*/),
+                    "selections": (v14/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -456,7 +459,7 @@ return {
                     "kind": "LinkedField",
                     "name": "modifiedBy",
                     "plural": false,
-                    "selections": (v8/*: any*/),
+                    "selections": (v9/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -474,16 +477,16 @@ return {
                         "name": "kind",
                         "storageKey": null
                       },
-                      (v12/*: any*/),
+                      (v13/*: any*/),
                       {
                         "kind": "InlineFragment",
-                        "selections": (v16/*: any*/),
+                        "selections": (v15/*: any*/),
                         "type": "RenameApplicationChange",
                         "abstractKey": null
                       },
                       {
                         "kind": "InlineFragment",
-                        "selections": (v16/*: any*/),
+                        "selections": (v15/*: any*/),
                         "type": "RenameApplicationPartChange",
                         "abstractKey": null
                       },
@@ -497,7 +500,7 @@ return {
                             "kind": "LinkedField",
                             "name": "addedComponent",
                             "plural": false,
-                            "selections": (v17/*: any*/),
+                            "selections": (v16/*: any*/),
                             "storageKey": null
                           }
                         ],
@@ -514,7 +517,7 @@ return {
                             "kind": "LinkedField",
                             "name": "addedPart",
                             "plural": false,
-                            "selections": (v6/*: any*/),
+                            "selections": (v7/*: any*/),
                             "storageKey": null
                           }
                         ],
@@ -531,7 +534,7 @@ return {
                             "kind": "LinkedField",
                             "name": "removedComponent",
                             "plural": false,
-                            "selections": (v17/*: any*/),
+                            "selections": (v16/*: any*/),
                             "storageKey": null
                           }
                         ],
@@ -548,7 +551,7 @@ return {
                             "kind": "LinkedField",
                             "name": "removedPart",
                             "plural": false,
-                            "selections": (v6/*: any*/),
+                            "selections": (v7/*: any*/),
                             "storageKey": null
                           }
                         ],
@@ -565,10 +568,19 @@ return {
                             "kind": "LinkedField",
                             "name": "part",
                             "plural": false,
-                            "selections": (v13/*: any*/),
+                            "selections": (v17/*: any*/),
                             "storageKey": null
                           },
-                          (v14/*: any*/),
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "Application",
+                            "kind": "LinkedField",
+                            "name": "application",
+                            "plural": false,
+                            "selections": (v17/*: any*/),
+                            "storageKey": null
+                          },
                           {
                             "alias": null,
                             "args": null,
@@ -578,7 +590,7 @@ return {
                             "plural": false,
                             "selections": [
                               (v2/*: any*/),
-                              (v9/*: any*/)
+                              (v10/*: any*/)
                             ],
                             "storageKey": null
                           },
@@ -645,7 +657,7 @@ return {
                             "name": "partVersion",
                             "storageKey": null
                           },
-                          (v7/*: any*/)
+                          (v8/*: any*/)
                         ],
                         "type": "PublishedApplicationPartChange",
                         "abstractKey": null
@@ -766,7 +778,7 @@ return {
                             "kind": "LinkedField",
                             "name": "parent",
                             "plural": false,
-                            "selections": (v15/*: any*/),
+                            "selections": (v14/*: any*/),
                             "storageKey": null
                           }
                         ],
@@ -788,7 +800,7 @@ return {
                             "name": "nodes",
                             "plural": true,
                             "selections": [
-                              (v10/*: any*/),
+                              (v11/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -796,7 +808,7 @@ return {
                                 "kind": "LinkedField",
                                 "name": "application",
                                 "plural": false,
-                                "selections": (v6/*: any*/),
+                                "selections": (v7/*: any*/),
                                 "storageKey": null
                               },
                               {
@@ -806,7 +818,7 @@ return {
                                 "kind": "LinkedField",
                                 "name": "applicationPart",
                                 "plural": false,
-                                "selections": (v6/*: any*/),
+                                "selections": (v7/*: any*/),
                                 "storageKey": null
                               },
                               {
@@ -818,12 +830,12 @@ return {
                                 "plural": false,
                                 "selections": [
                                   (v2/*: any*/),
-                                  (v9/*: any*/),
-                                  (v5/*: any*/)
+                                  (v10/*: any*/),
+                                  (v6/*: any*/)
                                 ],
                                 "storageKey": null
                               },
-                              (v11/*: any*/),
+                              (v12/*: any*/),
                               (v2/*: any*/)
                             ],
                             "storageKey": null
@@ -845,7 +857,7 @@ return {
     ]
   },
   "params": {
-    "id": "a83a0dacf95ef2e598eff96353839e10",
+    "id": "ffc1ea821c519551351e3b00a4f2bd58",
     "metadata": {},
     "name": "EditApplicationPartQuery",
     "operationKind": "query",

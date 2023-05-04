@@ -8,6 +8,6 @@ public record ApplicationVariableValueScope(
     [property: ID<Application>] Guid ApplicationId) : VariableValueScope(EnvironmentId)
 {
     /// <inheritdoc />
-    public override string Identifier
-        => $"/application:{ApplicationId}/environment:{EnvironmentId?.ToString() ?? "global"}";
+   // public override string Identifier
+    //    => $"/application:{ApplicationId}/environment:{EnvironmentId?.ToString() ?? "global"}";
 }

@@ -1000,6 +1000,7 @@ type VariableValue {
   application: Application
   applicationPart: ApplicationPart
   environment: Environment
+  value: String!
 }
 
 type VariableValueChange implements VariableChange & Change {

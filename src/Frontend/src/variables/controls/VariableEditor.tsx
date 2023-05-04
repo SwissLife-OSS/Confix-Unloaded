@@ -27,14 +27,9 @@ import {useStringEventHanlder} from '../../shared/useEventListener';
 const variableEditorQuery = graphql`
   query VariableEditorQuery(
     $variableId: ID!
-    $applicationId: ID
-    $applicationPartId: ID
+    $scope: VariableValueScopeInput!
   ) {
-    variableValues(
-      variableId: $variableId
-      applicationId: $applicationId
-      applicationPartId: $applicationPartId
-    ) {
+    variableValues(variableId: $variableId, scope: $scope) {
       id
       application {
         id
@@ -61,11 +56,13 @@ const variableEditorQuery = graphql`
 
 export const VariableEditor: React.FC<{
   variableId: string;
+  namespace: string;
   applicationId?: string;
   applicationPartId?: string;
   refresh?: () => void;
 }> = ({
   variableId,
+  namespace,
   applicationId,
   applicationPartId,
   refresh: outerRefresh,
@@ -75,8 +72,13 @@ export const VariableEditor: React.FC<{
     variableEditorQuery,
     {
       variableId,
-      applicationId,
-      applicationPartId,
+      scope: applicationPartId
+        ? {
+            applicationPart: {partId: applicationPartId},
+          }
+        : applicationId
+        ? {application: {applicationId}}
+        : {namespace: {namespace}},
     },
     {fetchPolicy: 'network-only', ...queryOptions},
   );
@@ -144,10 +146,6 @@ const variableEditorDeleteVariableValue = graphql`
       value {
         variable {
           id
-          values {
-            id
-            value
-          }
         }
       }
     }
