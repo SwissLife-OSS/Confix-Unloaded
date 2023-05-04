@@ -199,6 +199,16 @@ type ApplicationPartNotFoundError implements UserError {
   message: String!
 }
 
+type ApplicationPartVariableValueScope {
+  partId: ID!
+  environmentId: ID
+}
+
+type ApplicationVariableValueScope {
+  applicationId: ID!
+  environmentId: ID
+}
+
 "A connection to a list of items."
 type ApplicationsConnection {
   "Information to aid in pagination."
@@ -414,7 +424,6 @@ type CreateVariablePayload {
 }
 
 type DeleteVariableValueChange implements VariableChange & Change {
-  key: VariableKey!
   variableValue: VariableValue!
   variable: Variable
   variableVersion: Int!
@@ -544,6 +553,11 @@ type Mutation {
   removeGroupById(input: RemoveGroupByIdInput!): RemoveGroupByIdPayload!
 }
 
+type NamespaceVariableValueScope {
+  namespace: String!
+  environmentId: ID
+}
+
 "Information about pagination in a connection."
 type PageInfo {
   "Indicates whether more edges exist following the set defined by the clients arguments."
@@ -651,10 +665,9 @@ type Query {
   componentById(id: ID!): Component
   searchEnvironments(search: String "Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String): SearchEnvironmentsConnection
   environmentById(id: ID!): Environment
-  variables: [Variable!]!
   searchVariables(search: String "Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String): SearchVariablesConnection
   variable(id: ID!): Variable
-  variableValues(variableId: ID! applicationId: ID applicationPartId: ID): [VariableValue!]!
+  variableValues(variableId: ID! scope: VariableValueScopeInput!): [VariableValue!]!
   globalVariableValues: [VariableValue!]!
   "Gets the latest published version of an application part."
   latestPublishedVersion(applicationName: String! applicationPartName: String! environmentName: String!): LatestPublishedVersionResult
@@ -978,20 +991,10 @@ type Variable implements Node {
   namespace: String!
   version: Int!
   changeLog: [ChangeLog!]!
-  values: [VariableValue!]!
-}
-
-type VariableKey {
-  variableId: ID!
-  applicationId: ID
-  partId: ID
-  environmentId: ID
 }
 
 type VariableValue {
   id: ID!
-  key: VariableKey!
-  value: String
   version: Int!
   variable: Variable
   application: Application
@@ -1000,8 +1003,8 @@ type VariableValue {
 }
 
 type VariableValueChange implements VariableChange & Change {
-  key: VariableKey!
-  value: String
+  scope: VariableValueScope!
+  environmentId: UUID
   encryptedValue: EncryptedValue
   variable: Variable
   variableVersion: Int!
@@ -1089,6 +1092,8 @@ union UpdateGroupRequirementsError = UnauthorizedOperationError
 
 union UpdateGroupRolesError = UnauthorizedOperationError
 
+union VariableValueScope = ApplicationPartVariableValueScope | ApplicationVariableValueScope | NamespaceVariableValueScope
+
 input AddComponentsToApplicationPartInput {
   applicationPartId: ID!
   componentIds: [ID!]!
@@ -1097,6 +1102,16 @@ input AddComponentsToApplicationPartInput {
 input AddPartToApplicationInput {
   partName: String!
   applicationId: ID!
+}
+
+input ApplicationPartVariableValueScopeInput {
+  partId: ID!
+  environmentId: ID
+}
+
+input ApplicationVariableValueScopeInput {
+  applicationId: ID!
+  environmentId: ID
 }
 
 input ChangeRolePermissionsInput {
@@ -1160,10 +1175,16 @@ input CreateVariableInput {
   isSecret: Boolean!
   namespace: String!
   defaultValue: String
+  scope: VariableValueScopeInput!
 }
 
 input DeleteVariableValueInput {
   id: ID!
+}
+
+input NamespaceVariableValueScopeInput {
+  namespace: String!
+  environmentId: ID
 }
 
 input PermissionInput {
@@ -1253,11 +1274,8 @@ input RoleScopeInput {
 
 input SaveVariableValueInput {
   variableId: ID!
+  reference: VariableValueScopeInput!
   value: String!
-  valueId: ID
-  applicationId: ID
-  partId: ID
-  environmentId: ID
 }
 
 input SetDeveloperAccessOfEnvironmentInput {
@@ -1303,6 +1321,12 @@ input UpdateGroupRequirementsInput {
 input UpdateGroupRolesInput {
   id: ID!
   roles: [RoleScopeInput!]!
+}
+
+input VariableValueScopeInput @oneOf {
+  application: ApplicationVariableValueScopeInput
+  applicationPart: ApplicationPartVariableValueScopeInput
+  namespace: NamespaceVariableValueScopeInput
 }
 
 enum ApplyPolicy {

@@ -12,11 +12,11 @@ public sealed class VariableMutations
         bool isSecret,
         string @namespace,
         string? defaultValue,
-        VariableValueScope scope,
+        VariableValueScopeInput scope,
         CancellationToken cancellationToken)
     {
         return await variableService
-            .CreateAsync(name, @namespace, isSecret, scope, defaultValue, cancellationToken);
+            .CreateAsync(name, @namespace, isSecret, scope.GetValueScope(), defaultValue, cancellationToken);
     }
 
     [Error(typeof(UnauthorizedOperationException))]
