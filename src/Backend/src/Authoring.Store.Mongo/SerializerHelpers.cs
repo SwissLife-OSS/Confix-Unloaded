@@ -9,7 +9,7 @@ internal static class SerializerHelpers
 
     public static void RegisterSerializers()
     {
-        if (!_isConfigured)
+        if (_isConfigured)
         {
             return;
         }

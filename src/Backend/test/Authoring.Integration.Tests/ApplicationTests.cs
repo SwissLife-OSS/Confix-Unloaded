@@ -14,7 +14,7 @@ public class ApplicationTests : IClassFixture<MongoResource>
         _mongoResource = mongoResource;
     }
 
-    [Fact(Skip = "TODO: Fix this test")]
+    [Fact]
     public async Task Applications_Should_ReturnAllApplications()
     {
         // arrange
@@ -67,7 +67,7 @@ public class ApplicationTests : IClassFixture<MongoResource>
         Assert.Equal(1, result.Data!.Applications!.Nodes!.Count);
     }
 
-    [Fact(Skip = "TODO: Fix this test")]
+    [Fact]
     public async Task Applications_Should_NotReturnAnything_When_NotAuthenticated()
     {
         // arrange
@@ -91,7 +91,7 @@ public class ApplicationTests : IClassFixture<MongoResource>
         Assert.Equal(0, result.Data!.Applications!.Nodes!.Count);
     }
 
-    [Fact(Skip = "TODO: Fix this test")]
+    [Fact]
     public async Task ApplicationById_Should_ReturnApplication_When_Authenticated()
     {
     }

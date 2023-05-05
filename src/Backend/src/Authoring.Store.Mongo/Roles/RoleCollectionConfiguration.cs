@@ -23,6 +23,6 @@ internal sealed class RoleCollectionConfiguration : IMongoCollectionConfiguratio
             })
             .AddBsonClassMap<ClaimRequirement>(x => x.AutoMap())
             .WithCollectionSettings(s => s.ReadConcern = ReadConcern.Majority)
-            .WithCollectionSettings(s => s.ReadPreference = ReadPreference.Nearest)
+            .WithCollectionSettings(s => s.ReadPreference = ReadPreference.Nearest);
     }
 }
