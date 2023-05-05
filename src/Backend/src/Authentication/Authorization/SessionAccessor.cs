@@ -2,8 +2,9 @@ using System.Collections.Immutable;
 using System.Security.Authentication;
 using System.Security.Claims;
 using Confix.Authentication.ApiKey;
-using IdentityModel;
 using Microsoft.AspNetCore.Http;
+using static Confix.Authentication.ApiKey.ApiKeyDefaults;
+using static IdentityModel.JwtClaimTypes;
 
 namespace Confix.Authentication.Authorization;
 
@@ -52,41 +53,28 @@ internal class SessionAccessor : ISessionAccessor
 
         var groupsTask = GetGroupsAsync(user, cancellationToken);
         var roleMapTask = _roleProvider.GetRoleMapAsync(cancellationToken);
-        UserInfo userInfo = GetUserInfo(user);
+        var userInfo = GetUserInfo(user);
 
         var groups = await groupsTask;
-        if (!groups.Any())
+        if (groups.Count == 0)
         {
             return null;
         }
 
-        return new Session(
-            userInfo,
-            groups,
-            await roleMapTask);
+        return new Session(userInfo, groups, await roleMapTask);
     }
 
     private static UserInfo GetUserInfo(ClaimsPrincipal user)
     {
-        string? sub = user.FirstExisting(
-            JwtClaimTypes.Subject,
-            ClaimTypes.NameIdentifier,
-            JwtClaimTypes.JwtId);
+        var sub = user.FirstExisting(Subject, ClaimTypes.NameIdentifier, JwtId);
 
         if (sub is null)
         {
             throw new AuthenticationException("Sub was not provided");
         }
 
-        string name = user.FirstExisting(
-            JwtClaimTypes.Name,
-            JwtClaimTypes.PreferredUserName,
-            JwtClaimTypes.GivenName) ?? sub;
-        string? email = user.FirstExisting(
-            JwtClaimTypes.Email,
-            ClaimTypes.Upn,
-            JwtClaimTypes.PreferredUserName,
-            "upn");
+        var name = user.FirstExisting(Name, PreferredUserName, GivenName) ?? sub;
+        var email = user.FirstExisting(Email, ClaimTypes.Upn, PreferredUserName, "upn");
 
         return new(sub, name, email);
     }
@@ -95,8 +83,7 @@ internal class SessionAccessor : ISessionAccessor
         ClaimsPrincipal user,
         CancellationToken cancellationToken)
     {
-        if (user.Claims.FirstOrDefault(x => x.Type == ApiKeyDefaults.ApiKeyClaim) is
-            { } apiKeyClaim)
+        if (user.Claims.FirstOrDefault(x => x.Type == ApiKeyClaim) is { } apiKeyClaim)
         {
             var apiKey = await _apiKeyProvider
                 .GetByIdAsync(Guid.Parse(apiKeyClaim.Value), cancellationToken);
@@ -119,9 +106,11 @@ internal class SessionAccessor : ISessionAccessor
     }
 }
 
-file static class Extensions
+static file class Extensions
 {
-    public static string? FirstExisting(this ClaimsPrincipal claimsPrincipal, params string[] claims)
+    public static string? FirstExisting(
+        this ClaimsPrincipal claimsPrincipal,
+        params string[] claims)
     {
         foreach (string claim in claims)
         {

@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>Confix.Authoring.Integration.Tests</AssemblyName>
+    <RootNamespace>Confix.Authoring.Integration.Tests</RootNamespace>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Authoring\Authoring.csproj" />
+    <ProjectReference Include="..\..\src\Authoring.Store.Mongo\Authoring.Store.Mongo.csproj" />
+    <ProjectReference Include="..\..\src\CryptoProviders.Mongo\CryptoProviders.Mongo.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="coverlet.collector">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="coverlet.msbuild">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+
+    <PackageReference Include="Moq" />
+
+    <PackageReference Include="Squadron.Mongo" />
+
+    <PackageReference Include="StrawberryShake.Server" />
+
+    <PackageReference Include="StrawberryShake.Transport.InMemory" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+    <PackageReference Include="Snapshooter.Xunit" />
+    <PackageReference Include="FluentAssertions" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <GraphQL Update="ComponentTests.graphql">
+      <Generator>MSBuild:GenerateGraphQLCode</Generator>
+    </GraphQL>
+  </ItemGroup>
+
+</Project>

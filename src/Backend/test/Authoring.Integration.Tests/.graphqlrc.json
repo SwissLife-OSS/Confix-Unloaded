@@ -1,0 +1,19 @@
+{
+  "schema": "schema.graphql",
+  "documents": "**/*.graphql",
+  "extensions": {
+    "strawberryShake": {
+      "name": "TestClient",
+      "url": "https://localhost",
+      "records": {
+        "inputs": false,
+        "entities": false
+      },
+      "transportProfiles": [
+        {
+          "default": "InMemory"
+        }
+      ]
+    }
+  }
+}

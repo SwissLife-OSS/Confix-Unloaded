@@ -47,7 +47,7 @@ public static class AuthenticationExtensions
                 return ApiKeyDefaults.AuthenticationScheme;
             }
 
-            string authorization = context.Request.Headers[HeaderNames.Authorization];
+            string? authorization = context.Request.Headers[HeaderNames.Authorization];
             if (!string.IsNullOrEmpty(authorization) && authorization.StartsWith("Bearer "))
             {
                 return JwtBearerDefaults.AuthenticationScheme;
@@ -62,7 +62,6 @@ public static class AuthenticationExtensions
         string pathToConfig = Settings.Confix.Authoring.Authentication.JwtBearer.Section)
     {
         builder.ConfigureBuilder(x => x.AddJwtBearer());
-
 
         builder.Services
             .AddOptions<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme)

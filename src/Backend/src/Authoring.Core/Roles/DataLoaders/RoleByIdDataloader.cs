@@ -3,7 +3,7 @@ using GreenDonut;
 
 namespace Confix.Authoring.Roles;
 
-internal sealed class RoleByIdDataLoader : BatchDataLoader<Guid, Role>, IRoleByIdDataLoader
+internal sealed class RoleByIdDataLoader : BatchDataLoader<Guid, Role?>, IRoleByIdDataLoader
 {
     private readonly IRoleStore _store;
 
@@ -15,12 +15,12 @@ internal sealed class RoleByIdDataLoader : BatchDataLoader<Guid, Role>, IRoleByI
         _store = store;
     }
 
-    protected override async Task<IReadOnlyDictionary<Guid, Role>> LoadBatchAsync(
+    protected override async Task<IReadOnlyDictionary<Guid, Role?>> LoadBatchAsync(
         IReadOnlyList<Guid> keys,
         CancellationToken cancellationToken)
     {
         var roles = await _store.GetByIdsAsync(keys, cancellationToken);
 
-        return roles.ToDictionary(x => x.Id);
+        return roles.ToDictionary(x => x.Id)!;
     }
 }

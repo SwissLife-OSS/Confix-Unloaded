@@ -36,39 +36,44 @@ internal class GroupProvider : IGroupProvider
 
         var cacheKey = $"group_service.groups_of_user.{identifier}";
 
-        if (_cache.TryGetValue(cacheKey, out IReadOnlyList<Group> cachedGroups))
+        if (_cache.TryGetValue(cacheKey, out IReadOnlyList<Group>? cachedGroups))
         {
-            return cachedGroups;
+            return cachedGroups!;
         }
 
         var groups = await GetGroupsAsync(cancellationToken);
 
         lock (_userCacheLock)
         {
-            return _cache.GetOrCreate(cacheKey, (cacheEntry) =>
-            {
-                cacheEntry.AbsoluteExpirationRelativeToNow = _cacheExpiration;
-                return groups
-                    .AsParallel()
-                    .Where(x => x.Requirements.Any(r => r.Validate(principal)))
-                    .ToArray();
-            });
+            cachedGroups = _cache.GetOrCreate(
+                cacheKey,
+                cacheEntry =>
+                {
+                    cacheEntry.AbsoluteExpirationRelativeToNow = _cacheExpiration;
+                    return groups
+                        .AsParallel()
+                        .Where(x => x.Requirements.Any(r => r.Validate(principal)))
+                        .ToArray();
+                });
         }
+
+        return cachedGroups!;
     }
 
     private async Task<IReadOnlyList<Group>> GetGroupsAsync(CancellationToken cancellationToken)
     {
         const string cacheKey = "group_service.groups";
 
-        if (_cache.TryGetValue(cacheKey, out IReadOnlyList<Group> cachedGroups))
+        if (_cache.TryGetValue(cacheKey, out IReadOnlyList<Group>? cachedGroups))
         {
-            return cachedGroups;
+            return cachedGroups!;
         }
 
         await _groupCacheSemaphore.WaitAsync(cancellationToken);
         try
         {
-            return await _cache.GetOrCreateAsync(cacheKey, async (cacheEntry) =>
+            cachedGroups = await _cache.GetOrCreateAsync(cacheKey,
+                async cacheEntry =>
                 {
                     cacheEntry.AbsoluteExpirationRelativeToNow = _cacheExpiration;
                     return await _groupStore.GetAllAsync(cancellationToken);
@@ -78,5 +83,7 @@ internal class GroupProvider : IGroupProvider
         {
             _groupCacheSemaphore.Release();
         }
+
+        return cachedGroups!;
     }
 }

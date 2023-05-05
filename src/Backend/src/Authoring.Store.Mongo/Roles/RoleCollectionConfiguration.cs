@@ -20,12 +20,13 @@ internal sealed class RoleCollectionConfiguration : IMongoCollectionConfiguratio
             .WithCollectionSettings(s => s.ReadPreference = ReadPreference.Nearest)
             .WithCollectionConfiguration(_ =>
             {
-                BsonClassMap.RegisterClassMap<Requirement>(x =>
+                Database.RegisterClassMap<Requirement>(x =>
                 {
                     x.SetIsRootClass(true);
                     x.AutoMap();
                 });
-                BsonClassMap.RegisterClassMap<ClaimRequirement>().AutoMap();
+
+                Database.RegisterClassMap<ClaimRequirement>(x => x.AutoMap());
             });
     }
 }
