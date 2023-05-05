@@ -16,17 +16,13 @@ internal sealed class RoleCollectionConfiguration : IMongoCollectionConfiguratio
                 cm.AutoMap();
                 cm.MapIdMember(c => c.Id);
             })
+            .AddBsonClassMap<Requirement>(x =>
+            {
+                x.SetIsRootClass(true);
+                x.AutoMap();
+            })
+            .AddBsonClassMap<ClaimRequirement>(x => x.AutoMap())
             .WithCollectionSettings(s => s.ReadConcern = ReadConcern.Majority)
             .WithCollectionSettings(s => s.ReadPreference = ReadPreference.Nearest)
-            .WithCollectionConfiguration(_ =>
-            {
-                Database.RegisterClassMap<Requirement>(x =>
-                {
-                    x.SetIsRootClass(true);
-                    x.AutoMap();
-                });
-
-                Database.RegisterClassMap<ClaimRequirement>(x => x.AutoMap());
-            });
     }
 }
