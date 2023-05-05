@@ -42,7 +42,16 @@ export const NewVariable: React.FC = () => {
       namespace: '',
       isSecret: false,
     },
-    (input) => ({input, connectionIds: [connectionId]}),
+    ({name, defaultValue, namespace, isSecret}) => ({
+      input: {
+        name,
+        defaultValue,
+        isSecret,
+        namespace,
+        scope: {namespace: {namespace}},
+      },
+      connectionIds: [connectionId],
+    }),
     {
       pipes: [
         withOnSuccess((x) => x.createVariable.variable?.id, goToEdit),

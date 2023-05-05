@@ -172,13 +172,15 @@ internal sealed class VariableService : IVariableService
             .Select(x => x.Scope)
             .OfType<ApplicationVariableValueScope>()
             .Select(x => x.ApplicationId)
-            .Distinct();
+            .Distinct()
+            .ToArray();
 
         var applicationPartIds = values
             .Select(x => x.Scope)
             .OfType<ApplicationPartVariableValueScope>()
             .Select(x => x.PartId)
-            .Distinct();
+            .Distinct()
+            .ToArray();
 
         await Task.WhenAll(
             _applicationById.LoadAsync(applicationIds, cancellationToken),
