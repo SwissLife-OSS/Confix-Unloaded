@@ -1,3 +1,5 @@
+using HotChocolate;
+using HotChocolate.Types;
 using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring;

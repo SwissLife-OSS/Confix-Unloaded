@@ -267,13 +267,13 @@ internal sealed class VariableService : IVariableService
             new[] { scope },
             cancellationToken);
 
-        var variableValue = variables.SingleOrDefault() ??
-            new VariableValue(Guid.NewGuid(), scope, null, 0);
-
         const string topic = "variable";
 
         var encrypted = await _encryptor
             .EncryptAsync(topic, value, scope.EnvironmentId ?? Guid.Empty, cancellationToken);
+
+        var variableValue = variables.SingleOrDefault() ??
+            new VariableValue(Guid.NewGuid(), scope, encrypted, 0);
 
         variableValue = variableValue with { EncryptedValue = encrypted };
 
@@ -300,8 +300,8 @@ internal sealed class VariableService : IVariableService
         CancellationToken cancellationToken)
     {
         if (!await _authorizationService
-            .RuleFor<VariableValue>()
-            .IsAuthorizedAsync(variableValue, Decrypt, cancellationToken))
+                .RuleFor<VariableValue>()
+                .IsAuthorizedAsync(variableValue, Decrypt, cancellationToken))
         {
             throw new UnauthorizedOperationException();
         }

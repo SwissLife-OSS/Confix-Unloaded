@@ -73,6 +73,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Samples.Host", "src\Samples
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authoring.Authentication.Tests", "test\Authoring.Authentication.Tests\Authoring.Authentication.Tests.csproj", "{D7B34C75-E53E-4DAD-8ADD-C92D7576C714}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authoring.Integration.Tests", "test\Authoring.Integration.Tests\Authoring.Integration.Tests.csproj", "{A6467E98-B5F2-488A-984D-D80C158B49C2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -214,6 +216,10 @@ Global
 		{D7B34C75-E53E-4DAD-8ADD-C92D7576C714}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D7B34C75-E53E-4DAD-8ADD-C92D7576C714}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D7B34C75-E53E-4DAD-8ADD-C92D7576C714}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6467E98-B5F2-488A-984D-D80C158B49C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6467E98-B5F2-488A-984D-D80C158B49C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6467E98-B5F2-488A-984D-D80C158B49C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6467E98-B5F2-488A-984D-D80C158B49C2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{A506ADEE-0136-4A7B-B3C8-0D23C176F4DE} = {8C4B0F32-7C73-4C83-80AF-CDD992121D3D}
@@ -249,5 +255,6 @@ Global
 		{94741D84-65A2-453F-A037-0B5C46287244} = {8C4B0F32-7C73-4C83-80AF-CDD992121D3D}
 		{3957135B-E458-44D1-9C9B-9D7AD6220638} = {8C4B0F32-7C73-4C83-80AF-CDD992121D3D}
 		{D7B34C75-E53E-4DAD-8ADD-C92D7576C714} = {D40302DA-D28B-4601-BD53-3A7D4405826B}
+		{A6467E98-B5F2-488A-984D-D80C158B49C2} = {D40302DA-D28B-4601-BD53-3A7D4405826B}
 	EndGlobalSection
 EndGlobal

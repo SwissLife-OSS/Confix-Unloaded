@@ -4,7 +4,7 @@ using GreenDonut;
 namespace Confix.Authoring.Publishing;
 
 internal sealed class PublishedApplicationPartsByPartByIdPartDataloader
-    : GroupedDataLoader<Guid, PublishedApplicationPart?>
+    : GroupedDataLoader<Guid, PublishedApplicationPart>
     , IPublishedApplicationPartsByPartIdDataloader
 {
     private readonly IPublishingStore _publishingStore;
@@ -17,12 +17,12 @@ internal sealed class PublishedApplicationPartsByPartByIdPartDataloader
         _publishingStore = publishingStore;
     }
 
-    protected override async Task<ILookup<Guid, PublishedApplicationPart?>> LoadGroupedBatchAsync(
+    protected override async Task<ILookup<Guid, PublishedApplicationPart>> LoadGroupedBatchAsync(
         IReadOnlyList<Guid> keys,
         CancellationToken cancellationToken)
     {
         var results = await _publishingStore.GetByApplicationPartIdsAsync(keys, cancellationToken);
 
-        return results.OrderByDescending(x => x.PublishedAt).ToLookup(x => x.Part.Id)!;
+        return results.OrderByDescending(x => x.PublishedAt).ToLookup(x => x.Part.Id);
     }
 }

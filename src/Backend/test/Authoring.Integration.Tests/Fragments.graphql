@@ -1,0 +1,68 @@
+fragment Application on Application {
+  id
+  name
+  namespace
+  version
+
+  parts {
+    ...ApplicationPart
+  }
+}
+
+fragment ApplicationPart on ApplicationPart {
+  id
+  name
+  version
+
+  application {
+    id
+    name
+  }
+
+  components {
+    ...ApplicationPartComponent
+  }
+}
+
+fragment ApplicationPartComponent on ApplicationPartComponent  {
+  id
+  version
+
+  applicationPart {
+    id
+    name
+  }
+
+  definition {
+    id
+    name
+  }
+
+  values
+}
+
+fragment Component on Component {
+  id
+  name
+  version
+  schema
+  schemaSdl
+  defaults
+  values
+  state
+  schemaViolations {
+    code
+    path
+  }
+
+  scopes {
+    application {
+      name
+    }
+    namespace
+    applicationPart {
+      name
+    }
+  }
+  values
+}

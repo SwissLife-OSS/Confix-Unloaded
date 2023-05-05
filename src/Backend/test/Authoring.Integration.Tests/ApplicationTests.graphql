@@ -1,0 +1,15 @@
+query GetApplications
+{
+  applications {
+    nodes {
+      ...Application
+    }
+  }
+}
+
+query GetApplicationById($id: ID!)
+{
+  applicationById(id: $id) {
+    ...Application
+  }
+}

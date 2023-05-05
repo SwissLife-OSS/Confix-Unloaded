@@ -3,7 +3,7 @@ using GreenDonut;
 
 namespace Confix.Authoring.ApiKeys.DataLoaders;
 
-internal sealed class ApiKeyByIdDataLoader : BatchDataLoader<Guid, ApiKey>, IApiKeyByIdDataLoader
+internal sealed class ApiKeyByIdDataLoader : BatchDataLoader<Guid, ApiKey?>, IApiKeyByIdDataLoader
 {
     private readonly IApiKeyStore _store;
 
@@ -15,12 +15,12 @@ internal sealed class ApiKeyByIdDataLoader : BatchDataLoader<Guid, ApiKey>, IApi
         _store = store;
     }
 
-    protected override async Task<IReadOnlyDictionary<Guid, ApiKey>> LoadBatchAsync(
+    protected override async Task<IReadOnlyDictionary<Guid, ApiKey?>> LoadBatchAsync(
         IReadOnlyList<Guid> keys,
         CancellationToken cancellationToken)
     {
         var roles = await _store.FindKeysByIdsAsync(keys, cancellationToken);
 
-        return roles.ToDictionary(x => x.Id);
+        return roles.ToDictionary(x => x.Id)!;
     }
 }

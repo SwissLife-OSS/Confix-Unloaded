@@ -20,24 +20,28 @@ internal class RoleProvider : IRoleProvider
         CancellationToken cancellationToken)
     {
         const string cacheKey = "role_service.role_map";
-        if (_cache.TryGetValue(cacheKey, out IReadOnlyDictionary<Guid, Role> cachedRoles))
+        if (_cache.TryGetValue(cacheKey, out IReadOnlyDictionary<Guid, Role>? cachedRoles))
         {
-            return cachedRoles;
+            return cachedRoles!;
         }
 
         await _roleCacheSemaphore.WaitAsync(cancellationToken);
         try
         {
-            return await _cache.GetOrCreateAsync(cacheKey, async (cacheEntry) =>
-            {
-                cacheEntry.AbsoluteExpirationRelativeToNow = _cacheExpiration;
-                var roles  = await _roleStore.GetAllAsync(cancellationToken);
-                return roles.ToDictionary(r => r.Id);
-            });
+            cachedRoles = await _cache.GetOrCreateAsync(
+                cacheKey,
+                async cacheEntry =>
+                {
+                    cacheEntry.AbsoluteExpirationRelativeToNow = _cacheExpiration;
+                    var roles = await _roleStore.GetAllAsync(cancellationToken);
+                    return roles.ToDictionary(r => r.Id);
+                });
         }
         finally
         {
             _roleCacheSemaphore.Release();
         }
+
+        return cachedRoles!;
     }
 }

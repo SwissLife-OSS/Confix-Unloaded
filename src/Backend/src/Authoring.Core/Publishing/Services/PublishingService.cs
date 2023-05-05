@@ -141,8 +141,7 @@ internal sealed class PublishingService : IPublishingService
             return Array.Empty<PublishedApplicationPart>();
         }
 
-        return await _publishedApplicationPartsByPartId.LoadAsync(partId, cancellationToken) ??
-            Array.Empty<PublishedApplicationPart>();
+        return await _publishedApplicationPartsByPartId.LoadAsync(partId, cancellationToken);
     }
 
     public async Task<IReadOnlyList<Environment>> GetDeployedEnvironmentByPartIdAsync(
@@ -269,7 +268,7 @@ internal sealed class PublishingService : IPublishingService
         var claimedVersion = await _publishingStore
             .GetClaimedVersionByGitVersionAsync(gitVersion, app.Id, part.Id, cancellationToken);
 
-        PublishedApplicationPart? publishedApplicationPart = null;
+        PublishedApplicationPart? publishedApplicationPart;
 
         if (claimedVersion?.PublishingId is { } publishingId)
         {
@@ -627,7 +626,7 @@ internal sealed class PublishingService : IPublishingService
 
         var possibleValues =
             await _variableValueStore.GetByFilterAsync(
-                variables.Select(x => x.Id).Distinct(),
+                variables.Select(x => x?.Id).OfType<Guid>().Distinct(),
                 new VariableValueScope[]
                 {
                     applicationAndEnvScope,

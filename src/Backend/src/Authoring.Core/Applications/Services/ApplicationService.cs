@@ -16,7 +16,7 @@ internal sealed class ApplicationService : IApplicationService
     private readonly IApplicationStore _appStore;
     private readonly IAuthorizationService _authorizationService;
     private readonly IChangeLogService _changeLogService;
-    private readonly IDataLoader<Guid, Component> _componentById;
+    private readonly IComponentDataLoader _componentById;
     private readonly IComponentStore _compStore;
     private readonly ISchemaService _schemaService;
     private readonly ISessionAccessor _sessionAccessor;
@@ -27,7 +27,7 @@ internal sealed class ApplicationService : IApplicationService
         IApplicationPartDataLoader applicationPartByIdDataLoader,
         IApplicationPartComponentDataLoader applicationPartComponentByIdDataloader,
         IComponentStore compStore,
-        IDataLoader<Guid, Component> componentById,
+        IComponentDataLoader componentById,
         ISchemaService schemaService,
         ISessionAccessor sessionAccessor,
         IAuthorizationService authorizationService)
@@ -117,11 +117,11 @@ internal sealed class ApplicationService : IApplicationService
         }
 
         return await _appStore.Search(
-                skip,
-                take,
-                session.GetNamespacesWithAccess(Scope.Application, Read),
-                search,
-                cancellationToken);
+            skip,
+            take,
+            session.GetNamespacesWithAccess(Scope.Application, Read),
+            search,
+            cancellationToken);
     }
 
     public async Task<Application> CreateAsync(
@@ -168,8 +168,7 @@ internal sealed class ApplicationService : IApplicationService
 
         application = application with
         {
-            Version = application.Version + 1,
-            Parts = applicationParts
+            Version = application.Version + 1, Parts = applicationParts
         };
 
         using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
