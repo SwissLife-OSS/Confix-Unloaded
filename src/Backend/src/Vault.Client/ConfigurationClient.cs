@@ -82,7 +82,7 @@ public sealed class VaultClient : IVaultClient
         string token,
         CancellationToken cancellationToken)
     {
-        using var client = _clientFactory.CreateClient(HttpClientName);
+        using HttpClient client = _clientFactory.CreateClient(HttpClientName);
 
         UriBuilder uriBuilder = new(client.BaseAddress!)
         {
@@ -91,12 +91,12 @@ public sealed class VaultClient : IVaultClient
                 .AddParameter("applicationName", applicationName)
                 .AddParameter("applicationPartName", applicationPartName)
                 .AddParameter("environmentName", environmentName)
-                .AddParameter("token", token)
                 .ToQueryString()
                 .Value
         };
 
         HttpRequestMessage request = new() { Method = HttpMethod.Get, RequestUri = uriBuilder.Uri };
+        request.Headers.Add(WellKnown.Headers.TokenHeader, token);
 
         var repsonse =
             await RequestAsync<GetConfigurationResponse>(client, request, cancellationToken);
