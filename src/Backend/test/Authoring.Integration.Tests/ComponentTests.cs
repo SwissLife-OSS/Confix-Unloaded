@@ -1,7 +1,9 @@
 using Confix.Authentication.Authorization;
 using Squadron;
+using Snapshooter;
 using Xunit;
 using static Confix.Authoring.Integration.Tests.Wellknown;
+using Snapshooter.Xunit;
 
 namespace Confix.Authoring.Integration.Tests;
 
@@ -15,29 +17,25 @@ public class ComponentTests : IClassFixture<MongoResource>
     }
 
     [Fact]
-    public async Task Applications_Should_ReturnAllApplications()
+    public async Task Components_Should_ReturnAllComponents()
     {
         // arrange
         await TestExecutorBuilder
             .New()
             .AddDatabase(_mongoResource.ConnectionString)
             .AddDefaultUser()
-            .AddPermission(Namespaces.Default, Scope.Application, Permissions.Read)
-            .AddPermission(Namespaces.Other, Scope.Application, Permissions.Read)
+            .AddPermission(Namespaces.Default, Scope.Component, Permissions.Read)
             .AddClient(out var client)
             .SetupDb(db => db
-                .AddApplication(x => x with { Name = "Test" })
-                .AddApplication(x => x with
-                {
-                    Id = Guid.NewGuid(), Name = "Test2", Namespace = Namespaces.Other
-                }))
+                .AddComponent(x => x with { Id = Guid.Parse("10000000-0000-0000-0000-000000000000"), Name = "Component 1" })
+                .AddComponent(x => x with { Id = Guid.Parse("20000000-0000-0000-0000-000000000000"), Name = "Component 2" }))
             .Build();
 
         // act
-        var result = await client.Value.GetApplications.ExecuteAsync();
+        var result = await client.Value.GetComponents.ExecuteAsync();
 
         // assert
         result.AssertNoErrors();
-        Assert.Equal(2, result.Data!.Applications!.Nodes!.Count);
+        result.Data.MatchSnapshot();
     }
 }
