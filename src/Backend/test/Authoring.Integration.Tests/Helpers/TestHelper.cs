@@ -39,7 +39,10 @@ public sealed class TestDataProvider
                 }
             };
 
-            configure?.Invoke(application);
+            if (configure is not null)
+            {
+                application = configure(application);
+            }
 
             await store.AddAsync(application, CancellationToken.None);
         });
@@ -61,7 +64,10 @@ public sealed class TestDataProvider
                 Authoring.ComponentState.Active,
                 new[] { new ComponentScope(Wellknown.Application.Namespace, null, null) });
 
-            configure?.Invoke(component);
+            if (configure is not null)
+            {
+                component = configure(component);
+            }
 
             await store.AddAsync(component, CancellationToken.None);
         });
@@ -81,7 +87,10 @@ public sealed class TestDataProvider
                 Wellknown.Variable.IsSecret,
                 Wellknown.Variable.Namespace);
 
-            configure?.Invoke(variable);
+            if (configure is not null)
+            {
+                variable = configure(variable);
+            }
 
             await store.UpdateAsync(variable, CancellationToken.None);
         });

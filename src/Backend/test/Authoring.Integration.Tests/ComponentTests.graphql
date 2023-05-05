@@ -1,5 +1,4 @@
-query GetComponent
-{
+query GetComponent {
   components {
     nodes {
       ...Component
