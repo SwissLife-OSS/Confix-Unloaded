@@ -93,6 +93,28 @@ public class ComponentTests : IClassFixture<MongoResource>
     }
 
     [Fact]
+    public async Task ComponentById_InvalidId_ReturnsNull()
+    {
+        // arrange
+        await TestExecutorBuilder
+            .New()
+            .AddDatabase(_mongoResource.ConnectionString)
+            .AddDefaultUser()
+            .AddPermission(Namespaces.Default, Scope.Component, Permissions.Read)
+            .AddClient(out var client)
+            .SetupDb(db => db.AddComponent())
+            .Build();
+        string relayId = new IdSerializer().Serialize(nameof(Component), Guid.NewGuid())!;
+
+        // act
+        var result = await client.Value.GetComponentById.ExecuteAsync(relayId);
+
+        // assert
+        result.AssertNoErrors();
+        result.Data!.ComponentById.Should().BeNull();
+    }
+
+    [Fact]
     public async Task ComponentById_NoPermission_ReturnsNull()
     {
         // arrange

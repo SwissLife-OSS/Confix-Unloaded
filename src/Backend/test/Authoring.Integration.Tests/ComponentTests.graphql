@@ -6,9 +6,27 @@ query GetComponents {
   }
 }
 
-query GetComponentById($id: ID!){
-  componentById(id: $id){
+query GetComponentById($id: ID!) {
+  componentById(id: $id) {
     ...Component
+  }
+}
+
+query GetComponentsWithFilter(
+  $applicationId: ID
+  $applicationPartId: ID
+  $namespace: String
+  $search: String
+) {
+  components(
+    applicationId: $applicationId
+    applicationPartId: $applicationPartId
+    namespace: $namespace
+    search: $search
+  ) {
+    nodes {
+      ...Component
+    }
   }
 }
 
