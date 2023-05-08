@@ -302,7 +302,6 @@ type Component implements Node {
   name: String!
   scopes: [ComponentScope!]!
   version: Int!
-  state: ComponentState!
   changeLog: [ChangeLog!]!
   schemaSdl: SDL
   schema: Any
@@ -1336,10 +1335,6 @@ enum ApplyPolicy {
   VALIDATION
 }
 
-enum ComponentState {
-  ACTIVE
-  DEPRECATED
-}
 
 enum Scope {
   CONFIGURATION

@@ -41,15 +41,13 @@ internal sealed class ComponentStore : IComponentStore
         string? search,
         CancellationToken cancellationToken)
     {
-        var namespaceFilter = Filter<Component>()
+        var scopeFilter = Filter<Component>()
             .ElemMatch(x => x.Scopes,
                 And(
                     Filter<ComponentScope>().In(x => x.Namespace, namespaces),
                     Filter<ComponentScope>().Null(x => x.ApplicationId),
                     Filter<ComponentScope>().Null(x => x.ApplicationPartId)
                 ));
-
-        var scopeFilter = namespaceFilter;
 
         if (applicationId is not null)
         {
@@ -70,8 +68,7 @@ internal sealed class ComponentStore : IComponentStore
                         And(
                             Filter<ComponentScope>().In(x => x.Namespace, namespaces),
                             Filter<ComponentScope>().Eq(x => x.ApplicationId, applicationId),
-                            Filter<ComponentScope>()
-                                .Eq(x => x.ApplicationPartId, applicationPartId)
+                            Filter<ComponentScope>().Eq(x => x.ApplicationPartId, applicationPartId)
                         ));
             }
         }
@@ -86,6 +83,7 @@ internal sealed class ComponentStore : IComponentStore
 
         return await _dbContext.Components
             .Find(filter)
+            .SortByDescending(x => x.Name)
             .Skip(skip)
             .Limit(take)
             .ToListAsync(cancellationToken);

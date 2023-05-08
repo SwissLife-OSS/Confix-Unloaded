@@ -5,3 +5,18 @@ query GetComponents {
     }
   }
 }
+
+query GetComponentById($id: ID!){
+  componentById(id: $id){
+    ...Component
+  }
+}
+
+# components(
+#    applicationId: ID
+#    applicationPartId: ID
+#    namespace: String
+#    search: String
+#    first: Int
+#    after: String): ComponentsConnection
+# componentById(id: ID!): Component

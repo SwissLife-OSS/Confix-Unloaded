@@ -49,7 +49,6 @@ fragment Component on Component {
   schemaSdl
   defaults
   values
-  state
   schemaViolations {
     code
     path

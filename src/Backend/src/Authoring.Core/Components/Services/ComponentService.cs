@@ -133,7 +133,13 @@ internal sealed class ComponentService : IComponentService
         }
 
         Component component =
-            new(Guid.NewGuid(), name, schemaSdl, serializedValues, ComponentState.Active, scopes);
+            new(
+                Guid.NewGuid(),
+                name,
+                schemaSdl,
+                serializedValues,
+                version: 1,
+                scopes);
 
         if (!await _authorizationService
                 .RuleFor<Component>()

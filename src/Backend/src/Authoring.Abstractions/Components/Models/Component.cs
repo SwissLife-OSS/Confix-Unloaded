@@ -11,32 +11,14 @@ public sealed record Component
         string? schema,
         string? values,
         int version,
-        ComponentState state,
         IReadOnlyList<ComponentScope> scopes)
     {
         Id = id;
         Name = name;
         Schema = schema;
         Values = values;
+        Scopes = scopes;
         Version = version;
-        State = state;
-        Scopes = scopes;
-    }
-
-    public Component(
-        Guid id,
-        string? name,
-        string? schema,
-        string? values,
-        ComponentState state,
-        IReadOnlyList<ComponentScope> scopes)
-    {
-        Id = id;
-        Name = name;
-        Schema = schema;
-        Values = values;
-        State = state;
-        Scopes = scopes;
     }
 
     [ID]
@@ -53,6 +35,4 @@ public sealed record Component
     public IReadOnlyList<ComponentScope> Scopes { get; init; }
 
     public int Version { get; init; }
-
-    public ComponentState State { get; init; }
 }

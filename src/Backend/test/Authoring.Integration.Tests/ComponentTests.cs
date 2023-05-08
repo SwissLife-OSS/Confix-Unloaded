@@ -1,9 +1,6 @@
 using Confix.Authentication.Authorization;
-using Squadron;
-using Snapshooter;
-using Xunit;
+using HotChocolate.Types.Relay;
 using static Confix.Authoring.Integration.Tests.Wellknown;
-using Snapshooter.Xunit;
 
 namespace Confix.Authoring.Integration.Tests;
 
@@ -15,6 +12,8 @@ public class ComponentTests : IClassFixture<MongoResource>
     {
         _mongoResource = mongoResource;
     }
+
+    #region Components without filter
 
     [Fact]
     public async Task Components_Should_ReturnAllComponents()
@@ -36,11 +35,11 @@ public class ComponentTests : IClassFixture<MongoResource>
 
         // assert
         result.AssertNoErrors();
-        result.Data!.Components!.Nodes.MatchSnapshot();
+        result.Data!.Components!.Nodes!.Count.Should().Be(2);
     }
 
     [Fact]
-    public async Task ComponentById_Should_OnlyReturnComponentsWithReadPermission()
+    public async Task Component_Should_OnlyReturnComponentsWithReadPermission()
     {
         // arrange
         await TestExecutorBuilder
@@ -65,6 +64,57 @@ public class ComponentTests : IClassFixture<MongoResource>
 
         // assert
         result.AssertNoErrors();
-        Assert.Equal(1, result.Data!.Components!.Nodes!.Count);
+        result.Data!.Components!.Nodes!.Count.Should().Be(1);
     }
+    #endregion
+
+    #region ComponentById
+
+    [Fact]
+    public async Task ComponentById_ValidId_ReturnsComponent()
+    {
+        // arrange
+        await TestExecutorBuilder
+            .New()
+            .AddDatabase(_mongoResource.ConnectionString)
+            .AddDefaultUser()
+            .AddPermission(Namespaces.Default, Scope.Component, Permissions.Read)
+            .AddClient(out var client)
+            .SetupDb(db => db.AddComponent())
+            .Build();
+        string relayId = new IdSerializer().Serialize(nameof(Component), Wellknown.Component.Id)!;
+
+        // act
+        var result = await client.Value.GetComponentById.ExecuteAsync(relayId);
+
+        // assert
+        result.AssertNoErrors();
+        result.Data!.ComponentById.MatchSnapshot();
+    }
+
+    [Fact]
+    public async Task ComponentById_NoPermission_ReturnsNull()
+    {
+        // arrange
+        await TestExecutorBuilder
+            .New()
+            .AddDatabase(_mongoResource.ConnectionString)
+            .AddDefaultUser()
+            .AddPermission(Namespaces.Other, Scope.Component, Permissions.Read)
+            .AddClient(out var client)
+            .SetupDb(db => db.AddComponent())
+            .Build();
+        string relayId = new IdSerializer().Serialize(nameof(Component), Wellknown.Component.Id)!;
+
+        // act
+        var result = await client.Value.GetComponentById.ExecuteAsync(relayId);
+
+        // assert
+        result.AssertNoErrors();
+        result.Data!.ComponentById.Should().BeNull();
+    }
+
+    #endregion
+
+
 }

@@ -43,4 +43,11 @@
     </GraphQL>
   </ItemGroup>
 
+  <ItemGroup >
+    <Using Include="FluentAssertions" />
+    <Using Include="Snapshooter" />
+    <Using Include="Snapshooter.Xunit" />
+    <Using Include="Squadron" />
+    <Using Include="Xunit" />
+  </ItemGroup>
 </Project>
