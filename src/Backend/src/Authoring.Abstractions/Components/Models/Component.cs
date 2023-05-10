@@ -32,6 +32,9 @@ public sealed record Component
 
     public string? Values { get; init; }
 
+    // TODO: figure out how to do a "root-scope"
+    // public ComponentScope RootScope {get;init;}
+    public string Namespace {get;init;}
     public IReadOnlyList<ComponentScope> Scopes { get; init; }
 
     public int Version { get; init; }

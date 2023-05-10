@@ -9,12 +9,10 @@ public interface IComponentService
     Task<ISchema?> GetSchemaByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
     Task<IReadOnlyList<Component>> Search(
+        IReadOnlyList<ComponentScope> scopes,
+        string? search,
         int skip,
         int take,
-        Guid? applicationId,
-        Guid? applicationPartId,
-        string? @namespace,
-        string? search,
         CancellationToken cancellationToken);
 
     Task<Component> CreateAsync(

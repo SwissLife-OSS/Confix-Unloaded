@@ -65,41 +65,26 @@ internal sealed class ComponentService : IComponentService
     }
 
     public async Task<IReadOnlyList<Component>> Search(
+        IReadOnlyList<ComponentScope> scopes,
+        string? search,
         int skip,
         int take,
-        Guid? applicationId,
-        Guid? applicationPartId,
-        string? @namespace,
-        string? search,
         CancellationToken cancellationToken)
     {
         var session = await _accessor.GetSession(cancellationToken);
-
         if (session is null)
         {
             return Array.Empty<Component>();
         }
 
         var namespaces = session.GetNamespacesWithAccess(Scope.Component, Read);
-        if (@namespace is not null)
-        {
-            if (namespaces.Contains(@namespace))
-            {
-                namespaces = new HashSet<string> { @namespace };
-            }
-            else
-            {
-                return Array.Empty<Component>();
-            }
-        }
 
-        return await _componentStore.Search(
+        return await _componentStore.GetByFilterAsync(
+            namespaces,
+            scopes,
+            search,
             skip,
             take,
-            namespaces,
-            applicationId,
-            applicationPartId,
-            search,
             cancellationToken);
     }
 
