@@ -139,6 +139,101 @@ public class ComponentTests : IClassFixture<MongoResource>
         result.Data!.Components!.Nodes!.Count.Should().Be(2);
     }
 
+    [Fact]
+    public async Task ComponentsFilter_Scopes_ReturnsAllMatching()
+    {
+        // arrange
+        await TestExecutorBuilder
+            .New()
+            .AddDatabase(_mongoResource.ConnectionString)
+            .AddDefaultUser()
+            .AddPermission(Namespaces.Default, Scope.Component, Permissions.Read)
+            .AddPermission(Namespaces.Other, Scope.Component, Permissions.Read)
+            .AddClient(out var client)
+            .SetupDb(db => db
+                .AddComponent(x => x with
+                {
+                    Id = Guid.Parse("10000000-0000-0000-0000-000000000000"),
+                    Name = "Component1",
+                    Scopes = new[] { new NamespaceComponentScope(Namespaces.Default) }
+                })
+                .AddComponent(x => x with
+                {
+                    Id = Guid.Parse("20000000-0000-0000-0000-000000000000"),
+                    Name = "Component2",
+                    Scopes = new[] { new NamespaceComponentScope(Namespaces.Other) }
+                })
+                .AddComponent(x => x with
+                {
+                    Id = Guid.Parse("30000000-0000-0000-0000-000000000000"),
+                    Name = "Component3",
+                    Scopes = new[] { new NamespaceComponentScope("Some Other Namespace") }
+                }))
+            .Build();
+
+        // act
+        var result = await client.Value.GetComponentsWithFilter.ExecuteAsync(new[]{
+            new ComponentScopeInput{
+                Namespace = new() {Namespace = Namespaces.Default}
+            },
+            new ComponentScopeInput{
+                Namespace = new() {Namespace = Namespaces.Other}
+            }
+        }, null);
+
+        // assert
+        result.AssertNoErrors();
+        result.Data!.Components!.Nodes!.Count.Should().Be(2);
+    }
+
+    [Fact]
+    public async Task ComponentsFilter_ScopesWithSearch_ReturnsAllMatchingBoth()
+    {
+        // arrange
+        await TestExecutorBuilder
+            .New()
+            .AddDatabase(_mongoResource.ConnectionString)
+            .AddDefaultUser()
+            .AddPermission(Namespaces.Default, Scope.Component, Permissions.Read)
+            .AddPermission(Namespaces.Other, Scope.Component, Permissions.Read)
+            .AddClient(out var client)
+            .SetupDb(db => db
+                .AddComponent(x => x with
+                {
+                    Id = Guid.Parse("10000000-0000-0000-0000-000000000000"),
+                    Name = "Search1Component",
+                    Scopes = new[] { new NamespaceComponentScope(Namespaces.Default) }
+                })
+                .AddComponent(x => x with
+                {
+                    Id = Guid.Parse("20000000-0000-0000-0000-000000000000"),
+                    Name = "Search3Component",
+                    Scopes = new[] { new NamespaceComponentScope(Namespaces.Other) }
+                })
+                .AddComponent(x => x with
+                {
+                    Id = Guid.Parse("30000000-0000-0000-0000-000000000000"),
+                    Name = "Search2Component",
+                    Scopes = new[] { new NamespaceComponentScope("Some Other Namespace") }
+                }))
+            .Build();
+
+        // act
+        var result = await client.Value.GetComponentsWithFilter.ExecuteAsync(new[]{
+            new ComponentScopeInput{
+                Namespace = new() {Namespace = Namespaces.Default}
+            },
+            new ComponentScopeInput{
+                Namespace = new() {Namespace = Namespaces.Other}
+            }
+        }, "Search1");
+
+        // assert
+        result.AssertNoErrors();
+        result.Data!.Components!.Nodes!.Count.Should().Be(1);
+    }
+
+
     #endregion
 
 
