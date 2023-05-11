@@ -27,7 +27,8 @@ public static class ComponentsRequestExecutorBuilderExtensions
         // types
         builder
             .AddTypeExtension<ComponentQueries>()
-            .AddTypeExtension<ComponentMutations>();
+            .AddTypeExtension<ComponentMutations>()
+            .AddType<ComponentScopeType>();
 
         // extensions
         builder
