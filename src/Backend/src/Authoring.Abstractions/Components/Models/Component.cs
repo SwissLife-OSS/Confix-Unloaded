@@ -7,9 +7,9 @@ public sealed record Component
 {
     public Component(
         Guid id,
-        string? name,
-        string? schema,
-        string? values,
+        string name,
+        string schema,
+        string values,
         string @namespace,
         IReadOnlyList<ComponentScope> scopes,
         int version = 1)
@@ -27,16 +27,17 @@ public sealed record Component
     public Guid Id { get; init; }
 
     [Required]
-    public string? Name { get; init; }
+    public string Name { get; init; }
 
     [Required]
-    public string? Schema { get; init; }
+    public string Schema { get; init; }
 
-    public string? Values { get; init; }
+    // TODO: difference between Component.Values <-> DefaultValue resolver
+    public string Values { get; init; }
 
     // TODO: figure out how to do a "root-scope"
     // public ComponentScope RootScope {get;init;}
-    public string Namespace {get;init;}
+    public string Namespace { get; init; }
     public IReadOnlyList<ComponentScope> Scopes { get; init; }
 
     public int Version { get; init; }

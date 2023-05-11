@@ -93,12 +93,12 @@ internal sealed class ComponentService : IComponentService
         string schemaSdl,
         string @namespace,
         IReadOnlyList<ComponentScope> scopes,
-        IDictionary<string, object?>? values,
+        IDictionary<string, object?> values,
         CancellationToken cancellationToken)
     {
-        if (string.IsNullOrEmpty(name))
+        if (string.IsNullOrWhiteSpace(name))
         {
-            throw new ArgumentException("Value cannot be null or empty.", nameof(name));
+            throw ComponentValidationFailed.NameRequired();
         }
 
         if (scopes.Count == 0)
@@ -106,16 +106,8 @@ internal sealed class ComponentService : IComponentService
             throw ComponentValidationFailed.AtLeastOneScopeIsRequired();
         }
 
-        string? serializedValues = null;
-
-
-        var schema = _schemaService.CreateSchema(schemaSdl);
-
-        if (values is not null)
-        {
-            serializedValues = _schemaService.CreateValuesForSchema(schema, values);
-        }
-
+        ISchema schema = _schemaService.CreateSchema(schemaSdl);
+        string serializedValues = _schemaService.CreateValuesForSchema(schema, values);
 
         Component component =
             new(

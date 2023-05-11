@@ -90,9 +90,4 @@ public class ApplicationTests : IClassFixture<MongoResource>
         result.AssertNoErrors();
         Assert.Equal(0, result.Data!.Applications!.Nodes!.Count);
     }
-
-    [Fact]
-    public async Task ApplicationById_Should_ReturnApplication_When_Authenticated()
-    {
-    }
 }

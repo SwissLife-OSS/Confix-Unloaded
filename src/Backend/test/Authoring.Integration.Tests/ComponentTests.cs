@@ -233,9 +233,7 @@ public class ComponentTests : IClassFixture<MongoResource>
         result.Data!.Components!.Nodes!.Count.Should().Be(1);
     }
 
-
     #endregion
-
 
     #region ComponentById
 
@@ -307,8 +305,7 @@ public class ComponentTests : IClassFixture<MongoResource>
 
     #endregion
 
-
-    #region
+    #region CreateComponent
     // TODO: mutations
     #endregion
 

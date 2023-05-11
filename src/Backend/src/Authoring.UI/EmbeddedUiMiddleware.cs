@@ -25,7 +25,7 @@ internal sealed class EmbeddedUiMiddleware
         var hasContentType =
             _contentTypeProvider.TryGetContentType(context.Request.Path, out var contentType);
 
-        var fileInfo = _fileProvider.GetFileInfo(context.Request.Path.Value);
+        var fileInfo = _fileProvider.GetFileInfo(context.Request.Path.Value!);
 
         if (!fileInfo.Exists && !hasContentType)
         {

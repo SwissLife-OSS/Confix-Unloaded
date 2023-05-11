@@ -20,7 +20,7 @@ public interface IComponentService
         string schemaSdl,
         string @namespace,
         IReadOnlyList<ComponentScope> scopes,
-        IDictionary<string, object?>? values,
+        IDictionary<string, object?> values,
         CancellationToken cancellationToken);
 
     Task<Component> RenameAsync(Guid id, string name, CancellationToken cancellationToken);

@@ -43,9 +43,9 @@ dotnet_style_coalesce_expression = true:suggestion
 dotnet_style_null_propagation = true:suggestion
 
 # Prefer "var" everywhere
-csharp_style_var_for_built_in_types = true:suggestion
+csharp_style_var_for_built_in_types = false:suggestion
 csharp_style_var_when_type_is_apparent = true:suggestion
-csharp_style_var_elsewhere = true:suggestion
+csharp_style_var_elsewhere = false:suggestion
 
 # Prefer method-like constructs to have a block body
 csharp_style_expression_bodied_methods = false:none
@@ -101,3 +101,6 @@ dotnet_style_require_accessibility_modifiers = always
 
 # Public API
 dotnet_diagnostic.RS0016.severity = warning
+
+# Implement standard exception constructors
+dotnet_diagnostic.CA1032.severity = none
