@@ -21,9 +21,8 @@
   "SchemaViolations": [],
   "Scopes": [
     {
-      "Application": null,
-      "Namespace": "Test",
-      "ApplicationPart": null
+      "__typename": "NamespaceComponentScope",
+      "Namespace": "Test"
     }
   ]
 }
