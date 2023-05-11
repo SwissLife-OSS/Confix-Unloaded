@@ -342,6 +342,43 @@ public class ComponentTests : IClassFixture<MongoResource>
         result.Data!.CreateComponent.Component.Should().MatchSnapshot();
         result.Data!.CreateComponent.Query.Components!.Nodes!.Count.Should().Be(2);
     }
+
+    [Fact]
+    public async Task CreateComponent_BrokenSchema_ReturnsError()
+    {
+        // arrange
+        await TestExecutorBuilder
+            .New()
+            .AddDatabase(_mongoResource.ConnectionString)
+            .AddDefaultUser()
+            .AddPermission(Namespaces.Default, Scope.Component, Permissions.Read)
+            .AddClient(out var client)
+            .SetupDb(db => db.AddComponent())
+            .Build();
+
+        // act
+        var result = await client.Value.CreateComponent.ExecuteAsync(new CreateComponentInput
+        {
+            Name = "My New Component",
+            Schema = """type Component { someFieldWithNonExistentType: Unicorn! }""",
+            Namespace = Namespaces.Default,
+            Scopes = new[] {
+                new ComponentScopeInput() {
+                    Namespace = new NamespaceComponentScopeInput() {
+                         Namespace = Namespaces.Default
+                    }
+                }
+            },
+            Values = JsonDocument.Parse("""{"someFieldWithNonExistentType": "foo"}""")
+        });
+
+        // assert
+        result.AssertNoErrors();
+        result.Data!.CreateComponent.Errors!.Count.Should().BeGreaterThan(0);
+        result.Data!.CreateComponent.Errors!.Should().MatchSnapshot();
+        result.Data!.CreateComponent.Component.Should().BeNull();
+        result.Data!.CreateComponent.Query.Components!.Nodes!.Count.Should().Be(1);
+    }
     #endregion
 
 }
