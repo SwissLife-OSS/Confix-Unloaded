@@ -17,7 +17,8 @@ public interface IComponentService
 
     Task<Component> CreateAsync(
         string name,
-        string? schemaSdl,
+        string schemaSdl,
+        string @namespace,
         IReadOnlyList<ComponentScope> scopes,
         IDictionary<string, object?>? values,
         CancellationToken cancellationToken);

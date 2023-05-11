@@ -11,12 +11,12 @@ public sealed class ComponentQueries
     public async Task<Connection<Component>> GetComponents(
         [Service] IComponentService componentService,
         IResolverContext context,
-        IReadOnlyList<ComponentScopeInput> scopes,
+        IReadOnlyList<ComponentScopeInput>? scopes,
         string? search)
     {
         return await context.ApplyPaginationAsync((skip, take, ct) =>
             componentService.Search(
-                scopes.Select(x => x.GetScope()).ToArray(),
+                scopes?.Select(x => x.GetScope()).ToArray() ?? Array.Empty<ComponentScope>(),
                 search,
                 skip,
                 take,

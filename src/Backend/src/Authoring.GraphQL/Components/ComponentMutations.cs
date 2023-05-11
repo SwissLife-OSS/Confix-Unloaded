@@ -11,6 +11,7 @@ public sealed class ComponentMutations
     public async Task<Component> CreateComponentAsync(
         [Service] IComponentService service,
         string name,
+        string @namespace,
         IReadOnlyList<ComponentScopeInput> scopes,
         [DefaultValue("type Component { text: String! }")] string schema,
         [GraphQLType(typeof(AnyType))] Dictionary<string, object?>? values,
@@ -19,6 +20,7 @@ public sealed class ComponentMutations
         return await service.CreateAsync(
             name,
             schema,
+            @namespace,
             scopes.Select(x => x.GetScope()).ToArray(),
             values,
             cancellationToken);

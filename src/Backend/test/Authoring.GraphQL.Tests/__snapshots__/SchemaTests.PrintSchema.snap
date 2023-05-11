@@ -124,6 +124,11 @@ type Application implements Node {
   changeLog: [ChangeLog!]!
 }
 
+type ApplicationComponentScope {
+  applicationId: ID!
+  application: Application
+}
+
 type ApplicationIdInvalid implements UserError {
   applicationId: ID!
   code: String!
@@ -168,6 +173,11 @@ type ApplicationPartComponentNotFoundError implements UserError {
   componentPartId: ID!
   code: String!
   message: String!
+}
+
+type ApplicationPartComponentScope {
+  applicationPartId: ID!
+  applicationPart: ApplicationPart
 }
 
 type ApplicationPartComponentValuesChange implements ApplicationPartComponentChange & ApplicationPartChange & ApplicationChange & Change {
@@ -300,9 +310,9 @@ type ClaimedVersionsEdge {
 type Component implements Node {
   id: ID!
   name: String!
+  namespace: String!
   scopes: [ComponentScope!]!
   version: Int!
-  state: ComponentState!
   changeLog: [ChangeLog!]!
   schemaSdl: SDL
   schema: Any
@@ -322,14 +332,6 @@ type ComponentSchemaChange implements ComponentChange & Change {
   kind: String!
   component: Component
   componentVersion: Int!
-}
-
-type ComponentScope {
-  namespace: String!
-  applicationId: ID
-  applicationPartId: ID
-  application: Application
-  applicationPart: ApplicationPart
 }
 
 type ComponentValidationFailed implements UserError {
@@ -553,6 +555,10 @@ type Mutation {
   removeGroupById(input: RemoveGroupByIdInput!): RemoveGroupByIdPayload!
 }
 
+type NamespaceComponentScope {
+  namespace: String!
+}
+
 type NamespaceVariableValueScope {
   namespace: String!
   environmentId: ID
@@ -661,7 +667,7 @@ type Query {
   applicationById("The application ID." id: ID!): Application
   applicationPartById(id: ID!): ApplicationPart
   applicationPartComponentById(partComponentId: ID!): ApplicationPartComponent
-  components(applicationId: ID applicationPartId: ID namespace: String search: String "Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String): ComponentsConnection
+  components(scopes: [ComponentScopeInput!] search: String "Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String): ComponentsConnection
   componentById(id: ID!): Component
   searchEnvironments(search: String "Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String): SearchEnvironmentsConnection
   environmentById(id: ID!): Environment
@@ -1025,6 +1031,8 @@ union ChangeRolePermissionsError = UnauthorizedOperationError
 
 union ClaimVersionError = ClaimVersionFailedError | UnauthorizedOperationError
 
+union ComponentScope = ApplicationPartComponentScope | ApplicationComponentScope | NamespaceComponentScope
+
 union CreateApiKeyError = UnauthorizedOperationError
 
 union CreateApplicationError = ApplicationNameTaken | UnauthorizedOperationError
@@ -1105,6 +1113,14 @@ input AddPartToApplicationInput {
   applicationId: ID!
 }
 
+input ApplicationComponentScopeInput {
+  applicationId: ID!
+}
+
+input ApplicationPartComponentScopeInput {
+  applicationPartId: ID!
+}
+
 input ApplicationPartVariableValueScopeInput {
   partId: ID!
   environmentId: ID
@@ -1132,10 +1148,10 @@ input ClaimVersionInput {
   environmentName: String!
 }
 
-input ComponentScopeInput {
-  namespace: String!
-  applicationId: ID
-  applicationPartId: ID
+input ComponentScopeInput @oneOf {
+  application: ApplicationComponentScopeInput
+  applicationPart: ApplicationPartComponentScopeInput
+  namespace: NamespaceComponentScopeInput
 }
 
 input CreateApiKeyInput {
@@ -1181,6 +1197,10 @@ input CreateVariableInput {
 
 input DeleteVariableValueInput {
   id: ID!
+}
+
+input NamespaceComponentScopeInput {
+  namespace: String!
 }
 
 input NamespaceVariableValueScopeInput {
@@ -1334,11 +1354,6 @@ enum ApplyPolicy {
   BEFORE_RESOLVER
   AFTER_RESOLVER
   VALIDATION
-}
-
-enum ComponentState {
-  ACTIVE
-  DEPRECATED
 }
 
 enum Scope {

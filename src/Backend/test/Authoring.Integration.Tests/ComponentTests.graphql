@@ -13,15 +13,11 @@ query GetComponentById($id: ID!) {
 }
 
 query GetComponentsWithFilter(
-  $applicationId: ID
-  $applicationPartId: ID
-  $namespace: String
+  $scopes: [ComponentScopeInput!]
   $search: String
 ) {
   components(
-    applicationId: $applicationId
-    applicationPartId: $applicationPartId
-    namespace: $namespace
+    scopes: $scopes
     search: $search
   ) {
     nodes {

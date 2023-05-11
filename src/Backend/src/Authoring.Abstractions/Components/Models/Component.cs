@@ -10,13 +10,15 @@ public sealed record Component
         string? name,
         string? schema,
         string? values,
-        int version,
-        IReadOnlyList<ComponentScope> scopes)
+        string @namespace,
+        IReadOnlyList<ComponentScope> scopes,
+        int version = 1)
     {
         Id = id;
         Name = name;
         Schema = schema;
         Values = values;
+        Namespace = @namespace;
         Scopes = scopes;
         Version = version;
     }

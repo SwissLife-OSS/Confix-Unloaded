@@ -60,8 +60,9 @@ public sealed class TestDataProvider
                 Wellknown.Component.Name,
                 Wellknown.Component.Schema,
                 Wellknown.Component.Values,
-                Wellknown.Component.Version,
-                new[] { new NamespaceComponentScope(Wellknown.Application.Namespace) });
+                Wellknown.Namespaces.Default,
+                new[] { new NamespaceComponentScope(Wellknown.Namespaces.Default) },
+                Wellknown.Component.Version);
 
             if (configure is not null)
             {

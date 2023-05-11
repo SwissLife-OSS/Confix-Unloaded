@@ -90,7 +90,8 @@ internal sealed class ComponentService : IComponentService
 
     public async Task<Component> CreateAsync(
         string name,
-        string? schemaSdl,
+        string schemaSdl,
+        string @namespace,
         IReadOnlyList<ComponentScope> scopes,
         IDictionary<string, object?>? values,
         CancellationToken cancellationToken)
@@ -107,15 +108,14 @@ internal sealed class ComponentService : IComponentService
 
         string? serializedValues = null;
 
-        if (schemaSdl is not null)
-        {
-            var schema = _schemaService.CreateSchema(schemaSdl);
 
-            if (values is not null)
-            {
-                serializedValues = _schemaService.CreateValuesForSchema(schema, values);
-            }
+        var schema = _schemaService.CreateSchema(schemaSdl);
+
+        if (values is not null)
+        {
+            serializedValues = _schemaService.CreateValuesForSchema(schema, values);
         }
+
 
         Component component =
             new(
@@ -123,8 +123,9 @@ internal sealed class ComponentService : IComponentService
                 name,
                 schemaSdl,
                 serializedValues,
-                version: 1,
-                scopes);
+                @namespace,
+                scopes,
+                version: 1);
 
         if (!await _authorizationService
                 .RuleFor<Component>()
