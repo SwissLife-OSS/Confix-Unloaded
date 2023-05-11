@@ -23,26 +23,102 @@ query GetComponentsWithFilter(
   }
 }
 
-mutation createComponent($input: CreateComponentInput!) {
+mutation CreateComponent($input: CreateComponentInput!) {
   createComponent(input: $input) {
     component {
       ...Component
     }
     errors {
       __typename
-      ... on ComponentValidationFailed {
-        code
-        message
-      }
-      ... on UnauthorizedOperationError {
-        code
-        message
-      }
       ... on UserError {
         code
         message
       }
-      ... on ValueSchemaViolation {
+    }
+    query {
+      components {
+        nodes {
+          ...Component
+        }
+      }
+    }
+  }
+}
+
+mutation RenameComponent($input: RenameComponentInput!) {
+  renameComponent(input: $input) {
+    component {
+      ...Component
+    }
+    errors {
+      __typename
+      ... on UserError {
+        code
+        message
+      }
+    }
+    query {
+      components {
+        nodes {
+          ...Component
+        }
+      }
+    }
+  }
+}
+
+mutation UpdateComponentSchema($input: UpdateComponentSchemaInput!) {
+  updateComponentSchema(input: $input) {
+    component {
+      ...Component
+    }
+    errors {
+      __typename
+      ... on UserError {
+        code
+        message
+      }
+    }
+    query {
+      components {
+        nodes {
+          ...Component
+        }
+      }
+    }
+  }
+}
+
+mutation UpdateComponentScopes($input: UpdateComponentScopesInput!) {
+  updateComponentScopes(input: $input) {
+    component {
+      ...Component
+    }
+    errors {
+      __typename
+      ... on UserError {
+        code
+        message
+      }
+    }
+    query {
+      components {
+        nodes {
+          ...Component
+        }
+      }
+    }
+  }
+}
+
+mutation UpdateComponentValues($input: UpdateComponentValuesInput!) {
+  updateComponentValues(input: $input) {
+    component {
+      ...Component
+    }
+    errors {
+      __typename
+      ... on UserError {
         code
         message
       }
