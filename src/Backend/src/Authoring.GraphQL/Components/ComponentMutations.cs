@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Confix.Common.Exceptions;
 
 namespace Confix.Authoring.GraphQL.Components;
@@ -14,7 +15,7 @@ public sealed class ComponentMutations
         string @namespace,
         IReadOnlyList<ComponentScopeInput> scopes,
         [DefaultValue("type Component { text: String! }")] string schema,
-        [GraphQLType(typeof(AnyType))] Dictionary<string, object?> values,
+        [GraphQLType(typeof(JsonType))] JsonElement values,
         CancellationToken cancellationToken)
     {
         return await service.CreateAsync(
@@ -22,7 +23,7 @@ public sealed class ComponentMutations
             schema,
             @namespace,
             scopes.Select(x => x.GetScope()).ToArray(),
-            values,
+            values.Deserialize<Dictionary<string, object?>>()!,
             cancellationToken);
     }
 

@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Confix.Authentication.Authorization;
 using HotChocolate.Types.Relay;
 using static Confix.Authoring.Integration.Tests.Wellknown;
@@ -306,7 +307,41 @@ public class ComponentTests : IClassFixture<MongoResource>
     #endregion
 
     #region CreateComponent
-    // TODO: mutations
+    [Fact]
+    public async Task CreateComponent_ValidInput_CreatesComponent()
+    {
+        // arrange
+        await TestExecutorBuilder
+            .New()
+            .AddDatabase(_mongoResource.ConnectionString)
+            .AddDefaultUser()
+            .AddPermission(Namespaces.Default, Scope.Component, Permissions.Read)
+            .AddClient(out var client)
+            .SetupDb(db => db.AddComponent())
+            .Build();
+
+        // act
+        var result = await client.Value.CreateComponent.ExecuteAsync(new CreateComponentInput
+        {
+            Name = "My New Component",
+            Schema = """type Component { someTestField: String! }""",
+            Namespace = Namespaces.Default,
+            Scopes = new[] {
+                new ComponentScopeInput() {
+                    Namespace = new NamespaceComponentScopeInput() {
+                         Namespace = Namespaces.Default
+                    }
+                }
+            },
+            Values = JsonDocument.Parse("""{"someTestField": "foo"}""")
+        });
+
+        // assert
+        result.AssertNoErrors();
+        result.Data!.CreateComponent.Errors.Should().BeNull();
+        result.Data!.CreateComponent.Component.Should().MatchSnapshot();
+        result.Data!.CreateComponent.Query.Components!.Nodes!.Count.Should().Be(2);
+    }
     #endregion
 
 }

@@ -16,12 +16,43 @@ query GetComponentsWithFilter(
   $scopes: [ComponentScopeInput!]
   $search: String
 ) {
-  components(
-    scopes: $scopes
-    search: $search
-  ) {
+  components(scopes: $scopes, search: $search) {
     nodes {
       ...Component
+    }
+  }
+}
+
+mutation createComponent($input: CreateComponentInput!) {
+  createComponent(input: $input) {
+    component {
+      ...Component
+    }
+    errors {
+      __typename
+      ... on ComponentValidationFailed {
+        code
+        message
+      }
+      ... on UnauthorizedOperationError {
+        code
+        message
+      }
+      ... on UserError {
+        code
+        message
+      }
+      ... on ValueSchemaViolation {
+        code
+        message
+      }
+    }
+    query {
+      components {
+        nodes {
+          ...Component
+        }
+      }
     }
   }
 }

@@ -122,6 +122,7 @@ public static class DataTestExecutorBuilder
         {
             var dataProvider = TestDataProvider.From(sp);
             configure(dataProvider);
+
             await dataProvider.RunAsync();
         });
         return builder;
