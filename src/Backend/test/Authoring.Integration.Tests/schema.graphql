@@ -1167,6 +1167,7 @@ input CreateApplicationInput {
 
 input CreateComponentInput {
   name: String!
+  namespace: String!
   scopes: [ComponentScopeInput!]!
   schema: String = "type Component { text: String! }"
   values: Any
