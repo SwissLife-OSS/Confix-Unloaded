@@ -69,7 +69,76 @@ public class ComponentTests : IClassFixture<MongoResource>
     #endregion
 
     #region Components With Filter
-    // TODO
+
+    [Fact]
+    public async Task ComponentsFilter_Search_ReturnAllMatchingComponents()
+    {
+        // arrange
+        await TestExecutorBuilder
+            .New()
+            .AddDatabase(_mongoResource.ConnectionString)
+            .AddDefaultUser()
+            .AddPermission(Namespaces.Default, Scope.Component, Permissions.Read)
+            .AddClient(out var client)
+            .SetupDb(db => db
+                .AddComponent(x => x with { Id = Guid.Parse("10000000-0000-0000-0000-000000000000"), Name = "Search1Component" })
+                .AddComponent(x => x with { Id = Guid.Parse("20000000-0000-0000-0000-000000000000"), Name = "Search2Component" }))
+            .Build();
+
+        // act
+        var result = await client.Value.GetComponentsWithFilter.ExecuteAsync(null, "Search1");
+
+        // assert
+        result.AssertNoErrors();
+        result.Data!.Components!.Nodes!.Count.Should().Be(1);
+    }
+
+    [Fact]
+    public async Task ComponentsFilter_Search_EmptyResponseWhenNoNameMatches()
+    {
+        // arrange
+        await TestExecutorBuilder
+            .New()
+            .AddDatabase(_mongoResource.ConnectionString)
+            .AddDefaultUser()
+            .AddPermission(Namespaces.Default, Scope.Component, Permissions.Read)
+            .AddClient(out var client)
+            .SetupDb(db => db
+                .AddComponent(x => x with { Id = Guid.Parse("10000000-0000-0000-0000-000000000000"), Name = "Search1Component" })
+                .AddComponent(x => x with { Id = Guid.Parse("20000000-0000-0000-0000-000000000000"), Name = "Search2Component" }))
+            .Build();
+
+        // act
+        var result = await client.Value.GetComponentsWithFilter.ExecuteAsync(null, "No-Match");
+
+        // assert
+        result.AssertNoErrors();
+        result.Data!.Components!.Nodes!.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task ComponentsFilter_SearchPartialMatch_ReturnsAllMatching()
+    {
+        // arrange
+        await TestExecutorBuilder
+            .New()
+            .AddDatabase(_mongoResource.ConnectionString)
+            .AddDefaultUser()
+            .AddPermission(Namespaces.Default, Scope.Component, Permissions.Read)
+            .AddClient(out var client)
+            .SetupDb(db => db
+                .AddComponent(x => x with { Id = Guid.Parse("10000000-0000-0000-0000-000000000000"), Name = "Search1Component" })
+                .AddComponent(x => x with { Id = Guid.Parse("20000000-0000-0000-0000-000000000000"), Name = "Search2Component" }))
+            .Build();
+
+        // act
+        var result = await client.Value.GetComponentsWithFilter.ExecuteAsync(null, "Comp");
+
+        // assert
+        result.AssertNoErrors();
+        result.Data!.Components!.Nodes!.Count.Should().Be(2);
+    }
+
     #endregion
 
 
