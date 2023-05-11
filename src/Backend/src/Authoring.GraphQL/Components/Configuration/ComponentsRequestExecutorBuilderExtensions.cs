@@ -31,7 +31,9 @@ public static class ComponentsRequestExecutorBuilderExtensions
 
         // extensions
         builder
-            .AddTypeExtension<ComponentExtensions>();
+            .AddTypeExtension<ComponentExtensions>()
+            .AddTypeExtension<ApplicationComponentScopeExtensions>()
+            .AddTypeExtension<ApplicationPartComponentScopeExtensions>();
 
         // change log
         builder.AddInterfaceType<IComponentChange>(x => x.Name("ComponentChange"))

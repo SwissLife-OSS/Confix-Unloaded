@@ -11,13 +11,11 @@ public sealed class ComponentQueries
     public async Task<Connection<Component>> GetComponents(
         [Service] IComponentService componentService,
         IResolverContext context,
-        [ID<Application>] Guid? applicationId,
-        [ID<ApplicationPart>] Guid? applicationPartId,
-        string? @namespace,
+        IReadOnlyList<ComponentScope> scopes,
         string? search)
     {
-        return await context.ApplyPaginationAsync((skip, take, ct) => componentService
-            .Search(skip, take, applicationId, applicationPartId,@namespace, search, ct));
+        return await context.ApplyPaginationAsync((skip, take, ct) =>
+            componentService.Search(scopes, search, skip, take, ct));
     }
 
     public async Task<Component?> GetComponentByIdAsync(

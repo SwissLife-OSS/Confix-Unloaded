@@ -1,11 +1,17 @@
-using Confix.Authoring.Store;
-
 namespace Confix.Authoring.GraphQL.Components;
 
-public sealed record ComponentScopeInput(
-    string Namespace,
-    [property: ID<Application>] Guid? ApplicationId,
-    [property: ID<ApplicationPart>] Guid? ApplicationPartId)
+[OneOf]
+public record ComponentScopeInput
 {
-    public ComponentScope ToScope() => new(Namespace, ApplicationId, ApplicationPartId);
+    public ApplicationComponentScope? Application { get; init; }
+
+    public ApplicationPartComponentScope? ApplicationPart { get; init; }
+
+    public NamespaceComponentScope? Namespace { get; init; }
+
+    public ComponentScope GetScope()
+        => Application as ComponentScope ??
+            ApplicationPart as ComponentScope ??
+            Namespace as ComponentScope ??
+            throw new GraphQLException("Invalid filter");
 }

@@ -61,7 +61,7 @@ public sealed class TestDataProvider
                 Wellknown.Component.Schema,
                 Wellknown.Component.Values,
                 Wellknown.Component.Version,
-                new[] { new ComponentScope(Wellknown.Application.Namespace, null, null) });
+                new[] { new NamespaceComponentScope(Wellknown.Application.Namespace) });
 
             if (configure is not null)
             {

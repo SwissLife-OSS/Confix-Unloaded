@@ -19,7 +19,7 @@ public sealed class ComponentMutations
         return await service.CreateAsync(
             name,
             schema,
-            scopes.Select(x => x.ToScope()).ToArray(),
+            scopes.Select(x => x.GetScope()).ToArray(),
             values,
             cancellationToken);
     }
@@ -44,7 +44,7 @@ public sealed class ComponentMutations
     {
         return await service.ChangeComponentScopeByIdAsync(
             id,
-            scopes.Select(x => x.ToScope()).ToArray(),
+            scopes.Select(x => x.GetScope()).ToArray(),
             cancellationToken);
     }
 
