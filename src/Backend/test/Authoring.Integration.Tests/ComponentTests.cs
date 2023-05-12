@@ -307,6 +307,43 @@ public class ComponentTests : IClassFixture<MongoResource>
     #endregion
 
     #region CreateComponent
+
+    [Fact]
+    public async Task CreateComponent_ReadPermission_Fail()
+    {
+        // arrange
+        await TestExecutorBuilder
+            .New()
+            .AddDatabase(_mongoResource.ConnectionString)
+            .AddDefaultUser()
+            .AddPermission(Namespaces.Default, Scope.Component, Permissions.Read)
+            .AddClient(out var client)
+            .SetupDb(db => db.AddComponent())
+            .Build();
+
+        // act
+        var result = await client.Value.CreateComponent.ExecuteAsync(new CreateComponentInput
+        {
+            Name = "My New Component",
+            Schema = """type Component { someTestField: String! }""",
+            Namespace = Namespaces.Default,
+            Scopes = new[] {
+                new ComponentScopeInput() {
+                    Namespace = new NamespaceComponentScopeInput() {
+                         Namespace = Namespaces.Default
+                    }
+                }
+            },
+            Values = JsonDocument.Parse("""{"someTestField": "foo"}""")
+        });
+
+        // assert
+        result.AssertNoErrors();
+        result.Data!.CreateComponent.Errors.Should().HaveCount(1);
+        result.Data!.CreateComponent.Component.Should().BeNull();
+        result.Data!.CreateComponent.Query.Components!.Nodes!.Count.Should().Be(1);
+    }
+
     [Fact]
     public async Task CreateComponent_ValidInput_CreatesComponent()
     {
@@ -315,7 +352,7 @@ public class ComponentTests : IClassFixture<MongoResource>
             .New()
             .AddDatabase(_mongoResource.ConnectionString)
             .AddDefaultUser()
-            .AddPermission(Namespaces.Default, Scope.Component, Permissions.Read)
+            .AddPermission(Namespaces.Default, Scope.Component, Permissions.Write)
             .AddClient(out var client)
             .SetupDb(db => db.AddComponent())
             .Build();
@@ -351,7 +388,7 @@ public class ComponentTests : IClassFixture<MongoResource>
             .New()
             .AddDatabase(_mongoResource.ConnectionString)
             .AddDefaultUser()
-            .AddPermission(Namespaces.Default, Scope.Component, Permissions.Read)
+            .AddPermission(Namespaces.Default, Scope.Component, Permissions.Write)
             .AddClient(out var client)
             .SetupDb(db => db.AddComponent())
             .Build();
@@ -375,10 +412,80 @@ public class ComponentTests : IClassFixture<MongoResource>
         // assert
         result.AssertNoErrors();
         result.Data!.CreateComponent.Errors!.Count.Should().BeGreaterThan(0);
+        // TODO: check that snapshot contains correct errors
+        Assert.True(false); // remove when todo is done
         result.Data!.CreateComponent.Errors!.Should().MatchSnapshot();
         result.Data!.CreateComponent.Component.Should().BeNull();
         result.Data!.CreateComponent.Query.Components!.Nodes!.Count.Should().Be(1);
     }
     #endregion
 
+    #region RenameComponent
+
+    [Fact]
+    public async Task RenameComponent_ReadPermission_Fails()
+    {
+        // arrange
+        await TestExecutorBuilder
+            .New()
+            .AddDatabase(_mongoResource.ConnectionString)
+            .AddDefaultUser()
+            .AddPermission(Namespaces.Default, Scope.Component, Permissions.Read)
+            .AddClient(out var client)
+            .SetupDb(db => db.AddComponent())
+            .Build();
+        string relayId = new IdSerializer().Serialize(nameof(Component), Wellknown.Component.Id)!;
+        // act
+        var result = await client.Value.RenameComponent.ExecuteAsync(new RenameComponentInput
+        {
+            Id = relayId,
+            Name = "SomeNewName",
+        });
+
+        // assert
+        result.AssertNoErrors();
+        result.Data!.RenameComponent.Errors!.Should().HaveCount(1);
+        result.Data!.RenameComponent.Component.Should().BeNull();
+        result.Data!.RenameComponent.Query.Components!.Nodes!.Count.Should().Be(1);
+    }
+
+    [Fact]
+    public async Task RenameComponent_ValidName_UpdatesComponent()
+    {
+        // arrange
+        await TestExecutorBuilder
+            .New()
+            .AddDatabase(_mongoResource.ConnectionString)
+            .AddDefaultUser()
+            .AddPermission(Namespaces.Default, Scope.Component, Permissions.Write)
+            .AddClient(out var client)
+            .SetupDb(db => db.AddComponent())
+            .Build();
+        string relayId = new IdSerializer().Serialize(nameof(Component), Wellknown.Component.Id)!;
+        // act
+        var result = await client.Value.RenameComponent.ExecuteAsync(new RenameComponentInput
+        {
+            Id = relayId,
+            Name = "SomeNewName",
+        });
+
+        // assert
+        result.AssertNoErrors();
+        result.Data!.RenameComponent.Errors!.Should().BeNull();
+        result.Data!.RenameComponent.Component!.Name.Should().Be("SomeNewName");
+        result.Data!.RenameComponent.Query.Components!.Nodes!.Count.Should().Be(1);
+    }
+    #endregion
+
+    #region UpdateComponentSchema
+    // TODO
+    #endregion
+
+    #region UpdateComponentScopes
+    // TODO
+    #endregion
+
+    #region UpdateComponentValues
+    // TODO:
+    #endregion
 }
