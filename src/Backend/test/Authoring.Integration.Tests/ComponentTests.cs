@@ -5,11 +5,11 @@ using static Confix.Authoring.Integration.Tests.Wellknown;
 
 namespace Confix.Authoring.Integration.Tests;
 
-public class ComponentTests : IClassFixture<MongoResource>
+public class ComponentTests : IClassFixture<MongoReplicaSetResource>
 {
-    private readonly MongoResource _mongoResource;
+    private readonly MongoReplicaSetResource _mongoResource;
 
-    public ComponentTests(MongoResource mongoResource)
+    public ComponentTests(MongoReplicaSetResource mongoResource)
     {
         _mongoResource = mongoResource;
     }
