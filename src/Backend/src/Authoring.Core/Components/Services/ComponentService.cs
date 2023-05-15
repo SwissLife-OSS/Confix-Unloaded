@@ -126,25 +126,12 @@ internal sealed class ComponentService : IComponentService
         string name,
         CancellationToken cancellationToken)
     {
+        Component component = await GetWritableComponent(id, cancellationToken);
+
         if (string.IsNullOrWhiteSpace(name))
         {
             throw new ArgumentException("Value cannot be null or empty.", nameof(name));
         }
-
-        var component = await _componentById.LoadAsync(id, cancellationToken);
-
-        if (!await _authorizationService
-                .RuleFor<Component>()
-                .IsAuthorizedAsync(component, Write, cancellationToken))
-        {
-            throw new UnauthorizedOperationException();
-        }
-
-        if (component is null)
-        {
-            throw new ComponentNotFoundException(id);
-        }
-
         component = component with { Name = name, Version = component.Version + 1 };
 
         RenameComponentChange log = new(component.Id, component.Version, name);
@@ -161,24 +148,12 @@ internal sealed class ComponentService : IComponentService
     }
 
     public async Task<Component> UpdateSchemaAsync(
-        Guid componentId,
+        Guid id,
         string schemaSdl,
         JsonElement values,
         CancellationToken cancellationToken)
     {
-        var component = await _componentById.LoadAsync(componentId, cancellationToken);
-
-        if (!await _authorizationService
-                .RuleFor<Component>()
-                .IsAuthorizedAsync(component, Write, cancellationToken))
-        {
-            throw new UnauthorizedOperationException();
-        }
-
-        if (component is null)
-        {
-            throw new ComponentNotFoundException(componentId);
-        }
+        Component component = await GetWritableComponent(id, cancellationToken);
 
         _schemaValidator.ValidateSchema(schemaSdl);
         _schemaValidator.ValidateValues(values, schemaSdl);
@@ -207,19 +182,7 @@ internal sealed class ComponentService : IComponentService
         JsonElement values,
         CancellationToken cancellationToken)
     {
-        var component = await _componentById.LoadAsync(id, cancellationToken);
-
-        if (!await _authorizationService
-                .RuleFor<Component>()
-                .IsAuthorizedAsync(component, Write, cancellationToken))
-        {
-            throw new UnauthorizedOperationException();
-        }
-
-        if (component is null)
-        {
-            throw new ComponentNotFoundException(id);
-        }
+        Component component = await GetWritableComponent(id, cancellationToken);
 
         _schemaValidator.ValidateValues(values, component.Schema);
 
@@ -241,19 +204,7 @@ internal sealed class ComponentService : IComponentService
         string values,
         CancellationToken cancellationToken)
     {
-        var component = await _componentById.LoadAsync(id, cancellationToken);
-
-        if (!await _authorizationService
-                .RuleFor<Component>()
-                .IsAuthorizedAsync(component, Read, cancellationToken))
-        {
-            throw new UnauthorizedOperationException();
-        }
-
-        if (component is null)
-        {
-            throw new ComponentNotFoundException(id);
-        }
+        Component component = await GetWritableComponent(id, cancellationToken);
 
         return _schemaValidator.GetSchemaViolations(
             JsonDocument.Parse(component.Values).RootElement,
@@ -266,19 +217,7 @@ internal sealed class ComponentService : IComponentService
         IReadOnlyList<ComponentScope> scopes,
         CancellationToken cancellationToken)
     {
-        var component = await _componentById.LoadAsync(id, cancellationToken);
-
-        if (!await _authorizationService
-                .RuleFor<Component>()
-                .IsAuthorizedAsync(component, Write, cancellationToken))
-        {
-            throw new UnauthorizedOperationException();
-        }
-
-        if (component is null)
-        {
-            throw new ComponentNotFoundException(id);
-        }
+        Component component = await GetWritableComponent(id, cancellationToken);
 
         if (scopes.Count == 0)
         {
@@ -295,6 +234,25 @@ internal sealed class ComponentService : IComponentService
             await _componentStore.UpdateAsync(component, cancellationToken);
 
             transaction.Complete();
+        }
+
+        return component;
+    }
+
+    private async Task<Component> GetWritableComponent(Guid id, CancellationToken cancellationToken)
+    {
+        Component? component = await _componentById.LoadAsync(id, cancellationToken);
+
+        if (!await _authorizationService
+                .RuleFor<Component>()
+                .IsAuthorizedAsync(component, Write, cancellationToken))
+        {
+            throw new UnauthorizedOperationException();
+        }
+
+        if (component is null)
+        {
+            throw new ComponentNotFoundException(id);
         }
 
         return component;
