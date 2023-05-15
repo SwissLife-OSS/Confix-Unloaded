@@ -38,7 +38,7 @@ internal sealed class ComponentService : IComponentService
 
     public async Task<Component?> GetByIdAsync(
         Guid id,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken)
     {
         var component = await _componentById.LoadAsync(id, cancellationToken);
 
@@ -47,7 +47,7 @@ internal sealed class ComponentService : IComponentService
             .AuthorizeOrNullAsync(component, Read, cancellationToken);
     }
 
-    public async Task<IReadOnlyList<Component>> Search(
+    public async Task<IReadOnlyList<Component>> SearchAsync(
         IReadOnlyList<ComponentScope> scopes,
         string? search,
         int skip,
@@ -92,15 +92,14 @@ internal sealed class ComponentService : IComponentService
         _schemaValidator.ValidateSchema(schemaSdl);
         _schemaValidator.ValidateValues(values, schemaSdl);
 
-        Component component =
-            new(
-                Guid.NewGuid(),
-                name,
-                schemaSdl,
-                values: values.ToString(),
-                @namespace,
-                scopes,
-                version: 1);
+        Component component = new(
+            Guid.NewGuid(),
+            name,
+            schemaSdl,
+            values: values.ToString(),
+            @namespace,
+            scopes,
+            version: 1);
 
         if (!await _authorizationService
                 .RuleFor<Component>()
@@ -127,6 +126,11 @@ internal sealed class ComponentService : IComponentService
         string name,
         CancellationToken cancellationToken)
     {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            throw new ArgumentException("Value cannot be null or empty.", nameof(name));
+        }
+
         var component = await _componentById.LoadAsync(id, cancellationToken);
 
         if (!await _authorizationService
@@ -139,11 +143,6 @@ internal sealed class ComponentService : IComponentService
         if (component is null)
         {
             throw new ComponentNotFoundException(id);
-        }
-
-        if (string.IsNullOrEmpty(name))
-        {
-            throw new ArgumentException("Value cannot be null or empty.", nameof(name));
         }
 
         component = component with { Name = name, Version = component.Version + 1 };
@@ -161,9 +160,10 @@ internal sealed class ComponentService : IComponentService
         return component;
     }
 
-    public async Task<Component> SetSchemaAsync(
+    public async Task<Component> UpdateSchemaAsync(
         Guid componentId,
         string schemaSdl,
+        JsonElement values,
         CancellationToken cancellationToken)
     {
         var component = await _componentById.LoadAsync(componentId, cancellationToken);
@@ -181,10 +181,16 @@ internal sealed class ComponentService : IComponentService
         }
 
         _schemaValidator.ValidateSchema(schemaSdl);
+        _schemaValidator.ValidateValues(values, schemaSdl);
 
-        component = component with { Schema = schemaSdl, Version = component.Version + 1 };
+        component = component with
+        {
+            Schema = schemaSdl,
+            Values = values.ToString(),
+            Version = component.Version + 1
+        };
 
-        ComponentSchemaChange log = new(component.Id, component.Version, schemaSdl);
+        ComponentSchemaChange log = new(component.Id, component.Version, schemaSdl, values.ToString());
 
         using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
         {
@@ -196,7 +202,7 @@ internal sealed class ComponentService : IComponentService
         return component;
     }
 
-    public async Task<Component> SetValuesAsync(
+    public async Task<Component> UpdateValuesAsync(
         Guid id,
         JsonElement values,
         CancellationToken cancellationToken)
@@ -255,7 +261,7 @@ internal sealed class ComponentService : IComponentService
         );
     }
 
-    public async Task<Component> ChangeComponentScopeByIdAsync(
+    public async Task<Component> UpdateScopesAsync(
         Guid id,
         IReadOnlyList<ComponentScope> scopes,
         CancellationToken cancellationToken)

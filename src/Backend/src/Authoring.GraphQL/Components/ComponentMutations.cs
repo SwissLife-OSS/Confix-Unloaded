@@ -15,7 +15,9 @@ public sealed class ComponentMutations
         string name,
         string @namespace,
         IReadOnlyList<ComponentScopeInput> scopes,
-        [DefaultValue("type Component { text: String! }")] string schema,
+        [GraphQLType(typeof(SdlType))]
+        [DefaultValue("type Component { text: String! }")]
+        string schema,
         [GraphQLType(typeof(JsonType))] JsonElement values,
         CancellationToken cancellationToken)
     {
@@ -46,7 +48,7 @@ public sealed class ComponentMutations
         IReadOnlyList<ComponentScopeInput> scopes,
         CancellationToken cancellationToken)
     {
-        return await service.ChangeComponentScopeByIdAsync(
+        return await service.UpdateScopesAsync(
             id,
             scopes.Select(x => x.GetScope()).ToArray(),
             cancellationToken);
@@ -57,10 +59,11 @@ public sealed class ComponentMutations
     public async Task<Component> UpdateComponentSchemaAsync(
         [Service] IComponentService service,
         [ID(nameof(Component))] Guid id,
-        string schema,
+        [GraphQLType(typeof(SdlType))] string schema,
+        [GraphQLType(typeof(JsonType))] JsonElement values,
         CancellationToken cancellationToken)
     {
-        return await service.SetSchemaAsync(id, schema, cancellationToken);
+        return await service.UpdateSchemaAsync(id, schema, values, cancellationToken);
     }
 
     [Error(typeof(ValueSchemaViolation))]
@@ -71,6 +74,6 @@ public sealed class ComponentMutations
         [GraphQLType(typeof(JsonType))] JsonElement values,
         CancellationToken cancellationToken)
     {
-        return await service.SetValuesAsync(id, values, cancellationToken);
+        return await service.UpdateValuesAsync(id, values, cancellationToken);
     }
 }

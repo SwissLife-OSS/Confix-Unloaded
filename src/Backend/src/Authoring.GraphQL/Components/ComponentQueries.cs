@@ -15,7 +15,7 @@ public sealed class ComponentQueries
         string? search)
     {
         return await context.ApplyPaginationAsync((skip, take, ct) =>
-            componentService.Search(
+            componentService.SearchAsync(
                 scopes?.Select(x => x.GetScope()).ToArray() ?? Array.Empty<ComponentScope>(),
                 search,
                 skip,

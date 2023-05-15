@@ -326,6 +326,7 @@ type ComponentNotFoundError implements UserError {
 
 type ComponentSchemaChange implements ComponentChange & Change {
   schema: String!
+  values: String!
   kind: String!
   component: Component
   componentVersion: Int!
@@ -1162,7 +1163,7 @@ input CreateComponentInput {
   name: String!
   namespace: String!
   scopes: [ComponentScopeInput!]!
-  schema: String = "type Component { text: String! }"
+  schema: SDL = "type Component { text: String! }"
   values: JSON
 }
 
@@ -1315,7 +1316,8 @@ input UpdateApplicationPartComponentValuesInput {
 
 input UpdateComponentSchemaInput {
   id: ID!
-  schema: String!
+  schema: SDL
+  values: JSON
 }
 
 input UpdateComponentScopesInput {
