@@ -1,12 +1,22 @@
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.Json;
 using HotChocolate;
 using HotChocolate.Language;
+using Microsoft.Extensions.Caching.Memory;
 using static Confix.Authoring.Internal.ValueHelper;
 
 namespace Confix.Authoring.Internal;
 
 internal sealed class SchemaValidator : ISchemaValidator
 {
+    private readonly IMemoryCache _cache;
+    private readonly TimeSpan _cacheExpiration = TimeSpan.FromHours(1);
+    public SchemaValidator(IMemoryCache cache)
+    {
+        _cache = cache;
+    }
+
     public void ValidateSchema(string schemaSdl)
     {
         try
@@ -40,9 +50,12 @@ internal sealed class SchemaValidator : ISchemaValidator
         return ValidateDictionary(schema, valueDictionary, schema.QueryType);
     }
 
-    // TODO: cache?
     private ISchema CreateSchema(string schemaSdl)
-        => SchemaBuilder.New()
+        => _cache.GetOrCreate(CacheKey(schemaSdl), (e) =>
+        {
+            e.AbsoluteExpirationRelativeToNow = _cacheExpiration;
+
+            return SchemaBuilder.New()
                 .AddDocument(Utf8GraphQLParser.Parse(schemaSdl))
                 .Use(x => x)
                 .ModifyOptions(c =>
@@ -51,4 +64,8 @@ internal sealed class SchemaValidator : ISchemaValidator
                     c.StrictValidation = false;
                 })
                 .Create();
+        })!;
+
+    private static string CacheKey(string input)
+        => Encoding.UTF8.GetString(SHA256.HashData(Encoding.UTF8.GetBytes(input)));
 }
