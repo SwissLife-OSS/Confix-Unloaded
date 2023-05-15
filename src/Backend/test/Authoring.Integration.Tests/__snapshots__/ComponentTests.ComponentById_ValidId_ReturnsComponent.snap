@@ -4,8 +4,9 @@
   "Name": "Test Component",
   "Schema": "type Configuration {\n  field: String!\n  nestedField: NestedConfiguration!\n}\n\ntype NestedConfiguration {\n  field: String!\n}",
   "Values": {
-    "RootElement": {
-      "ValueKind": "Object"
+    "field": "default",
+    "nestedField": {
+      "field": "defaultNested"
     }
   },
   "Scopes": [
