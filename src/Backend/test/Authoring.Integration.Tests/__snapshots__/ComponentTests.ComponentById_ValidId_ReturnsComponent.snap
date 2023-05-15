@@ -8,11 +8,6 @@
     }
   },
   "SchemaSdl": "type Configuration {\n    field: String!\n    nestedField: NestedConfiguration!\n}\ntype NestedConfiguration {\n    field: String!\n}",
-  "Defaults": {
-    "RootElement": {
-      "ValueKind": "Object"
-    }
-  },
   "Values": {
     "RootElement": {
       "ValueKind": "Object"

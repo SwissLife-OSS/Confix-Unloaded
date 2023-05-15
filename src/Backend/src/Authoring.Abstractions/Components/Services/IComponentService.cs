@@ -42,10 +42,6 @@ public interface IComponentService
         string values,
         CancellationToken cancellationToken);
 
-    Task<IDictionary<string, object?>?> GetDefaultValuesAsync(
-        Guid id,
-        CancellationToken cancellationToken);
-
     Task<Component> ChangeComponentScopeByIdAsync(
         Guid id,
         IReadOnlyList<ComponentScope> scopes,

@@ -106,15 +106,6 @@ public sealed class ComponentExtensions
         return ValueHelper.DeserializeDictionary(document.RootElement, schema.QueryType);
     }
 
-    [GraphQLType(typeof(AnyType))]
-    public async Task<IDictionary<string, object?>?> GetDefaults(
-        [Parent] Component component,
-        [Service] IComponentService componentService,
-        CancellationToken cancellationToken)
-    {
-        return await componentService.GetDefaultValuesAsync(component.Id, cancellationToken);
-    }
-
     public async Task<IReadOnlyList<SchemaViolation>> GetSchemaViolations(
         [Parent] Component component,
         [Service] IComponentService componentService,

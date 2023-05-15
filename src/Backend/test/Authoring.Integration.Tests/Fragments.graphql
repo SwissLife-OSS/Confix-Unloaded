@@ -47,7 +47,6 @@ fragment Component on Component {
   version
   schema
   schemaSdl
-  defaults
   values
   schemaViolations {
     code

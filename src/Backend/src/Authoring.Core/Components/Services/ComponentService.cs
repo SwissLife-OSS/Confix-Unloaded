@@ -312,29 +312,6 @@ internal sealed class ComponentService : IComponentService
         return ValidateDictionary(schema, values, schema.QueryType);
     }
 
-    public async Task<IDictionary<string, object?>?> GetDefaultValuesAsync(
-        Guid id,
-        CancellationToken cancellationToken)
-    {
-        var component = await _componentById.LoadAsync(id, cancellationToken);
-
-        if (!await _authorizationService
-                .RuleFor<Component>()
-                .IsAuthorizedAsync(component, Read, cancellationToken))
-        {
-            throw new UnauthorizedOperationException();
-        }
-
-        if (component?.Schema is null)
-        {
-            return null;
-        }
-
-        var schema = _schemaService.CreateSchema(component.Schema);
-
-        return CreateDefaultObjectValue(schema, schema.QueryType);
-    }
-
     public async Task<Component> ChangeComponentScopeByIdAsync(
         Guid id,
         IReadOnlyList<ComponentScope> scopes,
