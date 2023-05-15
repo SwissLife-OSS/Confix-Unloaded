@@ -636,6 +636,41 @@ public class ComponentTests : IClassFixture<MongoReplicaSetResource>
         result.Data!.UpdateComponentScopes.Component!.Should().BeNull();
         result.Data!.UpdateComponentScopes.Query.Components!.Nodes!.Count.Should().Be(1);
     }
+
+    [Fact]
+    public async Task UpdateComponentScopes_ValidScopes_UpdatesComponent()
+    {
+        // arrange
+        await TestExecutorBuilder
+            .New()
+            .AddDatabase(_mongoResource.ConnectionString)
+            .AddDefaultUser()
+            .AddPermission(Namespaces.Default, Scope.Component, Permissions.Read)
+            .AddPermission(Namespaces.Default, Scope.Component, Permissions.Write)
+            .AddClient(out var client)
+            .SetupDb(db => db.AddComponent())
+            .Build();
+        string relayId = new IdSerializer().Serialize(nameof(Component), Wellknown.Component.Id)!;
+
+        // act
+        var result = await client.Value.UpdateComponentScopes.ExecuteAsync(new UpdateComponentScopesInput
+        {
+            Id = relayId,
+            Scopes = new[] {
+                new ComponentScopeInput() {
+                    Namespace = new NamespaceComponentScopeInput() {
+                         Namespace = Namespaces.Other
+                    }
+                }
+            },
+        });
+
+        // assert
+        result.AssertNoErrors();
+        result.Data!.UpdateComponentScopes.Errors!.Should().BeNull();
+        result.Data!.UpdateComponentScopes.Component!.MatchSnapshot();
+        result.Data!.UpdateComponentScopes.Query.Components!.Nodes!.Count.Should().Be(1);
+    }
     #endregion
 
     #region UpdateComponentValues
