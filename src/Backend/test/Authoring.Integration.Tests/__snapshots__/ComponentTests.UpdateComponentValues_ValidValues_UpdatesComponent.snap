@@ -2,9 +2,12 @@
   "Id": "Q29tcG9uZW50CmcwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMw==",
   "Version": 2,
   "Name": "Test Component",
-  "Schema": "type Configuration {\n  updatedField: String!\n}",
+  "Schema": "type Configuration {\n  field: String!\n  nestedField: NestedConfiguration!\n}\n\ntype NestedConfiguration {\n  field: String!\n}",
   "Values": {
-    "updatedField": "foo"
+    "field": "updatedNested",
+    "nestedField": {
+      "field": "updatedNested"
+    }
   },
   "Scopes": [
     {

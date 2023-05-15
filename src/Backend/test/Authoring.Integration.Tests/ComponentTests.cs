@@ -325,7 +325,7 @@ public class ComponentTests : IClassFixture<MongoReplicaSetResource>
         var result = await client.Value.CreateComponent.ExecuteAsync(new CreateComponentInput
         {
             Name = "My New Component",
-            Schema = """type Component { someTestField: String! }""",
+            Schema = """type Configuration { someTestField: String! }""",
             Namespace = Namespaces.Default,
             Scopes = new[] {
                 new ComponentScopeInput() {
@@ -363,7 +363,7 @@ public class ComponentTests : IClassFixture<MongoReplicaSetResource>
         var result = await client.Value.CreateComponent.ExecuteAsync(new CreateComponentInput
         {
             Name = "My New Component",
-            Schema = """type Component { someTestField: String! }""",
+            Schema = """type Configuration { someTestField: String! }""",
             Namespace = Namespaces.Default,
             Scopes = new[] {
                 new ComponentScopeInput() {
@@ -400,7 +400,7 @@ public class ComponentTests : IClassFixture<MongoReplicaSetResource>
         var result = await client.Value.CreateComponent.ExecuteAsync(new CreateComponentInput
         {
             Name = "My New Component",
-            Schema = """type Component { someFieldWithNonExistentType: Unicorn! }""",
+            Schema = """type Configuration { someFieldWithNonExistentType: Unicorn! }""",
             Namespace = Namespaces.Default,
             Scopes = new[] {
                 new ComponentScopeInput() {
@@ -500,7 +500,7 @@ public class ComponentTests : IClassFixture<MongoReplicaSetResource>
         var result = await client.Value.UpdateComponentSchema.ExecuteAsync(new UpdateComponentSchemaInput
         {
             Id = relayId,
-            Schema = "type Component { updatedField: String! }",
+            Schema = "type Configuration { updatedField: String! }",
             Values = JsonDocument.Parse("""{"updatedField": "foo"}""")
         });
 
@@ -530,7 +530,7 @@ public class ComponentTests : IClassFixture<MongoReplicaSetResource>
         var result = await client.Value.UpdateComponentSchema.ExecuteAsync(new UpdateComponentSchemaInput
         {
             Id = relayId,
-            Schema = "type Component { updatedField: String! }",
+            Schema = "type Configuration { updatedField: String! }",
             Values = JsonDocument.Parse("""{"updatedField": "foo"}""")
         });
 
@@ -560,7 +560,7 @@ public class ComponentTests : IClassFixture<MongoReplicaSetResource>
         var result = await client.Value.UpdateComponentSchema.ExecuteAsync(new UpdateComponentSchemaInput
         {
             Id = relayId,
-            Schema = "type Component { updatedField: String! }",
+            Schema = "type Configuration { updatedField: String! }",
             Values = JsonDocument.Parse("""{"someOtherField": "foo"}""")
         });
 
@@ -590,7 +590,7 @@ public class ComponentTests : IClassFixture<MongoReplicaSetResource>
         var result = await client.Value.UpdateComponentSchema.ExecuteAsync(new UpdateComponentSchemaInput
         {
             Id = relayId,
-            Schema = "type Component { updatedField: Unicorn! }",
+            Schema = "type Configuration { updatedField: Unicorn! }",
             Values = JsonDocument.Parse("""{"updatedField": "foo"}""")
         });
 
@@ -607,6 +607,92 @@ public class ComponentTests : IClassFixture<MongoReplicaSetResource>
     #endregion
 
     #region UpdateComponentValues
-    // TODO:
+
+    [Fact]
+    public async Task UpdateComponentValues_WithoutWritePermission_Fails()
+    {
+        // arrange
+        await TestExecutorBuilder
+            .New()
+            .AddDatabase(_mongoResource.ConnectionString)
+            .AddDefaultUser()
+            .AddPermission(Namespaces.Default, Scope.Component, Permissions.Read)
+            .AddClient(out var client)
+            .SetupDb(db => db.AddComponent())
+            .Build();
+        string relayId = new IdSerializer().Serialize(nameof(Component), Wellknown.Component.Id)!;
+
+        // act
+        var result = await client.Value.UpdateComponentValues.ExecuteAsync(new UpdateComponentValuesInput
+        {
+            Id = relayId,
+            Values = JsonDocument.Parse("""{ "field" : "updatedNested", "nestedField" : { "field" : "updatedNested" } }""")
+        });
+
+        // assert
+        result.AssertNoErrors();
+        result.Data!.UpdateComponentValues.Errors!.MatchSnapshot();
+        result.Data!.UpdateComponentValues.Component!.Should().BeNull();
+        result.Data!.UpdateComponentValues.Query.Components!.Nodes!.Count.Should().Be(1);
+    }
+
+    [Fact]
+    public async Task UpdateComponentValues_ValidValues_UpdatesComponent()
+    {
+        // arrange
+        await TestExecutorBuilder
+            .New()
+            .AddDatabase(_mongoResource.ConnectionString)
+            .AddDefaultUser()
+            .AddPermission(Namespaces.Default, Scope.Component, Permissions.Read)
+            .AddPermission(Namespaces.Default, Scope.Component, Permissions.Write)
+            .AddClient(out var client)
+            .SetupDb(db => db.AddComponent())
+            .Build();
+        string relayId = new IdSerializer().Serialize(nameof(Component), Wellknown.Component.Id)!;
+
+        // act
+        var result = await client.Value.UpdateComponentValues.ExecuteAsync(new UpdateComponentValuesInput
+        {
+            Id = relayId,
+            Values = JsonDocument.Parse("""{ "field" : "updatedNested", "nestedField" : { "field" : "updatedNested" } }""")
+        });
+
+        // assert
+        result.AssertNoErrors();
+        result.Data!.UpdateComponentValues.Errors!.Should().BeNull();
+        result.Data!.UpdateComponentValues.Component!.MatchSnapshot();
+        result.Data!.UpdateComponentValues.Query.Components!.Nodes!.Count.Should().Be(1);
+    }
+
+    [Fact]
+    public async Task UpdateComponentValues_NewValuesDontMatchSchema_Error()
+    {
+        // arrange
+        await TestExecutorBuilder
+            .New()
+            .AddDatabase(_mongoResource.ConnectionString)
+            .AddDefaultUser()
+            .AddPermission(Namespaces.Default, Scope.Component, Permissions.Read)
+            .AddPermission(Namespaces.Default, Scope.Component, Permissions.Write)
+            .AddClient(out var client)
+            .SetupDb(db => db.AddComponent())
+            .Build();
+        string relayId = new IdSerializer().Serialize(nameof(Component), Wellknown.Component.Id)!;
+
+        // act
+        var result = await client.Value.UpdateComponentValues.ExecuteAsync(new UpdateComponentValuesInput
+        {
+            Id = relayId,
+            Values = JsonDocument.Parse("""{ "unicorn" : "updatedNested"}""")
+        });
+
+        // assert
+        result.AssertNoErrors();
+        result.Data!.UpdateComponentValues.Errors!.MatchSnapshot();
+        result.Data!.UpdateComponentValues.Component!.Should().BeNull();
+        result.Data!.UpdateComponentValues.Query.Components!.Nodes!.Count.Should().Be(1);
+    }
+
     #endregion
 }

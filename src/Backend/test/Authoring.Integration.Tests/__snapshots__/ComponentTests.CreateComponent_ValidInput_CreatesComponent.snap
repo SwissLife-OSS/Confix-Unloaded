@@ -1,8 +1,8 @@
 ﻿{
-  "Id": "Q29tcG9uZW50CmczN2VjNGQ1OGY4N2Q0NDZkYTgwMzc3ZjBkYmU0YTcxYg==",
+  "Id": "Q29tcG9uZW50CmdjMmViZDU5ZWYwMGU0NjQwYTc1N2Y1NmQ5NTdiNzVjZQ==",
   "Version": 1,
   "Name": "My New Component",
-  "Schema": "type Component {\n  someTestField: String!\n}",
+  "Schema": "type Configuration {\n  someTestField: String!\n}",
   "Values": {
     "someTestField": "foo"
   },

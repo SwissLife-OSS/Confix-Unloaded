@@ -47,7 +47,7 @@ internal sealed class SchemaValidator : ISchemaValidator
                 .Use(x => x)
                 .ModifyOptions(c =>
                 {
-                    c.QueryTypeName = "Component";
+                    c.QueryTypeName = "Configuration";
                     c.StrictValidation = false;
                 })
                 .Create();

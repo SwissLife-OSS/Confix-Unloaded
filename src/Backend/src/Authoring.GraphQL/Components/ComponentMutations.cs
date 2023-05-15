@@ -16,7 +16,7 @@ public sealed class ComponentMutations
         string @namespace,
         IReadOnlyList<ComponentScopeInput> scopes,
         [GraphQLType(typeof(SdlType))]
-        [DefaultValue("type Component { text: String! }")]
+        [DefaultValue("type Configuration { text: String! }")]
         string schema,
         [GraphQLType(typeof(JsonType))] JsonElement values,
         CancellationToken cancellationToken)
