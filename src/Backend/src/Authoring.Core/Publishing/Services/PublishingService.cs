@@ -16,7 +16,7 @@ namespace Confix.Authoring.Publishing;
 
 // TODO cleanup this service. Most of the service depenencies here are wrong
 // the publishing service should go directly to the DL or stores and only use
-// helpers like the ISchemaService (also, this "service" should have a different name)
+// helpers like the IComponentService (also, this "service" should have a different name)
 internal sealed class PublishingService : IPublishingService
 {
     private readonly IApplicationByPartIdDataLoader _applicationByPartId;

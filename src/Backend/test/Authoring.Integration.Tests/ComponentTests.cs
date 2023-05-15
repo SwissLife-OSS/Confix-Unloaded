@@ -340,6 +340,7 @@ public class ComponentTests : IClassFixture<MongoReplicaSetResource>
         // assert
         result.AssertNoErrors();
         result.Data!.CreateComponent.Errors.Should().HaveCount(1);
+        result.Data!.CreateComponent.Errors.Should().MatchSnapshot();
         result.Data!.CreateComponent.Component.Should().BeNull();
         result.Data!.CreateComponent.Query.Components!.Nodes!.Count.Should().Be(1);
     }

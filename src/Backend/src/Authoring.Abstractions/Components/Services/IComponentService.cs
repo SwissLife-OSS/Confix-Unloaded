@@ -1,3 +1,4 @@
+using System.Text.Json;
 using HotChocolate;
 
 namespace Confix.Authoring;
@@ -5,8 +6,6 @@ namespace Confix.Authoring;
 public interface IComponentService
 {
     Task<Component?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
-
-    Task<ISchema?> GetSchemaByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
     Task<IReadOnlyList<Component>> Search(
         IReadOnlyList<ComponentScope> scopes,
@@ -20,7 +19,7 @@ public interface IComponentService
         string schemaSdl,
         string @namespace,
         IReadOnlyList<ComponentScope> scopes,
-        IDictionary<string, object?> values,
+        JsonElement values,
         CancellationToken cancellationToken);
 
     Task<Component> RenameAsync(Guid id, string name, CancellationToken cancellationToken);
@@ -29,7 +28,7 @@ public interface IComponentService
 
     Task<Component> SetValuesAsync(
         Guid id,
-        IDictionary<string, object?> values,
+        JsonElement values,
         CancellationToken cancellationToken);
 
     Task<IReadOnlyList<SchemaViolation>> GetSchemaViolationsAsync(

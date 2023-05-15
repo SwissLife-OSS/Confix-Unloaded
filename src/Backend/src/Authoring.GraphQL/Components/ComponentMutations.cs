@@ -23,7 +23,7 @@ public sealed class ComponentMutations
             schema,
             @namespace,
             scopes.Select(x => x.GetScope()).ToArray(),
-            values.Deserialize<Dictionary<string, object?>>()!,
+            values,
             cancellationToken);
     }
 
@@ -67,7 +67,7 @@ public sealed class ComponentMutations
     public async Task<Component> UpdateComponentValuesAsync(
         [Service] IComponentService service,
         [ID(nameof(Component))] Guid id,
-        [GraphQLType(typeof(AnyType))] Dictionary<string, object?> values,
+        [GraphQLType(typeof(JsonType))] JsonElement values,
         CancellationToken cancellationToken)
     {
         return await service.SetValuesAsync(id, values, cancellationToken);

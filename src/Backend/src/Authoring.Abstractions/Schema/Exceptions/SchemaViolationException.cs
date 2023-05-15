@@ -1,5 +1,4 @@
 namespace Confix.Authoring;
-
 public sealed class SchemaViolationException : Exception
 {
     public SchemaViolationException(IReadOnlyList<SchemaViolation> violations)

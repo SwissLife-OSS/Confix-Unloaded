@@ -6,7 +6,7 @@ public static class SchemaServiceCollectionExtensions
 {
     public static IServiceCollection AddSchemas(this IServiceCollection services)
     {
-        services.AddScoped<ISchemaService, SchemaService>();
+        services.AddScoped<ISchemaValidator, SchemaValidator>();
 
         return services;
     }

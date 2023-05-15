@@ -8,7 +8,6 @@ using Confix.Common.Exceptions;
 using GreenDonut;
 using HotChocolate;
 using static Confix.Authentication.Authorization.Permissions;
-using static Confix.Authoring.Internal.ValueHelper;
 
 namespace Confix.Authoring;
 
@@ -19,22 +18,22 @@ internal sealed class ComponentService : IComponentService
     private readonly IChangeLogService _changeLogService;
     private readonly IDataLoader<Guid, Component?> _componentById;
     private readonly IComponentStore _componentStore;
-    private readonly ISchemaService _schemaService;
+    private readonly ISchemaValidator _schemaValidator;
 
     public ComponentService(
-        IComponentStore componentStore,
-        IDataLoader<Guid, Component?> componentById,
-        ISchemaService schemaService,
-        IChangeLogService changeLogService,
+        ISessionAccessor accessor,
         IAuthorizationService authorizationService,
-        ISessionAccessor accessor)
+        IChangeLogService changeLogService,
+        IDataLoader<Guid, Component?> componentById,
+        IComponentStore componentStore,
+        ISchemaValidator schemaValidator)
     {
-        _componentStore = componentStore;
-        _componentById = componentById;
-        _schemaService = schemaService;
-        _changeLogService = changeLogService;
-        _authorizationService = authorizationService;
         _accessor = accessor;
+        _authorizationService = authorizationService;
+        _changeLogService = changeLogService;
+        _componentById = componentById;
+        _componentStore = componentStore;
+        _schemaValidator = schemaValidator;
     }
 
     public async Task<Component?> GetByIdAsync(
@@ -46,22 +45,6 @@ internal sealed class ComponentService : IComponentService
         return await _authorizationService
             .RuleFor<Component>()
             .AuthorizeOrNullAsync(component, Read, cancellationToken);
-    }
-
-    public async Task<ISchema?> GetSchemaByIdAsync(
-        Guid id,
-        CancellationToken cancellationToken = default)
-    {
-        var component = await GetByIdAsync(id, cancellationToken);
-
-        if (component?.Schema is null || !await _authorizationService
-                .RuleFor<Component>()
-                .IsAuthorizedAsync(component, Read, cancellationToken))
-        {
-            return null;
-        }
-
-        return _schemaService.CreateSchema(component.Schema);
     }
 
     public async Task<IReadOnlyList<Component>> Search(
@@ -93,7 +76,7 @@ internal sealed class ComponentService : IComponentService
         string schemaSdl,
         string @namespace,
         IReadOnlyList<ComponentScope> scopes,
-        IDictionary<string, object?> values,
+        JsonElement values,
         CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(name))
@@ -106,15 +89,15 @@ internal sealed class ComponentService : IComponentService
             throw ComponentValidationFailed.AtLeastOneScopeIsRequired();
         }
 
-        ISchema schema = _schemaService.CreateSchema(schemaSdl);
-        string serializedValues = _schemaService.CreateValuesForSchema(schema, values);
+        _schemaValidator.ValidateSchema(schemaSdl);
+        _schemaValidator.ValidateValues(values, schemaSdl);
 
         Component component =
             new(
                 Guid.NewGuid(),
                 name,
                 schemaSdl,
-                serializedValues,
+                values: values.ToString(),
                 @namespace,
                 scopes,
                 version: 1);
@@ -197,13 +180,7 @@ internal sealed class ComponentService : IComponentService
             throw new ComponentNotFoundException(componentId);
         }
 
-        if (schemaSdl is null)
-        {
-            throw new ArgumentNullException(nameof(schemaSdl));
-        }
-
-        // we ensure that the schema is valid.
-        _schemaService.CreateSchema(schemaSdl);
+        _schemaValidator.ValidateSchema(schemaSdl);
 
         component = component with { Schema = schemaSdl, Version = component.Version + 1 };
 
@@ -221,7 +198,7 @@ internal sealed class ComponentService : IComponentService
 
     public async Task<Component> SetValuesAsync(
         Guid id,
-        IDictionary<string, object?> values,
+        JsonElement values,
         CancellationToken cancellationToken)
     {
         var component = await _componentById.LoadAsync(id, cancellationToken);
@@ -238,16 +215,10 @@ internal sealed class ComponentService : IComponentService
             throw new ComponentNotFoundException(id);
         }
 
-        if (component.Schema is null)
-        {
-            throw new InvalidOperationException("There is no schema.");
-        }
+        _schemaValidator.ValidateValues(values, component.Schema);
 
-        var serializedValues = _schemaService.CreateValuesForSchema(component.Schema, values);
-
-        component = component with { Values = serializedValues, Version = component.Version + 1 };
-
-        ComponentValuesChange log = new(component.Id, component.Version, serializedValues);
+        component = component with { Values = values.ToString(), Version = component.Version + 1 };
+        ComponentValuesChange log = new(component.Id, component.Version, component.Values);
 
         using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
         {
@@ -273,18 +244,15 @@ internal sealed class ComponentService : IComponentService
             throw new UnauthorizedOperationException();
         }
 
-        if (component?.Schema is null)
+        if (component is null)
         {
-            // TODO proper exception
-            throw new InvalidOperationException("There is no schema.");
+            throw new ComponentNotFoundException(id);
         }
 
-        var schema = _schemaService.CreateSchema(component.Schema);
-
-        var dictionary = DeserializeDictionary(JsonSerializer.Deserialize<JsonElement>(values),
-            schema.QueryType);
-
-        return ValidateDictionary(schema, dictionary, schema.QueryType);
+        return _schemaValidator.GetSchemaViolations(
+            JsonDocument.Parse(component.Values).RootElement,
+            component.Schema
+        );
     }
 
     public async Task<Component> ChangeComponentScopeByIdAsync(
