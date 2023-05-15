@@ -1,0 +1,7 @@
+﻿[
+  {
+    "__typename": "UnauthorizedOperationError",
+    "Code": "UNAUTHORIZED_OPERATION_EXCEPTION",
+    "Message": "You are not allowed to perform this operation"
+  }
+]
