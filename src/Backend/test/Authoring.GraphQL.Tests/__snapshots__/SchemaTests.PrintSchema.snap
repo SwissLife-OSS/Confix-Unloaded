@@ -1163,7 +1163,7 @@ input CreateComponentInput {
   name: String!
   namespace: String!
   scopes: [ComponentScopeInput!]!
-  schema: SDL = "type Component { text: String! }"
+  schema: SDL = "type Configuration { text: String! }"
   values: JSON
 }
 
