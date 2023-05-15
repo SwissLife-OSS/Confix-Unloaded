@@ -48,11 +48,6 @@ fragment Component on Component {
   schema
   schemaSdl
   values
-  schemaViolations {
-    code
-    path
-  }
-
   scopes {
     __typename
     ... on NamespaceComponentScope {
@@ -69,5 +64,4 @@ fragment Component on Component {
       }
     }
   }
-  values
 }

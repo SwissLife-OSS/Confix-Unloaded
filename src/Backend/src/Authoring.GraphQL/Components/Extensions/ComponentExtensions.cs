@@ -106,29 +106,6 @@ public sealed class ComponentExtensions
         return ValueHelper.DeserializeDictionary(document.RootElement, schema.QueryType);
     }
 
-    public async Task<IReadOnlyList<SchemaViolation>> GetSchemaViolations(
-        [Parent] Component component,
-        [Service] IComponentService componentService,
-        CancellationToken cancellationToken)
-    {
-        if (component.Values is null)
-        {
-            return Array.Empty<SchemaViolation>();
-        }
-
-        var values = await GetValues(component, componentService, cancellationToken);
-
-        if (values is null)
-        {
-            return Array.Empty<SchemaViolation>();
-        }
-
-        return await componentService.GetSchemaViolationsAsync(
-            component.Id,
-            values,
-            cancellationToken);
-    }
-
     private IDictionary<string, object?> CreateFieldDto(
         FieldDefinitionNode field,
         IDictionary<string, TypeKind> typeKinds)

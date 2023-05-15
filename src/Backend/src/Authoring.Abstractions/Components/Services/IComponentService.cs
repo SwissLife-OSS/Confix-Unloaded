@@ -34,11 +34,6 @@ public interface IComponentService
 
     Task<IReadOnlyList<SchemaViolation>> GetSchemaViolationsAsync(
         Guid id,
-        IDictionary<string, object?> values,
-        CancellationToken cancellationToken);
-
-    Task<IReadOnlyList<SchemaViolation>> GetSchemaViolationsAsync(
-        Guid id,
         string values,
         CancellationToken cancellationToken);
 

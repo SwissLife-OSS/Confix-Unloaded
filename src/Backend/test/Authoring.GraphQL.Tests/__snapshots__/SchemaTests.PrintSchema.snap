@@ -317,7 +317,6 @@ type Component implements Node {
   schemaSdl: SDL
   schema: Any
   values: Any
-  schemaViolations: [SchemaViolation!]!
 }
 
 type ComponentNotFoundError implements UserError {

@@ -287,31 +287,6 @@ internal sealed class ComponentService : IComponentService
         return ValidateDictionary(schema, dictionary, schema.QueryType);
     }
 
-    public async Task<IReadOnlyList<SchemaViolation>> GetSchemaViolationsAsync(
-        Guid id,
-        IDictionary<string, object?> values,
-        CancellationToken cancellationToken)
-    {
-        var component = await _componentById.LoadAsync(id, cancellationToken);
-
-        if (!await _authorizationService
-                .RuleFor<Component>()
-                .IsAuthorizedAsync(component, Read, cancellationToken))
-        {
-            throw new UnauthorizedOperationException();
-        }
-
-        if (component?.Schema is null)
-        {
-            // TODO proper exception
-            throw new InvalidOperationException("There is no schema.");
-        }
-
-        var schema = _schemaService.CreateSchema(component.Schema);
-
-        return ValidateDictionary(schema, values, schema.QueryType);
-    }
-
     public async Task<Component> ChangeComponentScopeByIdAsync(
         Guid id,
         IReadOnlyList<ComponentScope> scopes,
