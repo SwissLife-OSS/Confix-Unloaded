@@ -54,6 +54,8 @@ public sealed class ComponentMutations
             cancellationToken);
     }
 
+    [Error(typeof(SchemaInvalidError))]
+    [Error(typeof(ValueSchemaViolation))]
     [Error(typeof(UnauthorizedOperationException))]
     [Error(typeof(SchemaInvalidError))]
     public async Task<Component> UpdateComponentSchemaAsync(
@@ -66,6 +68,7 @@ public sealed class ComponentMutations
         return await service.UpdateSchemaAsync(id, schema, values, cancellationToken);
     }
 
+    [Error(typeof(ValueSchemaViolation))]
     [Error(typeof(ValueSchemaViolation))]
     [Error(typeof(UnauthorizedOperationException))]
     public async Task<Component> UpdateComponentValuesAsync(

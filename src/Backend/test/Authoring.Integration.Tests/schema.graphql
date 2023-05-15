@@ -1085,7 +1085,7 @@ union UpdateApiKeyError = UnauthorizedOperationError
 
 union UpdateApplicationPartComponentValuesError = ApplicationPartComponentNotFoundError | ComponentNotFoundError | UnauthorizedOperationError
 
-union UpdateComponentSchemaError = UnauthorizedOperationError | SchemaInvalidError
+union UpdateComponentSchemaError = SchemaInvalidError | ValueSchemaViolation | UnauthorizedOperationError
 
 union UpdateComponentScopesError = UnauthorizedOperationError | ComponentValidationFailed
 
