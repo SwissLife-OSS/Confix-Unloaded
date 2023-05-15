@@ -1,19 +1,13 @@
 ﻿{
   "Id": "Q29tcG9uZW50CmcwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMw==",
-  "Name": "Test Component",
   "Version": 1,
-  "Schema": {
-    "RootElement": {
-      "ValueKind": "Array"
-    }
-  },
-  "SchemaSdl": "type Configuration {\n    field: String!\n    nestedField: NestedConfiguration!\n}\ntype NestedConfiguration {\n    field: String!\n}",
+  "Name": "Test Component",
+  "Schema": "type Configuration {\n  field: String!\n  nestedField: NestedConfiguration!\n}\n\ntype NestedConfiguration {\n  field: String!\n}",
   "Values": {
     "RootElement": {
       "ValueKind": "Object"
     }
   },
-  "SchemaViolations": [],
   "Scopes": [
     {
       "__typename": "NamespaceComponentScope",

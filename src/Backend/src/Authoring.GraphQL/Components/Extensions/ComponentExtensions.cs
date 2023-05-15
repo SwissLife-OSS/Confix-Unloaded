@@ -15,12 +15,12 @@ public sealed class ComponentExtensions
         => await service.GetByComponentId(application.Id, cancellationToken);
 
     [BindMember(nameof(Component.Schema))]
-    [GraphQLType<SdlType>]
+    [GraphQLType<NonNullType<SdlType>>]
     public string? GetSchema([Parent] Component component)
             => Utf8GraphQLParser.Parse(component.Schema).Print();
 
     [BindMember(nameof(Component.Values))]
-    [GraphQLType<JsonType>]
-    public JsonDocument GetValues([Parent] Component component)
-        => JsonDocument.Parse(component.Values);
+    [GraphQLType<NonNullType<JsonType>>]
+    public string GetValues([Parent] Component component)
+        => component.Values;
 }

@@ -1,6 +1,6 @@
 {
   "schema": "schema.graphql",
-  "documents": "**/*.graphql",
+  "documents": "*.graphql",
   "extensions": {
     "strawberryShake": {
       "name": "TestClient",
