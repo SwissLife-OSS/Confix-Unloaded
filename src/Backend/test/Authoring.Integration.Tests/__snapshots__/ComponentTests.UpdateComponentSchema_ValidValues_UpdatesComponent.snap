@@ -1,0 +1,17 @@
+﻿{
+  "Id": "Q29tcG9uZW50CmcwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMw==",
+  "Version": 2,
+  "Name": "Test Component",
+  "Schema": "type Component {\n  updatedField: String!\n}",
+  "Values": {
+    "RootElement": {
+      "ValueKind": "Object"
+    }
+  },
+  "Scopes": [
+    {
+      "__typename": "NamespaceComponentScope",
+      "Namespace": "Test"
+    }
+  ]
+}
