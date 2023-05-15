@@ -43,10 +43,9 @@ fragment ApplicationPartComponent on ApplicationPartComponent {
 
 fragment Component on Component {
   id
-  name
   version
+  name
   schema
-  schemaSdl
   values
   scopes {
     __typename

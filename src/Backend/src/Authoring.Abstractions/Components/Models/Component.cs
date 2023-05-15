@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using HotChocolate.Types.Relay;
 
 namespace Confix.Authoring;
@@ -26,13 +25,10 @@ public sealed record Component
     [ID]
     public Guid Id { get; init; }
 
-    [Required]
     public string Name { get; init; }
 
-    [Required]
     public string Schema { get; init; }
 
-    // TODO: difference between Component.Values <-> DefaultValue resolver
     public string Values { get; init; }
 
     public string Namespace { get; init; }

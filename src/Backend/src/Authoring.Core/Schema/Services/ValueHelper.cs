@@ -7,7 +7,6 @@ namespace Confix.Authoring.Internal;
 
 internal static class ValueHelper
 {
-
     public static List<SchemaViolation> ValidateDictionary(
         ISchema schema,
         IDictionary<string, object?> value,

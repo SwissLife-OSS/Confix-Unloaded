@@ -314,9 +314,8 @@ type Component implements Node {
   scopes: [ComponentScope!]!
   version: Int!
   changeLog: [ChangeLog!]!
-  schemaSdl: SDL
-  schema: Any
-  values: Any
+  schema: SDL
+  values: JSON
 }
 
 type ComponentNotFoundError implements UserError {
