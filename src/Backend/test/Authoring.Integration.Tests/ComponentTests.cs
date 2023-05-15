@@ -570,6 +570,36 @@ public class ComponentTests : IClassFixture<MongoReplicaSetResource>
         result.Data!.UpdateComponentSchema.Component!.Should().BeNull();
         result.Data!.UpdateComponentSchema.Query.Components!.Nodes!.Count.Should().Be(1);
     }
+
+    [Fact]
+    public async Task UpdateComponentSchema_InvalidSchema_Error()
+    {
+        // arrange
+        await TestExecutorBuilder
+            .New()
+            .AddDatabase(_mongoResource.ConnectionString)
+            .AddDefaultUser()
+            .AddPermission(Namespaces.Default, Scope.Component, Permissions.Read)
+            .AddPermission(Namespaces.Default, Scope.Component, Permissions.Write)
+            .AddClient(out var client)
+            .SetupDb(db => db.AddComponent())
+            .Build();
+        string relayId = new IdSerializer().Serialize(nameof(Component), Wellknown.Component.Id)!;
+
+        // act
+        var result = await client.Value.UpdateComponentSchema.ExecuteAsync(new UpdateComponentSchemaInput
+        {
+            Id = relayId,
+            Schema = "type Component { updatedField: Unicorn! }",
+            Values = JsonDocument.Parse("""{"updatedField": "foo"}""")
+        });
+
+        // assert
+        result.AssertNoErrors();
+        result.Data!.UpdateComponentSchema.Errors!.MatchSnapshot();
+        result.Data!.UpdateComponentSchema.Component!.Should().BeNull();
+        result.Data!.UpdateComponentSchema.Query.Components!.Nodes!.Count.Should().Be(1);
+    }
     #endregion
 
     #region UpdateComponentScopes
