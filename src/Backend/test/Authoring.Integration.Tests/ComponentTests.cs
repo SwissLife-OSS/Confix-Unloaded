@@ -353,6 +353,7 @@ public class ComponentTests : IClassFixture<MongoReplicaSetResource>
             .New()
             .AddDatabase(_mongoResource.ConnectionString)
             .AddDefaultUser()
+            .AddPermission(Namespaces.Default, Scope.Component, Permissions.Read)
             .AddPermission(Namespaces.Default, Scope.Component, Permissions.Write)
             .AddClient(out var client)
             .SetupDb(db => db.AddComponent())
@@ -377,7 +378,7 @@ public class ComponentTests : IClassFixture<MongoReplicaSetResource>
         // assert
         result.AssertNoErrors();
         result.Data!.CreateComponent.Errors.Should().BeNull();
-        result.Data!.CreateComponent.Component.Should().MatchSnapshot();
+        result.Data!.CreateComponent.Component.Should().MatchSnapshot(o => o.IgnoreField("Id"));
         result.Data!.CreateComponent.Query.Components!.Nodes!.Count.Should().Be(2);
     }
 
@@ -389,6 +390,7 @@ public class ComponentTests : IClassFixture<MongoReplicaSetResource>
             .New()
             .AddDatabase(_mongoResource.ConnectionString)
             .AddDefaultUser()
+            .AddPermission(Namespaces.Default, Scope.Component, Permissions.Read)
             .AddPermission(Namespaces.Default, Scope.Component, Permissions.Write)
             .AddClient(out var client)
             .SetupDb(db => db.AddComponent())
@@ -412,10 +414,8 @@ public class ComponentTests : IClassFixture<MongoReplicaSetResource>
 
         // assert
         result.AssertNoErrors();
-        result.Data!.CreateComponent.Errors!.Count.Should().BeGreaterThan(0);
-        // TODO: check that snapshot contains correct errors
-        Assert.True(false); // remove when todo is done
-        result.Data!.CreateComponent.Errors!.Should().MatchSnapshot();
+        result.Data!.CreateComponent.Errors.Should().HaveCount(1);
+        result.Data!.CreateComponent.Errors.Should().MatchSnapshot();
         result.Data!.CreateComponent.Component.Should().BeNull();
         result.Data!.CreateComponent.Query.Components!.Nodes!.Count.Should().Be(1);
     }
@@ -446,6 +446,7 @@ public class ComponentTests : IClassFixture<MongoReplicaSetResource>
         // assert
         result.AssertNoErrors();
         result.Data!.RenameComponent.Errors!.Should().HaveCount(1);
+        result.Data!.RenameComponent.Errors.Should().MatchSnapshot();
         result.Data!.RenameComponent.Component.Should().BeNull();
         result.Data!.RenameComponent.Query.Components!.Nodes!.Count.Should().Be(1);
     }
@@ -458,6 +459,7 @@ public class ComponentTests : IClassFixture<MongoReplicaSetResource>
             .New()
             .AddDatabase(_mongoResource.ConnectionString)
             .AddDefaultUser()
+            .AddPermission(Namespaces.Default, Scope.Component, Permissions.Read)
             .AddPermission(Namespaces.Default, Scope.Component, Permissions.Write)
             .AddClient(out var client)
             .SetupDb(db => db.AddComponent())

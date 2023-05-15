@@ -6,6 +6,7 @@ namespace Confix.Authoring.GraphQL.Components;
 [ExtendObjectType(OperationTypeNames.Mutation)]
 public sealed class ComponentMutations
 {
+    [Error(typeof(SchemaInvalidError))]
     [Error(typeof(ValueSchemaViolation))]
     [Error(typeof(UnauthorizedOperationException))]
     [Error(typeof(ComponentValidationFailed))]

@@ -314,8 +314,8 @@ type Component implements Node {
   scopes: [ComponentScope!]!
   version: Int!
   changeLog: [ChangeLog!]!
-  schema: SDL
-  values: JSON
+  schema: SDL!
+  values: JSON!
 }
 
 type ComponentNotFoundError implements UserError {
@@ -516,13 +516,9 @@ type Mutation {
   renameApplication(input: RenameApplicationInput!): RenameApplicationPayload!
   "Renames an application part of an application configuration."
   renameApplicationPart(input: RenameApplicationPartInput!): RenameApplicationPartPayload!
-  "Adds a component to an application part."
   addComponentsToApplicationPart(input: AddComponentsToApplicationPartInput!): AddComponentsToApplicationPartPayload!
-  "Adds a component to an application part."
   addPartToApplication(input: AddPartToApplicationInput!): AddPartToApplicationPayload!
-  "Adds a component to an application part."
   removeApplicationPart(input: RemoveApplicationPartInput!): RemoveApplicationPartPayload!
-  "Adds a component to an application part."
   removeComponentFromApplicationPart(input: RemoveComponentFromApplicationPartInput!): RemoveComponentFromApplicationPartPayload!
   updateApplicationPartComponentValues(input: UpdateApplicationPartComponentValuesInput!): UpdateApplicationPartComponentValuesPayload!
   createComponent(input: CreateComponentInput!): CreateComponentPayload!
@@ -1034,7 +1030,7 @@ union CreateApiKeyError = UnauthorizedOperationError
 
 union CreateApplicationError = ApplicationNameTaken | UnauthorizedOperationError
 
-union CreateComponentError = ValueSchemaViolation | UnauthorizedOperationError | ComponentValidationFailed
+union CreateComponentError = SchemaInvalidError | ValueSchemaViolation | UnauthorizedOperationError | ComponentValidationFailed
 
 union CreateEnvironmentError = EnvironmentNameCollisionError | UnauthorizedOperationError
 

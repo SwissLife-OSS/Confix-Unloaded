@@ -1,13 +1,10 @@
+using Confix.Authoring.GraphQL.Applications;
+
 namespace Confix.Authoring.GraphQL.Components;
 
-public class SchemaInvalidError : IUserError
+public class SchemaInvalidError : UserError
 {
-    public SchemaInvalidError(SchemaException exception)
+    public SchemaInvalidError(InvalidSchemaException exception): base(exception.Message)
     {
-        Message = string.Join("\n", exception.Errors.Select(x => x.Message));
     }
-
-    public string Code => nameof(SchemaInvalidError);
-
-    public string Message { get; private set; }
 }

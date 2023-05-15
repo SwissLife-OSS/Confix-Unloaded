@@ -13,11 +13,13 @@ internal sealed class SchemaValidator : ISchemaValidator
         {
             CreateSchema(schemaSdl);
         }
+        catch (SchemaException ex)
+        {
+            throw new InvalidSchemaException(ex.Errors.Select(e => e.Message).ToArray());
+        }
         catch (Exception ex)
         {
-            var x = ex.Message;
-            // todo: populate exception with more info
-            throw new InvalidSchemaException();
+            throw new InvalidSchemaException(new[] { ex.Message });
         }
     }
 

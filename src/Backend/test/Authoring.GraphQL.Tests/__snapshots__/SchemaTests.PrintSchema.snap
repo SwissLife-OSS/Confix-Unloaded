@@ -1030,7 +1030,7 @@ union CreateApiKeyError = UnauthorizedOperationError
 
 union CreateApplicationError = ApplicationNameTaken | UnauthorizedOperationError
 
-union CreateComponentError = ValueSchemaViolation | UnauthorizedOperationError | ComponentValidationFailed
+union CreateComponentError = SchemaInvalidError | ValueSchemaViolation | UnauthorizedOperationError | ComponentValidationFailed
 
 union CreateEnvironmentError = EnvironmentNameCollisionError | UnauthorizedOperationError
 
