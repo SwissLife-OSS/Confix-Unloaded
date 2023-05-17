@@ -33,5 +33,6 @@
     <Using Include="Snapshooter.Xunit" />
     <Using Include="Squadron" />
     <Using Include="Xunit" />
+    <Using Include="Moq" />
   </ItemGroup>
 </Project>
