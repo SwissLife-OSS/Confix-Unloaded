@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Squadron;
+using StrawberryShake.Serialization;
 
 namespace Confix.Authoring.Integration.Tests;
 
@@ -90,6 +91,7 @@ public class TestExecutorBuilder
 
         if (_clientAccessor is not null)
         {
+            _services.AddSerializer(new JsonSerializer("JSON"));
             _services.AddTestClient().ConfigureInMemoryClient();
         }
 

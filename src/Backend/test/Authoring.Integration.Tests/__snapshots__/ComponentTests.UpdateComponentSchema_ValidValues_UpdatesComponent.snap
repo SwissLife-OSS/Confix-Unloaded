@@ -1,0 +1,15 @@
+﻿{
+  "Id": "Q29tcG9uZW50CmcwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMw==",
+  "Version": 2,
+  "Name": "Test Component",
+  "Schema": "type Configuration {\n  updatedField: String!\n}",
+  "Values": {
+    "updatedField": "foo"
+  },
+  "Scopes": [
+    {
+      "__typename": "NamespaceComponentScope",
+      "Namespace": "Test"
+    }
+  ]
+}

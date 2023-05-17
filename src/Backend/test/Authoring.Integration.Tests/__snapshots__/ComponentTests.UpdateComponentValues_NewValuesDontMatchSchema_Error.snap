@@ -1,0 +1,7 @@
+﻿[
+  {
+    "__typename": "ValueSchemaViolation",
+    "Code": "ValueSchemaViolation",
+    "Message": "Values has invalid structure."
+  }
+]

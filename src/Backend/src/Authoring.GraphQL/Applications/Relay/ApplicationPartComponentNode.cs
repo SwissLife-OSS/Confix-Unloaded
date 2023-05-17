@@ -17,28 +17,8 @@ public sealed class ApplicationPartComponentNode
             .GetByIdAsync(applicationPartComponent.ComponentId, cancellationToken);
     }
 
-    [GraphQLType(typeof(AnyType))]
+    [GraphQLType(typeof(JsonType))]
     [BindMember(nameof(Component.Values))]
-    public async Task<Dictionary<string, object?>?> GetValuesAsync(
-        [Parent] ApplicationPartComponent applicationPartComponent,
-        [Service] IComponentService componentService,
-        CancellationToken cancellationToken)
-    {
-        if (applicationPartComponent.Values is null)
-        {
-            return null;
-        }
-
-        var schema = await componentService.GetSchemaByIdAsync(applicationPartComponent.ComponentId,
-            cancellationToken);
-
-        if (schema is null)
-        {
-            return null;
-        }
-
-        var document = JsonDocument.Parse(applicationPartComponent.Values!);
-
-        return ValueHelper.DeserializeDictionary(document.RootElement, schema.QueryType);
-    }
+    public string? GetValuesAsync([Parent] ApplicationPartComponent applicationPartComponent)
+        => applicationPartComponent.Values;
 }

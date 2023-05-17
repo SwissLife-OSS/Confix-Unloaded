@@ -1,0 +1,18 @@
+﻿{
+  "Id": "Q29tcG9uZW50CmcwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMw==",
+  "Version": 1,
+  "Name": "Test Component",
+  "Schema": "type Configuration {\n  field: String!\n  nestedField: NestedConfiguration!\n}\n\ntype NestedConfiguration {\n  field: String!\n}",
+  "Values": {
+    "field": "default",
+    "nestedField": {
+      "field": "defaultNested"
+    }
+  },
+  "Scopes": [
+    {
+      "__typename": "NamespaceComponentScope",
+      "Namespace": "Test"
+    }
+  ]
+}

@@ -124,6 +124,11 @@ type Application implements Node {
   changeLog: [ChangeLog!]!
 }
 
+type ApplicationComponentScope {
+  applicationId: ID!
+  application: Application
+}
+
 type ApplicationIdInvalid implements UserError {
   applicationId: ID!
   code: String!
@@ -168,6 +173,11 @@ type ApplicationPartComponentNotFoundError implements UserError {
   componentPartId: ID!
   code: String!
   message: String!
+}
+
+type ApplicationPartComponentScope {
+  applicationPartId: ID!
+  applicationPart: ApplicationPart
 }
 
 type ApplicationPartComponentValuesChange implements ApplicationPartComponentChange & ApplicationPartChange & ApplicationChange & Change {
@@ -300,15 +310,12 @@ type ClaimedVersionsEdge {
 type Component implements Node {
   id: ID!
   name: String!
+  namespace: String!
   scopes: [ComponentScope!]!
   version: Int!
-  state: ComponentState!
   changeLog: [ChangeLog!]!
-  schemaSdl: SDL
-  schema: Any
-  values: Any
-  defaults: Any
-  schemaViolations: [SchemaViolation!]!
+  schema: SDL!
+  values: JSON!
 }
 
 type ComponentNotFoundError implements UserError {
@@ -319,17 +326,10 @@ type ComponentNotFoundError implements UserError {
 
 type ComponentSchemaChange implements ComponentChange & Change {
   schema: String!
+  values: String!
   kind: String!
   component: Component
   componentVersion: Int!
-}
-
-type ComponentScope {
-  namespace: String!
-  applicationId: ID
-  applicationPartId: ID
-  application: Application
-  applicationPart: ApplicationPart
 }
 
 type ComponentValidationFailed implements UserError {
@@ -517,13 +517,9 @@ type Mutation {
   renameApplication(input: RenameApplicationInput!): RenameApplicationPayload!
   "Renames an application part of an application configuration."
   renameApplicationPart(input: RenameApplicationPartInput!): RenameApplicationPartPayload!
-  "Adds a component to an application part."
   addComponentsToApplicationPart(input: AddComponentsToApplicationPartInput!): AddComponentsToApplicationPartPayload!
-  "Adds a component to an application part."
   addPartToApplication(input: AddPartToApplicationInput!): AddPartToApplicationPayload!
-  "Adds a component to an application part."
   removeApplicationPart(input: RemoveApplicationPartInput!): RemoveApplicationPartPayload!
-  "Adds a component to an application part."
   removeComponentFromApplicationPart(input: RemoveComponentFromApplicationPartInput!): RemoveComponentFromApplicationPartPayload!
   updateApplicationPartComponentValues(input: UpdateApplicationPartComponentValuesInput!): UpdateApplicationPartComponentValuesPayload!
   createComponent(input: CreateComponentInput!): CreateComponentPayload!
@@ -551,6 +547,10 @@ type Mutation {
   updateGroupRequirements(input: UpdateGroupRequirementsInput!): UpdateGroupRequirementsPayload!
   updateGroupRoles(input: UpdateGroupRolesInput!): UpdateGroupRolesPayload!
   removeGroupById(input: RemoveGroupByIdInput!): RemoveGroupByIdPayload!
+}
+
+type NamespaceComponentScope {
+  namespace: String!
 }
 
 type NamespaceVariableValueScope {
@@ -661,7 +661,7 @@ type Query {
   applicationById("The application ID." id: ID!): Application
   applicationPartById(id: ID!): ApplicationPart
   applicationPartComponentById(partComponentId: ID!): ApplicationPartComponent
-  components(applicationId: ID applicationPartId: ID namespace: String search: String "Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String): ComponentsConnection
+  components(scopes: [ComponentScopeInput!] search: String "Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String): ComponentsConnection
   componentById(id: ID!): Component
   searchEnvironments(search: String "Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String): SearchEnvironmentsConnection
   environmentById(id: ID!): Environment
@@ -836,7 +836,7 @@ type SchemaInvalidError implements UserError {
 }
 
 type SchemaViolation {
-  path: Any!
+  path: JSON!
   code: String!
 }
 
@@ -1025,11 +1025,13 @@ union ChangeRolePermissionsError = UnauthorizedOperationError
 
 union ClaimVersionError = ClaimVersionFailedError | UnauthorizedOperationError
 
+union ComponentScope = ApplicationPartComponentScope | ApplicationComponentScope | NamespaceComponentScope
+
 union CreateApiKeyError = UnauthorizedOperationError
 
 union CreateApplicationError = ApplicationNameTaken | UnauthorizedOperationError
 
-union CreateComponentError = ValueSchemaViolation | UnauthorizedOperationError | ComponentValidationFailed
+union CreateComponentError = SchemaInvalidError | ValueSchemaViolation | UnauthorizedOperationError | ComponentValidationFailed
 
 union CreateEnvironmentError = EnvironmentNameCollisionError | UnauthorizedOperationError
 
@@ -1083,7 +1085,7 @@ union UpdateApiKeyError = UnauthorizedOperationError
 
 union UpdateApplicationPartComponentValuesError = ApplicationPartComponentNotFoundError | ComponentNotFoundError | UnauthorizedOperationError
 
-union UpdateComponentSchemaError = UnauthorizedOperationError | SchemaInvalidError
+union UpdateComponentSchemaError = SchemaInvalidError | ValueSchemaViolation | UnauthorizedOperationError
 
 union UpdateComponentScopesError = UnauthorizedOperationError | ComponentValidationFailed
 
@@ -1103,6 +1105,14 @@ input AddComponentsToApplicationPartInput {
 input AddPartToApplicationInput {
   partName: String!
   applicationId: ID!
+}
+
+input ApplicationComponentScopeInput {
+  applicationId: ID!
+}
+
+input ApplicationPartComponentScopeInput {
+  applicationPartId: ID!
 }
 
 input ApplicationPartVariableValueScopeInput {
@@ -1132,10 +1142,10 @@ input ClaimVersionInput {
   environmentName: String!
 }
 
-input ComponentScopeInput {
-  namespace: String!
-  applicationId: ID
-  applicationPartId: ID
+input ComponentScopeInput @oneOf {
+  application: ApplicationComponentScopeInput
+  applicationPart: ApplicationPartComponentScopeInput
+  namespace: NamespaceComponentScopeInput
 }
 
 input CreateApiKeyInput {
@@ -1151,9 +1161,10 @@ input CreateApplicationInput {
 
 input CreateComponentInput {
   name: String!
+  namespace: String!
   scopes: [ComponentScopeInput!]!
-  schema: String = "type Component { text: String! }"
-  values: Any
+  schema: SDL = "type Component { text: String! }"
+  values: JSON
 }
 
 input CreateEnvironmentInput {
@@ -1181,6 +1192,10 @@ input CreateVariableInput {
 
 input DeleteVariableValueInput {
   id: ID!
+}
+
+input NamespaceComponentScopeInput {
+  namespace: String!
 }
 
 input NamespaceVariableValueScopeInput {
@@ -1296,12 +1311,13 @@ input UpdateApiKeyInput {
 
 input UpdateApplicationPartComponentValuesInput {
   partComponentId: ID!
-  values: Any
+  values: JSON
 }
 
 input UpdateComponentSchemaInput {
   id: ID!
-  schema: String!
+  schema: SDL
+  values: JSON
 }
 
 input UpdateComponentScopesInput {
@@ -1311,7 +1327,7 @@ input UpdateComponentScopesInput {
 
 input UpdateComponentValuesInput {
   id: ID!
-  values: Any
+  values: JSON
 }
 
 input UpdateGroupRequirementsInput {
@@ -1334,11 +1350,6 @@ enum ApplyPolicy {
   BEFORE_RESOLVER
   AFTER_RESOLVER
   VALIDATION
-}
-
-enum ComponentState {
-  ACTIVE
-  DEPRECATED
 }
 
 enum Scope {
@@ -1365,8 +1376,6 @@ directive @oneOf on INPUT_OBJECT
 
 "The `@specifiedBy` directive is used within the type system definition language to provide a URL for specifying the behavior of custom scalar definitions."
 directive @specifiedBy("The specifiedBy URL points to a human-readable specification. This field will only read a result for scalar types." url: String!) on SCALAR
-
-scalar Any
 
 "The `DateTime` scalar represents an ISO-8601 compliant date time type."
 scalar DateTime @specifiedBy(url: "https:\/\/www.graphql-scalars.com\/date-time")

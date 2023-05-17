@@ -56,7 +56,7 @@ if (app.Environment.IsDevelopment())
 app.UseAuthoringServer();
 if (app.Environment.IsDevelopment())
 {
-    app.UseEndpoints(x => x.MapReverseProxy());
+    app.MapReverseProxy();
 }
 else
 {

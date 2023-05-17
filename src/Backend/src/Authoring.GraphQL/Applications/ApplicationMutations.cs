@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Confix.Authoring.Store;
 using Confix.Common.Exceptions;
 
@@ -52,9 +53,6 @@ public sealed class ApplicationMutations
         return await applicationService.RenamePartAsync(applicationPartId, name, cancellationToken);
     }
 
-    /// <summary>
-    ///     Adds a component to an application part.
-    /// </summary>
     [Error(typeof(ApplicationPartIdInvalid))]
     [Error(typeof(UnauthorizedOperationException))]
     public async Task<ApplicationPart> AddComponentsToApplicationPartAsync(
@@ -67,9 +65,6 @@ public sealed class ApplicationMutations
             .AddComponentsToPartAsync(applicationPartId, componentIds, cancellationToken);
     }
 
-    /// <summary>
-    ///     Adds a component to an application part.
-    /// </summary>
     [Error(typeof(ApplicationNotFoundError))]
     [Error(typeof(ApplicationPartNameTaken))]
     [Error(typeof(UnauthorizedOperationException))]
@@ -83,9 +78,6 @@ public sealed class ApplicationMutations
             .AddPartToApplicationAsync(applicationId, partName, cancellationToken);
     }
 
-    /// <summary>
-    ///     Adds a component to an application part.
-    /// </summary>
     [Error(typeof(ApplicationPartNotFoundError))]
     [Error(typeof(UnauthorizedOperationException))]
     public async Task<Application> RemoveApplicationPartAsync(
@@ -96,9 +88,6 @@ public sealed class ApplicationMutations
         return await applicationService.RemovePartAsync(applicationPartId, cancellationToken);
     }
 
-    /// <summary>
-    ///     Adds a component to an application part.
-    /// </summary>
     [Error(typeof(ApplicationPartNotFoundError))]
     [Error(typeof(UnauthorizedOperationException))]
     public async Task<ApplicationPart> RemoveComponentFromApplicationPartAsync(
@@ -110,9 +99,6 @@ public sealed class ApplicationMutations
             .RemoveComponentFromApplicationPartAsync(partComponentId, cancellationToken);
     }
 
-    /// <summary>
-    ///     Adds a component to an application part.
-    /// </summary>
     [Error(typeof(ApplicationPartComponentNotFoundError))]
     [Error(typeof(ComponentNotFoundError))]
     [Error(typeof(UnauthorizedOperationException))]
@@ -120,7 +106,7 @@ public sealed class ApplicationMutations
     public async Task<ApplicationPartComponent> UpdateApplicationPartComponentValuesAsync(
         [Service] IApplicationService applicationService,
         [ID(nameof(ApplicationPartComponent))] Guid partComponentId,
-        [GraphQLType(typeof(AnyType))] IDictionary<string, object?> values,
+        [GraphQLType(typeof(JsonType))] JsonElement values,
         CancellationToken cancellationToken)
     {
         return await applicationService

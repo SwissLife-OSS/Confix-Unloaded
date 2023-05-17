@@ -53,10 +53,11 @@ internal sealed class VariableStore : IVariableStore
         Variable variable,
         CancellationToken cancellationToken)
     {
-        ReplaceOptions options = new() { IsUpsert = false };
-
-        await _dbContext.Variables
-            .ReplaceOneAsync(x => x.Id == variable.Id, variable, options, cancellationToken);
+        await _dbContext.Variables.ReplaceOneAsync(
+            x => x.Id == variable.Id,
+            variable,
+            new ReplaceOptions{ IsUpsert = false },
+            cancellationToken);
 
         return variable;
     }

@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Confix.Authoring.Store;
 
 namespace Confix.Authoring;
@@ -74,6 +75,6 @@ public interface IApplicationService
 
     Task<ApplicationPartComponent> SetApplicationPartComponentValues(
         Guid partComponentId,
-        IDictionary<string, object?> values,
+        JsonElement values,
         CancellationToken cancellationToken = default);
 }

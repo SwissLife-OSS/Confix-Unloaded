@@ -36,6 +36,6 @@ public static class VaultServerBuilderMessagingExtensions
         return collection
             .BuildServiceProvider()
             .GetRequiredService<IConfiguration>()
-            .GetValue<string>(Settings.Confix.Vault.Environment.Name.Value);
+            .GetValue<string>(Settings.Confix.Vault.Environment.Name.Value)!;
     }
 }

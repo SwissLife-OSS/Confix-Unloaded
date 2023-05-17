@@ -27,11 +27,14 @@ public static class ComponentsRequestExecutorBuilderExtensions
         // types
         builder
             .AddTypeExtension<ComponentQueries>()
-            .AddTypeExtension<ComponentMutations>();
+            .AddTypeExtension<ComponentMutations>()
+            .AddType<ComponentScopeType>();
 
         // extensions
         builder
-            .AddTypeExtension<ComponentExtensions>();
+            .AddTypeExtension<ComponentExtensions>()
+            .AddTypeExtension<ApplicationComponentScopeExtensions>()
+            .AddTypeExtension<ApplicationPartComponentScopeExtensions>();
 
         // change log
         builder.AddInterfaceType<IComponentChange>(x => x.Name("ComponentChange"))

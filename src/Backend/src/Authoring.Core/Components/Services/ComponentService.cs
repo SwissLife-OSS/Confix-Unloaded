@@ -8,7 +8,6 @@ using Confix.Common.Exceptions;
 using GreenDonut;
 using HotChocolate;
 using static Confix.Authentication.Authorization.Permissions;
-using static Confix.Authoring.Internal.ValueHelper;
 
 namespace Confix.Authoring;
 
@@ -19,27 +18,27 @@ internal sealed class ComponentService : IComponentService
     private readonly IChangeLogService _changeLogService;
     private readonly IDataLoader<Guid, Component?> _componentById;
     private readonly IComponentStore _componentStore;
-    private readonly ISchemaService _schemaService;
+    private readonly ISchemaValidator _schemaValidator;
 
     public ComponentService(
-        IComponentStore componentStore,
-        IDataLoader<Guid, Component?> componentById,
-        ISchemaService schemaService,
-        IChangeLogService changeLogService,
+        ISessionAccessor accessor,
         IAuthorizationService authorizationService,
-        ISessionAccessor accessor)
+        IChangeLogService changeLogService,
+        IDataLoader<Guid, Component?> componentById,
+        IComponentStore componentStore,
+        ISchemaValidator schemaValidator)
     {
-        _componentStore = componentStore;
-        _componentById = componentById;
-        _schemaService = schemaService;
-        _changeLogService = changeLogService;
-        _authorizationService = authorizationService;
         _accessor = accessor;
+        _authorizationService = authorizationService;
+        _changeLogService = changeLogService;
+        _componentById = componentById;
+        _componentStore = componentStore;
+        _schemaValidator = schemaValidator;
     }
 
     public async Task<Component?> GetByIdAsync(
         Guid id,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken)
     {
         var component = await _componentById.LoadAsync(id, cancellationToken);
 
@@ -48,71 +47,41 @@ internal sealed class ComponentService : IComponentService
             .AuthorizeOrNullAsync(component, Read, cancellationToken);
     }
 
-    public async Task<ISchema?> GetSchemaByIdAsync(
-        Guid id,
-        CancellationToken cancellationToken = default)
-    {
-        var component = await GetByIdAsync(id, cancellationToken);
-
-        if (component?.Schema is null || !await _authorizationService
-                .RuleFor<Component>()
-                .IsAuthorizedAsync(component, Read, cancellationToken))
-        {
-            return null;
-        }
-
-        return _schemaService.CreateSchema(component.Schema);
-    }
-
-    public async Task<IReadOnlyList<Component>> Search(
+    public async Task<IReadOnlyList<Component>> SearchAsync(
+        IReadOnlyList<ComponentScope> scopes,
+        string? search,
         int skip,
         int take,
-        Guid? applicationId,
-        Guid? applicationPartId,
-        string? @namespace,
-        string? search,
         CancellationToken cancellationToken)
     {
         var session = await _accessor.GetSession(cancellationToken);
-
         if (session is null)
         {
             return Array.Empty<Component>();
         }
 
         var namespaces = session.GetNamespacesWithAccess(Scope.Component, Read);
-        if (@namespace is not null)
-        {
-            if (namespaces.Contains(@namespace))
-            {
-                namespaces = new HashSet<string> { @namespace };
-            }
-            else
-            {
-                return Array.Empty<Component>();
-            }
-        }
 
-        return await _componentStore.Search(
+        return await _componentStore.GetByFilterAsync(
+            namespaces,
+            scopes,
+            search,
             skip,
             take,
-            namespaces,
-            applicationId,
-            applicationPartId,
-            search,
             cancellationToken);
     }
 
     public async Task<Component> CreateAsync(
         string name,
-        string? schemaSdl,
+        string schemaSdl,
+        string @namespace,
         IReadOnlyList<ComponentScope> scopes,
-        IDictionary<string, object?>? values,
+        JsonElement values,
         CancellationToken cancellationToken)
     {
-        if (string.IsNullOrEmpty(name))
+        if (string.IsNullOrWhiteSpace(name))
         {
-            throw new ArgumentException("Value cannot be null or empty.", nameof(name));
+            throw ComponentValidationFailed.NameRequired();
         }
 
         if (scopes.Count == 0)
@@ -120,20 +89,17 @@ internal sealed class ComponentService : IComponentService
             throw ComponentValidationFailed.AtLeastOneScopeIsRequired();
         }
 
-        string? serializedValues = null;
+        _schemaValidator.ValidateSchema(schemaSdl);
+        _schemaValidator.ValidateValues(values, schemaSdl);
 
-        if (schemaSdl is not null)
-        {
-            var schema = _schemaService.CreateSchema(schemaSdl);
-
-            if (values is not null)
-            {
-                serializedValues = _schemaService.CreateValuesForSchema(schema, values);
-            }
-        }
-
-        Component component =
-            new(Guid.NewGuid(), name, schemaSdl, serializedValues, ComponentState.Active, scopes);
+        Component component = new(
+            Guid.NewGuid(),
+            name,
+            schemaSdl,
+            values: values.ToString(),
+            @namespace,
+            scopes,
+            version: 1);
 
         if (!await _authorizationService
                 .RuleFor<Component>()
@@ -160,25 +126,12 @@ internal sealed class ComponentService : IComponentService
         string name,
         CancellationToken cancellationToken)
     {
-        var component = await _componentById.LoadAsync(id, cancellationToken);
+        Component component = await GetWritableComponent(id, cancellationToken);
 
-        if (!await _authorizationService
-                .RuleFor<Component>()
-                .IsAuthorizedAsync(component, Write, cancellationToken))
-        {
-            throw new UnauthorizedOperationException();
-        }
-
-        if (component is null)
-        {
-            throw new ComponentNotFoundException(id);
-        }
-
-        if (string.IsNullOrEmpty(name))
+        if (string.IsNullOrWhiteSpace(name))
         {
             throw new ArgumentException("Value cannot be null or empty.", nameof(name));
         }
-
         component = component with { Name = name, Version = component.Version + 1 };
 
         RenameComponentChange log = new(component.Id, component.Version, name);
@@ -194,36 +147,25 @@ internal sealed class ComponentService : IComponentService
         return component;
     }
 
-    public async Task<Component> SetSchemaAsync(
-        Guid componentId,
+    public async Task<Component> UpdateSchemaAsync(
+        Guid id,
         string schemaSdl,
+        JsonElement values,
         CancellationToken cancellationToken)
     {
-        var component = await _componentById.LoadAsync(componentId, cancellationToken);
+        Component component = await GetWritableComponent(id, cancellationToken);
 
-        if (!await _authorizationService
-                .RuleFor<Component>()
-                .IsAuthorizedAsync(component, Write, cancellationToken))
+        _schemaValidator.ValidateSchema(schemaSdl);
+        _schemaValidator.ValidateValues(values, schemaSdl);
+
+        component = component with
         {
-            throw new UnauthorizedOperationException();
-        }
+            Schema = schemaSdl,
+            Values = values.ToString(),
+            Version = component.Version + 1
+        };
 
-        if (component is null)
-        {
-            throw new ComponentNotFoundException(componentId);
-        }
-
-        if (schemaSdl is null)
-        {
-            throw new ArgumentNullException(nameof(schemaSdl));
-        }
-
-        // we ensure that the schema is valid.
-        _schemaService.CreateSchema(schemaSdl);
-
-        component = component with { Schema = schemaSdl, Version = component.Version + 1 };
-
-        ComponentSchemaChange log = new(component.Id, component.Version, schemaSdl);
+        ComponentSchemaChange log = new(component.Id, component.Version, schemaSdl, values.ToString());
 
         using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
         {
@@ -235,35 +177,17 @@ internal sealed class ComponentService : IComponentService
         return component;
     }
 
-    public async Task<Component> SetValuesAsync(
+    public async Task<Component> UpdateValuesAsync(
         Guid id,
-        IDictionary<string, object?> values,
+        JsonElement values,
         CancellationToken cancellationToken)
     {
-        var component = await _componentById.LoadAsync(id, cancellationToken);
+        Component component = await GetWritableComponent(id, cancellationToken);
 
-        if (!await _authorizationService
-                .RuleFor<Component>()
-                .IsAuthorizedAsync(component, Write, cancellationToken))
-        {
-            throw new UnauthorizedOperationException();
-        }
+        _schemaValidator.ValidateValues(values, component.Schema);
 
-        if (component is null)
-        {
-            throw new ComponentNotFoundException(id);
-        }
-
-        if (component.Schema is null)
-        {
-            throw new InvalidOperationException("There is no schema.");
-        }
-
-        var serializedValues = _schemaService.CreateValuesForSchema(component.Schema, values);
-
-        component = component with { Values = serializedValues, Version = component.Version + 1 };
-
-        ComponentValuesChange log = new(component.Id, component.Version, serializedValues);
+        component = component with { Values = values.ToString(), Version = component.Version + 1 };
+        ComponentValuesChange log = new(component.Id, component.Version, component.Values);
 
         using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
         {
@@ -280,95 +204,20 @@ internal sealed class ComponentService : IComponentService
         string values,
         CancellationToken cancellationToken)
     {
-        var component = await _componentById.LoadAsync(id, cancellationToken);
+        Component component = await GetWritableComponent(id, cancellationToken);
 
-        if (!await _authorizationService
-                .RuleFor<Component>()
-                .IsAuthorizedAsync(component, Read, cancellationToken))
-        {
-            throw new UnauthorizedOperationException();
-        }
-
-        if (component?.Schema is null)
-        {
-            // TODO proper exception
-            throw new InvalidOperationException("There is no schema.");
-        }
-
-        var schema = _schemaService.CreateSchema(component.Schema);
-
-        var dictionary = DeserializeDictionary(JsonSerializer.Deserialize<JsonElement>(values),
-            schema.QueryType);
-
-        return ValidateDictionary(schema, dictionary, schema.QueryType);
+        return _schemaValidator.GetSchemaViolations(
+            JsonDocument.Parse(component.Values).RootElement,
+            component.Schema
+        );
     }
 
-    public async Task<IReadOnlyList<SchemaViolation>> GetSchemaViolationsAsync(
-        Guid id,
-        IDictionary<string, object?> values,
-        CancellationToken cancellationToken)
-    {
-        var component = await _componentById.LoadAsync(id, cancellationToken);
-
-        if (!await _authorizationService
-                .RuleFor<Component>()
-                .IsAuthorizedAsync(component, Read, cancellationToken))
-        {
-            throw new UnauthorizedOperationException();
-        }
-
-        if (component?.Schema is null)
-        {
-            // TODO proper exception
-            throw new InvalidOperationException("There is no schema.");
-        }
-
-        var schema = _schemaService.CreateSchema(component.Schema);
-
-        return ValidateDictionary(schema, values, schema.QueryType);
-    }
-
-    public async Task<IDictionary<string, object?>?> GetDefaultValuesAsync(
-        Guid id,
-        CancellationToken cancellationToken)
-    {
-        var component = await _componentById.LoadAsync(id, cancellationToken);
-
-        if (!await _authorizationService
-                .RuleFor<Component>()
-                .IsAuthorizedAsync(component, Read, cancellationToken))
-        {
-            throw new UnauthorizedOperationException();
-        }
-
-        if (component?.Schema is null)
-        {
-            return null;
-        }
-
-        var schema = _schemaService.CreateSchema(component.Schema);
-
-        return CreateDefaultObjectValue(schema, schema.QueryType);
-    }
-
-    public async Task<Component> ChangeComponentScopeByIdAsync(
+    public async Task<Component> UpdateScopesAsync(
         Guid id,
         IReadOnlyList<ComponentScope> scopes,
         CancellationToken cancellationToken)
     {
-        var component = await _componentById.LoadAsync(id, cancellationToken);
-
-        if (!await _authorizationService
-                .RuleFor<Component>()
-                .IsAuthorizedAsync(component, Write, cancellationToken))
-        {
-            throw new UnauthorizedOperationException();
-        }
-
-        if (component is null)
-        {
-            throw new ComponentNotFoundException(id);
-        }
+        Component component = await GetWritableComponent(id, cancellationToken);
 
         if (scopes.Count == 0)
         {
@@ -385,6 +234,25 @@ internal sealed class ComponentService : IComponentService
             await _componentStore.UpdateAsync(component, cancellationToken);
 
             transaction.Complete();
+        }
+
+        return component;
+    }
+
+    private async Task<Component> GetWritableComponent(Guid id, CancellationToken cancellationToken)
+    {
+        Component? component = await _componentById.LoadAsync(id, cancellationToken);
+
+        if (!await _authorizationService
+                .RuleFor<Component>()
+                .IsAuthorizedAsync(component, Write, cancellationToken))
+        {
+            throw new UnauthorizedOperationException();
+        }
+
+        if (component is null)
+        {
+            throw new ComponentNotFoundException(id);
         }
 
         return component;

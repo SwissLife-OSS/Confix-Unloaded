@@ -15,6 +15,10 @@ internal sealed class ComponentCollectionConfiguration : IMongoCollectionConfigu
                 cm.AutoMap();
                 cm.MapIdMember(c => c.Id);
             })
+            .AddBsonClassMap<ComponentScope>(cm => cm.SetIsRootClass(true))
+            .AddBsonClassMap<NamespaceComponentScope>(cm => cm.AutoMap())
+            .AddBsonClassMap<ApplicationComponentScope>(cm => cm.AutoMap())
+            .AddBsonClassMap<ApplicationPartComponentScope>(cm => cm.AutoMap())
             .WithCollectionSettings(s => s.ReadConcern = ReadConcern.Majority)
             .WithCollectionSettings(s => s.ReadPreference = ReadPreference.Nearest)
             .WithCollectionConfiguration(collection =>

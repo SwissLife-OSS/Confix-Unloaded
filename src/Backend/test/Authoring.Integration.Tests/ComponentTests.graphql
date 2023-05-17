@@ -1,8 +1,134 @@
-query GetComponent
-{
+query GetComponents {
   components {
     nodes {
       ...Component
+    }
+  }
+}
+
+query GetComponentById($id: ID!) {
+  componentById(id: $id) {
+    ...Component
+  }
+}
+
+query GetComponentsWithFilter(
+  $scopes: [ComponentScopeInput!]
+  $search: String
+) {
+  components(scopes: $scopes, search: $search) {
+    nodes {
+      ...Component
+    }
+  }
+}
+
+mutation CreateComponent($input: CreateComponentInput!) {
+  createComponent(input: $input) {
+    component {
+      ...Component
+    }
+    errors {
+      __typename
+      ... on UserError {
+        code
+        message
+      }
+    }
+    query {
+      components {
+        nodes {
+          ...Component
+        }
+      }
+    }
+  }
+}
+
+mutation RenameComponent($input: RenameComponentInput!) {
+  renameComponent(input: $input) {
+    component {
+      ...Component
+    }
+    errors {
+      __typename
+      ... on UserError {
+        code
+        message
+      }
+    }
+    query {
+      components {
+        nodes {
+          ...Component
+        }
+      }
+    }
+  }
+}
+
+mutation UpdateComponentSchema($input: UpdateComponentSchemaInput!) {
+  updateComponentSchema(input: $input) {
+    component {
+      ...Component
+    }
+    errors {
+      __typename
+      ... on UserError {
+        code
+        message
+      }
+    }
+    query {
+      components {
+        nodes {
+          ...Component
+        }
+      }
+    }
+  }
+}
+
+mutation UpdateComponentScopes($input: UpdateComponentScopesInput!) {
+  updateComponentScopes(input: $input) {
+    component {
+      ...Component
+    }
+    errors {
+      __typename
+      ... on UserError {
+        code
+        message
+      }
+    }
+    query {
+      components {
+        nodes {
+          ...Component
+        }
+      }
+    }
+  }
+}
+
+mutation UpdateComponentValues($input: UpdateComponentValuesInput!) {
+  updateComponentValues(input: $input) {
+    component {
+      ...Component
+    }
+    errors {
+      __typename
+      ... on UserError {
+        code
+        message
+      }
+    }
+    query {
+      components {
+        nodes {
+          ...Component
+        }
+      }
     }
   }
 }

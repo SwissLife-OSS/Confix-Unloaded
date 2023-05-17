@@ -60,9 +60,9 @@ public sealed class TestDataProvider
                 Wellknown.Component.Name,
                 Wellknown.Component.Schema,
                 Wellknown.Component.Values,
-                Wellknown.Component.Version,
-                Authoring.ComponentState.Active,
-                new[] { new ComponentScope(Wellknown.Application.Namespace, null, null) });
+                Wellknown.Namespaces.Default,
+                new[] { new NamespaceComponentScope(Wellknown.Namespaces.Default) },
+                Wellknown.Component.Version);
 
             if (configure is not null)
             {
@@ -122,6 +122,7 @@ public static class DataTestExecutorBuilder
         {
             var dataProvider = TestDataProvider.From(sp);
             configure(dataProvider);
+
             await dataProvider.RunAsync();
         });
         return builder;

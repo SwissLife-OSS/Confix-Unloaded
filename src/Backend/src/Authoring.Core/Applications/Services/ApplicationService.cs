@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Transactions;
 using Confix.Authentication.Authorization;
 using Confix.Authoring.Extensions;
@@ -18,29 +19,29 @@ internal sealed class ApplicationService : IApplicationService
     private readonly IChangeLogService _changeLogService;
     private readonly IComponentDataLoader _componentById;
     private readonly IComponentStore _compStore;
-    private readonly ISchemaService _schemaService;
+    private readonly ISchemaValidator _schemaValidator;
     private readonly ISessionAccessor _sessionAccessor;
 
     public ApplicationService(
-        IApplicationStore appStore,
-        IChangeLogService changeLogService,
         IApplicationPartDataLoader applicationPartByIdDataLoader,
-        IApplicationPartComponentDataLoader applicationPartComponentByIdDataloader,
-        IComponentStore compStore,
+        IApplicationPartComponentDataLoader applicationPartByIdDataloaderDataLoader,
+        IApplicationStore appStore,
+        IAuthorizationService authorizationService,
+        IChangeLogService changeLogService,
         IComponentDataLoader componentById,
-        ISchemaService schemaService,
-        ISessionAccessor sessionAccessor,
-        IAuthorizationService authorizationService)
+        IComponentStore compStore,
+        ISchemaValidator schemaValidator,
+        ISessionAccessor sessionAccessor)
     {
-        _appStore = appStore;
-        _changeLogService = changeLogService;
         _applicationPartByIdDataLoader = applicationPartByIdDataLoader;
-        _applicationPartByIdDataloaderDataLoader = applicationPartComponentByIdDataloader;
-        _compStore = compStore;
-        _schemaService = schemaService;
-        _sessionAccessor = sessionAccessor;
+        _applicationPartByIdDataloaderDataLoader = applicationPartByIdDataloaderDataLoader;
+        _appStore = appStore;
         _authorizationService = authorizationService;
+        _changeLogService = changeLogService;
         _componentById = componentById;
+        _compStore = compStore;
+        _schemaValidator = schemaValidator;
+        _sessionAccessor = sessionAccessor;
     }
 
     public async Task<Application?> GetByIdAsync(
@@ -168,7 +169,8 @@ internal sealed class ApplicationService : IApplicationService
 
         application = application with
         {
-            Version = application.Version + 1, Parts = applicationParts
+            Version = application.Version + 1,
+            Parts = applicationParts
         };
 
         using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
@@ -504,7 +506,7 @@ internal sealed class ApplicationService : IApplicationService
 
     public async Task<ApplicationPartComponent> SetApplicationPartComponentValues(
         Guid partComponentId,
-        IDictionary<string, object?> values,
+        JsonElement values,
         CancellationToken cancellationToken = default)
     {
         Application? application =
@@ -549,11 +551,7 @@ internal sealed class ApplicationService : IApplicationService
             throw new ComponentNotFoundException(applicationPartComponent.ComponentId);
         }
 
-        if (component.Schema is null)
-        {
-            // TODO proper exception
-            throw new InvalidOperationException("There is no schema.");
-        }
+      _schemaValidator.ValidateValues(values, component.Schema);
 
         var version = application.Version + 1;
         application = application with
@@ -569,8 +567,7 @@ internal sealed class ApplicationService : IApplicationService
                             () => applicationPartComponent with
                             {
                                 Version = version,
-                                Values = _schemaService.CreateValuesForSchema(component.Schema,
-                                    values)
+                                Values = values.ToString()
                             }
                         )
                     })

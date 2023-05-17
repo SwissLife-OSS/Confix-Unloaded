@@ -1,4 +1,4 @@
-using HotChocolate;
+using System.Text.Json;
 
 namespace Confix.Authoring;
 
@@ -6,36 +6,11 @@ public interface IComponentService
 {
     Task<Component?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
-    Task<ISchema?> GetSchemaByIdAsync(Guid id, CancellationToken cancellationToken = default);
-
-    Task<IReadOnlyList<Component>> Search(
+    Task<IReadOnlyList<Component>> SearchAsync(
+        IReadOnlyList<ComponentScope> scopes,
+        string? search,
         int skip,
         int take,
-        Guid? applicationId,
-        Guid? applicationPartId,
-        string? @namespace,
-        string? search,
-        CancellationToken cancellationToken);
-
-    Task<Component> CreateAsync(
-        string name,
-        string? schemaSdl,
-        IReadOnlyList<ComponentScope> scopes,
-        IDictionary<string, object?>? values,
-        CancellationToken cancellationToken);
-
-    Task<Component> RenameAsync(Guid id, string name, CancellationToken cancellationToken);
-
-    Task<Component> SetSchemaAsync(Guid id, string schemaSdl, CancellationToken cancellationToken);
-
-    Task<Component> SetValuesAsync(
-        Guid id,
-        IDictionary<string, object?> values,
-        CancellationToken cancellationToken);
-
-    Task<IReadOnlyList<SchemaViolation>> GetSchemaViolationsAsync(
-        Guid id,
-        IDictionary<string, object?> values,
         CancellationToken cancellationToken);
 
     Task<IReadOnlyList<SchemaViolation>> GetSchemaViolationsAsync(
@@ -43,11 +18,28 @@ public interface IComponentService
         string values,
         CancellationToken cancellationToken);
 
-    Task<IDictionary<string, object?>?> GetDefaultValuesAsync(
-        Guid id,
+    Task<Component> CreateAsync(
+        string name,
+        string schemaSdl,
+        string @namespace,
+        IReadOnlyList<ComponentScope> scopes,
+        JsonElement values,
         CancellationToken cancellationToken);
 
-    Task<Component> ChangeComponentScopeByIdAsync(
+    Task<Component> RenameAsync(Guid id, string name, CancellationToken cancellationToken);
+
+    Task<Component> UpdateSchemaAsync(
+        Guid id,
+        string schemaSdl,
+        JsonElement values,
+        CancellationToken cancellationToken);
+
+    Task<Component> UpdateValuesAsync(
+        Guid id,
+        JsonElement values,
+        CancellationToken cancellationToken);
+
+    Task<Component> UpdateScopesAsync(
         Guid id,
         IReadOnlyList<ComponentScope> scopes,
         CancellationToken cancellationToken);

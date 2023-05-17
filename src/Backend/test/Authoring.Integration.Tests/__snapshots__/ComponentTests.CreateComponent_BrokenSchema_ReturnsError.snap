@@ -1,0 +1,7 @@
+﻿[
+  {
+    "__typename": "SchemaInvalidError",
+    "Code": "SchemaInvalidError",
+    "Message": "The Provided sdl is not valid"
+  }
+]

@@ -1,9 +1,7 @@
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
-using C = MongoDB.Driver.Builders<Confix.Authoring.Component>;
-using CS = MongoDB.Driver.Builders<Confix.Authoring.ComponentScope>;
-using static Confix.Authoring.Store.Mongo.Builders;
+using static MongoDB.Driver.Builders<Confix.Authoring.Component>;
 
 namespace Confix.Authoring.Store.Mongo;
 
@@ -18,8 +16,8 @@ internal sealed class ComponentStore : IComponentStore
 
     public async Task<Component> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        return await _dbContext.Components.AsQueryable()
-            .Where(x => x.Id == id)
+        return await _dbContext.Components
+            .Find(Filter.Eq(x => x.Id, id))
             .FirstOrDefaultAsync(cancellationToken);
     }
 
@@ -27,65 +25,33 @@ internal sealed class ComponentStore : IComponentStore
         IEnumerable<Guid> ids,
         CancellationToken cancellationToken)
     {
-        return await _dbContext.Components.AsQueryable()
-            .Where(x => ids.Contains(x.Id))
+        return await _dbContext.Components
+            .Find(Filter.In(x => x.Id, ids))
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<IReadOnlyList<Component>> Search(
+    public async Task<IReadOnlyList<Component>> GetByFilterAsync(
+        IEnumerable<string> namespaces,
+        IEnumerable<ComponentScope> scopes,
+        string? search,
         int skip,
         int take,
-        IEnumerable<string> namespaces,
-        Guid? applicationId,
-        Guid? applicationPartId,
-        string? search,
         CancellationToken cancellationToken)
     {
-        var namespaceFilter = Filter<Component>()
-            .ElemMatch(x => x.Scopes,
-                And(
-                    Filter<ComponentScope>().In(x => x.Namespace, namespaces),
-                    Filter<ComponentScope>().Null(x => x.ApplicationId),
-                    Filter<ComponentScope>().Null(x => x.ApplicationPartId)
-                ));
+        var filter = Filter.In(x => x.Namespace, namespaces);
 
-        var scopeFilter = namespaceFilter;
-
-        if (applicationId is not null)
+        if (scopes.Any())
         {
-            var applicationIdFilter = Filter<Component>()
-                .ElemMatch(x => x.Scopes,
-                    And(
-                        Filter<ComponentScope>().In(x => x.Namespace, namespaces),
-                        Filter<ComponentScope>().Eq(x => x.ApplicationId, applicationId),
-                        Filter<ComponentScope>().Null(x => x.ApplicationPartId)
-                    ));
-
-            scopeFilter |= applicationIdFilter;
-
-            if (applicationPartId is not null)
-            {
-                scopeFilter |= Filter<Component>()
-                    .ElemMatch(x => x.Scopes,
-                        And(
-                            Filter<ComponentScope>().In(x => x.Namespace, namespaces),
-                            Filter<ComponentScope>().Eq(x => x.ApplicationId, applicationId),
-                            Filter<ComponentScope>()
-                                .Eq(x => x.ApplicationPartId, applicationPartId)
-                        ));
-            }
+            filter &= Filter.Or(scopes.Select(s => Filter.AnyEq(x => x.Scopes, s)));
         }
 
-        var filter = scopeFilter;
-
-        if (!string.IsNullOrEmpty(search))
+        if (!string.IsNullOrWhiteSpace(search))
         {
-            filter &= Filter<Component>()
-                .Regex(x => x.Name, new BsonRegularExpression(search, "i"));
+            filter &= Filter.Regex(x => x.Name, new BsonRegularExpression(search, "i"));
         }
-
         return await _dbContext.Components
             .Find(filter)
+            .SortByDescending(x => x.Name)
             .Skip(skip)
             .Limit(take)
             .ToListAsync(cancellationToken);
@@ -110,12 +76,4 @@ internal sealed class ComponentStore : IComponentStore
 
         return component;
     }
-}
-
-public static class Builders
-{
-    public static FilterDefinitionBuilder<T> Filter<T>() => Builders<T>.Filter;
-
-    public static FilterDefinition<T> And<T>(params FilterDefinition<T>[] filters)
-        => Builders<T>.Filter.And(filters);
 }

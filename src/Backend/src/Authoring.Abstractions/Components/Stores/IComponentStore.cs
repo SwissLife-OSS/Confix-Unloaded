@@ -8,13 +8,12 @@ public interface IComponentStore
         IEnumerable<Guid> ids,
         CancellationToken cancellationToken);
 
-    Task<IReadOnlyList<Component>> Search(
+    Task<IReadOnlyList<Component>> GetByFilterAsync(
+        IEnumerable<string> namespaces,
+        IEnumerable<ComponentScope> scopes,
+        string? search,
         int skip,
         int take,
-        IEnumerable<string> namespaces,
-        Guid? applicationId,
-        Guid? applicationPartId,
-        string? search,
         CancellationToken cancellationToken);
 
     Task<Component> AddAsync(Component component, CancellationToken cancellationToken);

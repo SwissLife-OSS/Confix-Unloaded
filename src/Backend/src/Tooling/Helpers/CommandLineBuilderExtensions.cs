@@ -6,7 +6,7 @@ internal static class CommandLineBuilderExtensions
     public static CommandLineBuilder AddService<T, TImpl>(this CommandLineBuilder builder)
         where TImpl : T, new()
     {
-        T? value = default(T);
+        T? value = default;
 
         builder.AddService<T>(_ => value ??= new TImpl());
 
@@ -25,9 +25,10 @@ internal static class CommandLineBuilderExtensions
     {
         builder.AddMiddleware(x =>
         {
-            T cache = default(T);
+            T cache = default!;
             x.BindingContext.AddService(sp => cache ??= factory(sp));
         }, MiddlewareOrder.Configuration);
         return builder;
     }
 }
+

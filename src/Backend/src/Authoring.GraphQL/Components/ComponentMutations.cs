@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Confix.Common.Exceptions;
 
 namespace Confix.Authoring.GraphQL.Components;
@@ -5,21 +6,26 @@ namespace Confix.Authoring.GraphQL.Components;
 [ExtendObjectType(OperationTypeNames.Mutation)]
 public sealed class ComponentMutations
 {
+    [Error(typeof(SchemaInvalidError))]
     [Error(typeof(ValueSchemaViolation))]
     [Error(typeof(UnauthorizedOperationException))]
     [Error(typeof(ComponentValidationFailed))]
     public async Task<Component> CreateComponentAsync(
         [Service] IComponentService service,
         string name,
+        string @namespace,
         IReadOnlyList<ComponentScopeInput> scopes,
-        [DefaultValue("type Component { text: String! }")] string schema,
-        [GraphQLType(typeof(AnyType))] Dictionary<string, object?>? values,
+        [GraphQLType(typeof(SdlType))]
+        [DefaultValue("type Configuration { text: String! }")]
+        string schema,
+        [GraphQLType(typeof(JsonType))] JsonElement values,
         CancellationToken cancellationToken)
     {
         return await service.CreateAsync(
             name,
             schema,
-            scopes.Select(x => x.ToScope()).ToArray(),
+            @namespace,
+            scopes.Select(x => x.GetScope()).ToArray(),
             values,
             cancellationToken);
     }
@@ -42,31 +48,35 @@ public sealed class ComponentMutations
         IReadOnlyList<ComponentScopeInput> scopes,
         CancellationToken cancellationToken)
     {
-        return await service.ChangeComponentScopeByIdAsync(
+        return await service.UpdateScopesAsync(
             id,
-            scopes.Select(x => x.ToScope()).ToArray(),
+            scopes.Select(x => x.GetScope()).ToArray(),
             cancellationToken);
     }
 
+    [Error(typeof(SchemaInvalidError))]
+    [Error(typeof(ValueSchemaViolation))]
     [Error(typeof(UnauthorizedOperationException))]
     [Error(typeof(SchemaInvalidError))]
     public async Task<Component> UpdateComponentSchemaAsync(
         [Service] IComponentService service,
         [ID(nameof(Component))] Guid id,
-        string schema,
+        [GraphQLType(typeof(SdlType))] string schema,
+        [GraphQLType(typeof(JsonType))] JsonElement values,
         CancellationToken cancellationToken)
     {
-        return await service.SetSchemaAsync(id, schema, cancellationToken);
+        return await service.UpdateSchemaAsync(id, schema, values, cancellationToken);
     }
 
+    [Error(typeof(ValueSchemaViolation))]
     [Error(typeof(ValueSchemaViolation))]
     [Error(typeof(UnauthorizedOperationException))]
     public async Task<Component> UpdateComponentValuesAsync(
         [Service] IComponentService service,
         [ID(nameof(Component))] Guid id,
-        [GraphQLType(typeof(AnyType))] Dictionary<string, object?> values,
+        [GraphQLType(typeof(JsonType))] JsonElement values,
         CancellationToken cancellationToken)
     {
-        return await service.SetValuesAsync(id, values, cancellationToken);
+        return await service.UpdateValuesAsync(id, values, cancellationToken);
     }
 }

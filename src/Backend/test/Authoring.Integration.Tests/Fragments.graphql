@@ -24,7 +24,7 @@ fragment ApplicationPart on ApplicationPart {
   }
 }
 
-fragment ApplicationPartComponent on ApplicationPartComponent  {
+fragment ApplicationPartComponent on ApplicationPartComponent {
   id
   version
 
@@ -43,26 +43,24 @@ fragment ApplicationPartComponent on ApplicationPartComponent  {
 
 fragment Component on Component {
   id
-  name
   version
+  name
   schema
-  schemaSdl
-  defaults
   values
-  state
-  schemaViolations {
-    code
-    path
-  }
-
   scopes {
-    application {
-      name
+    __typename
+    ... on NamespaceComponentScope {
+      namespace
     }
-    namespace
-    applicationPart {
-      name
+    ... on ApplicationComponentScope {
+      application {
+        name
+      }
+    }
+    ... on ApplicationPartComponentScope {
+      applicationPart {
+        name
+      }
     }
   }
-  values
 }

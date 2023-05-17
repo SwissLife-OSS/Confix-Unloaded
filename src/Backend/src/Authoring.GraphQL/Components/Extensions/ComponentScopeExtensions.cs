@@ -2,32 +2,22 @@ using Confix.Authoring.Store;
 
 namespace Confix.Authoring.GraphQL;
 
-[ExtendObjectType<ComponentScope>]
-public class ComponentScopeExtensions
+[ExtendObjectType<ApplicationComponentScope>]
+public class ApplicationComponentScopeExtensions
 {
     public async ValueTask<Application?> GetApplication(
-        [Parent] ComponentScope scope,
+        [Parent] ApplicationComponentScope scope,
         [Service] IApplicationService applicationService,
         CancellationToken cancellationToken)
-    {
-        if (scope.ApplicationId is not { } applicationId)
-        {
-            return null;
-        }
+    => await applicationService.GetByIdAsync(scope.ApplicationId, cancellationToken);
+}
 
-        return await applicationService.GetByIdAsync(applicationId, cancellationToken);
-    }
-
+[ExtendObjectType<ApplicationPartComponentScope>]
+public class ApplicationPartComponentScopeExtensions
+{
     public async ValueTask<ApplicationPart?> GetApplicationPart(
-        [Parent] ComponentScope scope,
+        [Parent] ApplicationPartComponentScope scope,
         [Service] IApplicationService applicationService,
         CancellationToken cancellationToken)
-    {
-        if (scope.ApplicationPartId is not { } applicationPartId)
-        {
-            return null;
-        }
-
-        return await applicationService.GetPartByIdAsync(applicationPartId, cancellationToken);
-    }
+    => await applicationService.GetPartByIdAsync(scope.ApplicationPartId, cancellationToken);
 }
