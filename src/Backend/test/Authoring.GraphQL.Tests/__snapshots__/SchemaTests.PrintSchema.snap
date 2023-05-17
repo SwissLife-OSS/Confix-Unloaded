@@ -496,6 +496,10 @@ type Grant {
   permission: PermissionsFlags!
 }
 
+type GraphQLSchemaError {
+  message: String!
+}
+
 type Group {
   id: ID!
   name: String!
@@ -831,6 +835,7 @@ type SaveVariableValuePayload {
 }
 
 type SchemaInvalidError implements UserError {
+  errors: [GraphQLSchemaError!]!
   code: String!
   message: String!
 }

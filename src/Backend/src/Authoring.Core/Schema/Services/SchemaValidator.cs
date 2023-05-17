@@ -25,7 +25,7 @@ internal sealed class SchemaValidator : ISchemaValidator
         }
         catch (SchemaException ex)
         {
-            throw new InvalidSchemaException(ex.Errors.Select(e => e.Message).ToArray());
+            throw new InvalidSchemaException(ex.Errors.Select(e => new GraphQLSchemaError(e.Message)).ToArray());
         }
     }
 

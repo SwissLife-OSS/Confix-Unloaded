@@ -1,7 +1,5 @@
 using HotChocolate.Execution;
 using Microsoft.Extensions.DependencyInjection;
-using Snapshooter.Xunit;
-using Xunit;
 
 namespace Confix.Authoring.GraphQL.Tests;
 
