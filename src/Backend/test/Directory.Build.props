@@ -1,0 +1,37 @@
+<Project>
+
+  <PropertyGroup>
+    <PropsAbove>$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))</PropsAbove>
+  </PropertyGroup>
+  <Import Condition="Exists($(PropsAbove))" Project="$(PropsAbove)" />
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="coverlet.collector">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="coverlet.msbuild">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+
+    <PackageReference Include="Moq" />
+    <PackageReference Include="Squadron.Mongo" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+    <PackageReference Include="Snapshooter.Xunit" />
+    <PackageReference Include="FluentAssertions" />
+  </ItemGroup>
+
+  <ItemGroup >
+    <Using Include="FluentAssertions" />
+    <Using Include="Snapshooter" />
+    <Using Include="Snapshooter.Xunit" />
+    <Using Include="Squadron" />
+    <Using Include="Xunit" />
+  </ItemGroup>
+</Project>
