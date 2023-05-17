@@ -27,10 +27,6 @@ internal sealed class SchemaValidator : ISchemaValidator
         {
             throw new InvalidSchemaException(ex.Errors.Select(e => e.Message).ToArray());
         }
-        catch (Exception ex)
-        {
-            throw new InvalidSchemaException(new[] { ex.Message });
-        }
     }
 
     public void ValidateValues(JsonElement values, string schemaSdl)
