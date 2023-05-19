@@ -100,8 +100,42 @@ public class SchemaValidatorTests
             }
         """);
 
+    [Fact]
+    public void ValidateSchema_NoRootType_Exception()
+        => AssertInvalidSchema("""
+            type Unicorn {
+                someText: String!
+            }
+        """);
+
+    [Fact]
+    public void ValidateSchema_MissingBrace_Exception()
+        => AssertInvalidSchema("""
+            type Configuration {
+                someText: String!
+        """);
+
+    [Fact]
+    public void ValidateSchema_UnknownType_Exception()
+        => AssertInvalidSchema("""
+            type Configuration {
+                someText: Unicorn!
+            }
+        """);
+
     private void AssertValidSchema(string schema)
         => new SchemaValidator(GetMemoryCache()).ValidateSchema(schema);
+
+    private void AssertInvalidSchema(string schema)
+    {
+        // arrange
+        SchemaValidator validator = new(GetMemoryCache());
+
+        // act && assert
+        var exception = Assert.Throws<InvalidSchemaException>(() => validator.ValidateSchema(schema));
+        exception.Errors.MatchSnapshot();
+    }
+
 
     private IMemoryCache GetMemoryCache()
     {
