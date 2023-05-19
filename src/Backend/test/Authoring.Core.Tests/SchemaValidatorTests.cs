@@ -91,6 +91,15 @@ public class SchemaValidatorTests
             }
         """);
 
+    [Fact]
+    public void ValidateSchema_WithComments_Valid()
+        => AssertValidSchema("""
+            type Configuration {
+                # some comment to make it clear
+                someText: String!
+            }
+        """);
+
     private void AssertValidSchema(string schema)
         => new SchemaValidator(GetMemoryCache()).ValidateSchema(schema);
 
