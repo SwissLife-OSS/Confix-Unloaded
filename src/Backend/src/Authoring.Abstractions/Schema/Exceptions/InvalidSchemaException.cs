@@ -8,4 +8,4 @@ public sealed class InvalidSchemaException: Exception{
 
     public GraphQLSchemaError[] Errors;
 }
-public record GraphQLSchemaError(string message);
+public record GraphQLSchemaError(string Message);

@@ -54,11 +54,9 @@ public class SchemaValidatorTests
     public void ValidateSchema_Unions_Valid()
         => AssertValidSchema("""
             type Configuration {
-                someField: UnionOfPrimitivesOrCustomTypes!
+                someField: CustomTypeUnion!
             }
 
-            union UnionOfPrimitivesOrCustomTypes = PrimitiveUnion | CustomTypeUnion
-            union PrimitiveUnion = String | Int | Boolean
             union CustomTypeUnion = CustomType1 | CustomType2
 
             type CustomType1 {
