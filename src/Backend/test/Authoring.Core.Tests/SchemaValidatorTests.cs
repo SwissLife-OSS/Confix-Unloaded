@@ -315,11 +315,43 @@ public class SchemaValidatorTests
             }
             """);
 
+
+    [Fact]
+    // TODO: null violations should somehow have a better error
+    public void ValidateValues_PrimitivesNullViolation_Invalid()
+        => AssertInvalidValues(
+            """
+            {
+                "someText": null,
+                "someNumber": null,
+                "someFloat": null,
+                "someBoolean": null
+            }
+            """,
+            """
+            type Configuration {
+                someText: String!
+                someNumber: Int!
+                someFloat: Float!
+                someBoolean: Boolean!
+            }
+            """);
+
     private void AssertValidValues(string jsonValue, string schema)
         => GetValidator().ValidateValues(
             JsonDocument.Parse(jsonValue).RootElement,
             schema);
 
+
+    private void AssertInvalidValues(string jsonValue, string schema)
+    {
+        // act && assert
+        var exception = Assert.Throws<SchemaViolationException>(() =>
+            GetValidator().ValidateValues(
+                JsonDocument.Parse(jsonValue).RootElement,
+                schema));
+        exception.Violations.MatchSnapshot();
+    }
     #endregion
 
     private ISchemaValidator GetValidator()

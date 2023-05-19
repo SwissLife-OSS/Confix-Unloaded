@@ -1,0 +1,26 @@
+﻿[
+  {
+    "Path": [
+      "someText"
+    ],
+    "Code": "INVALID_TYPE"
+  },
+  {
+    "Path": [
+      "someNumber"
+    ],
+    "Code": "INVALID_TYPE"
+  },
+  {
+    "Path": [
+      "someFloat"
+    ],
+    "Code": "INVALID_TYPE"
+  },
+  {
+    "Path": [
+      "someBoolean"
+    ],
+    "Code": "INVALID_TYPE"
+  }
+]
