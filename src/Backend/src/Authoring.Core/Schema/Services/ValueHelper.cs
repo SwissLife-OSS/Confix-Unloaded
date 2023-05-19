@@ -189,6 +189,7 @@ internal static class ValueHelper
     public static Dictionary<string, object?> DeserializeDictionary(JsonElement element, IType type)
     {
         var dictionary = new Dictionary<string, object?>();
+        // TODO: fix this for unionTypes
         var objectType = (ObjectType)type.NamedType();
 
         foreach (var property in element.EnumerateObject())
