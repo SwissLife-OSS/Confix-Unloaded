@@ -6,6 +6,7 @@ namespace Confix.Authoring.Core.Tests;
 
 public class SchemaValidatorTests
 {
+    #region ValidateSchema
     [Fact]
     public void ValidateSchema_Primitives_Valid()
         => AssertValidSchema("""
@@ -136,6 +137,7 @@ public class SchemaValidatorTests
         exception.Errors.MatchSnapshot();
     }
 
+    #endregion
 
     private IMemoryCache GetMemoryCache()
     {
