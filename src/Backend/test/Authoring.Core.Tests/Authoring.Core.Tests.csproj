@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>Confix.Authoring.Core.Tests</AssemblyName>
+    <RootNamespace>Confix.Authoring.Core.Tests</RootNamespace>
+  </PropertyGroup>
+
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Authoring.Core\Authoring.Core.csproj" />
+  </ItemGroup>
+
+</Project>

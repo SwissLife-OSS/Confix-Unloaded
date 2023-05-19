@@ -63,5 +63,5 @@ internal sealed class SchemaValidator : ISchemaValidator
         })!;
 
     private static string CacheKey(string input)
-        => Encoding.UTF8.GetString(SHA256.HashData(Encoding.UTF8.GetBytes(input)));
+        => "schema." + Encoding.UTF8.GetString(SHA256.HashData(Encoding.UTF8.GetBytes(input)));
 }
