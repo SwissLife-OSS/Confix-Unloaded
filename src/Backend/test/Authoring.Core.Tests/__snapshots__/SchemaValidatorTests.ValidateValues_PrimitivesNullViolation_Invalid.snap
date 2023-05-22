@@ -1,0 +1,46 @@
+﻿[
+  {
+    "Path": [
+      "someText"
+    ],
+    "Code": "INVALID_TYPE"
+  },
+  {
+    "Path": [
+      "someNumber"
+    ],
+    "Code": "INVALID_TYPE"
+  },
+  {
+    "Path": [
+      "someFloat"
+    ],
+    "Code": "INVALID_TYPE"
+  },
+  {
+    "Path": [
+      "someBoolean"
+    ],
+    "Code": "INVALID_TYPE"
+  },
+  {
+    "Path": [
+      "someUnicorn"
+    ],
+    "Code": "INVALID_TYPE"
+  },
+  {
+    "Path": [
+      "someOtherUnicorn",
+      "count"
+    ],
+    "Code": "INVALID_TYPE"
+  },
+  {
+    "Path": [
+      "someOtherCoolUnicorn",
+      "count"
+    ],
+    "Code": "NON_NULL"
+  }
+]

@@ -27,6 +27,13 @@ internal sealed class SchemaValidator : ISchemaValidator
         {
             throw new InvalidSchemaException(ex.Errors.Select(e => new GraphQLSchemaError(e.Message)).ToArray());
         }
+        catch (SyntaxException)
+        {
+            throw new InvalidSchemaException(
+                new GraphQLSchemaError[] {
+                    new("Could not parse Schema")
+                });
+        }
     }
 
     public void ValidateValues(JsonElement values, string schemaSdl)
@@ -57,11 +64,11 @@ internal sealed class SchemaValidator : ISchemaValidator
                 .ModifyOptions(c =>
                 {
                     c.QueryTypeName = "Configuration";
-                    c.StrictValidation = false;
+                    c.StrictValidation = true;
                 })
                 .Create();
         })!;
 
     private static string CacheKey(string input)
-        => Encoding.UTF8.GetString(SHA256.HashData(Encoding.UTF8.GetBytes(input)));
+        => "schema." + Encoding.UTF8.GetString(SHA256.HashData(Encoding.UTF8.GetBytes(input)));
 }
