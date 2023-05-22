@@ -325,7 +325,10 @@ public class SchemaValidatorTests
                 "someText": null,
                 "someNumber": null,
                 "someFloat": null,
-                "someBoolean": null
+                "someBoolean": null,
+                "someUnicorn": null,
+                "someOtherUnicorn": {"count": null},
+                "someOtherCoolUnicorn": {}
             }
             """,
             """
@@ -334,6 +337,12 @@ public class SchemaValidatorTests
                 someNumber: Int!
                 someFloat: Float!
                 someBoolean: Boolean!
+                someUnicorn: Unicorn!
+                someOtherUnicorn: Unicorn!
+                someOtherCoolUnicorn: Unicorn!
+            }
+            type Unicorn{
+                count: Int!
             }
             """);
 

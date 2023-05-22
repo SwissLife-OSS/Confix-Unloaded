@@ -22,5 +22,25 @@
       "someBoolean"
     ],
     "Code": "INVALID_TYPE"
+  },
+  {
+    "Path": [
+      "someUnicorn"
+    ],
+    "Code": "INVALID_TYPE"
+  },
+  {
+    "Path": [
+      "someOtherUnicorn",
+      "count"
+    ],
+    "Code": "INVALID_TYPE"
+  },
+  {
+    "Path": [
+      "someOtherCoolUnicorn",
+      "count"
+    ],
+    "Code": "NON_NULL"
   }
 ]
